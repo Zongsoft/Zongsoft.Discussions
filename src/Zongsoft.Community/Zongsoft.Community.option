@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<options>
+	<option path="/Community">
+		<general general.type="Zongsoft.Community.Configuration.GeneratlConfiguration, Zongsoft.Community"
+						 basePath="zfs.oss:/zongsoft-community/" />
+	</option>
+</options>

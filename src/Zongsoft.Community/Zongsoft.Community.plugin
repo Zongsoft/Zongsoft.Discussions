@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<plugin name="Zongsoft.Community"
+        title="Zongsoft.Community Plugin"
+        author="Popeye Zhong(9555843@qq.com)"
+        version="1.0"
+        copyright="Copyright(C) Zongsoft Corporation. 2015-2017. All rights reserved."
+        description="Created by Popeye Zhong in 2017-05">
+
+	<manifest>
+		<assemblies>
+			<assembly name="Zongsoft.Community" />
+		</assemblies>
+	</manifest>
+
+	<modules>
+		<module name="DataAccessModule" type="Zongsoft.Community.DataAccessModule, Zongsoft.Community" />
+	</modules>
+
+	<extension path="/Workbench/Schemas">
+		<category name="Community" title="{res:Text.Community.Title}" description="{res:Text.Community.Description}" />
+	</extension>
+
+	<extension path="/Workbench/Startup">
+		<object name="AuthenticationWorker" type="Zongsoft.Community.Security.AuthenticationWorker, Zongsoft.Community" />
+	</extension>
+
+	<extension path="/Workspace/Data/DataAccess/Filters">
+		<object name="UserFilter" type="Zongsoft.Community.Data.UserFilter, Zongsoft.Community" />
+	</extension>
+
+	<extension path="/Workspace/Services">
+		<object name="ForumService" type="Zongsoft.Community.Services.ForumService, Zongsoft.Community" />
+		<object name="ForumsService" type="Zongsoft.Community.Services.ForumsService, Zongsoft.Community" />
+		<object name="MessageService" type="Zongsoft.Community.Services.MessageService, Zongsoft.Community" />
+		<object name="PostService" type="Zongsoft.Community.Services.PostService, Zongsoft.Community" />
+		<object name="ThreadService" type="Zongsoft.Community.Services.ThreadService, Zongsoft.Community" />
+		<object name="UserService" type="Zongsoft.Community.Services.UserService, Zongsoft.Community" basePath="zfs.oss:/zongsoft-community/users/" />
+	</extension>
+</plugin>

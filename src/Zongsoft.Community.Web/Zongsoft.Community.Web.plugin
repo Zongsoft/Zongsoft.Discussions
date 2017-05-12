@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<plugin name="Zongsoft.Community.Web"
+        title="Zongsoft.Community.Web Plugin"
+        author="Popeye Zhong(9555843@qq.com)"
+        version="1.0"
+        copyright="Copyright(C) Zongsoft Corporation. 2015-2017. All rights reserved."
+        description="Created by Popeye Zhong in 2017-05">
+
+	<manifest>
+		<dependencies>
+			<dependency name="Zongsoft.Community" />
+		</dependencies>
+
+		<assemblies>
+			<assembly name="Zongsoft.Community.Web" />
+		</assemblies>
+	</manifest>
+
+	<extension path="/Workspace/Web/Controllers/Api">
+		<object name="Forum" type="Zongsoft.Community.Web.Http.Controllers.ForumController, Zongsoft.Community.Web" />
+		<object name="Forums" type="Zongsoft.Community.Web.Http.Controllers.ForumsController, Zongsoft.Community.Web" />
+		<object name="Message" type="Zongsoft.Community.Web.Http.Controllers.MessageController, Zongsoft.Community.Web" />
+		<object name="Post" type="Zongsoft.Community.Web.Http.Controllers.PostController, Zongsoft.Community.Web" />
+		<object name="Thread" type="Zongsoft.Community.Web.Http.Controllers.ThreadController, Zongsoft.Community.Web" />
+		<object name="User" type="Zongsoft.Community.Web.Http.Controllers.UserController, Zongsoft.Community.Web" />
+	</extension>
+</plugin>

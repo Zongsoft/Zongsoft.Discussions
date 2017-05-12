@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<schema>
+	<entity name="Community.Message" table="Community_Message" type="Zongsoft.Community.Models.Message, Zongsoft.Community">
+		<key>
+			<property name="MessageId"/>
+		</key>
+	</entity>
+
+</schema>
