@@ -37,7 +37,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public bool IsModerator(uint forumId, uint? userId = null)
+		public bool IsModerator(uint siteId, ushort forumId, uint? userId = null)
 		{
 			if(userId == null)
 			{
@@ -47,24 +47,24 @@ namespace Zongsoft.Community.Services
 				userId = this.Credential.UserId;
 			}
 
-			return this.GetModerators(forumId).Any(p => p.UserId == userId);
+			return this.GetModerators(siteId, forumId).Any(p => p.UserId == userId);
 		}
 
-		public ICollection<UserProfile> GetModerators(uint forumId)
+		public ICollection<UserProfile> GetModerators(uint siteId, ushort forumId)
 		{
-			return this.DataAccess.Select<Moderator>(Condition.Equal("ForumId", forumId), "User, User.User", Paging.Disable).Select(p => p.User).ToArray();
+			return this.DataAccess.Select<Moderator>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId), "User, User.User", Paging.Disable).Select(p => p.User).ToArray();
 		}
 
-		public IEnumerable<Thread> GetThreads(uint forumId, Paging paging = null)
+		public IEnumerable<Thread> GetThreads(uint siteId, ushort forumId, Paging paging = null)
 		{
 			//获取必须的主题服务
 			var service = this.ServiceProvider.ResolveRequired<ThreadService>();
 
 			//获取指定论坛中最顶部的主题集（全局贴+本论坛的置顶贴）
-			var topmosts = service.GetTopmosts(forumId);
+			var topmosts = service.GetTopmosts(siteId, forumId);
 
 			//查询指定论坛中的并且排除顶部集中的主题集
-			return service.Select(Condition.Equal("ForumId", forumId) & Condition.NotIn("ThreadId", topmosts.Select(p => p.ThreadId)), paging);
+			return service.Select(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.NotIn("ThreadId", topmosts.Select(p => p.ThreadId)), paging);
 		}
 		#endregion
 
@@ -89,7 +89,7 @@ namespace Zongsoft.Community.Services
 				return null;
 
 			//获取当前论坛的版主集
-			forum.Moderators = this.GetModerators(forum.ForumId);
+			forum.Moderators = this.GetModerators(forum.SiteId, forum.ForumId);
 
 			return forum;
 		}

@@ -78,39 +78,29 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Select<Thread>(Condition.In("ThreadId", globals)).ToArray();
 		}
 
-		public Thread[] GetPinnedThreads(uint forumId)
+		public Thread[] GetPinnedThreads(uint siteId, ushort forumId)
 		{
 			var cache = this.Cache;
 
 			if(cache == null)
 				throw new InvalidOperationException("Missing cache for the operation.");
 
-			var pinneds = cache.GetValue<ulong[]>(this.GetPinnedCacheKey(forumId));
+			var pinneds = cache.GetValue<ulong[]>(this.GetPinnedCacheKey(siteId, forumId));
 
 			if(pinneds == null)
 			{
-				var threads = this.DataAccess.Select<Thread>(Condition.Equal("ForumId", forumId) & Condition.Equal("IsPinned", true), Paging.Page(1, 10), Sorting.Descending("ThreadId"));
-				cache.SetValue(this.GetPinnedCacheKey(forumId), threads.Select(p => p.ThreadId).ToArray());
+				var threads = this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("IsPinned", true), Paging.Page(1, 10), Sorting.Descending("ThreadId"));
+				cache.SetValue(this.GetPinnedCacheKey(siteId, forumId), threads.Select(p => p.ThreadId).ToArray());
 				return threads.ToArray();
 			}
 
 			return this.DataAccess.Select<Thread>(Condition.In("ThreadId", pinneds)).ToArray();
 		}
 
-		public Thread[] GetTopmosts(uint forumId)
-		{
-			var siteId = this.DataAccess.Select<Forum>(Condition.Equal("ForumId", forumId)).Select(p => p.SiteId).FirstOrDefault();
-
-			if(siteId == 0)
-				return new Thread[0];
-
-			return this.GetTopmosts(forumId, siteId);
-		}
-
-		public Thread[] GetTopmosts(uint forumId, uint siteId)
+		public Thread[] GetTopmosts(uint siteId, ushort forumId)
 		{
 			var globals = this.GetGlobalThreads(siteId);
-			var pinneds = this.GetPinnedThreads(forumId);
+			var pinneds = this.GetPinnedThreads(siteId, forumId);
 
 			return globals.Union(pinneds).ToArray();
 		}
@@ -132,7 +122,7 @@ namespace Zongsoft.Community.Services
 			if(thread.Disabled || (!thread.IsApproved))
 			{
 				//判断当前用户是否为该论坛的版主
-				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(thread.ForumId);
+				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(thread.SiteId, thread.ForumId);
 
 				if(!isModerator)
 				{
@@ -194,9 +184,9 @@ namespace Zongsoft.Community.Services
 			return "Global-" + siteId.ToString();
 		}
 
-		private string GetPinnedCacheKey(uint forumId)
+		private string GetPinnedCacheKey(uint siteId, ushort forumId)
 		{
-			return "Pinned-" + forumId.ToString();
+			return "Pinned-" + siteId.ToString() + "-" + forumId.ToString();
 		}
 		#endregion
 	}

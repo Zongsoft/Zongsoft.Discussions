@@ -86,7 +86,7 @@ namespace Zongsoft.Community.Services
 
 		public bool SetPhotoPath(uint userId, string path)
 		{
-			return this.DataAccess.Update(new UserProfile(userId) { PhotoPath = path }, "!, UserId, PhotoPath") > 0;
+			return this.DataAccess.Update(this.Name, new { PhotoPath = path }, Condition.Equal("UserId", userId)) > 0;
 		}
 		#endregion
 
