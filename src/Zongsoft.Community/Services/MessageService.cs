@@ -26,7 +26,7 @@ using Zongsoft.Community.Models;
 namespace Zongsoft.Community.Services
 {
 	[DataSequence("MessageId", 100000)]
-	[DataSearchKey("Status:Stauts", "From,FromId:FromId", "To,ToId:ToId", "Key:Subject")]
+	[DataSearchKey("Status:Stauts", "Creator,CreatorId:CreatorId", "Key:Subject")]
 	public class MessageService : ServiceBase<Message>
 	{
 		#region 构造函数
@@ -39,7 +39,7 @@ namespace Zongsoft.Community.Services
 		protected override Message OnGet(ICondition condition, string scope)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
-				scope = "From, From.User, To, To.User";
+				scope = "Creator, Creator.User";
 
 			//调用基类同名方法
 			return base.OnGet(condition, scope);

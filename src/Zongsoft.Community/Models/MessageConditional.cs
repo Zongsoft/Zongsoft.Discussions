@@ -52,18 +52,6 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public string Content
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Content);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Content, value);
-			}
-		}
-
 		public MessageStatus? Status
 		{
 			get
@@ -88,39 +76,39 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public uint? FromId
+		public uint? TargetId
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.FromId);
+				return this.GetPropertyValue(() => this.TargetId);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.FromId, value);
+				this.SetPropertyValue(() => this.TargetId, value);
 			}
 		}
 
-		public uint? ToId
+		public MessageTargetKind? TargetKind
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.ToId);
+				return this.GetPropertyValue(() => this.TargetKind);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.ToId, value);
+				this.SetPropertyValue(() => this.TargetKind, value);
 			}
 		}
 
-		public ConditionalRange ReadTime
+		public uint? CreatorId
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.ReadTime);
+				return this.GetPropertyValue(() => this.CreatorId);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.ReadTime, value);
+				this.SetPropertyValue(() => this.CreatorId, value);
 			}
 		}
 

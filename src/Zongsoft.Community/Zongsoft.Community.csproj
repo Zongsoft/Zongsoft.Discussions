@@ -48,6 +48,7 @@
     <Compile Include="Models\Liking.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\MessageConditional.cs" />
+    <Compile Include="Models\MessageTargetKind.cs" />
     <Compile Include="Models\MessageStatus.cs" />
     <Compile Include="Models\Moderator.cs" />
     <Compile Include="Models\Post.cs" />

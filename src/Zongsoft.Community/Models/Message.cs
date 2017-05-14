@@ -29,8 +29,9 @@ namespace Zongsoft.Community.Models
 		private uint _siteId;
 		private MessageStatus _status;
 		private DateTime _statusTimestamp;
-		private uint? _fromId;
-		private uint? _toId;
+		private uint? _targetId;
+		private MessageTargetKind _targetKind;
+		private uint? _creatorId;
 		private DateTime _createdTime;
 		#endregion
 
@@ -90,6 +91,18 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
+		public string ContentPath
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.ContentPath);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.ContentPath, value);
+			}
+		}
+
 		public MessageStatus Status
 		{
 			get
@@ -126,63 +139,63 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public uint? FromId
+		public uint? TargetId
 		{
 			get
 			{
-				return _fromId;
+				return _targetId;
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.FromId, ref _fromId, value);
+				this.SetPropertyValue(() => this.TargetId, ref _targetId, value);
 			}
 		}
 
-		public UserProfile From
+		public object Target
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.From);
+				return this.GetPropertyValue(() => this.Target);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.From, value);
+				this.SetPropertyValue(() => this.Target, value);
 			}
 		}
 
-		public uint? ToId
+		public MessageTargetKind TargetKind
 		{
 			get
 			{
-				return _toId;
+				return _targetKind;
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.ToId, ref _toId, value);
+				this.SetPropertyValue(() => this.TargetKind, ref _targetKind, value);
 			}
 		}
 
-		public UserProfile To
+		public uint? CreatorId
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.To);
+				return _creatorId;
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.To, value);
+				this.SetPropertyValue(() => this.CreatorId, ref _creatorId, value);
 			}
 		}
 
-		public DateTime? ReadTime
+		public UserProfile Creator
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.ReadTime);
+				return this.GetPropertyValue(() => this.Creator);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.ReadTime, value);
+				this.SetPropertyValue(() => this.Creator, value);
 			}
 		}
 

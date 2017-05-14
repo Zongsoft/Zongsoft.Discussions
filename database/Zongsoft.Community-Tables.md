@@ -9,17 +9,15 @@
 MessageId | bigint | 8 | False | 主键，消息编号
 SiteId | int | 4 | False | 站点编号
 Subject | nvarchar | 100 | False | 消息主题
-Content | nvarchar | 500 | False | 消息内容
-Status | byte | 1 | False | 状态(0:未发送, 1:发送中, 2:已发送, 3:删除)
+ContentPath | nvarchar | 500 | False | 内容文件路径
+Status | byte | 1 | False | 状态(0:未读, 1:已读)
 StatusTimestamp | datetime | - | False | 状态更新时间
 StatusDescription | nvarchar | 100 | True | 状态描述
-FromId | int | 4 | True | 发送人编号(空表示系统消息)
-ToId | int | 4 | True | 接收人编号(空表示广播; 0表示用户的反馈信息)
-ReadTime | datetime | - | True | 查收时间(仅限个人接受者)
+TargetId | int | 4 | True | 接收人编号
+TargetKind | byte | 1 | False | 接收人种类(0:全站广播, 1:用户; 2:版主)
+CreatorId | int | 4 | False | 发送人编号(零表示系统消息)
 CreatedTime | datetime | - | False | 创建时间
 
-
--------
 
 
 ### 论坛分组表 `Community.ForumGroup`

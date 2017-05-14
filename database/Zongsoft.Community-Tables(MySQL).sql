@@ -7,13 +7,13 @@ CREATE TABLE IF NOT EXISTS `Community_Message`
   `MessageId` bigint UNSIGNED NOT NULL COMMENT '主键，消息编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '站点编号',
   `Subject` varchar(100) NOT NULL COMMENT '消息标题',
-  `Content` varchar(500) NOT NULL COMMENT '消息内容',
-  `Status` tinyint UNSIGNED NOT NULL COMMENT '状态(0:未发送, 1:发送中, 2:已发送, 3:删除)',
+  `ContentPath` varchar(200) NOT NULL COMMENT '内容文件路径',
+  `Status` tinyint UNSIGNED NOT NULL COMMENT '状态(0:未读, 1:已读)',
   `StatusTimestamp` datetime NOT NULL COMMENT '状态更改时间',
   `StatusDescription` varchar(100) DEFAULT NULL COMMENT '状态描述信息',
-  `FromId` int UNSIGNED DEFAULT NULL COMMENT '发送人编号(空表示系统消息)',
-  `ToId` int UNSIGNED DEFAULT NULL COMMENT '接收人编号(空表示广播; 0表示用户的反馈信息)',
-  `ReadTime` datetime NULL COMMENT '查收时间(仅限个人接受者)',
+  `TargetId` int UNSIGNED DEFAULT NULL COMMENT '接收人编号',
+  `TargetKind` tinyint UNSIGNED NOT NULL COMMENT '接收人种类(0:全站广播, 1:用户; 2:版主)',
+  `CreatorId` int UNSIGNED NOT NULL COMMENT '创人编号(零表示系统消息)',
   `CreatedTime` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`MessageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='通知消息表';

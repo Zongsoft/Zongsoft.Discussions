@@ -23,11 +23,12 @@ using System.ComponentModel;
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示站内消息的状态枚举。
+	/// 表示站内消息接收人种类的枚举。
 	/// </summary>
-	public enum MessageStatus : byte
+	public enum MessageTargetKind : byte
 	{
-		None,
-		Read,
+		Site,
+		User,
+		Moderators,
 	}
 }
