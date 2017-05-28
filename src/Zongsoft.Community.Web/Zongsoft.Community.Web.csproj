@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Http\Controllers\FeedbackController.cs" />
     <Compile Include="Http\Controllers\MessageController.cs" />
     <Compile Include="Http\Controllers\UserController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -31,17 +31,18 @@ namespace Zongsoft.Community
 	public class DataAccessModule : IApplicationModule
 	{
 		#region 常量定义
-		internal const string Security_UserProfile = "Security.UserProfile";
+		internal const string SECURITY_USERPROFILE = "Security.UserProfile";
 
-		internal const string Community_Forum = "Community.Forum";
-		internal const string Community_ForumGroup = "Community.ForumGroup";
-		internal const string Community_Liking = "Community.Liking";
-		internal const string Community_Message = "Community.Message";
-		internal const string Community_Moderator = "Community.Moderator";
-		internal const string Community_Post = "Community.Post";
-		internal const string Community_History = "Community.History";
-		internal const string Community_Thread = "Community.Thread";
-		internal const string Community_UserProfile = "Community.UserProfile";
+		internal const string COMMUNITY_FEEDBACK = "Community.Feedback";
+		internal const string COMMUNITY_FORUM = "Community.Forum";
+		internal const string COMMUNITY_FORUMGROUP = "Community.ForumGroup";
+		internal const string COMMUNITY_LIKING = "Community.Liking";
+		internal const string COMMUNITY_MESSAGE = "Community.Message";
+		internal const string COMMUNITY_MODERATOR = "Community.Moderator";
+		internal const string COMMUNITY_POST = "Community.Post";
+		internal const string COMMUNITY_HISTORY = "Community.History";
+		internal const string COMMUNITY_THREAD = "Community.Thread";
+		internal const string COMMUNITY_USERPROFILE = "Community.UserProfile";
 		#endregion
 
 		#region 公共属性
@@ -84,15 +85,16 @@ namespace Zongsoft.Community
 		#region 映射方法
 		private void Map(Zongsoft.Data.IDataAccessMapper mapper)
 		{
-			mapper.Map<Forum>(Community_Forum);
-			mapper.Map<ForumGroup>(Community_ForumGroup);
-			mapper.Map<History>(Community_History);
-			mapper.Map<Liking>(Community_Liking);
-			mapper.Map<Message>(Community_Message);
-			mapper.Map<Moderator>(Community_Moderator);
-			mapper.Map<Post>(Community_Post);
-			mapper.Map<Thread>(Community_Thread);
-			mapper.Map<UserProfile>(Community_UserProfile);
+			mapper.Map<Feedback>(COMMUNITY_FEEDBACK);
+			mapper.Map<Forum>(COMMUNITY_FORUM);
+			mapper.Map<ForumGroup>(COMMUNITY_FORUMGROUP);
+			mapper.Map<History>(COMMUNITY_HISTORY);
+			mapper.Map<Liking>(COMMUNITY_LIKING);
+			mapper.Map<Message>(COMMUNITY_MESSAGE);
+			mapper.Map<Moderator>(COMMUNITY_MODERATOR);
+			mapper.Map<Post>(COMMUNITY_POST);
+			mapper.Map<Thread>(COMMUNITY_THREAD);
+			mapper.Map<UserProfile>(COMMUNITY_USERPROFILE);
 		}
 		#endregion
 	}

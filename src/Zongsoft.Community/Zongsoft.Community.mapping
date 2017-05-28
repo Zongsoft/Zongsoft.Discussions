@@ -5,6 +5,39 @@
 		<key>
 			<property name="MessageId"/>
 		</key>
+
+		<property name="Content" field="" />
+		<property name="Target" field="" />
+
+		<property name="Creator" relationTo="Community.UserProfile">
+			<join mode="left">
+				<member from="CreatorId" to="UserId"/>
+			</join>
+		</property>
+	</entity>
+
+	<entity name="Community.Feedback" table="Community_Feedback" type="Zongsoft.Community.Models.Feedback, Zongsoft.Community">
+		<key>
+			<property name="FeedbackId"/>
+		</key>
+
+		<property name="Content" field="" />
+	</entity>
+
+	<entity name="Community.UserProfile" table="Community_UserProfile" type="Zongsoft.Community.Models.UserProfile, Zongsoft.Community">
+		<key>
+			<property name="UserId" constructor.parameter="userId"/>
+		</key>
+
+		<property name="Name" field=""/>
+		<property name="FullName" field=""/>
+		<property name="PhotoUrl" field=""/>
+
+		<property name="User" relationTo="Security.User">
+			<join>
+				<member from="UserId" to="UserId"/>
+			</join>
+		</property>
 	</entity>
 
 </schema>

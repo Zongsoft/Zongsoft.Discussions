@@ -36,27 +36,32 @@ namespace Zongsoft.Community.Services
 		}
 		#endregion
 
-		#region 保护属性
-		protected Security.Credential Credential
+		#region 保护方法
+		protected Security.Credential EnsureCredential(bool throwException = true)
 		{
-			get
-			{
-				if(this.Principal == null || this.Principal.Identity == null)
-					return null;
+			//获取当前操作的用户身份标识
+			var identity = this.Principal?.Identity;
 
-				return new Security.Credential(base.Principal.Identity.Credential);
-			}
+			//如果用户身份标识获取成功并且身份验证已通过
+			if(identity != null && identity.IsAuthenticated)
+				return new Security.Credential(identity.Credential);
+
+			if(throwException)
+				throw new Zongsoft.Security.Membership.AuthorizationException();
+
+			return null;
 		}
 		#endregion
 
 		#region 虚拟方法
 		protected virtual bool EnsureRequiredCondition(ref ICondition condition)
 		{
-			bool isRequired = this.Credential != null && !this.Credential.InAdministrators;
+			var credential = this.EnsureCredential(false);
+			var isRequired = credential != null && !credential.InAdministrators;
 
-			if(isRequired && !string.IsNullOrWhiteSpace(this.Credential.User.PrincipalId))
+			if(isRequired && !string.IsNullOrWhiteSpace(credential.User.PrincipalId))
 			{
-				var requires = Condition.Equal("SiteId", this.Credential.User.PrincipalId);
+				var requires = Condition.Equal("SiteId", credential.User.PrincipalId);
 
 				if(condition == null)
 					condition = requires;
@@ -72,16 +77,19 @@ namespace Zongsoft.Community.Services
 			//设置创建时间
 			data.TrySet("CreatedTime", DateTime.Now);
 
-			if(this.Credential != null && this.Credential.User != null)
+			//确认当前操作的用户凭证（获取失败则抛出授权异常）
+			var credential = this.EnsureCredential();
+
+			if(credential != null && credential.User != null)
 			{
 				//尝试设置创建人编号
-				data.TrySet("CreatorId", () => this.Credential.UserId, value =>
+				data.TrySet("CreatorId", () => credential.UserId, value =>
 				{
 					return value == null || Zongsoft.Common.Convert.ConvertValue(value, 0) == 0;
 				});
 
 				//尝试设置所属站点编号
-				data.TrySet("SiteId", () => this.Credential.User.PrincipalId, value =>
+				data.TrySet("SiteId", () => credential.User.PrincipalId, value =>
 				{
 					return value == null || Zongsoft.Common.Convert.ConvertValue(value, 0) == 0;
 				});

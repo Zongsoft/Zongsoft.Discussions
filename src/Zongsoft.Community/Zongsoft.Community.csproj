@@ -38,6 +38,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\GeneratlConfiguration.cs" />
+    <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="DataAccessModule.cs" />
     <Compile Include="Data\UserFilter.cs" />
     <Compile Include="Models\Forum.cs" />
@@ -46,7 +48,9 @@
     <Compile Include="Models\ForumVisiblity.cs" />
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\Liking.cs" />
+    <Compile Include="Models\Feedback.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\FeedbackConditional.cs" />
     <Compile Include="Models\MessageConditional.cs" />
     <Compile Include="Models\MessageTargetKind.cs" />
     <Compile Include="Models\MessageStatus.cs" />
@@ -60,6 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\AuthenticationWorker.cs" />
     <Compile Include="Security\Credential.cs" />
+    <Compile Include="Services\FeedbackService.cs" />
     <Compile Include="Services\PostService.cs" />
     <Compile Include="Services\ThreadService.cs" />
     <Compile Include="Services\ForumService.cs" />
@@ -67,11 +72,17 @@
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Zongsoft.Community.mapping" />
-    <None Include="Zongsoft.Community.option" />
+    <None Include="Zongsoft.Community.mapping">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Zongsoft.Community.option">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Zongsoft.Community.plugin" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

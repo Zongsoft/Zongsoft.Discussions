@@ -41,10 +41,12 @@ namespace Zongsoft.Community.Services
 		{
 			if(userId == null)
 			{
-				if(this.Credential == null)
+				var credential = this.EnsureCredential(false);
+
+				if(credential == null)
 					return false;
 
-				userId = this.Credential.UserId;
+				userId = credential.UserId;
 			}
 
 			return this.GetModerators(siteId, forumId).Any(p => p.UserId == userId);

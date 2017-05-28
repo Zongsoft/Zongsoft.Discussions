@@ -17,7 +17,22 @@
 		</assemblies>
 	</manifest>
 
-	<extension path="/Workspace/Web/Controllers/Api">
+	<!-- 挂载Web.Api路由 -->
+	<extension path="/Workbench/Web/Routes">
+		<route name="Community-Api" kind="api"
+		       url="api/Community/{controller}/{action}/{id}/{*args}"
+		       constraints="action=^[A-Za-z]+\w*$"
+		       defaults="action=, id="
+		       position="Api" />
+
+		<route name="Community-ApiReversed" kind="api"
+		       url="api/Community/{controller}/{id}/{action}/{*args}"
+		       defaults="action=, id="
+		       position="Api" />
+	</extension>
+
+	<extension path="/Workspace/Web/Controllers/Api/Community">
+		<object name="Feedback" type="Zongsoft.Community.Web.Http.Controllers.FeedbackController, Zongsoft.Community.Web" />
 		<object name="Forum" type="Zongsoft.Community.Web.Http.Controllers.ForumController, Zongsoft.Community.Web" />
 		<object name="Forums" type="Zongsoft.Community.Web.Http.Controllers.ForumsController, Zongsoft.Community.Web" />
 		<object name="Message" type="Zongsoft.Community.Web.Http.Controllers.MessageController, Zongsoft.Community.Web" />

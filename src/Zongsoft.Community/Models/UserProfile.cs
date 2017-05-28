@@ -43,14 +43,16 @@ namespace Zongsoft.Community.Models
 		#endregion
 
 		#region 构造函数
-		public UserProfile(uint userId = 0, uint siteId = 0)
+		public UserProfile(uint userId)
 		{
-			if(userId > 0)
-				this.UserId = userId;
+			this.UserId = userId;
+			this.CreatedTime = DateTime.Now;
+		}
 
-			if(siteId > 0)
-				this.SiteId = siteId;
-
+		public UserProfile(uint userId, uint siteId)
+		{
+			this.UserId = userId;
+			this.SiteId = siteId;
 			this.CreatedTime = DateTime.Now;
 		}
 		#endregion
@@ -113,6 +115,21 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.PhotoPath, value);
+			}
+		}
+
+		/// <summary>
+		/// 获取或设置用户的照片文件访问URL。
+		/// </summary>
+		public string PhotoUrl
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.PhotoUrl);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.PhotoUrl, value);
 			}
 		}
 

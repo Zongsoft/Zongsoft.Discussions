@@ -19,6 +19,18 @@ CreatorId | int | 4 | False | 发送人编号(零表示系统消息)
 CreatedTime | datetime | - | False | 创建时间
 
 
+### 意见反馈表 `Community.Feedback`
+
+字段名称|数据类型|长度|可空|备注
+--------|:------:|:--:|:--:|----:
+FeedbackId | bigint | 8 | False | 主键，反馈编号
+SiteId | int | 4 | False | 站点编号
+Subject | nvarchar | 100 | False | 反馈标题
+ContentPath | nvarchar | 500 | False | 内容文件路径
+ContactName | varchar | 50 | True | 联系人名
+ContactText | varchar | 50 | True | 联系方式
+CreatedTime | datetime | - | False | 反馈时间
+
 
 ### 论坛分组表 `Community.ForumGroup`
 

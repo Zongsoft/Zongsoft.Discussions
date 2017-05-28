@@ -158,7 +158,8 @@ namespace Zongsoft.Community.Services
 		#region 私有方法
 		private void SetHistory(ulong threadId)
 		{
-			var conditions = Condition.Equal("UserId", this.Credential.UserId) & Condition.Equal("ThreadId", threadId);
+			var credential = this.EnsureCredential();
+			var conditions = Condition.Equal("UserId", credential.UserId) & Condition.Equal("ThreadId", threadId);
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
@@ -174,7 +175,7 @@ namespace Zongsoft.Community.Services
 				else
 				{
 					//尝试新增一条用户的浏览记录
-					this.DataAccess.Insert(new History(this.Credential.UserId, threadId));
+					this.DataAccess.Insert(new History(credential.UserId, threadId));
 				}
 			}
 		}

@@ -22,14 +22,23 @@
 	</extension>
 
 	<extension path="/Workbench/Startup">
-		<object name="AuthenticationWorker" type="Zongsoft.Community.Security.AuthenticationWorker, Zongsoft.Community" />
+		<object name="Community_AuthenticationWorker" type="Zongsoft.Community.Security.AuthenticationWorker, Zongsoft.Community" />
 	</extension>
 
 	<extension path="/Workspace/Data/DataAccess/Filters">
-		<object name="UserFilter" type="Zongsoft.Community.Data.UserFilter, Zongsoft.Community" />
+		<object name="Community_UserFilter" type="Zongsoft.Community.Data.UserFilter, Zongsoft.Community" />
+	</extension>
+
+	<extension path="/Workspace/Services/Providers">
+		<serviceProvider name="Community" />
 	</extension>
 
 	<extension path="/Workspace/Services">
+		<link ref="../Providers/Community" />
+	</extension>
+
+	<extension path="/Workspace/Services/Community">
+		<object name="FeedbackService" configuration="{opt:/Community/General}" type="Zongsoft.Community.Services.FeedbackService, Zongsoft.Community" />
 		<object name="ForumService" type="Zongsoft.Community.Services.ForumService, Zongsoft.Community" />
 		<object name="ForumsService" type="Zongsoft.Community.Services.ForumsService, Zongsoft.Community" />
 		<object name="MessageService" type="Zongsoft.Community.Services.MessageService, Zongsoft.Community" />

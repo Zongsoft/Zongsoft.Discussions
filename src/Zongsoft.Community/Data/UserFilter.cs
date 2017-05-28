@@ -33,7 +33,7 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 构造函数
-		public UserFilter() : base(new DataAccessMethod[] { DataAccessMethod.Delete, DataAccessMethod.Select }, DataAccessModule.Community_UserProfile, DataAccessModule.Security_UserProfile)
+		public UserFilter() : base(new DataAccessMethod[] { DataAccessMethod.Delete, DataAccessMethod.Select }, DataAccessModule.COMMUNITY_USERPROFILE, DataAccessModule.SECURITY_USERPROFILE)
 		{
 		}
 		#endregion
@@ -45,9 +45,9 @@ namespace Zongsoft.Community.Data
 			{
 				var args = (DataDeletedEventArgs)context.Arguments;
 
-				if(string.Equals(context.Name, DataAccessModule.Security_UserProfile, StringComparison.OrdinalIgnoreCase))
+				if(string.Equals(context.Name, DataAccessModule.SECURITY_USERPROFILE, StringComparison.OrdinalIgnoreCase))
 					context.States[DELETED_RESULTS] = context.DataAccess.Select<User>(context.Name, args.Condition, Paging.Disable).ToArray();
-				else if(string.Equals(context.Name, DataAccessModule.Community_UserProfile, StringComparison.OrdinalIgnoreCase))
+				else if(string.Equals(context.Name, DataAccessModule.COMMUNITY_USERPROFILE, StringComparison.OrdinalIgnoreCase))
 					context.States[DELETED_RESULTS] = context.DataAccess.Select<Models.UserProfile>(context.Name, args.Condition, Paging.Disable).ToArray();
 			}
 		}

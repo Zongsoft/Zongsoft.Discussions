@@ -2,6 +2,18 @@ SET NAMES utf8;
 SET TIME_ZONE='+08:00';
 
 
+CREATE TABLE IF NOT EXISTS `Community_Feedback`
+(
+  `FeedbackId` bigint UNSIGNED NOT NULL COMMENT '主键，反馈编号',
+  `SiteId` int UNSIGNED NOT NULL COMMENT '站点编号',
+  `Subject` varchar(100) NOT NULL COMMENT '反馈标题',
+  `ContentPath` varchar(200) DEFAULT NULL COMMENT '内容文件路径',
+  `ContactName` varchar(50) NOT NULL COMMENT '联系人名称',
+  `ContactText` varchar(50) NOT NULL COMMENT '联系人方式',
+  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`FeedbackId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='意见反馈表';
+
 CREATE TABLE IF NOT EXISTS `Community_Message`
 (
   `MessageId` bigint UNSIGNED NOT NULL COMMENT '主键，消息编号',
@@ -144,15 +156,15 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
   `SiteId` int UNSIGNED NOT NULL COMMENT '用户所属的站点编号',
   `Gender` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户性别',
   `PhotoPath` varchar(200) DEFAULT NULL COMMENT '照片文件路径',
-  `TotalPosts` int UNSIGNED NOT NULL COMMENT '累计回复总数',
-  `TotalThreads` int UNSIGNED NOT NULL COMMENT '累计主题总数',
-  `TotalInLikes` int UNSIGNED NOT NULL COMMENT '累计收获的赞数',
-  `TotalOutLikes` int UNSIGNED NOT NULL COMMENT '累计点击的赞数',
+  `TotalPosts` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计回复总数',
+  `TotalThreads` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计主题总数',
+  `TotalInLikes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计收获的赞数',
+  `TotalOutLikes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计点击的赞数',
   `MostRecentPostId` bigint UNSIGNED DEFAULT NULL COMMENT '最后回帖的帖子编号',
   `MostRecentPostTime` datetime DEFAULT NULL COMMENT '最后回帖的时间',
-  `MostRecentThreadId` int UNSIGNED NOT NULL COMMENT '最新主题的编号',
-  `MostRecentThreadSubject` nvarchar(100) NOT NULL COMMENT '最新主题的标题',
+  `MostRecentThreadId` int UNSIGNED DEFAULT NULL COMMENT '最新主题的编号',
+  `MostRecentThreadSubject` nvarchar(100) DEFAULT NULL COMMENT '最新主题的标题',
   `MostRecentThreadTime` datetime DEFAULT NULL COMMENT '最新主题的发布时间',
-  `CreatedTime` datetime NOT NULL COMMENT '创建时间',
+  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`UserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户配置表';

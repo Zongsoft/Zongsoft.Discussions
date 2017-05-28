@@ -122,8 +122,10 @@ namespace Zongsoft.Community.Services
 				user.Status = UserStatus.Active;
 
 				//如果未显式指定用户的命名空间，则使用当前用户的命名空间
-				if(string.IsNullOrWhiteSpace(user.Namespace) && this.Credential != null && this.Credential.User != null)
-					user.Namespace = this.Credential.User.Namespace;
+				if(string.IsNullOrWhiteSpace(user.Namespace))
+				{
+					user.Namespace = this.EnsureCredential().User.Namespace;
+				}
 
 				//创建基础用户账户
 				if(!this.UserProvider.CreateUser(user, user.Name.Trim().ToLowerInvariant()))
@@ -141,7 +143,7 @@ namespace Zongsoft.Community.Services
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号
 			if(!data.TryGet(p => p.UserId, out var userId) || userId == 0)
-				data.Set(p => p.UserId, userId = this.Credential.UserId);
+				data.Set(p => p.UserId, userId = this.EnsureCredential().UserId);
 
 			//获取用户导航属性值
 			User user = data.Get(p => p.User, null);
