@@ -62,28 +62,28 @@ namespace Zongsoft.Community.Data
 
 					break;
 				case DataAccessMethod.Select:
-					var args = context.Arguments as DataSelectedEventArgs;
+					//var args = context.Arguments as DataSelectedEventArgs;
 
-					if(args != null && args.Result != null)
-					{
-						foreach(var item in args.Result)
-						{
-							var user = item as User;
+					//if(args != null && args.Result != null)
+					//{
+					//	foreach(var item in args.Result)
+					//	{
+					//		var user = item as User;
 
-							if(user != null)
-							{
-								if(!string.IsNullOrWhiteSpace(user.Avatar))
-									user.Avatar = Zongsoft.IO.FileSystem.GetUrl(user.Avatar);
-							}
-							else
-							{
-								var userProfile = item as Models.UserProfile;
+					//		if(user != null)
+					//		{
+					//			if(!string.IsNullOrWhiteSpace(user.Avatar))
+					//				user.Avatar = Zongsoft.IO.FileSystem.GetUrl(user.Avatar);
+					//		}
+					//		else
+					//		{
+					//			var userProfile = item as Models.UserProfile;
 
-								if(userProfile != null && userProfile.User != null && !string.IsNullOrWhiteSpace(userProfile.User.Avatar))
-									userProfile.User.Avatar = Zongsoft.IO.FileSystem.GetUrl(userProfile.User.Avatar);
-							}
-						}
-					}
+					//			if(userProfile != null && userProfile.User != null && !string.IsNullOrWhiteSpace(userProfile.User.Avatar))
+					//				userProfile.User.Avatar = Zongsoft.IO.FileSystem.GetUrl(userProfile.User.Avatar);
+					//		}
+					//	}
+					//}
 
 					break;
 			}

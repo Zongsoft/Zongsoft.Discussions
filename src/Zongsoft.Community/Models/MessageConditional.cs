@@ -64,7 +64,7 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public ConditionalRange StatusTimestamp
+		public ConditionalRange<DateTime> StatusTimestamp
 		{
 			get
 			{
@@ -112,7 +112,7 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public ConditionalRange CreatedTime
+		public ConditionalRange<DateTime> CreatedTime
 		{
 			get
 			{

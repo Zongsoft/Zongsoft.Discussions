@@ -68,7 +68,7 @@ namespace Wayto.Common.Web.Http.Controllers
 		#endregion
 
 		#region 重写方法
-		public override void Patch(string id, [FromContent]IDictionary<string, object> data)
+		public override void Patch(string id, IDictionary<string, object> data)
 		{
 			uint userId;
 

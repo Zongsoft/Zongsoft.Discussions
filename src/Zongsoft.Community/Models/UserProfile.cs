@@ -43,6 +43,11 @@ namespace Zongsoft.Community.Models
 		#endregion
 
 		#region 构造函数
+		public UserProfile()
+		{
+			this.CreatedTime = DateTime.Now;
+		}
+
 		public UserProfile(uint userId)
 		{
 			this.UserId = userId;

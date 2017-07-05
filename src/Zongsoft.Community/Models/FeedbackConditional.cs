@@ -76,7 +76,7 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public ConditionalRange CreatedTime
+		public ConditionalRange<DateTime> CreatedTime
 		{
 			get
 			{
