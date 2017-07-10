@@ -2,21 +2,31 @@
 ## Zongsoft.Community 社区系统
 
 
-### 通知消息表 `Community.Message`
+### 消息表 `Community.Message`
 
 字段名称|数据类型|长度|可空|备注
 --------|:------:|:--:|:--:|----:
 MessageId | bigint | 8 | False | 主键，消息编号
 SiteId | int | 4 | False | 站点编号
 Subject | nvarchar | 100 | False | 消息主题
-ContentPath | nvarchar | 500 | False | 内容文件路径
-Status | byte | 1 | False | 状态(0:未读, 1:已读)
-StatusTimestamp | datetime | - | False | 状态更新时间
+Content | nvarchar | 500 | False | 消息内容
+ContentKind | byte | 1 | False | 内容种类(0:Text, 1:File)
+MessageKind | byte | 1 | False | 消息种类(0:None)
+Status | byte | 1 | False | 状态
+StatusTimestamp | datetime | - | True | 状态更新时间
 StatusDescription | nvarchar | 100 | True | 状态描述
-TargetId | int | 4 | True | 接收人编号
-TargetKind | byte | 1 | False | 接收人种类(0:全站广播, 1:用户; 2:版主)
 CreatorId | int | 4 | False | 发送人编号(零表示系统消息)
 CreatedTime | datetime | - | False | 创建时间
+
+
+### 消息接收人员表 `Community.MessageMember`
+
+字段名称|数据类型|长度|可空|备注
+--------|:------:|:--:|:--:|----:
+MessageId | bigint | 8 | False | 主键，消息编号
+UserId | int | 4 | False | 主键，用户编号
+Status | byte | 1 | False | 状态(0:None, 1:Read)
+StatusTimestamp | datetime | - | True | 状态更新时间
 
 
 ### 意见反馈表 `Community.Feedback`
@@ -26,7 +36,8 @@ CreatedTime | datetime | - | False | 创建时间
 FeedbackId | bigint | 8 | False | 主键，反馈编号
 SiteId | int | 4 | False | 站点编号
 Subject | nvarchar | 100 | False | 反馈标题
-ContentPath | nvarchar | 500 | False | 内容文件路径
+Content | nvarchar | 500 | False | 反馈内容
+ContentKind | byte | 1 | False | 内容种类(0:Text, 1:File)
 ContactName | varchar | 50 | True | 联系人名
 ContactText | varchar | 50 | True | 联系方式
 CreatedTime | datetime | - | False | 反馈时间
@@ -125,7 +136,8 @@ CreatedTime | datetime | - | False | 创建时间
 PostId | bigint | 8 | False | 主键，帖子编号
 SiteId | int | 4 | False | 所属站点编号
 ThreadId | bigint | 8 | False | 所属主题编号
-ContentPath | varchar | 200 | False | 活动内容文件的路径
+Content | varchar | 500 | False | 帖子内容
+ContentKind | byte | 1 | False | 内容种类(0:Text, 1:File)
 ParentId | bigint | 8 | True | 应答的回复编号
 Disabled | bool | - | False | 已被禁用(False)
 IsApproved | bool | - | False | 是否审核通过

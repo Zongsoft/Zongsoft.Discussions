@@ -22,15 +22,16 @@ using System.Collections.Generic;
 
 namespace Zongsoft.Community.Models
 {
+	/// <summary>
+	/// 表示消息的业务实体类。
+	/// </summary>
 	public class Message : Zongsoft.Common.ModelBase
 	{
 		#region 成员字段
 		private ulong _messageId;
 		private uint _siteId;
 		private MessageStatus _status;
-		private DateTime _statusTimestamp;
-		private uint? _targetId;
-		private MessageTargetKind _targetKind;
+		private DateTime? _statusTimestamp;
 		private uint? _creatorId;
 		private DateTime _createdTime;
 		#endregion
@@ -91,15 +92,27 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public string ContentPath
+		public ContentKind ContentKind
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.ContentPath);
+				return this.GetPropertyValue(() => this.ContentKind);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.ContentPath, value);
+				this.SetPropertyValue(() => this.ContentKind, value);
+			}
+		}
+
+		public byte MessageKind
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.MessageKind);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.MessageKind, value);
 			}
 		}
 
@@ -115,7 +128,7 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public DateTime StatusTimestamp
+		public DateTime? StatusTimestamp
 		{
 			get
 			{
@@ -136,42 +149,6 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.StatusDescription, value);
-			}
-		}
-
-		public uint? TargetId
-		{
-			get
-			{
-				return _targetId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TargetId, ref _targetId, value);
-			}
-		}
-
-		public object Target
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Target);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Target, value);
-			}
-		}
-
-		public MessageTargetKind TargetKind
-		{
-			get
-			{
-				return _targetKind;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TargetKind, ref _targetKind, value);
 			}
 		}
 
@@ -208,6 +185,64 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.CreatedTime, ref _createdTime, value);
+			}
+		}
+		#endregion
+
+		#region 关联属性
+		public IEnumerable<MessageMember> Members
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.Members);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Members, value);
+			}
+		}
+		#endregion
+
+		#region 嵌套子类
+		/// <summary>
+		/// 表示消息接受人的业务实体类。
+		/// </summary>
+		public class MessageMember
+		{
+			public ulong MessageId
+			{
+				get;
+				set;
+			}
+
+			public Message Message
+			{
+				get;
+				set;
+			}
+
+			public uint UserId
+			{
+				get;
+				set;
+			}
+
+			public UserProfile User
+			{
+				get;
+				set;
+			}
+
+			public MessageMemberStatus Status
+			{
+				get;
+				set;
+			}
+
+			public DateTime? StatusTimestamp
+			{
+				get;
+				set;
 			}
 		}
 		#endregion

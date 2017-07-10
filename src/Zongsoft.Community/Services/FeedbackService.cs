@@ -22,6 +22,7 @@ using System.Linq;
 
 using Zongsoft.Data;
 using Zongsoft.Community.Models;
+using System.Collections.Generic;
 
 namespace Zongsoft.Community.Services
 {
@@ -71,15 +72,21 @@ namespace Zongsoft.Community.Services
 			//调用基类同名方法
 			var feedback = base.OnGet(condition, scope);
 
-			if(feedback != null && !string.IsNullOrWhiteSpace(feedback.ContentPath))
-				feedback.Content = Utility.ReadTextFile(feedback.ContentPath);
+			if(feedback.ContentKind == ContentKind.File)
+				feedback.Content = Utility.ReadTextFile(feedback.Content);
 
 			return feedback;
 		}
 
+		protected override IEnumerable<Feedback> OnSelect(ICondition condition, Grouping grouping, string scope, Paging paging, params Sorting[] sortings)
+		{
+			//调用基类同名方法
+			return base.OnSelect(condition, grouping, scope, paging, sortings);
+		}
+
 		protected override int OnDelete(ICondition condition, string[] cascades)
 		{
-			var paths = this.Select(condition, "ContentPath").Select(p => p.ContentPath).ToArray();
+			var paths = this.Select(ConditionCollection.And(condition, Condition.Equal("ContentKind", ContentKind.File)), "Content").Select(p => p.Content).ToArray();
 
 			//调用基类同名方法
 			var count = base.OnDelete(condition, cascades);
@@ -101,32 +108,49 @@ namespace Zongsoft.Community.Services
 
 		protected override int OnInsert(DataDictionary<Feedback> data, string scope)
 		{
-			//调用基类同名方法
-			var count = base.OnInsert(data, scope);
+			string filePath = null;
 
-			if(count < 1)
-				return count;
+			//初始化内容种类为文本
+			data.Set(p => p.ContentKind, ContentKind.Text);
 
 			data.TryGet(p => p.Content, (key, value) =>
 			{
-				if(string.IsNullOrWhiteSpace(value))
+				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
 					return;
 
 				//设置内容文件的存储路径
-				var filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId));
+				filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId));
 
 				//将内容文本写入到文件中
 				Utility.WriteTextFile(filePath, value);
 
 				//更新内容文件的存储路径
-				this.Update(new
-				{
-					FeedbackId = data.Get(p => p.FeedbackId),
-					ContentPath = filePath,
-				});
+				data.Set(p => p.Content, filePath);
+				data.Set(p => p.ContentKind, ContentKind.File);
 			});
 
-			return count;
+			try
+			{
+				//调用基类同名方法
+				var count = base.OnInsert(data, scope);
+
+				if(count < 1)
+				{
+					//如果新增记录失败则删除刚创建的文件
+					if(filePath != null && filePath.Length > 0)
+						Utility.DeleteFile(filePath);
+				}
+
+				return count;
+			}
+			catch
+			{
+				//删除新建的文件
+				if(filePath != null && filePath.Length > 0)
+					Utility.DeleteFile(filePath);
+
+				throw;
+			}
 		}
 
 		protected override int OnUpdate(DataDictionary<Feedback> data, ICondition condition, string scope)
@@ -134,22 +158,18 @@ namespace Zongsoft.Community.Services
 			//更新内容到文本文件中
 			data.TryGet(p => p.Content, (key, value) =>
 			{
-				if(string.IsNullOrWhiteSpace(value))
+				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
 					return;
 
-				var filePath = data.Get(p => p.ContentPath, string.Empty);
-
-				if(string.IsNullOrWhiteSpace(filePath))
-				{
-					//根据当前反馈编号，获得其对应的内容文件存储路径
-					filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId));
-
-					//更新当前反馈的内容文件存储路径属性
-					data.Set(p => p.ContentPath, filePath);
-				}
+				//根据当前反馈编号，获得其对应的内容文件存储路径
+				var filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId));
 
 				//将反馈内容写入到对应的存储文件中
 				Utility.WriteTextFile(filePath, value);
+
+				//更新当前反馈的内容文件存储路径属性
+				data.Set(p => p.Content, filePath);
+				data.Set(p => p.ContentKind, ContentKind.File);
 			});
 
 			//调用基类同名方法

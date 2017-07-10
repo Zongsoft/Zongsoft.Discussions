@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using System.Threading.Tasks;
 
+using Zongsoft.Data;
 using Zongsoft.Web.Http;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
@@ -40,6 +41,13 @@ namespace Wayto.Common.Web.Http.Controllers
 		#endregion
 
 		#region 公共方法
+		[ActionName("Messages")]
+		[HttpPaging]
+		public IEnumerable<Message.MessageMember> GetMessages(uint id, MessageMemberStatus? status = null, Paging paging = null)
+		{
+			return this.DataService.GetMessages(id, status, paging);
+		}
+
 		[HttpPost]
 		public async Task<Zongsoft.IO.FileInfo> Upload(uint id, string args)
 		{

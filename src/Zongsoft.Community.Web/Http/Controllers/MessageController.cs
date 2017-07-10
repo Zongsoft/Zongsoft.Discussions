@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http;
 
+using Zongsoft.Data;
 using Zongsoft.Web.Http;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
@@ -34,6 +35,15 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#region 构造函数
 		public MessageController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
+		}
+		#endregion
+
+		#region 公共方法
+		[ActionName("Members")]
+		[HttpPaging]
+		public IEnumerable<Message.MessageMember> GetMembers(ulong id, MessageMemberStatus? status = null, ConditionalRange<DateTime> period = null, Paging paging = null)
+		{
+			return this.DataService.GetMembers(id, status, period, paging);
 		}
 		#endregion
 	}

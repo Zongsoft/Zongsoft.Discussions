@@ -23,11 +23,14 @@ using System.ComponentModel;
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示站内消息的状态枚举。
+	/// 表示消息成员状态的枚举。
 	/// </summary>
-	public enum MessageStatus : byte
+	public enum MessageMemberStatus : byte
 	{
 		/// <summary>未定义</summary>
 		None,
+
+		/// <summary>已读</summary>
+		Read,
 	}
 }

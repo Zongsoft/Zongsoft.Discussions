@@ -42,6 +42,7 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="DataAccessModule.cs" />
     <Compile Include="Data\UserFilter.cs" />
+    <Compile Include="Models\ContentKind.cs" />
     <Compile Include="Models\Forum.cs" />
     <Compile Include="Models\ForumAccessibility.cs" />
     <Compile Include="Models\ForumGroup.cs" />
@@ -52,7 +53,7 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\FeedbackConditional.cs" />
     <Compile Include="Models\MessageConditional.cs" />
-    <Compile Include="Models\MessageTargetKind.cs" />
+    <Compile Include="Models\MessageMemberStatus.cs" />
     <Compile Include="Models\MessageStatus.cs" />
     <Compile Include="Models\Moderator.cs" />
     <Compile Include="Models\Post.cs" />

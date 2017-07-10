@@ -74,6 +74,16 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
+		public IEnumerable<Message.MessageMember> GetMessages(uint userId, MessageMemberStatus? status = null, Paging paging = null)
+		{
+			var conditions = ConditionCollection.And(Condition.Equal("UserId", userId));
+
+			if(status.HasValue)
+				conditions.Add(Condition.Equal("Status", status.Value));
+
+			return this.DataAccess.Select<Message.MessageMember>(conditions, "Message", paging);
+		}
+
 		public bool SetStatus(uint userId, UserStatus status)
 		{
 			return this.UserProvider.SetStatus(userId, status);

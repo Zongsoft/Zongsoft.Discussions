@@ -38,6 +38,7 @@ namespace Zongsoft.Community
 		internal const string COMMUNITY_FORUMGROUP = "Community.ForumGroup";
 		internal const string COMMUNITY_LIKING = "Community.Liking";
 		internal const string COMMUNITY_MESSAGE = "Community.Message";
+		internal const string COMMUNITY_MESSAGEMEMBER = "Community.MessageMember";
 		internal const string COMMUNITY_MODERATOR = "Community.Moderator";
 		internal const string COMMUNITY_POST = "Community.Post";
 		internal const string COMMUNITY_HISTORY = "Community.History";
@@ -91,6 +92,7 @@ namespace Zongsoft.Community
 			mapper.Map<History>(COMMUNITY_HISTORY);
 			mapper.Map<Liking>(COMMUNITY_LIKING);
 			mapper.Map<Message>(COMMUNITY_MESSAGE);
+			mapper.Map<Message.MessageMember>(COMMUNITY_MESSAGEMEMBER);
 			mapper.Map<Moderator>(COMMUNITY_MODERATOR);
 			mapper.Map<Post>(COMMUNITY_POST);
 			mapper.Map<Thread>(COMMUNITY_THREAD);

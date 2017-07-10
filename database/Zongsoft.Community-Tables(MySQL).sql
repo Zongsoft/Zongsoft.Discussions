@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS `Community_Feedback`
   `FeedbackId` bigint UNSIGNED NOT NULL COMMENT '主键，反馈编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '站点编号',
   `Subject` varchar(100) NOT NULL COMMENT '反馈标题',
-  `ContentPath` varchar(200) DEFAULT NULL COMMENT '内容文件路径',
+  `Content` varchar(500) NOT NULL COMMENT '反馈内容文件',
+  `ContentKind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '内容种类(0:Text, 1:File)',
   `ContactName` varchar(50) NOT NULL COMMENT '联系人名称',
   `ContactText` varchar(50) NOT NULL COMMENT '联系人方式',
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -19,16 +20,25 @@ CREATE TABLE IF NOT EXISTS `Community_Message`
   `MessageId` bigint UNSIGNED NOT NULL COMMENT '主键，消息编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '站点编号',
   `Subject` varchar(100) NOT NULL COMMENT '消息标题',
-  `ContentPath` varchar(200) NOT NULL COMMENT '内容文件路径',
-  `Status` tinyint UNSIGNED NOT NULL COMMENT '状态(0:未读, 1:已读)',
-  `StatusTimestamp` datetime NOT NULL COMMENT '状态更改时间',
+  `Content` varchar(500) NOT NULL COMMENT '消息内容',
+  `ContentKind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '内容种类(0:Text, 1:File)',
+  `MessageKind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '消息种类(0:None)',
+  `Status` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态',
+  `StatusTimestamp` datetime NULL COMMENT '状态更改时间',
   `StatusDescription` varchar(100) DEFAULT NULL COMMENT '状态描述信息',
-  `TargetId` int UNSIGNED DEFAULT NULL COMMENT '接收人编号',
-  `TargetKind` tinyint UNSIGNED NOT NULL COMMENT '接收人种类(0:全站广播, 1:用户; 2:版主)',
   `CreatorId` int UNSIGNED NOT NULL COMMENT '创人编号(零表示系统消息)',
-  `CreatedTime` datetime NOT NULL COMMENT '创建时间',
+  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`MessageId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='通知消息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息(站内通知)表';
+
+CREATE TABLE IF NOT EXISTS `Community_MessageMember`
+(
+  `MessageId` bigint UNSIGNED NOT NULL COMMENT '主键，消息编号',
+  `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
+  `Status` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态(0:未读, 1:已读)',
+  `StatusTimestamp` datetime NULL COMMENT '状态更改时间',
+  PRIMARY KEY (`MessageId`, `UserId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息接收人员表';
 
 CREATE TABLE IF NOT EXISTS `Community_ForumGroup`
 (
@@ -65,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `Community_Forum`
   `MostRecentPostAuthorName` nvarchar(50) NULL COMMENT '最后回帖的作者名',
   `MostRecentPostAuthorAvatar` varchar(150) NULL COMMENT '最后回帖的作者头像',
   `MostRecentPostTime` datetime NULL DEFAULT NULL COMMENT '最后回帖的时间',
-  `CreatedTime` datetime NOT NULL COMMENT '创建时间',
+  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`SiteId`, `ForumId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='论坛表';
 
@@ -82,7 +92,8 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   `PostId` bigint UNSIGNED NOT NULL COMMENT '主键，帖子编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '所属站点编号',
   `ThreadId` bigint UNSIGNED NOT NULL COMMENT '所属主题编号',
-  `ContentPath` varchar(200) NULL COMMENT '内容文件的路径',
+  `Content` varchar(500) NOT NULL COMMENT '帖子内容',
+  `ContentKind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '内容种类(0:Text, 1:File)',
   `ParentId` bigint UNSIGNED DEFAULT NULL COMMENT '父帖子编号(应答的回复编号)',
   `Disabled` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已禁用',
   `IsApproved` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否已审核通过',
@@ -92,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   `VisitorAddress` varchar(100) NULL COMMENT '访客地址(IP和地址信息)',
   `VisitorDescription` varchar(500) NULL COMMENT '访客描述(浏览器代理信息)',
   `CreatorId` int UNSIGNED NOT NULL COMMENT '发帖人编号',
-  `CreatedTime` datetime NOT NULL COMMENT '发帖时间',
+  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发帖时间',
   PRIMARY KEY (`PostId` DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子/回帖表';
 
@@ -101,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `Community_Liking`
   `PostId` bigint UNSIGNED NOT NULL COMMENT '主键，帖子编号',
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
   `Points` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '赞助积分',
-  `CreatedTime` datetime NOT NULL COMMENT '发帖时间',
+  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发帖时间',
   PRIMARY KEY (`PostId` DESC, `UserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子点赞表';
 
@@ -110,8 +121,8 @@ CREATE TABLE IF NOT EXISTS `Community_History`
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
   `ThreadId` bigint UNSIGNED NOT NULL COMMENT '主键，主题编号',
   `Count` int UNSIGNED NOT NULL COMMENT '浏览次数',
-  `FirstViewedTime` datetime NOT NULL COMMENT '首次浏览时间',
-  `MostRecentViewedTime` datetime NOT NULL COMMENT '最后浏览时间',
+  `FirstViewedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '首次浏览时间',
+  `MostRecentViewedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后浏览时间',
   PRIMARY KEY (`UserId`, `ThreadId` DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户浏览记录表';
 
@@ -146,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `Community_Thread`
   `MostRecentPostAuthorAvatar` varchar(150) NULL COMMENT '最后回帖的作者头像',
   `MostRecentPostTime` datetime NULL DEFAULT NULL COMMENT '最后回帖的时间',
   `CreatorId` int UNSIGNED NOT NULL COMMENT '作者编号',
-  `CreatedTime` datetime NOT NULL COMMENT '创建时间',
+  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`ThreadId` DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章/主题表';
 
@@ -154,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
 (
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '用户所属的站点编号',
-  `Gender` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户性别',
+  `Gender` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户性别(0:Female, 1:Male)',
   `PhotoPath` varchar(200) DEFAULT NULL COMMENT '照片文件路径',
   `TotalPosts` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计回复总数',
   `TotalThreads` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计主题总数',

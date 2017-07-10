@@ -6,8 +6,7 @@
 			<property name="MessageId"/>
 		</key>
 
-		<property name="Content" field="" />
-		<property name="Target" field="" />
+		<property name="Members" field="" />
 
 		<property name="Creator" relationTo="Community.UserProfile">
 			<join mode="left">
@@ -16,12 +15,29 @@
 		</property>
 	</entity>
 
+	<entity name="Community.MessageMember" table="Community_MessageMember" type="Zongsoft.Community.Models.Message+MessageMember, Zongsoft.Community">
+		<key>
+			<property name="MessageId"/>
+			<property name="UserId"/>
+		</key>
+
+		<property name="Message" relationTo="Community.Message">
+			<join mode="left">
+				<member from="MessageId" to="MessageId"/>
+			</join>
+		</property>
+
+		<property name="User" relationTo="Community.UserProfile">
+			<join mode="left">
+				<member from="UserId" to="UserId"/>
+			</join>
+		</property>
+	</entity>
+
 	<entity name="Community.Feedback" table="Community_Feedback" type="Zongsoft.Community.Models.Feedback, Zongsoft.Community">
 		<key>
 			<property name="FeedbackId"/>
 		</key>
-
-		<property name="Content" field="" />
 	</entity>
 
 	<entity name="Community.UserProfile" table="Community_UserProfile" type="Zongsoft.Community.Models.UserProfile, Zongsoft.Community">

@@ -23,12 +23,14 @@ using System.ComponentModel;
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示站内消息接收人种类的枚举。
+	/// 表示内容种类的枚举。
 	/// </summary>
-	public enum MessageTargetKind : byte
+	public enum ContentKind : byte
 	{
-		Site,
-		User,
-		Moderators,
+		/// <summary>文本内容</summary>
+		Text,
+
+		/// <summary>外部文件</summary>
+		File,
 	}
 }

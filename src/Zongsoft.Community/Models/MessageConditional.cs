@@ -76,30 +76,6 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public uint? TargetId
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.TargetId);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TargetId, value);
-			}
-		}
-
-		public MessageTargetKind? TargetKind
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.TargetKind);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TargetKind, value);
-			}
-		}
-
 		public uint? CreatorId
 		{
 			get

@@ -29,6 +29,18 @@ namespace Zongsoft.Community
 {
 	internal static class Utility
 	{
+		public static void DeleteFile(string path)
+		{
+			if(string.IsNullOrWhiteSpace(path))
+				return;
+
+			try
+			{
+				Zongsoft.IO.FileSystem.File.DeleteAsync(path);
+			}
+			catch { }
+		}
+
 		public static string ReadTextFile(string path)
 		{
 			if(string.IsNullOrWhiteSpace(path))

@@ -109,21 +109,6 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置帖子的内容文件路径。
-		/// </summary>
-		public string ContentPath
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ContentPath);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ContentPath, value);
-			}
-		}
-
-		/// <summary>
 		/// 获取或设置帖子的内容。
 		/// </summary>
 		public string Content
@@ -135,6 +120,21 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.Content, value);
+			}
+		}
+
+		/// <summary>
+		/// 获取或设置帖子的内容种类。
+		/// </summary>
+		public ContentKind ContentKind
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.ContentKind);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.ContentKind, value);
 			}
 		}
 

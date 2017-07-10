@@ -22,6 +22,9 @@ using System.Collections.Generic;
 
 namespace Zongsoft.Community.Models
 {
+	/// <summary>
+	/// 表示意见反馈的业务实体类。
+	/// </summary>
 	public class Feedback : Zongsoft.Common.ModelBase
 	{
 		#region 成员字段
@@ -86,15 +89,15 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public string ContentPath
+		public ContentKind ContentKind
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.ContentPath);
+				return this.GetPropertyValue(() => this.ContentKind);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.ContentPath, value);
+				this.SetPropertyValue(() => this.ContentKind, value);
 			}
 		}
 
