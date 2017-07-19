@@ -37,6 +37,14 @@
 		<link ref="../Providers/Community" />
 	</extension>
 
+	<extension path="/Workbench/Executor/Commands">
+		<commandNode name="Community">
+			<commandNode name="Message">
+				<object name="Send" type="Zongsoft.Community.Services.Commands.MessageSendCommand" />
+			</commandNode>
+		</commandNode>
+	</extension>
+
 	<extension path="/Workspace/Services/Community">
 		<object name="FeedbackService" configuration="{opt:/Community/General}" type="Zongsoft.Community.Services.FeedbackService, Zongsoft.Community" />
 		<object name="ForumService" type="Zongsoft.Community.Services.ForumService, Zongsoft.Community" />

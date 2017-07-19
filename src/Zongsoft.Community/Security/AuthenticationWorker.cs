@@ -132,9 +132,17 @@ namespace Zongsoft.Community.Security
 			//获取当前登录用户所对应的用户配置对象
 			var userProfile = this.UserService.Get(e.User.UserId) as UserProfile;
 
-			//如果对应的用户配置对象查找失败则返回
+			//如果对应的用户配置对象没有存在则新增一个
 			if(userProfile == null)
-				return;
+			{
+				uint siteId = 0;
+
+				if(uint.TryParse(e.User.PrincipalId, out siteId))
+				{
+					userProfile = new UserProfile(e.User.UserId, siteId);
+					this.DataAccess.Insert(userProfile);
+				}
+			}
 
 			//设置当前用户的扩展属性
 			e.Parameters.Add("Community.UserProfile", userProfile);

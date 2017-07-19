@@ -124,17 +124,17 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置帖子的内容种类。
+		/// 获取或设置帖子的内容类型。
 		/// </summary>
-		public ContentKind ContentKind
+		public string ContentType
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.ContentKind);
+				return this.GetPropertyValue(() => this.ContentType);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.ContentKind, value);
+				this.SetPropertyValue(() => this.ContentType, value);
 			}
 		}
 

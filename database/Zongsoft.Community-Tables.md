@@ -10,7 +10,7 @@ MessageId | bigint | 8 | False | 主键，消息编号
 SiteId | int | 4 | False | 站点编号
 Subject | nvarchar | 100 | False | 消息主题
 Content | nvarchar | 500 | False | 消息内容
-ContentKind | byte | 1 | False | 内容种类(0:Text, 1:File)
+ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 MessageKind | byte | 1 | False | 消息种类(0:None)
 Status | byte | 1 | False | 状态
 StatusTimestamp | datetime | - | True | 状态更新时间
@@ -37,7 +37,7 @@ FeedbackId | bigint | 8 | False | 主键，反馈编号
 SiteId | int | 4 | False | 站点编号
 Subject | nvarchar | 100 | False | 反馈标题
 Content | nvarchar | 500 | False | 反馈内容
-ContentKind | byte | 1 | False | 内容种类(0:Text, 1:File)
+ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 ContactName | varchar | 50 | True | 联系人名
 ContactText | varchar | 50 | True | 联系方式
 CreatedTime | datetime | - | False | 反馈时间
@@ -137,7 +137,7 @@ PostId | bigint | 8 | False | 主键，帖子编号
 SiteId | int | 4 | False | 所属站点编号
 ThreadId | bigint | 8 | False | 所属主题编号
 Content | varchar | 500 | False | 帖子内容
-ContentKind | byte | 1 | False | 内容种类(0:Text, 1:File)
+ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 ParentId | bigint | 8 | True | 应答的回复编号
 Disabled | bool | - | False | 已被禁用(False)
 IsApproved | bool | - | False | 是否审核通过

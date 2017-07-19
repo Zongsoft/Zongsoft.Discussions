@@ -3,6 +3,6 @@
 <options>
 	<option path="/Community">
 		<general general.type="Zongsoft.Community.Configuration.GeneratlConfiguration, Zongsoft.Community"
-		         siteId="1" basePath="zfs.oss:/zongsoft-community/" />
+		         basePath="zfs.oss:/zongsoft-community/" />
 	</option>
 </options>

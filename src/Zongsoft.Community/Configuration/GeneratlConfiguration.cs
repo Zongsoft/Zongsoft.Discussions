@@ -28,24 +28,10 @@ namespace Zongsoft.Community.Configuration
 	public class GeneratlConfiguration : OptionConfigurationElement, IConfiguration
 	{
 		#region 常量定义
-		private const string XML_SITEID_ATTRIBUTE = "siteId";
 		private const string XML_BASEPATH_ATTRIBUTE = "basePath";
 		#endregion
 
 		#region 公共属性
-		[OptionConfigurationProperty(XML_SITEID_ATTRIBUTE, OptionConfigurationPropertyBehavior.IsRequired)]
-		public uint SiteId
-		{
-			get
-			{
-				return (uint)this[XML_SITEID_ATTRIBUTE];
-			}
-			set
-			{
-				this[XML_SITEID_ATTRIBUTE] = value;
-			}
-		}
-
 		[OptionConfigurationProperty(XML_BASEPATH_ATTRIBUTE, OptionConfigurationPropertyBehavior.IsRequired)]
 		public string BasePath
 		{

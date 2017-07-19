@@ -64,7 +64,7 @@ namespace Zongsoft.Community.Services
 			data.TrySet("CreatedTime", DateTime.Now);
 
 			//尝试更新当前反馈的所属站点编号
-			data.TrySet(p => p.SiteId, _ => this.GetSiteId(), value => value == 0);
+			data.TrySet(p => p.SiteId, _ => this.EnsureCredential().SiteId, value => value == 0);
 		}
 
 		protected override Feedback OnGet(ICondition condition, string scope)
@@ -72,7 +72,11 @@ namespace Zongsoft.Community.Services
 			//调用基类同名方法
 			var feedback = base.OnGet(condition, scope);
 
-			if(feedback.ContentKind == ContentKind.File)
+			if(feedback == null)
+				return null;
+
+			//如果内容类型是外部文件（即非嵌入格式），则读取文件内容
+			if(!Utility.IsContentEmbedded(feedback.ContentType))
 				feedback.Content = Utility.ReadTextFile(feedback.Content);
 
 			return feedback;
@@ -86,20 +90,18 @@ namespace Zongsoft.Community.Services
 
 		protected override int OnDelete(ICondition condition, string[] cascades)
 		{
-			var paths = this.Select(ConditionCollection.And(condition, Condition.Equal("ContentKind", ContentKind.File)), "Content").Select(p => p.Content).ToArray();
+			//获取待删除的数据集
+			var feedbacks = this.Select(condition).ToArray();
 
 			//调用基类同名方法
 			var count = base.OnDelete(condition, cascades);
 
 			if(count > 0)
 			{
-				foreach(var path in paths)
+				foreach(var feedback in feedbacks)
 				{
-					try
-					{
-						Zongsoft.IO.FileSystem.File.DeleteAsync(path);
-					}
-					catch { }
+					if(!Utility.IsContentEmbedded(feedback.ContentType))
+						Utility.DeleteFile(feedback.Content);
 				}
 			}
 
@@ -110,8 +112,11 @@ namespace Zongsoft.Community.Services
 		{
 			string filePath = null;
 
-			//初始化内容种类为文本
-			data.Set(p => p.ContentKind, ContentKind.Text);
+			//获取原始的内容类型
+			var rawType = data.Get(p => p.ContentType, null);
+
+			//调整内容类型为嵌入格式
+			data.Set(p => p.ContentType, Utility.GetContentType(rawType, true));
 
 			data.TryGet(p => p.Content, (key, value) =>
 			{
@@ -119,14 +124,16 @@ namespace Zongsoft.Community.Services
 					return;
 
 				//设置内容文件的存储路径
-				filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId));
+				filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId), data.Get(p => p.ContentType));
 
 				//将内容文本写入到文件中
 				Utility.WriteTextFile(filePath, value);
 
 				//更新内容文件的存储路径
 				data.Set(p => p.Content, filePath);
-				data.Set(p => p.ContentKind, ContentKind.File);
+
+				//更新内容类型为非嵌入格式（即外部文件）
+				data.Set(p => p.ContentType, Utility.GetContentType(data.Get(p => p.ContentType), false));
 			});
 
 			try
@@ -162,14 +169,16 @@ namespace Zongsoft.Community.Services
 					return;
 
 				//根据当前反馈编号，获得其对应的内容文件存储路径
-				var filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId));
+				var filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId), data.Get(p => p.ContentType));
 
 				//将反馈内容写入到对应的存储文件中
 				Utility.WriteTextFile(filePath, value);
 
 				//更新当前反馈的内容文件存储路径属性
 				data.Set(p => p.Content, filePath);
-				data.Set(p => p.ContentKind, ContentKind.File);
+
+				//更新内容类型为非嵌入格式（即外部文件）
+				data.Set(p => p.ContentType, Utility.GetContentType(data.Get(p => p.ContentType), false));
 			});
 
 			//调用基类同名方法
@@ -182,36 +191,10 @@ namespace Zongsoft.Community.Services
 		}
 		#endregion
 
-		#region 私有方法
-		private uint GetSiteId()
+		#region 虚拟方法
+		protected virtual string GetContentFilePath(ulong feedbackId, string contentType)
 		{
-			var credential = this.EnsureCredential(false);
-
-			if(credential != null && credential.SiteId.HasValue)
-				return credential.SiteId.Value;
-
-			var configuration = this.Configuration;
-
-			if(configuration == null)
-				throw new InvalidOperationException("");
-
-			return configuration.SiteId;
-		}
-
-		private string GetContentFilePath(ulong feedbackId)
-		{
-			var configuration = this.Configuration;
-
-			if(configuration == null)
-				throw new InvalidOperationException();
-
-			var siteId = configuration.SiteId;
-			var credential = this.EnsureCredential(false);
-
-			if(credential != null && credential.SiteId.HasValue)
-				siteId = credential.SiteId.Value;
-
-			return Zongsoft.IO.Path.Combine(configuration.GetSitePath(siteId), "feedbacks/feedback-" + feedbackId.ToString() + ".txt");
+			return string.Format("/feedbacks/feedback-{0}.txt", feedbackId.ToString());
 		}
 		#endregion
 	}

@@ -29,6 +29,39 @@ namespace Zongsoft.Community
 {
 	internal static class Utility
 	{
+		private const string EMBEDDED_TYPE_SUFFIX = "+embedded";
+
+		public static bool IsContentEmbedded(string type)
+		{
+			if(string.IsNullOrWhiteSpace(type))
+				return true;
+
+			return type.TrimEnd().EndsWith(EMBEDDED_TYPE_SUFFIX, StringComparison.OrdinalIgnoreCase);
+		}
+
+		public static string GetContentType(string rawType, bool embedded)
+		{
+			if(string.IsNullOrWhiteSpace(rawType))
+				rawType = "text/plain";
+			else
+				rawType = rawType.Trim();
+
+			if(embedded)
+			{
+				if(rawType.EndsWith(EMBEDDED_TYPE_SUFFIX))
+					return rawType;
+				else
+					return rawType + EMBEDDED_TYPE_SUFFIX;
+			}
+			else
+			{
+				if(rawType.EndsWith(EMBEDDED_TYPE_SUFFIX))
+					return rawType.Substring(0, rawType.Length - EMBEDDED_TYPE_SUFFIX.Length);
+				else
+					return rawType;
+			}
+		}
+
 		public static void DeleteFile(string path)
 		{
 			if(string.IsNullOrWhiteSpace(path))
@@ -83,5 +116,93 @@ namespace Zongsoft.Community
 
 			return true;
 		}
+
+		public static string GetFilePath(string relativePath = null)
+		{
+			return GetFilePath(0, 0, relativePath);
+		}
+
+		public static string GetFilePath(uint siteId, string relativePath = null)
+		{
+			return GetFilePath(siteId, 0, relativePath);
+		}
+
+		/// <summary>
+		/// 获取特定规则的文件存储路径。
+		/// </summary>
+		/// <param name="siteId">指定的站点编号，零表示当前用户所在的站点。</param>
+		/// <param name="userId">指定的用户编号，零表示当前用户。</param>
+		/// <param name="relativePath">相对路径，如果以斜杠符“/”打头表示忽略编号为零的层级。</param>
+		/// <returns>返回的文件存储路径。</returns>
+		/// <remarks>
+		///		<list type="list">
+		///			<item>根目录下的指定子目录：<code>GetFilePath(0, 0, "/apps");</code></item>
+		///	
+		///			<item>指定站点下的子目录：<code>GetFilePath(1, 0, "/sub");</code></item>
+		///			<item>指定站点下的当前用户子目录：<code>GetFilePath(1, 0, "sub");</code></item>
+		///			<item>指定站点下的指定用户子目录：<code>GetFilePath(1, 100, "sub");</code></item>
+		///	
+		///			<item>指定用户下的子目录：<code>GetFilePath(0, 100, "/sub");</code></item>
+		///			<item>当前站点下的当前用户子目录：<code>GetFilePath(0, 0, "sub");</code></item>
+		///			<item>当前站点下的指定用户子目录：<code>GetFilePath(0, 100, "sub");</code></item>
+		///		</list>
+		/// </remarks>
+		public static string GetFilePath(uint siteId, uint userId, string relativePath = null)
+		{
+			var basePath = Zongsoft.ComponentModel.ApplicationContextBase.Current.OptionManager.GetOptionValue("/Community/General.BasePath") as string;
+
+			if(string.IsNullOrWhiteSpace(basePath))
+				return string.Empty;
+
+			if(relativePath != null && relativePath.StartsWith("/"))
+			{
+				relativePath = relativePath.TrimStart('/');
+
+				if(siteId == 0)
+				{
+					if(userId == 0)
+						return Zongsoft.IO.Path.Combine(basePath, relativePath);
+					else
+						return Zongsoft.IO.Path.Combine(basePath, "user-" + userId.ToString(), relativePath);
+				}
+				else
+				{
+					if(userId == 0)
+						return Zongsoft.IO.Path.Combine(basePath, "site-" + siteId.ToString(), relativePath);
+					else
+						return Zongsoft.IO.Path.Combine(basePath, "site-" + siteId.ToString(), "user-" + userId.ToString(), relativePath);
+				}
+			}
+
+			if(siteId == 0 || userId == 0)
+			{
+				var principal = Zongsoft.ComponentModel.ApplicationContextBase.Current.Principal as Zongsoft.Security.CredentialPrincipal;
+
+				if(principal != null && principal.Identity.IsAuthenticated)
+				{
+					if(userId == 0)
+						userId = principal.Identity.Credential.UserId;
+
+					if(siteId == 0)
+						uint.TryParse(principal.Identity.Credential.User.PrincipalId, out siteId);
+				}
+			}
+
+			if(siteId == 0)
+			{
+				if(userId == 0)
+					return Zongsoft.IO.Path.Combine(basePath, "anonymous", relativePath);
+				else
+					return Zongsoft.IO.Path.Combine(basePath, "user-" + userId.ToString(), relativePath);
+			}
+			else
+			{
+				if(userId == 0)
+					return Zongsoft.IO.Path.Combine(basePath, "site-" + siteId.ToString(), relativePath);
+				else
+					return Zongsoft.IO.Path.Combine(basePath, "site-" + siteId.ToString(), "user-" + userId.ToString(), relativePath);
+			}
+		}
+
 	}
 }

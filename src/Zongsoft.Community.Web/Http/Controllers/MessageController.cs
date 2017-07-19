@@ -41,7 +41,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#region 公共方法
 		[ActionName("Members")]
 		[HttpPaging]
-		public IEnumerable<Message.MessageMember> GetMembers(ulong id, MessageMemberStatus? status = null, ConditionalRange<DateTime> period = null, Paging paging = null)
+		public IEnumerable<Message.MessageMember> GetMembers(ulong id, [FromRoute("args")]MessageMemberStatus? status = null, [FromRoute("args")]ConditionalRange<DateTime> period = null, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetMembers(id, status, period, paging);
 		}

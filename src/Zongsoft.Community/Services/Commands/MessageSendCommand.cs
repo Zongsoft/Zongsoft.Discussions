@@ -20,32 +20,48 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Security
+using Zongsoft.Services;
+
+namespace Zongsoft.Community.Services.Commands
 {
-	public class Credential : Zongsoft.Security.Credential
+	public class MessageSendCommand : CommandBase<CommandContext>
 	{
+		#region 成员字段
+		private MessageService _service;
+		#endregion
+
 		#region 构造函数
-		public Credential(Zongsoft.Security.Credential innerCredential) : base(innerCredential)
+		public MessageSendCommand() : base("Send")
+		{
+		}
+
+		public MessageSendCommand(string name) : base(name)
 		{
 		}
 		#endregion
 
 		#region 公共属性
-		public bool InAdministrators
+		[ServiceDependency]
+		public MessageService Service
 		{
 			get
 			{
-				return false;
-				//throw new NotImplementedException();
+				return _service;
+			}
+			set
+			{
+				if(value == null)
+					throw new ArgumentNullException();
+
+				_service = value;
 			}
 		}
+		#endregion
 
-		public uint SiteId
+		#region 执行方法
+		protected override object OnExecute(CommandContext context)
 		{
-			get
-			{
-				return Zongsoft.Common.Convert.ConvertValue<uint>(this.User.PrincipalId);
-			}
+			throw new NotImplementedException();
 		}
 		#endregion
 	}

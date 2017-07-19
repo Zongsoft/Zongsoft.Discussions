@@ -37,15 +37,6 @@ namespace Zongsoft.Community.Configuration
 		}
 
 		/// <summary>
-		/// 获取或设置默认站点编号。
-		/// </summary>
-		uint SiteId
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
 		/// 获取指定站点的文件存储基路径。
 		/// </summary>
 		/// <param name="siteId">指定的站点编号。</param>
