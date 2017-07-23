@@ -18,7 +18,7 @@
 	</modules>
 
 	<extension path="/Workbench/Schemas">
-		<category name="Community" title="{res:Text.Community.Title}" description="{res:Text.Community.Description}" />
+		<object name="Community" title="{res:Text.Community.Title}" description="{res:Text.Community.Description}" />
 	</extension>
 
 	<extension path="/Workbench/Startup">
@@ -38,11 +38,11 @@
 	</extension>
 
 	<extension path="/Workbench/Executor/Commands">
-		<commandNode name="Community">
-			<commandNode name="Message">
-				<object name="Send" type="Zongsoft.Community.Services.Commands.MessageSendCommand" />
-			</commandNode>
-		</commandNode>
+		<object name="Community">
+			<object name="Message">
+				<object name="Send" type="Zongsoft.Community.Services.Commands.MessageSendCommand, Zongsoft.Community" />
+			</object>
+		</object>
 	</extension>
 
 	<extension path="/Workspace/Services/Community">

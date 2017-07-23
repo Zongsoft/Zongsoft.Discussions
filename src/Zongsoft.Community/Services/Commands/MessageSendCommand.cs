@@ -41,7 +41,7 @@ namespace Zongsoft.Community.Services.Commands
 		#endregion
 
 		#region 公共属性
-		[ServiceDependency]
+		[ServiceDependency(Provider = "Community")]
 		public MessageService Service
 		{
 			get
