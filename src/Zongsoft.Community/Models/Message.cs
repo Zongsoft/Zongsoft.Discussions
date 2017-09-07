@@ -104,15 +104,15 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public byte MessageKind
+		public string MessageType
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.MessageKind);
+				return this.GetPropertyValue(() => this.MessageType);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.MessageKind, value);
+				this.SetPropertyValue(() => this.MessageType, value);
 			}
 		}
 
@@ -209,6 +209,11 @@ namespace Zongsoft.Community.Models
 		/// </summary>
 		public class MessageMember
 		{
+			public MessageMember(uint userId)
+			{
+				this.UserId = userId;
+			}
+
 			public ulong MessageId
 			{
 				get;

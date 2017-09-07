@@ -56,4 +56,8 @@
 		</property>
 	</entity>
 
+	<procedure name="Community.GetMessageStatistics" procedure="Community_GetMessageStatistics">
+		<parameter name="UserId" />
+	</procedure>
+
 </schema>

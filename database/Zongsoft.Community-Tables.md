@@ -11,7 +11,7 @@ SiteId | int | 4 | False | 站点编号
 Subject | nvarchar | 100 | False | 消息主题
 Content | nvarchar | 500 | False | 消息内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
-MessageKind | byte | 1 | False | 消息种类(0:None)
+MessageType | varchar | 50 | True | 消息类型
 Status | byte | 1 | False | 状态
 StatusTimestamp | datetime | - | True | 状态更新时间
 StatusDescription | nvarchar | 100 | True | 状态描述
@@ -51,6 +51,7 @@ SiteId | int | 4 | False | 主键，站点编号(所属企业)
 GroupId | smallint | 2 | False | 主键，论坛分组编号
 Name | nvarchar | 50 | False | 论坛组名
 Icon | varchar | 100 | True | 显示图标
+Visiblity | byte | 1 | False | 可见范围(0:禁用,即不可见; 1:站内用户可见; 2:所有人可见)
 SortOrder | smallint | 2 | False | 排列顺序
 Description | nvarchar | 500 | True | 描述信息
 
@@ -67,7 +68,8 @@ Description | nvarchar | 500 | True | 描述文本
 CoverPicturePath | varchar | 200 | True | 封面图片路径
 SortOrder | smallint | 2 | False | 排列顺序
 IsPopular | bool | - | False | 是否热门版块
-Visiblity | byte | 1 | False | 可见范围(0:禁用,即不可见; 1:企业内部范围可见; 2:所有人可见)
+ApproveEnabled | bool | - | False | 发帖是否需要审核
+Visiblity | byte | 1 | False | 可见范围(0:禁用,即不可见; 1:站内用户可见; 2:所有人可见)
 Accessibility | byte | 1 | False | 可访问性(0:无限制; 1:注册用户; 2:仅限版主)
 TotalPosts | int | 4 | False | 累计帖子总数
 TotalThreads | int | 4 | False | 累计主题总数

@@ -29,7 +29,7 @@ using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
-namespace Wayto.Common.Web.Http.Controllers
+namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization(AuthorizationMode.Requires)]
 	public class UserController : Zongsoft.Web.Http.HttpControllerBase<UserProfile, UserProfileConditional, UserService>
@@ -41,9 +41,24 @@ namespace Wayto.Common.Web.Http.Controllers
 		#endregion
 
 		#region 公共方法
+		[ActionName("Statistics")]
+		public object GetStatistics(uint id, [FromRoute("args")]string kind = null)
+		{
+			if(string.IsNullOrWhiteSpace(kind))
+				throw HttpResponseExceptionUtility.BadRequest("Missing kind of the statistics.");
+
+			switch(kind.ToLowerInvariant())
+			{
+				case "message":
+					return this.DataService.GetMessageStatistics(id);
+				default:
+					throw HttpResponseExceptionUtility.BadRequest("Invalid kind of the statistics.");
+			}
+		}
+
 		[ActionName("Messages")]
 		[HttpPaging]
-		public IEnumerable<Message.MessageMember> GetMessages(uint id, MessageMemberStatus? status = null, Paging paging = null)
+		public IEnumerable<Message.MessageMember> GetMessages(uint id, [FromUri]MessageMemberStatus? status = null, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetMessages(id, status, paging);
 		}

@@ -24,10 +24,10 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class MessageConditional : Zongsoft.Data.Conditional
+	public class ForumConditional : Zongsoft.Data.Conditional
 	{
 		#region 公共属性
-		[Conditional("Subject")]
+		[Conditional("Name")]
 		public string Key
 		{
 			get
@@ -40,63 +40,51 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public string Subject
+		public string Name
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.Subject);
+				return this.GetPropertyValue(() => this.Name);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.Subject, value);
+				this.SetPropertyValue(() => this.Name, value);
 			}
 		}
 
-		public string MessageType
+		public ForumVisiblity? Visiblity
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.MessageType);
+				return this.GetPropertyValue(() => this.Visiblity);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.MessageType, value);
+				this.SetPropertyValue(() => this.Visiblity, value);
 			}
 		}
 
-		public MessageStatus? Status
+		public ForumAccessibility? Accessibility
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.Status);
+				return this.GetPropertyValue(() => this.Accessibility);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.Status, value);
+				this.SetPropertyValue(() => this.Accessibility, value);
 			}
 		}
 
-		public ConditionalRange<DateTime> StatusTimestamp
+		public bool? IsPopular
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.StatusTimestamp);
+				return this.GetPropertyValue(() => this.IsPopular);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.StatusTimestamp, value);
-			}
-		}
-
-		public uint? CreatorId
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CreatorId);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatorId, value);
+				this.SetPropertyValue(() => this.IsPopular, value);
 			}
 		}
 

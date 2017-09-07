@@ -44,6 +44,9 @@
     <Compile Include="Data\UserFilter.cs" />
     <Compile Include="Models\Forum.cs" />
     <Compile Include="Models\ForumAccessibility.cs" />
+    <Compile Include="Models\PostConditional.cs" />
+    <Compile Include="Models\ThreadConditional.cs" />
+    <Compile Include="Models\ForumGroupConditional.cs" />
     <Compile Include="Models\ForumGroup.cs" />
     <Compile Include="Models\ForumVisiblity.cs" />
     <Compile Include="Models\Gender.cs" />
@@ -51,12 +54,14 @@
     <Compile Include="Models\Feedback.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\FeedbackConditional.cs" />
+    <Compile Include="Models\ForumConditional.cs" />
     <Compile Include="Models\MessageConditional.cs" />
     <Compile Include="Models\MessageMemberStatus.cs" />
     <Compile Include="Models\MessageStatus.cs" />
     <Compile Include="Models\Moderator.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\History.cs" />
+    <Compile Include="Models\Statistics\StatusStatisticResult.cs" />
     <Compile Include="Models\Thread.cs" />
     <Compile Include="Models\ThreadStatus.cs" />
     <Compile Include="Models\UserProfile.cs" />
@@ -69,7 +74,7 @@
     <Compile Include="Services\PostService.cs" />
     <Compile Include="Services\ThreadService.cs" />
     <Compile Include="Services\ForumService.cs" />
-    <Compile Include="Services\ForumsService.cs" />
+    <Compile Include="Services\ForumGroupService.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Services\UserService.cs" />

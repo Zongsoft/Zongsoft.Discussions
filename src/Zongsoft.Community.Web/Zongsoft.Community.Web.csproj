@@ -56,6 +56,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Http\Controllers\FeedbackController.cs" />
+    <Compile Include="Http\Controllers\PostController.cs" />
+    <Compile Include="Http\Controllers\ThreadController.cs" />
+    <Compile Include="Http\Controllers\ForumGroupController.cs" />
+    <Compile Include="Http\Controllers\ForumController.cs" />
     <Compile Include="Http\Controllers\MessageController.cs" />
     <Compile Include="Http\Controllers\UserController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

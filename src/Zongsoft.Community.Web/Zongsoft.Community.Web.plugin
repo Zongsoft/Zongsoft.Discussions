@@ -34,7 +34,7 @@
 	<extension path="/Workspace/Web/Controllers/Api/Community">
 		<object name="Feedback" type="Zongsoft.Community.Web.Http.Controllers.FeedbackController, Zongsoft.Community.Web" />
 		<object name="Forum" type="Zongsoft.Community.Web.Http.Controllers.ForumController, Zongsoft.Community.Web" />
-		<object name="Forums" type="Zongsoft.Community.Web.Http.Controllers.ForumsController, Zongsoft.Community.Web" />
+		<object name="ForumGroup" type="Zongsoft.Community.Web.Http.Controllers.ForumGroupController, Zongsoft.Community.Web" />
 		<object name="Message" type="Zongsoft.Community.Web.Http.Controllers.MessageController, Zongsoft.Community.Web" />
 		<object name="Post" type="Zongsoft.Community.Web.Http.Controllers.PostController, Zongsoft.Community.Web" />
 		<object name="Thread" type="Zongsoft.Community.Web.Http.Controllers.ThreadController, Zongsoft.Community.Web" />

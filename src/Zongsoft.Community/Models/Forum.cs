@@ -202,6 +202,21 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
+		/// 获取或设置一个值，表示发帖是否需要审核。
+		/// </summary>
+		public bool ApproveEnabled
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.ApproveEnabled);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.ApproveEnabled, value);
+			}
+		}
+
+		/// <summary>
 		/// 获取或设置一个值，表示该论坛是否允许发帖。
 		/// </summary>
 		public bool EnabledPosting

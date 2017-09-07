@@ -18,14 +18,26 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Services;
 
 namespace Zongsoft.Community.Services.Commands
 {
+	[CommandOption(SUBJECT_OPTION, typeof(string), Required = true)]
+	[CommandOption(CONTENT_OPTION, typeof(string), Required = true)]
+	[CommandOption(CONTENTTYPE_OPTION, typeof(string))]
+	[CommandOption(MESSAGETYPE_OPTION, typeof(string))]
 	public class MessageSendCommand : CommandBase<CommandContext>
 	{
+		#region 常量定义
+		private const string SUBJECT_OPTION = "subject";
+		private const string CONTENT_OPTION = "content";
+		private const string CONTENTTYPE_OPTION = "contentType";
+		private const string MESSAGETYPE_OPTION = "messageType";
+		#endregion
+
 		#region 成员字段
 		private MessageService _service;
 		#endregion
@@ -61,7 +73,67 @@ namespace Zongsoft.Community.Services.Commands
 		#region 执行方法
 		protected override object OnExecute(CommandContext context)
 		{
-			throw new NotImplementedException();
+			var subject = context.Expression.Options.GetValue<string>(SUBJECT_OPTION);
+			var content = context.Expression.Options.GetValue<string>(CONTENT_OPTION);
+			var contentType = context.Expression.Options.GetValue<string>(CONTENTTYPE_OPTION);
+			var messageType = context.Expression.Options.GetValue<string>(MESSAGETYPE_OPTION);
+
+			if(context.Expression.Arguments == null || context.Expression.Arguments.Length == 0)
+				throw new CommandException("Missing arguments of the command.");
+
+			content = GetContent(content, ref contentType);
+
+			var message = new Models.Message()
+			{
+				Subject = subject,
+				Content = content,
+				ContentType = contentType,
+				MessageType = messageType,
+				Members = GetUsers(context.Expression.Arguments).Select(uid => new Models.Message.MessageMember(uid)),
+			};
+
+			if(this.Service.Insert(message) > 0)
+				return message;
+
+			return null;
+		}
+		#endregion
+
+		#region 私有方法
+		private static string GetContent(string content, ref string contentType)
+		{
+			if(string.IsNullOrWhiteSpace(content) || string.IsNullOrWhiteSpace(contentType))
+				return content;
+
+			if(contentType.Length > 5 && contentType.EndsWith("+file", StringComparison.OrdinalIgnoreCase))
+			{
+				contentType = contentType.Substring(0, contentType.Length - 5);
+
+				if(Zongsoft.IO.FileSystem.File.Exists(content))
+				{
+					using(var stream = Zongsoft.IO.FileSystem.File.Open(content))
+					{
+						using(var reader = new System.IO.StreamReader(stream))
+						{
+							content = reader.ReadToEnd();
+						}
+					}
+				}
+			}
+
+			return content;
+		}
+
+		private static IEnumerable<uint> GetUsers(string[] args)
+		{
+			if(args == null)
+				yield break;
+
+			foreach(var arg in args)
+			{
+				if(arg != null && uint.TryParse(arg, out var id))
+					yield return id;
+			}
 		}
 		#endregion
 	}

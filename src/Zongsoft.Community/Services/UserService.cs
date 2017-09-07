@@ -74,6 +74,11 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
+		public IEnumerable<Models.Statistics.StatusStatisticResult<MessageMemberStatus>> GetMessageStatistics(uint userId)
+		{
+			return this.DataAccess.Execute<Models.Statistics.StatusStatisticResult<MessageMemberStatus>>("Community.GetMessageStatistics", new Dictionary<string, object> { { "UserId", userId } });
+		}
+
 		public IEnumerable<Message.MessageMember> GetMessages(uint userId, MessageMemberStatus? status = null, Paging paging = null)
 		{
 			var conditions = ConditionCollection.And(Condition.Equal("UserId", userId));

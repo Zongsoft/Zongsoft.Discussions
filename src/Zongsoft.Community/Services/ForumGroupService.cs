@@ -28,11 +28,20 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("SiteId, GroupId", 101)]
 	[DataSearchKey("Key:Name")]
-	public class ForumsService : ServiceBase<ForumGroup>
+	public class ForumGroupService : ServiceBase<ForumGroup>
 	{
 		#region 构造函数
-		public ForumsService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public ForumGroupService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
+		}
+		#endregion
+
+		#region 公共方法
+		public ICollection<Forum> GetForums(uint siteId, ushort groupId)
+		{
+			return this.DataAccess.Select<Forum>(
+				Condition.Equal("SiteId", siteId) & Condition.Equal("GroupId", groupId),
+				Paging.Disable).ToArray();
 		}
 		#endregion
 

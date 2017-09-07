@@ -31,78 +31,20 @@ namespace Zongsoft.Community.Services
 	[DataSearchKey("Key:Name")]
 	public class ThreadService : ServiceBase<Thread>
 	{
-		#region 成员字段
-		private ICache _cache;
-		#endregion
-
 		#region 构造函数
 		public ThreadService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
 
-		#region 公共属性
-		public ICache Cache
-		{
-			get
-			{
-				return _cache;
-			}
-			set
-			{
-				if(value == null)
-					throw new ArgumentNullException();
-
-				_cache = value;
-			}
-		}
-		#endregion
-
 		#region 公共方法
-		public Thread[] GetGlobalThreads(uint siteId)
+		public IEnumerable<Post> GetPosts(ulong threadId, Paging paging = null)
 		{
-			var cache = this.Cache;
+			var conditions = ConditionCollection.And(
+				Condition.Equal("ThreadId", threadId),
+				Condition.Equal("ParentId", null) | Condition.Equal("ParentId", 0));
 
-			if(cache == null)
-				throw new InvalidOperationException("Missing cache for the operation.");
-
-			var globals = cache.GetValue<ulong[]>(this.GetGlobalCacheKey(siteId));
-
-			if(globals == null)
-			{
-				var threads = this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("IsGlobal", true), Paging.Page(1, 10), Sorting.Descending("ThreadId"));
-				cache.SetValue(this.GetGlobalCacheKey(siteId), threads.Select(p => p.ThreadId).ToArray());
-				return threads.ToArray();
-			}
-
-			return this.DataAccess.Select<Thread>(Condition.In("ThreadId", globals)).ToArray();
-		}
-
-		public Thread[] GetPinnedThreads(uint siteId, ushort forumId)
-		{
-			var cache = this.Cache;
-
-			if(cache == null)
-				throw new InvalidOperationException("Missing cache for the operation.");
-
-			var pinneds = cache.GetValue<ulong[]>(this.GetPinnedCacheKey(siteId, forumId));
-
-			if(pinneds == null)
-			{
-				var threads = this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("IsPinned", true), Paging.Page(1, 10), Sorting.Descending("ThreadId"));
-				cache.SetValue(this.GetPinnedCacheKey(siteId, forumId), threads.Select(p => p.ThreadId).ToArray());
-				return threads.ToArray();
-			}
-
-			return this.DataAccess.Select<Thread>(Condition.In("ThreadId", pinneds)).ToArray();
-		}
-
-		public Thread[] GetTopmosts(uint siteId, ushort forumId)
-		{
-			var globals = this.GetGlobalThreads(siteId);
-			var pinneds = this.GetPinnedThreads(siteId, forumId);
-
-			return globals.Union(pinneds).ToArray();
+			return this.DataAccess.Select<Post>(conditions, paging, Sorting.Descending("PostId"));
 		}
 		#endregion
 
@@ -110,7 +52,7 @@ namespace Zongsoft.Community.Services
 		protected override Thread OnGet(ICondition condition, string scope)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
-				scope = "Creator, Creator.User";
+				scope = "Post, Creator, Creator.User";
 
 			//调用基类同名方法
 			var thread = base.OnGet(condition, scope);
@@ -142,14 +84,12 @@ namespace Zongsoft.Community.Services
 			//更新当前用户的浏览记录
 			this.SetHistory(thread.ThreadId);
 
-			//通过帖子服务获取当前主题下的第一页回帖内容
-			var posts = this.ServiceProvider.ResolveRequired<PostService>().Select(Condition.Equal("ThreadId", thread.ThreadId));
-
-			//设置主题的内容帖
-			thread.Post = posts.FirstOrDefault(p => p.PostId == thread.PostId);
+			//设置主题对应的帖子内容（如果内容类型是外部文件(即非嵌入格式)，则读取文件内容）
+			if(thread.Post != null && !Utility.IsContentEmbedded(thread.Post.ContentType))
+				thread.Post.Content = Utility.ReadTextFile(thread.Post.Content);
 
 			//设置主题的回帖集
-			thread.Posts = posts.Where(p => p.PostId != thread.PostId);
+			thread.Posts = this.GetPosts(thread.ThreadId);
 
 			return thread;
 		}
@@ -187,16 +127,6 @@ namespace Zongsoft.Community.Services
 					this.DataAccess.Insert(new History(credential.UserId, threadId));
 				}
 			}
-		}
-
-		private string GetGlobalCacheKey(uint siteId)
-		{
-			return "Global-" + siteId.ToString();
-		}
-
-		private string GetPinnedCacheKey(uint siteId, ushort forumId)
-		{
-			return "Pinned-" + siteId.ToString() + "-" + forumId.ToString();
 		}
 		#endregion
 	}

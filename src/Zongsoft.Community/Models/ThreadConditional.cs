@@ -24,10 +24,10 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class MessageConditional : Zongsoft.Data.Conditional
+	public class ThreadConditional : Zongsoft.Data.Conditional
 	{
 		#region 公共属性
-		[Conditional("Subject")]
+		[Conditional("Name")]
 		public string Key
 		{
 			get
@@ -52,19 +52,7 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public string MessageType
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MessageType);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MessageType, value);
-			}
-		}
-
-		public MessageStatus? Status
+		public ThreadStatus? Status
 		{
 			get
 			{
@@ -85,6 +73,78 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.StatusTimestamp, value);
+			}
+		}
+
+		public bool? Disabled
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.Disabled);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Disabled, value);
+			}
+		}
+
+		public bool? IsApproved
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.IsApproved);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.IsApproved, value);
+			}
+		}
+
+		public bool? IsLocked
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.IsLocked);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.IsLocked, value);
+			}
+		}
+
+		public bool? IsPinned
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.IsPinned);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.IsPinned, value);
+			}
+		}
+
+		public bool? IsValued
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.IsValued);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.IsValued, value);
+			}
+		}
+
+		public bool? IsGlobal
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.IsGlobal);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.IsGlobal, value);
 			}
 		}
 

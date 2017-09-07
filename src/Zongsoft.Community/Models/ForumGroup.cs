@@ -110,6 +110,21 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
+		/// 获取或设置论坛组的可见性。
+		/// </summary>
+		public ForumVisiblity Visiblity
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.Visiblity);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Visiblity, value);
+			}
+		}
+
+		/// <summary>
 		/// 获取或设置论坛组的描述文本。
 		/// </summary>
 		public string Description

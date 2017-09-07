@@ -24,10 +24,10 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class MessageConditional : Zongsoft.Data.Conditional
+	public class PostConditional : Zongsoft.Data.Conditional
 	{
 		#region 公共属性
-		[Conditional("Subject")]
+		[Conditional("Content")]
 		public string Key
 		{
 			get
@@ -40,51 +40,75 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public string Subject
+		public string Content
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.Subject);
+				return this.GetPropertyValue(() => this.Content);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.Subject, value);
+				this.SetPropertyValue(() => this.Content, value);
 			}
 		}
 
-		public string MessageType
+		public ulong? ParentId
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.MessageType);
+				return this.GetPropertyValue(() => this.ParentId);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.MessageType, value);
+				this.SetPropertyValue(() => this.ParentId, value);
 			}
 		}
 
-		public MessageStatus? Status
+		public bool? Disabled
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.Status);
+				return this.GetPropertyValue(() => this.Disabled);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.Status, value);
+				this.SetPropertyValue(() => this.Disabled, value);
 			}
 		}
 
-		public ConditionalRange<DateTime> StatusTimestamp
+		public bool? IsApproved
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.StatusTimestamp);
+				return this.GetPropertyValue(() => this.IsApproved);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.StatusTimestamp, value);
+				this.SetPropertyValue(() => this.IsApproved, value);
+			}
+		}
+
+		public bool? IsLocked
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.IsLocked);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.IsLocked, value);
+			}
+		}
+
+		public bool? IsValued
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.IsValued);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.IsValued, value);
 			}
 		}
 

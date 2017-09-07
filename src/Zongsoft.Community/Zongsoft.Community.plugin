@@ -48,7 +48,7 @@
 	<extension path="/Workspace/Services/Community">
 		<object name="FeedbackService" configuration="{opt:/Community/General}" type="Zongsoft.Community.Services.FeedbackService, Zongsoft.Community" />
 		<object name="ForumService" type="Zongsoft.Community.Services.ForumService, Zongsoft.Community" />
-		<object name="ForumsService" type="Zongsoft.Community.Services.ForumsService, Zongsoft.Community" />
+		<object name="ForumGroupService" type="Zongsoft.Community.Services.ForumGroupService, Zongsoft.Community" />
 		<object name="MessageService" type="Zongsoft.Community.Services.MessageService, Zongsoft.Community" />
 		<object name="PostService" type="Zongsoft.Community.Services.PostService, Zongsoft.Community" />
 		<object name="ThreadService" type="Zongsoft.Community.Services.ThreadService, Zongsoft.Community" />

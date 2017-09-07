@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `Community_Message`
   `Subject` varchar(100) NOT NULL COMMENT '消息标题',
   `Content` varchar(500) NOT NULL COMMENT '消息内容',
   `ContentType` varchar(50) DEFAULT NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',
-  `MessageKind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '消息种类(0:None)',
+  `MessageType` varchar(50) DEFAULT NULL COMMENT '消息类型',
   `Status` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态',
   `StatusTimestamp` datetime NULL COMMENT '状态更改时间',
   `StatusDescription` varchar(100) DEFAULT NULL COMMENT '状态描述信息',
@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `Community_ForumGroup`
   `GroupId` smallint NOT NULL COMMENT '主键，分组编号',
   `Name` varchar(50) NOT NULL COMMENT '论坛组名称',
   `Icon` varchar(100) NULL COMMENT '显示图标',
+  `Visiblity` tinyint UNSIGNED NOT NULL DEFAULT 1 COMMENT '可见范围(0:禁用,即不可见; 1:站内用户可见; 2: 所有人可见)',
   `SortOrder` smallint NOT NULL DEFAULT 0 COMMENT '排列顺序',
   `Description` varchar(500) DEFAULT NULL COMMENT '描述文本',
   PRIMARY KEY (`SiteId`, `GroupId`)
@@ -61,7 +62,8 @@ CREATE TABLE IF NOT EXISTS `Community_Forum`
   `CoverPicturePath` varchar(200) DEFAULT NULL COMMENT '封面图片文件路径',
   `SortOrder` smallint NOT NULL DEFAULT 0 COMMENT '排列顺序',
   `IsPopular` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否热门版块',
-  `Visiblity` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '可见范围(0:禁用,即不可见; 1:企业范围可见; 2: 所有人可见; 3:所有人可发帖)',
+  `ApproveEnabled` tinyint(1) NOT NULL DEFAULT 0 COMMENT '发帖是否需要审核',
+  `Visiblity` tinyint UNSIGNED NOT NULL DEFAULT 1 COMMENT '可见范围(0:禁用,即不可见; 1:站内用户可见; 2: 所有人可见)',
   `Accessibility` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '可访问性(0:无限制; 1:注册用户; 2:仅限版主)',
   `TotalPosts` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计帖子总数',
   `TotalThreads` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计主题总数',
@@ -179,3 +181,26 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`UserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户配置表';
+
+DELIMITER //
+
+CREATE DEFINER=`develop`@`%` PROCEDURE `Community_GetMessageStatistics`(
+	IN `UserId` INT
+)
+LANGUAGE SQL
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT '获取指定用户的站内消息状态统计'
+BEGIN
+
+SELECT
+	m.`Status`,
+	COUNT(m.`Status`) AS 'Count'
+FROM `Community_MessageMember` m
+WHERE m.UserId = `UserId`
+GROUP BY m.`Status`;
+
+END//
+
+DELIMITER ;
