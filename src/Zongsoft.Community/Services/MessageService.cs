@@ -73,7 +73,7 @@ namespace Zongsoft.Community.Services
 			if(credential != null && credential.CredentialId != null && credential.CredentialId.Length > 0)
 			{
 				//更新当前用户对该消息的读取状态
-				this.DataAccess.Update(this.DataAccess.Mapper.Get<Message.MessageMember>(), new
+				this.DataAccess.Update(this.DataAccess.Naming.Get<Message.MessageMember>(), new
 				{
 					Status = MessageMemberStatus.Read,
 					StatusTimestamp = DateTime.Now,

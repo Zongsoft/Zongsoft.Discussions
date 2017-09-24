@@ -59,14 +59,14 @@ namespace Zongsoft.Community
 		#region 初始方法
 		public void Initialize(ApplicationContextBase context)
 		{
-			var mappers = context.ServiceFactory.Default.ResolveAll<IDataAccessMapper>();
+			var namings = context.ServiceFactory.Default.ResolveAll<IDataAccessNaming>();
 
-			if(mappers != null)
+			if(namings != null)
 			{
-				foreach(var mapper in mappers)
+				foreach(var naming in namings)
 				{
-					if(mapper != null)
-						this.Map(mapper);
+					if(naming != null)
+						this.Map(naming);
 				}
 			}
 
@@ -76,27 +76,27 @@ namespace Zongsoft.Community
 			{
 				foreach(var dataAccess in dataAccesses)
 				{
-					if(dataAccess != null && dataAccess.Mapper != null)
-						this.Map(dataAccess.Mapper);
+					if(dataAccess != null && dataAccess.Naming != null)
+						this.Map(dataAccess.Naming);
 				}
 			}
 		}
 		#endregion
 
 		#region 映射方法
-		private void Map(Zongsoft.Data.IDataAccessMapper mapper)
+		private void Map(Zongsoft.Data.IDataAccessNaming naming)
 		{
-			mapper.Map<Feedback>(COMMUNITY_FEEDBACK);
-			mapper.Map<Forum>(COMMUNITY_FORUM);
-			mapper.Map<ForumGroup>(COMMUNITY_FORUMGROUP);
-			mapper.Map<History>(COMMUNITY_HISTORY);
-			mapper.Map<Liking>(COMMUNITY_LIKING);
-			mapper.Map<Message>(COMMUNITY_MESSAGE);
-			mapper.Map<Message.MessageMember>(COMMUNITY_MESSAGEMEMBER);
-			mapper.Map<Moderator>(COMMUNITY_MODERATOR);
-			mapper.Map<Post>(COMMUNITY_POST);
-			mapper.Map<Thread>(COMMUNITY_THREAD);
-			mapper.Map<UserProfile>(COMMUNITY_USERPROFILE);
+			naming.Map<Feedback>(COMMUNITY_FEEDBACK);
+			naming.Map<Forum>(COMMUNITY_FORUM);
+			naming.Map<ForumGroup>(COMMUNITY_FORUMGROUP);
+			naming.Map<History>(COMMUNITY_HISTORY);
+			naming.Map<Liking>(COMMUNITY_LIKING);
+			naming.Map<Message>(COMMUNITY_MESSAGE);
+			naming.Map<Message.MessageMember>(COMMUNITY_MESSAGEMEMBER);
+			naming.Map<Moderator>(COMMUNITY_MODERATOR);
+			naming.Map<Post>(COMMUNITY_POST);
+			naming.Map<Thread>(COMMUNITY_THREAD);
+			naming.Map<UserProfile>(COMMUNITY_USERPROFILE);
 		}
 		#endregion
 	}

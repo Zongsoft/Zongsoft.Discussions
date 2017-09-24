@@ -179,7 +179,8 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
   `MostRecentThreadSubject` nvarchar(100) DEFAULT NULL COMMENT '最新主题的标题',
   `MostRecentThreadTime` datetime DEFAULT NULL COMMENT '最新主题的发布时间',
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`UserId`)
+  PRIMARY KEY (`UserId`),
+  INDEX `IX_SiteId` (`SiteId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户配置表';
 
 DELIMITER //

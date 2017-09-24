@@ -39,11 +39,11 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 重写方法
-		public override void OnExecuting(DataAccessFilterContext context)
+		public override void OnExecuting(DataAccessContextBase context)
 		{
 			if(context.Method == DataAccessMethod.Delete)
 			{
-				var args = (DataDeletedEventArgs)context.Arguments;
+				var args = (DataDeletionContext)context;
 
 				if(string.Equals(context.Name, DataAccessModule.SECURITY_USERPROFILE, StringComparison.OrdinalIgnoreCase))
 					context.States[DELETED_RESULTS] = context.DataAccess.Select<User>(context.Name, args.Condition, Paging.Disable).ToArray();
@@ -52,7 +52,7 @@ namespace Zongsoft.Community.Data
 			}
 		}
 
-		public override void OnExecuted(DataAccessFilterContext context)
+		public override void OnExecuted(DataAccessContextBase context)
 		{
 			switch(context.Method)
 			{

@@ -116,7 +116,7 @@ namespace Zongsoft.Community.Services
 				if(this.DataAccess.Increment<History>("Count", conditions) > 0)
 				{
 					//更新当前用户对当前主题的最后浏览时间
-					this.DataAccess.Update(this.DataAccess.Mapper.Get<History>(), new
+					this.DataAccess.Update(this.DataAccess.Naming.Get<History>(), new
 					{
 						MostRecentViewedTime = DateTime.Now,
 					}, conditions);
