@@ -31,7 +31,7 @@ namespace Zongsoft.Community
 	public class DataAccessModule : IApplicationModule
 	{
 		#region 常量定义
-		internal const string SECURITY_USERPROFILE = "Security.UserProfile";
+		internal const string SECURITY_USER = "Security.User";
 
 		internal const string COMMUNITY_FEEDBACK = "Community.Feedback";
 		internal const string COMMUNITY_FORUM = "Community.Forum";

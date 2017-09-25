@@ -33,60 +33,24 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 构造函数
-		public UserFilter() : base(new DataAccessMethod[] { DataAccessMethod.Delete, DataAccessMethod.Select }, DataAccessModule.COMMUNITY_USERPROFILE, DataAccessModule.SECURITY_USERPROFILE)
+		public UserFilter() : base(new DataAccessMethod[] { DataAccessMethod.Delete }, DataAccessModule.COMMUNITY_USERPROFILE, DataAccessModule.SECURITY_USER)
 		{
 		}
 		#endregion
 
 		#region 重写方法
-		public override void OnExecuting(DataAccessContextBase context)
+		protected override void OnDeleting(DataDeletionContext context)
 		{
-			if(context.Method == DataAccessMethod.Delete)
-			{
-				var args = (DataDeletionContext)context;
-
-				if(string.Equals(context.Name, DataAccessModule.SECURITY_USERPROFILE, StringComparison.OrdinalIgnoreCase))
-					context.States[DELETED_RESULTS] = context.DataAccess.Select<User>(context.Name, args.Condition, Paging.Disable).ToArray();
-				else if(string.Equals(context.Name, DataAccessModule.COMMUNITY_USERPROFILE, StringComparison.OrdinalIgnoreCase))
-					context.States[DELETED_RESULTS] = context.DataAccess.Select<Models.UserProfile>(context.Name, args.Condition, Paging.Disable).ToArray();
-			}
+			if(string.Equals(context.Name, DataAccessModule.SECURITY_USER, StringComparison.OrdinalIgnoreCase))
+				context.States[DELETED_RESULTS] = context.DataAccess.Select<User>(context.Name, context.Condition, Paging.Disable).ToArray();
+			else if(string.Equals(context.Name, DataAccessModule.COMMUNITY_USERPROFILE, StringComparison.OrdinalIgnoreCase))
+				context.States[DELETED_RESULTS] = context.DataAccess.Select<Models.UserProfile>(context.Name, context.Condition, Paging.Disable).ToArray();
 		}
 
-		public override void OnExecuted(DataAccessContextBase context)
+		protected override void OnDeleted(DataDeletionContext context)
 		{
-			switch(context.Method)
-			{
-				case DataAccessMethod.Delete:
-					if(context.States.TryGetValue(DELETED_RESULTS, out var items))
-						this.OnDeleted(items as IEnumerable);
-
-					break;
-				case DataAccessMethod.Select:
-					//var args = context.Arguments as DataSelectedEventArgs;
-
-					//if(args != null && args.Result != null)
-					//{
-					//	foreach(var item in args.Result)
-					//	{
-					//		var user = item as User;
-
-					//		if(user != null)
-					//		{
-					//			if(!string.IsNullOrWhiteSpace(user.Avatar))
-					//				user.Avatar = Zongsoft.IO.FileSystem.GetUrl(user.Avatar);
-					//		}
-					//		else
-					//		{
-					//			var userProfile = item as Models.UserProfile;
-
-					//			if(userProfile != null && userProfile.User != null && !string.IsNullOrWhiteSpace(userProfile.User.Avatar))
-					//				userProfile.User.Avatar = Zongsoft.IO.FileSystem.GetUrl(userProfile.User.Avatar);
-					//		}
-					//	}
-					//}
-
-					break;
-			}
+			if(context.States.TryGetValue(DELETED_RESULTS, out var items))
+				this.OnDeleted(items as IEnumerable);
 		}
 		#endregion
 
