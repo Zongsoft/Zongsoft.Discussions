@@ -82,10 +82,10 @@ namespace Zongsoft.Community.Services
 			return feedback;
 		}
 
-		protected override IEnumerable<Feedback> OnSelect(ICondition condition, Grouping grouping, string scope, Paging paging, params Sorting[] sortings)
+		protected override IEnumerable<Feedback> OnSelect(ICondition condition, string scope, Paging paging, params Sorting[] sortings)
 		{
 			//调用基类同名方法
-			return base.OnSelect(condition, grouping, scope, paging, sortings);
+			return base.OnSelect(condition, scope, paging, sortings);
 		}
 
 		protected override int OnDelete(ICondition condition, string[] cascades)
