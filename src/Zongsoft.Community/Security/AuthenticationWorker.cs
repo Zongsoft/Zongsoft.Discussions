@@ -66,25 +66,6 @@ namespace Zongsoft.Community.Security
 		}
 
 		/// <summary>
-		/// 获取或设置用户管理服务。
-		/// </summary>
-		[ServiceDependency]
-		public UserService UserService
-		{
-			get
-			{
-				return _userService;
-			}
-			set
-			{
-				if(value == null)
-					throw new ArgumentNullException();
-
-				_userService = value;
-			}
-		}
-
-		/// <summary>
 		/// 获取或设置身份验证服务。
 		/// </summary>
 		[ServiceDependency]
@@ -130,7 +111,7 @@ namespace Zongsoft.Community.Security
 				return;
 
 			//获取当前登录用户所对应的用户配置对象
-			var userProfile = this.UserService.Get(e.User.UserId) as UserProfile;
+			var userProfile = this.GetUserProfile(e.User.UserId);
 
 			//如果对应的用户配置对象没有存在则新增一个
 			if(userProfile == null)
@@ -146,6 +127,13 @@ namespace Zongsoft.Community.Security
 
 			//设置当前用户的扩展属性
 			e.Parameters.Add("Community.UserProfile", userProfile);
+		}
+		#endregion
+
+		#region 私有方法
+		private UserProfile GetUserProfile(uint userId)
+		{
+			return this.DataAccess.Select<UserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
 		}
 		#endregion
 	}
