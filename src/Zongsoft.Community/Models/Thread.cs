@@ -32,6 +32,7 @@ namespace Zongsoft.Community.Models
 		private uint _siteId;
 		private ushort _forumId;
 		private ulong _postId;
+		private string _tags;
 		private ThreadStatus _status;
 		private DateTime? _statusTimestamp;
 		private bool _disabled;
@@ -42,8 +43,8 @@ namespace Zongsoft.Community.Models
 		private bool _isGlobal;
 		private uint _totalViews;
 		private uint _totalReplies;
-		private ulong _mostRecentPostId;
-		private uint _mostRecentPostAuthorId;
+		private ulong? _mostRecentPostId;
+		private uint? _mostRecentPostAuthorId;
 		private uint _creatorId;
 		private DateTime _createdTime;
 		#endregion
@@ -141,6 +142,21 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.Summary, value);
+			}
+		}
+
+		/// <summary>
+		/// 获取或设置主题的标签集。
+		/// </summary>
+		public string Tags
+		{
+			get
+			{
+				return _tags;
+			}
+			set
+			{
+				this.SetPropertyValue(nameof(Tags), ref _tags, value);
 			}
 		}
 
@@ -428,7 +444,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的最后回帖编号。
 		/// </summary>
-		public ulong MostRecentPostId
+		public ulong? MostRecentPostId
 		{
 			get
 			{
@@ -443,7 +459,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的最后回帖作者编号。
 		/// </summary>
-		public uint MostRecentPostAuthorId
+		public uint? MostRecentPostAuthorId
 		{
 			get
 			{

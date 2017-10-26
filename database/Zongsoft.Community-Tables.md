@@ -73,12 +73,13 @@ Visiblity | byte | 1 | False | 可见范围(0:禁用,即不可见; 1:站内用�
 Accessibility | byte | 1 | False | 可访问性(0:无限制; 1:注册用户; 2:仅限版主)
 TotalPosts | int | 4 | False | 累计帖子总数
 TotalThreads | int | 4 | False | 累计主题总数
-MostRecentThreadId | int | 4 | True | 最新主题的编号
+MostRecentThreadId | bigint | 8 | True | 最新主题的编号
 MostRecentThreadSubject | nvarchar | 100 | True | 最新主题的标题
 MostRecentThreadAuthorId | int | 4 | True | 最新主题的作者编号
 MostRecentThreadAuthorName | nvarchar | 50 | True | 最新主题的作者名
 MostRecentThreadAuthorAvatar | varchar | 150 | True | 最新主题的作者头像
 MostRecentThreadTime | datetime | - | True | 最新主题的发布时间
+MostRecentPostId | bigint | 8 | True | 最后回帖的帖子编号
 MostRecentPostAuthorId | int | 4 | True | 最后回帖的作者编号
 MostRecentPostAuthorName | nvarchar | 50 | True | 最后回帖的作者名
 MostRecentPostAuthorAvatar | varchar | 150 | True | 最后回帖的作者头像
@@ -104,6 +105,7 @@ SiteId | int | 4 | False | 所属站点编号
 ForumId | smallint | 2 | False | 所属论坛编号
 Subject | nvarchar | 100 | False | 文章标题
 Summary | nvarchar | 500 | True | 文章摘要
+Tags | nvarchar | 100 | True | 标签集
 PostId | bigint | 8 | False | 内容帖子编号
 CoverPicturePath | varchar | 200 | True | 封面图片路径
 LinkUrl | varchar | 200 | True | 文章跳转链接
@@ -153,12 +155,14 @@ CreatorId | int | 4 | False | 发帖人编号
 CreatedTime | datetime | - | False | 发帖时间
 
 
-### 帖子投票表 `Community.PostVote`
+### 帖子投票表 `Community.PostVoting`
 
 字段名称|数据类型|长度|可空|备注
 --------|:------:|:--:|:--:|----:
 PostId | bigint | 8 | False | 主键，帖子编号
 UserId | int | 4 | False | 主键，用户编号
+UserName | nvarchar | 50 | True | 用户名称
+UserAvatar | nvarchar | 150 | True | 用户头像
 Value | byte | 1 | False | 投票数(正数为Upvote，负数为Downvote)
 Tiemstamp | datetime | - | False | 投票时间
 
@@ -186,7 +190,7 @@ TotalPosts | int | 4 | False | 累计回复总数
 TotalThreads | int | 4 | False | 累计主题总数
 MostRecentPostId | bigint | 8 | True | 最后回帖的帖子编号
 MostRecentPostTime | datetime | - | True | 最后回帖的时间
-MostRecentThreadId | int | 4 | True | 最新主题的编号
+MostRecentThreadId | bigint | 8 | True | 最新主题的编号
 MostRecentThreadSubject | nvarchar | 100 | True | 最新主题的标题
 MostRecentThreadTime | datetime | - | True | 最新主题的发布时间
 CreatedTime | datetime | - | False | 创建时间

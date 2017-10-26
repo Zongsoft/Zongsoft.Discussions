@@ -179,7 +179,7 @@ namespace Zongsoft.Community.Services
 					data.Set(p => p.PostId, post.PostId);
 
 					//更新发帖人关联的主题统计信息
-					this.SetUserMostRecentThread(data);
+					this.SetMostRecentThread(data);
 
 					//提交事务
 					transaction.Commit();
@@ -227,21 +227,41 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 私有方法
-		private bool SetUserMostRecentThread(DataDictionary<Thread> data)
+		private bool SetMostRecentThread(DataDictionary<Thread> data)
 		{
 			if(data == null)
 				return false;
 
-			if(this.DataAccess.Increment<UserProfile>("TotalThreads", Condition.Equal("UserId", data.Get(p => p.CreatorId))) < 0)
-				return false;
+			var userId = data.Get(p => p.CreatorId);
+			var user = Utility.GetUser(userId, this.EnsureCredential());
+			var count = 0;
 
-			return this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
+			//更新当前主题所属论坛的最后发帖信息
+			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Forum>(), new
 			{
-				UserId = data.Get(p => p.CreatorId),
+				SiteId = data.Get(p => p.SiteId),
+				ForumId = data.Get(p => p.ForumId),
 				MostRecentThreadId = data.Get(p => p.ThreadId),
 				MostRecentThreadSubject = data.Get(p => p.Subject),
 				MostRecentThreadTime = data.Get(p => p.CreatedTime),
-			}) > 0;
+				MostRecentThreadAuthorId = userId,
+				MostRecentThreadAuthorName = user?.FullName,
+				MostRecentThreadAuthorAvatar = user?.Avatar,
+			});
+
+			//递增当前发帖人的累计主题数，并且更新发帖人的最后发表的主题信息
+			if(this.DataAccess.Increment<UserProfile>("TotalThreads", Condition.Equal("UserId", data.Get(p => p.CreatorId))) > 0)
+			{
+				count += this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
+				{
+					UserId = data.Get(p => p.CreatorId),
+					MostRecentThreadId = data.Get(p => p.ThreadId),
+					MostRecentThreadSubject = data.Get(p => p.Subject),
+					MostRecentThreadTime = data.Get(p => p.CreatedTime),
+				});
+			}
+
+			return count > 0;
 		}
 
 		private void SetHistory(ulong threadId)

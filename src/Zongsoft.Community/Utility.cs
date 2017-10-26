@@ -24,6 +24,9 @@ using System.Collections.Generic;
 
 using Zongsoft.IO;
 using Zongsoft.Data;
+using Zongsoft.Services;
+using Zongsoft.Security;
+using Zongsoft.Security.Membership;
 
 namespace Zongsoft.Community
 {
@@ -204,5 +207,20 @@ namespace Zongsoft.Community
 			}
 		}
 
+		public static User GetUser(uint userId, Credential credential)
+		{
+			if(userId == 0)
+				return null;
+
+			if(credential != null && credential.UserId == userId)
+				return credential.User;
+
+			var userProvider = ServiceProviderFactory.Instance.Default.Resolve<IUserProvider>();
+
+			if(userProvider != null)
+				return userProvider.GetUser(userId);
+
+			return null;
+		}
 	}
 }

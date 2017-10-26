@@ -35,7 +35,7 @@ namespace Zongsoft.Community.Models
 		private uint _totalThreads;
 		private ulong? _mostRecentPostId;
 		private DateTime? _mostRecentPostTime;
-		private uint? _mostRecentThreadId;
+		private ulong? _mostRecentThreadId;
 		private DateTime? _mostRecentThreadTime;
 		private DateTime _createdTime;
 		#endregion
@@ -199,7 +199,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户最新发布的主题编号。
 		/// </summary>
-		public uint? MostRecentThreadId
+		public ulong? MostRecentThreadId
 		{
 			get
 			{

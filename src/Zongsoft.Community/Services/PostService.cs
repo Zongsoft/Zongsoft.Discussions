@@ -46,19 +46,25 @@ namespace Zongsoft.Community.Services
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				//递增指定编号的帖子的点赞总数，如果递增失败则返回
-				if(this.DataAccess.Increment<Post>("TotalUpvotes", Condition.Equal("PostId", postId)) < 0)
-					return false;
+				this.DataAccess.Delete<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
+				this.DataAccess.Insert(new Post.PostVoting(postId, credential.UserId, (sbyte)Math.Min(value, (byte)100))
+				{
+					UserName = credential.User.FullName,
+					UserAvatar = credential.User.Avatar,
+				});
 
-				this.DataAccess.Delete<Post.PostVote>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
-				var count = this.DataAccess.Insert(new Post.PostVote(postId, credential.UserId, (sbyte)Math.Min(value, (byte)100)));
+				//如果帖子投票统计信息更新成功
+				if(this.SetPostVotes(postId))
+				{
+					//提交事务
+					transaction.Commit();
 
-				//提交事务
-				transaction.Commit();
-
-				//返回是否成功
-				return count > 0;
+					//返回成功
+					return true;
+				}
 			}
+
+			return false;
 		}
 
 		public bool Downvote(ulong postId, byte value = 1)
@@ -70,19 +76,35 @@ namespace Zongsoft.Community.Services
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				//递增指定编号的帖子的被踩总数，如果递增失败则返回
-				if(this.DataAccess.Increment<Post>("TotalDownvotes", Condition.Equal("PostId", postId)) < 0)
-					return false;
+				this.DataAccess.Delete<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
+				this.DataAccess.Insert(new Post.PostVoting(postId, credential.UserId, (sbyte)-Math.Min(value, (byte)100))
+				{
+					UserName = credential.User.FullName,
+					UserAvatar = credential.User.Avatar,
+				});
 
-				this.DataAccess.Delete<Post.PostVote>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
-				var count = this.DataAccess.Insert(new Post.PostVote(postId, credential.UserId, (sbyte)-Math.Min(value, (byte)100)));
+				//如果帖子投票统计信息更新成功
+				if(this.SetPostVotes(postId))
+				{
+					//提交事务
+					transaction.Commit();
 
-				//提交事务
-				transaction.Commit();
-
-				//返回是否成功
-				return count > 0;
+					//返回成功
+					return true;
+				}
 			}
+
+			return false;
+		}
+
+		public IEnumerable<Post.PostVoting> GetUpvotes(ulong postId, Paging paging = null)
+		{
+			return this.DataAccess.Select<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.GreaterThan("Value", 0), paging);
+		}
+
+		public IEnumerable<Post.PostVoting> GetDownvotes(ulong postId, Paging paging = null)
+		{
+			return this.DataAccess.Select<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.LessThan("Value", 0), paging);
 		}
 
 		public IEnumerable<Post> GetChildren(ulong postId, Paging paging = null)
@@ -146,22 +168,28 @@ namespace Zongsoft.Community.Services
 
 			try
 			{
-				//调用基类同名方法
-				var count = base.OnInsert(data, scope);
-
-				if(count > 0)
+				using(var transaction = new Zongsoft.Transactions.Transaction())
 				{
-					//更新发帖人的关联帖子统计信息
-					this.SetUserMostRecentPost(data);
-				}
-				else
-				{
-					//如果新增记录失败则删除刚创建的文件
-					if(filePath != null && filePath.Length > 0)
-						Utility.DeleteFile(filePath);
-				}
+					//调用基类同名方法
+					var count = base.OnInsert(data, scope);
 
-				return count;
+					if(count > 0)
+					{
+						//更新发帖人的关联帖子统计信息
+						this.SetMostRecentPost(data);
+
+						//提交事务
+						transaction.Commit();
+					}
+					else
+					{
+						//如果新增记录失败则删除刚创建的文件
+						if(filePath != null && filePath.Length > 0)
+							Utility.DeleteFile(filePath);
+					}
+
+					return count;
+				}
 			}
 			catch
 			{
@@ -212,20 +240,84 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 私有方法
-		private bool SetUserMostRecentPost(DataDictionary<Post> data)
+		private bool SetPostVotes(ulong postId)
 		{
+			//获取当前帖子的点赞总数，即统计帖子投票表中投票数大于零的记录数
+			var upvotes = this.DataAccess.Count<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.GreaterThan("Value", 0));
+
+			//获取当前帖子的被踩总数，即统计帖子投票表中投票数小于零的记录数
+			var downvotes = this.DataAccess.Count<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.LessThan("Value", 0));
+
+			//更新指定帖子的累计点赞总数和累计被踩总数
+			return this.DataAccess.Update(this.DataAccess.Naming.Get<Post>(), new
+			{
+				PostId = postId,
+				TotalUpvotes = upvotes,
+				TotalDownvotes = downvotes,
+			}) > 0;
+		}
+
+		private bool SetMostRecentPost(DataDictionary<Post> data)
+		{
+			//注意：如果当前帖子是主题内容贴则不需要更新对应的统计信息
 			if(data == null || data.Get(p => p.IsThread, false))
 				return false;
 
-			if(this.DataAccess.Increment<UserProfile>("TotalPosts", Condition.Equal("UserId", data.Get(p => p.CreatorId))) < 0)
+			//如果当前帖子没有指定对应的主题编号，则返回失败
+			var threadId = data.Get(p => p.ThreadId, (ulong)0);
+
+			if(threadId == 0)
 				return false;
 
-			return this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
+			//如果当前帖子对应的主题是不存在的，则返回失败
+			var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
+
+			if(thread == null)
+				return false;
+
+			//递增新增贴所属的主题的累计回帖总数
+			if(this.DataAccess.Increment<Thread>("TotalReplies", Condition.Equal("ThreadId", threadId)) < 0)
+				return false;
+
+			var userId = data.Get(p => p.CreatorId);
+			var user = Utility.GetUser(userId, this.EnsureCredential());
+			var count = 0;
+
+			//更新当前帖子所属主题的最后回帖信息
+			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Thread>(), new
 			{
-				UserId = data.Get(p => p.CreatorId),
+				ThreadId = threadId,
 				MostRecentPostId = data.Get(p => p.PostId),
 				MostRecentPostTime = data.Get(p => p.CreatedTime),
-			}) > 0;
+				MostRecentPostAuthorId = userId,
+				MostRecentPostAuthorName = user?.FullName,
+				MostRecentPostAuthorAvatar = user?.Avatar,
+			});
+
+			//更新当前帖子所属论坛的最后回帖信息
+			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Forum>(), new
+			{
+				SiteId = thread.SiteId,
+				ForumId = thread.ForumId,
+				MostRecentPostId = data.Get(p => p.PostId),
+				MostRecentPostTime = data.Get(p => p.CreatedTime),
+				MostRecentPostAuthorId = userId,
+				MostRecentPostAuthorName = user?.FullName,
+				MostRecentPostAuthorAvatar = user?.Avatar,
+			});
+
+			//递增当前发帖人的累计回帖数，并且更新发帖人的最后回帖信息
+			if(this.DataAccess.Increment<UserProfile>("TotalPosts", Condition.Equal("UserId", data.Get(p => p.CreatorId))) > 0)
+			{
+				count += this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
+				{
+					UserId = data.Get(p => p.CreatorId),
+					MostRecentPostId = data.Get(p => p.PostId),
+					MostRecentPostTime = data.Get(p => p.CreatedTime),
+				});
+			}
+
+			return count > 0;
 		}
 		#endregion
 	}

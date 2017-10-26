@@ -35,10 +35,10 @@ namespace Zongsoft.Community.Models
 		private bool _isPopular;
 		private uint _totalPosts;
 		private uint _totalThreads;
-		private uint _mostRecentThreadId;
-		private uint _mostRecentThreadAuthorId;
-		private uint _mostRecentPostAuthorId;
-		private bool _enabledPosting;
+		private ulong? _mostRecentThreadId;
+		private uint? _mostRecentThreadAuthorId;
+		private ulong? _mostRecentPostId;
+		private uint? _mostRecentPostAuthorId;
 		private ForumVisiblity _visiblity;
 		private ForumAccessibility _accessibility;
 		private DateTime _createdTime;
@@ -47,7 +47,6 @@ namespace Zongsoft.Community.Models
 		#region 构造函数
 		public Forum()
 		{
-			this.EnabledPosting = true;
 			this.Visiblity = ForumVisiblity.Public;
 			this.Accessibility = ForumAccessibility.All;
 			this.CreatedTime = DateTime.Now;
@@ -217,21 +216,6 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置一个值，表示该论坛是否允许发帖。
-		/// </summary>
-		public bool EnabledPosting
-		{
-			get
-			{
-				return _enabledPosting;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.EnabledPosting, ref _enabledPosting, value);
-			}
-		}
-
-		/// <summary>
 		/// 获取或设置论坛的可见性。
 		/// </summary>
 		public ForumVisiblity Visiblity
@@ -294,7 +278,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最新主题的编号。
 		/// </summary>
-		public uint MostRecentThreadId
+		public ulong? MostRecentThreadId
 		{
 			get
 			{
@@ -324,7 +308,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最新主题的作者编号。
 		/// </summary>
-		public uint MostRecentThreadAuthorId
+		public uint? MostRecentThreadAuthorId
 		{
 			get
 			{
@@ -382,9 +366,24 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
+		/// 获取或设置主题的最后回帖编号。
+		/// </summary>
+		public ulong? MostRecentPostId
+		{
+			get
+			{
+				return _mostRecentPostId;
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.MostRecentPostId, ref _mostRecentPostId, value);
+			}
+		}
+
+		/// <summary>
 		/// 获取或设置论坛中最后回帖的作者编号。
 		/// </summary>
-		public uint MostRecentPostAuthorId
+		public uint? MostRecentPostAuthorId
 		{
 			get
 			{

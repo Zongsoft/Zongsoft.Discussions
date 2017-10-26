@@ -120,11 +120,17 @@
 		</property>
 	</entity>
 
-	<entity name="Community.PostVote" table="Community_PostVote" type="Zongsoft.Community.Models.Post+PostVote, Zongsoft.Community">
+	<entity name="Community.PostVoting" table="Community_PostVoting" type="Zongsoft.Community.Models.Post+PostVoting, Zongsoft.Community">
 		<key>
 			<property name="PostId"/>
 			<property name="UserId"/>
 		</key>
+
+		<property name="User" relationTo="Community.UserProfile">
+			<join>
+				<member from="UserId" to="UserId"/>
+			</join>
+		</property>
 	</entity>
 
 	<entity name="Community.History" table="Community_History" type="Zongsoft.Community.Models.History, Zongsoft.Community">

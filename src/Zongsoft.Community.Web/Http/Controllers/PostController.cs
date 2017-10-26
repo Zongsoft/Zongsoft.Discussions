@@ -53,6 +53,18 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
 		}
 
+		[ActionName("Upvotes")]
+		public IEnumerable<Post.PostVoting> GetUpvotes(ulong id, [FromUri]Paging paging = null)
+		{
+			return this.DataService.GetUpvotes(id, paging);
+		}
+
+		[ActionName("Downvotes")]
+		public IEnumerable<Post.PostVoting> GetDownvotes(ulong id, [FromUri]Paging paging = null)
+		{
+			return this.DataService.GetDownvotes(id, paging);
+		}
+
 		[ActionName("Children")]
 		public IEnumerable<Post> GetChildren(ulong id, [FromUri]Paging paging = null)
 		{

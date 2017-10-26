@@ -368,7 +368,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的点赞记录集。
 		/// </summary>
-		public IEnumerable<PostVote> Upvotes
+		public IEnumerable<PostVoting> Upvotes
 		{
 			get
 			{
@@ -383,7 +383,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的被踩记录集。
 		/// </summary>
-		public IEnumerable<PostVote> Downvotes
+		public IEnumerable<PostVoting> Downvotes
 		{
 			get
 			{
@@ -398,24 +398,27 @@ namespace Zongsoft.Community.Models
 
 		#region 嵌套子类
 		/// <summary>
-		/// 表示帖子点赞的实体类。
+		/// 表示帖子投票的业务实体类。
 		/// </summary>
-		public class PostVote
+		public class PostVoting
 		{
 			#region 成员字段
 			private ulong _postId;
 			private uint _userId;
+			private UserProfile _user;
+			private string _userName;
+			private string _userAvatar;
 			private sbyte _value;
 			private DateTime _timestamp;
 			#endregion
 
 			#region 构造函数
-			public PostVote()
+			public PostVoting()
 			{
 				_timestamp = DateTime.Now;
 			}
 
-			public PostVote(ulong postId, uint userId, sbyte value)
+			public PostVoting(ulong postId, uint userId, sbyte value)
 			{
 				_postId = postId;
 				_userId = userId;
@@ -452,6 +455,51 @@ namespace Zongsoft.Community.Models
 				set
 				{
 					_userId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置投票的用户对象。
+			/// </summary>
+			public UserProfile User
+			{
+				get
+				{
+					return _user;
+				}
+				set
+				{
+					_user = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置投票的用户名称。
+			/// </summary>
+			public string UserName
+			{
+				get
+				{
+					return _userName;
+				}
+				set
+				{
+					_userName = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置投票的用户头像。
+			/// </summary>
+			public string UserAvatar
+			{
+				get
+				{
+					return _userAvatar;
+				}
+				set
+				{
+					_userAvatar = value;
 				}
 			}
 

@@ -67,12 +67,13 @@ CREATE TABLE IF NOT EXISTS `Community_Forum`
   `Accessibility` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '可访问性(0:无限制; 1:注册用户; 2:仅限版主)',
   `TotalPosts` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计帖子总数',
   `TotalThreads` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计主题总数',
-  `MostRecentThreadId` int UNSIGNED NULL COMMENT '最新主题的编号',
+  `MostRecentThreadId` bigint UNSIGNED NULL COMMENT '最新主题的编号',
   `MostRecentThreadSubject` nvarchar(100) NULL COMMENT '最新主题的标题',
   `MostRecentThreadAuthorId` int UNSIGNED NULL COMMENT '最新主题的作者编号',
   `MostRecentThreadAuthorName` nvarchar(50) NULL COMMENT '最新主题的作者名',
   `MostRecentThreadAuthorAvatar` varchar(150) NULL COMMENT '最新主题的作者头像',
   `MostRecentThreadTime` datetime NULL DEFAULT NULL COMMENT '最新主题的发布时间',
+  `MostRecentPostId` bigint UNSIGNED NULL COMMENT '最后回帖的帖子编号',
   `MostRecentPostAuthorId` int UNSIGNED NULL COMMENT '最后回帖的作者编号',
   `MostRecentPostAuthorName` nvarchar(50) NULL COMMENT '最后回帖的作者名',
   `MostRecentPostAuthorAvatar` varchar(150) NULL COMMENT '最后回帖的作者头像',
@@ -111,10 +112,12 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   PRIMARY KEY (`PostId` DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子/回帖表';
 
-CREATE TABLE IF NOT EXISTS `Community_PostVote`
+CREATE TABLE IF NOT EXISTS `Community_PostVoting`
 (
   `PostId` bigint UNSIGNED NOT NULL COMMENT '主键，帖子编号',
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
+  `UserName` nvarchar(50) NULL COMMENT '用户名称',
+  `UserAvatar` varchar(150) NULL COMMENT '用户头像',
   `Value` tinyint NOT NULL COMMENT '投票数(正数为Upvote，负数为Downvote)',
   `Tiemstamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '投票时间',
   PRIMARY KEY (`PostId` DESC, `UserId`)
@@ -137,6 +140,7 @@ CREATE TABLE IF NOT EXISTS `Community_Thread`
   `ForumId` smallint UNSIGNED NOT NULL COMMENT '所属论坛编号',
   `Subject` varchar(100) NOT NULL COMMENT '文章标题',
   `Summary` varchar(500) NOT NULL COMMENT '文章摘要',
+  `Tags` varchar(100) DEFAULT NULL COMMENT '标签集',
   `PostId` bigint UNSIGNED NOT NULL COMMENT '内容帖子编号',
   `CoverPicturePath` varchar(200) DEFAULT NULL COMMENT '封面图片文件路径',
   `LinkUrl` varchar(200) DEFAULT NULL COMMENT '文章跳转链接',
@@ -174,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
   `TotalThreads` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计主题总数',
   `MostRecentPostId` bigint UNSIGNED DEFAULT NULL COMMENT '最后回帖的帖子编号',
   `MostRecentPostTime` datetime DEFAULT NULL COMMENT '最后回帖的时间',
-  `MostRecentThreadId` int UNSIGNED DEFAULT NULL COMMENT '最新主题的编号',
+  `MostRecentThreadId` bigint UNSIGNED DEFAULT NULL COMMENT '最新主题的编号',
   `MostRecentThreadSubject` nvarchar(100) DEFAULT NULL COMMENT '最新主题的标题',
   `MostRecentThreadTime` datetime DEFAULT NULL COMMENT '最新主题的发布时间',
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
