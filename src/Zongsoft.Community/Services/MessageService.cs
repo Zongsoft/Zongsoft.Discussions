@@ -92,26 +92,6 @@ namespace Zongsoft.Community.Services
 			return base.OnSelect(condition, scope, paging, sortings);
 		}
 
-		protected override int OnDelete(ICondition condition, string[] cascades)
-		{
-			//获取待删除的数据集
-			var messages = this.Select(condition).ToArray();
-
-			//调用基类同名方法
-			var count = base.OnDelete(condition, cascades);
-
-			if(count > 0)
-			{
-				foreach(var message in messages)
-				{
-					if(!Utility.IsContentEmbedded(message.ContentType))
-						Utility.DeleteFile(message.Content);
-				}
-			}
-
-			return count;
-		}
-
 		protected override int OnInsert(DataDictionary<Message> data, string scope)
 		{
 			string filePath = null;

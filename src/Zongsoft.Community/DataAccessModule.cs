@@ -36,11 +36,11 @@ namespace Zongsoft.Community
 		internal const string COMMUNITY_FEEDBACK = "Community.Feedback";
 		internal const string COMMUNITY_FORUM = "Community.Forum";
 		internal const string COMMUNITY_FORUMGROUP = "Community.ForumGroup";
-		internal const string COMMUNITY_LIKING = "Community.Liking";
 		internal const string COMMUNITY_MESSAGE = "Community.Message";
 		internal const string COMMUNITY_MESSAGEMEMBER = "Community.MessageMember";
 		internal const string COMMUNITY_MODERATOR = "Community.Moderator";
 		internal const string COMMUNITY_POST = "Community.Post";
+		internal const string COMMUNITY_POSTVOTE = "Community.PostVote";
 		internal const string COMMUNITY_HISTORY = "Community.History";
 		internal const string COMMUNITY_THREAD = "Community.Thread";
 		internal const string COMMUNITY_USERPROFILE = "Community.UserProfile";
@@ -90,11 +90,11 @@ namespace Zongsoft.Community
 			naming.Map<Forum>(COMMUNITY_FORUM);
 			naming.Map<ForumGroup>(COMMUNITY_FORUMGROUP);
 			naming.Map<History>(COMMUNITY_HISTORY);
-			naming.Map<Liking>(COMMUNITY_LIKING);
 			naming.Map<Message>(COMMUNITY_MESSAGE);
 			naming.Map<Message.MessageMember>(COMMUNITY_MESSAGEMEMBER);
 			naming.Map<Moderator>(COMMUNITY_MODERATOR);
 			naming.Map<Post>(COMMUNITY_POST);
+			naming.Map<Post.PostVote>(COMMUNITY_POSTVOTE);
 			naming.Map<Thread>(COMMUNITY_THREAD);
 			naming.Map<UserProfile>(COMMUNITY_USERPROFILE);
 		}

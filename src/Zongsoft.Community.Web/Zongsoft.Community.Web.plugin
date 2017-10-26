@@ -32,6 +32,8 @@
 	</extension>
 
 	<extension path="/Workspace/Web/Controllers/Api/Community">
+		<object name="File" basePath="zfs.oss:/zongsoft-community/" type="Zongsoft.Web.Http.Controllers.FileController, Zongsoft.Web" />
+
 		<object name="Feedback" type="Zongsoft.Community.Web.Http.Controllers.FeedbackController, Zongsoft.Community.Web" />
 		<object name="Forum" type="Zongsoft.Community.Web.Http.Controllers.ForumController, Zongsoft.Community.Web" />
 		<object name="ForumGroup" type="Zongsoft.Community.Web.Http.Controllers.ForumGroupController, Zongsoft.Community.Web" />

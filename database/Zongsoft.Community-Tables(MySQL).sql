@@ -101,7 +101,9 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   `IsApproved` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否已审核通过',
   `IsLocked` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已锁定',
   `IsValued` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否精华帖',
-  `TotalLikes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计点赞数',
+  `IsThread` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否主题内容贴',
+  `TotalUpvotes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计点赞数',
+  `TotalDownvotes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计被踩数',
   `VisitorAddress` varchar(100) NULL COMMENT '访客地址(IP和地址信息)',
   `VisitorDescription` varchar(500) NULL COMMENT '访客描述(浏览器代理信息)',
   `CreatorId` int UNSIGNED NOT NULL COMMENT '发帖人编号',
@@ -109,14 +111,14 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   PRIMARY KEY (`PostId` DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子/回帖表';
 
-CREATE TABLE IF NOT EXISTS `Community_Liking`
+CREATE TABLE IF NOT EXISTS `Community_PostVote`
 (
   `PostId` bigint UNSIGNED NOT NULL COMMENT '主键，帖子编号',
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
-  `Points` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '赞助积分',
-  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发帖时间',
+  `Value` tinyint NOT NULL COMMENT '投票数(正数为Upvote，负数为Downvote)',
+  `Tiemstamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '投票时间',
   PRIMARY KEY (`PostId` DESC, `UserId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子点赞表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子投票表';
 
 CREATE TABLE IF NOT EXISTS `Community_History`
 (
@@ -139,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `Community_Thread`
   `CoverPicturePath` varchar(200) DEFAULT NULL COMMENT '封面图片文件路径',
   `LinkUrl` varchar(200) DEFAULT NULL COMMENT '文章跳转链接',
   `Status` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态(0:未发送, 1:发送中, 2:已发送, 3:已取消)',
-  `StatusTimestamp` datetime NOT NULL COMMENT '状态更改时间',
+  `StatusTimestamp` datetime DEFAULT NULL COMMENT '状态更改时间',
   `StatusDescription` varchar(100) DEFAULT NULL COMMENT '状态描述信息',
   `Disabled` tinyint(1) NOT NULL DEFAULT 0 COMMENT '已被禁用',
   `IsApproved` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否锁定(锁定则不允许回复)',
@@ -148,7 +150,6 @@ CREATE TABLE IF NOT EXISTS `Community_Thread`
   `IsValued` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否精华帖',
   `IsGlobal` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否全局贴',
   `TotalViews` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计阅读数',
-  `TotalLikes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计点赞数',
   `TotalReplies` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计回帖数',
   `PinnedTime` datetime DEFAULT NULL COMMENT '置顶时间',
   `GlobalTime` datetime DEFAULT NULL COMMENT '全局时间',
@@ -171,8 +172,6 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
   `PhotoPath` varchar(200) DEFAULT NULL COMMENT '照片文件路径',
   `TotalPosts` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计回复总数',
   `TotalThreads` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计主题总数',
-  `TotalInLikes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计收获的赞数',
-  `TotalOutLikes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计点击的赞数',
   `MostRecentPostId` bigint UNSIGNED DEFAULT NULL COMMENT '最后回帖的帖子编号',
   `MostRecentPostTime` datetime DEFAULT NULL COMMENT '最后回帖的时间',
   `MostRecentThreadId` int UNSIGNED DEFAULT NULL COMMENT '最新主题的编号',

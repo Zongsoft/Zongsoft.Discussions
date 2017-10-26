@@ -41,6 +41,10 @@
     <Compile Include="Configuration\GeneratlConfiguration.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="DataAccessModule.cs" />
+    <Compile Include="Data\MessageFilter.cs" />
+    <Compile Include="Data\ContentFilterBase.cs" />
+    <Compile Include="Data\FeedbackFilter.cs" />
+    <Compile Include="Data\PostFilter.cs" />
     <Compile Include="Data\UserFilter.cs" />
     <Compile Include="Models\Forum.cs" />
     <Compile Include="Models\ForumAccessibility.cs" />
@@ -50,7 +54,6 @@
     <Compile Include="Models\ForumGroup.cs" />
     <Compile Include="Models\ForumVisiblity.cs" />
     <Compile Include="Models\Gender.cs" />
-    <Compile Include="Models\Liking.cs" />
     <Compile Include="Models\Feedback.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\FeedbackConditional.cs" />

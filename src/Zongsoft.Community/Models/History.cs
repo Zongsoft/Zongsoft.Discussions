@@ -30,6 +30,7 @@ namespace Zongsoft.Community.Models
 		#region 成员字段
 		private uint _userId;
 		private ulong _threadId;
+		private Thread _thread;
 		private uint _count;
 		private DateTime _firstViewedTime;
 		private DateTime _mostRecentViewedTime;
@@ -79,6 +80,21 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.ThreadId, ref _threadId, value);
+			}
+		}
+
+		/// <summary>
+		/// 获取或设置浏览的主题对象。
+		/// </summary>
+		public Thread Thread
+		{
+			get
+			{
+				return _thread;
+			}
+			set
+			{
+				this.SetPropertyValue(nameof(Thread), ref _thread, value);
 			}
 		}
 

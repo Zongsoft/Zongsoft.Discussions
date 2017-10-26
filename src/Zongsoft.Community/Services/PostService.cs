@@ -36,6 +36,61 @@ namespace Zongsoft.Community.Services
 		}
 		#endregion
 
+		#region 公共方法
+		public bool Upvote(ulong postId, byte value = 1)
+		{
+			var credential = this.EnsureCredential();
+
+			if(value == 0)
+				value = 1;
+
+			using(var transaction = new Zongsoft.Transactions.Transaction())
+			{
+				//递增指定编号的帖子的点赞总数，如果递增失败则返回
+				if(this.DataAccess.Increment<Post>("TotalUpvotes", Condition.Equal("PostId", postId)) < 0)
+					return false;
+
+				this.DataAccess.Delete<Post.PostVote>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
+				var count = this.DataAccess.Insert(new Post.PostVote(postId, credential.UserId, (sbyte)Math.Min(value, (byte)100)));
+
+				//提交事务
+				transaction.Commit();
+
+				//返回是否成功
+				return count > 0;
+			}
+		}
+
+		public bool Downvote(ulong postId, byte value = 1)
+		{
+			var credential = this.EnsureCredential();
+
+			if(value == 0)
+				value = 1;
+
+			using(var transaction = new Zongsoft.Transactions.Transaction())
+			{
+				//递增指定编号的帖子的被踩总数，如果递增失败则返回
+				if(this.DataAccess.Increment<Post>("TotalDownvotes", Condition.Equal("PostId", postId)) < 0)
+					return false;
+
+				this.DataAccess.Delete<Post.PostVote>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
+				var count = this.DataAccess.Insert(new Post.PostVote(postId, credential.UserId, (sbyte)-Math.Min(value, (byte)100)));
+
+				//提交事务
+				transaction.Commit();
+
+				//返回是否成功
+				return count > 0;
+			}
+		}
+
+		public IEnumerable<Post> GetChildren(ulong postId, Paging paging = null)
+		{
+			return this.Select(Condition.Equal("ParentId", postId), paging);
+		}
+		#endregion
+
 		#region 重写方法
 		protected override Post OnGet(ICondition condition, string scope)
 		{
@@ -59,26 +114,6 @@ namespace Zongsoft.Community.Services
 
 			//调用基类同名方法
 			return base.OnSelect(condition, scope, paging, sortings);
-		}
-
-		protected override int OnDelete(ICondition condition, string[] cascades)
-		{
-			//获取待删除的数据集
-			var posts = this.Select(condition).ToArray();
-
-			//调用基类同名方法
-			var count = base.OnDelete(condition, cascades);
-
-			if(count > 0)
-			{
-				foreach(var post in posts)
-				{
-					if(!Utility.IsContentEmbedded(post.ContentType))
-						Utility.DeleteFile(post.Content);
-				}
-			}
-
-			return count;
 		}
 
 		protected override int OnInsert(DataDictionary<Post> data, string scope)
@@ -114,7 +149,12 @@ namespace Zongsoft.Community.Services
 				//调用基类同名方法
 				var count = base.OnInsert(data, scope);
 
-				if(count < 1)
+				if(count > 0)
+				{
+					//更新发帖人的关联帖子统计信息
+					this.SetUserMostRecentPost(data);
+				}
+				else
 				{
 					//如果新增记录失败则删除刚创建的文件
 					if(filePath != null && filePath.Length > 0)
@@ -168,6 +208,24 @@ namespace Zongsoft.Community.Services
 		protected virtual string GetContentFilePath(ulong postId, string contentType)
 		{
 			return string.Format("/posts/post-{0}.txt", postId.ToString());
+		}
+		#endregion
+
+		#region 私有方法
+		private bool SetUserMostRecentPost(DataDictionary<Post> data)
+		{
+			if(data == null || data.Get(p => p.IsThread, false))
+				return false;
+
+			if(this.DataAccess.Increment<UserProfile>("TotalPosts", Condition.Equal("UserId", data.Get(p => p.CreatorId))) < 0)
+				return false;
+
+			return this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
+			{
+				UserId = data.Get(p => p.CreatorId),
+				MostRecentPostId = data.Get(p => p.PostId),
+				MostRecentPostTime = data.Get(p => p.CreatedTime),
+			}) > 0;
 		}
 		#endregion
 	}

@@ -40,6 +40,106 @@
 		</key>
 	</entity>
 
+	<entity name="Community.ForumGroup" table="Community_ForumGroup" type="Zongsoft.Community.Models.ForumGroup, Zongsoft.Community">
+		<key>
+			<property name="SiteId"/>
+			<property name="GroupId"/>
+		</key>
+	</entity>
+
+	<entity name="Community.Forum" table="Community_Forum" type="Zongsoft.Community.Models.Forum, Zongsoft.Community">
+		<key>
+			<property name="SiteId"/>
+			<property name="ForumId"/>
+		</key>
+
+		<property name="CoverPictureUrl" field="" />
+		<property name="Moderators" field="" />
+
+		<property name="Group" relationTo="Community.ForumGroup">
+			<join>
+				<member from="SiteId" to="SiteId"/>
+				<member from="GroupId" to="GroupId"/>
+			</join>
+		</property>
+	</entity>
+
+	<entity name="Community.Thread" table="Community_Thread" type="Zongsoft.Community.Models.Thread, Zongsoft.Community">
+		<key>
+			<property name="ThreadId"/>
+		</key>
+
+		<property name="CoverPictureUrl" field="" />
+		<property name="Posts" field="" />
+
+		<property name="Forum" relationTo="Community.Forum">
+			<join>
+				<member from="SiteId" to="SiteId"/>
+				<member from="ForumId" to="ForumId"/>
+			</join>
+		</property>
+
+		<property name="Post" relationTo="Community.Post">
+			<join>
+				<member from="PostId" to="PostId"/>
+			</join>
+		</property>
+
+		<property name="Creator" relationTo="Community.UserProfile">
+			<join>
+				<member from="CreatorId" to="UserId"/>
+			</join>
+		</property>
+	</entity>
+
+	<entity name="Community.Post" table="Community_Post" type="Zongsoft.Community.Models.Post, Zongsoft.Community">
+		<key>
+			<property name="PostId"/>
+		</key>
+
+		<property name="Children" field="" />
+		<property name="Upvotes" field="" />
+		<property name="Downvotes" field="" />
+
+		<property name="Thread" relationTo="Community.Thread">
+			<join>
+				<member from="ThreadId" to="ThreadId"/>
+			</join>
+		</property>
+
+		<property name="Parent" relationTo="Community.Post">
+			<join>
+				<member from="ParentId" to="PostId"/>
+			</join>
+		</property>
+
+		<property name="Creator" relationTo="Community.UserProfile">
+			<join>
+				<member from="CreatorId" to="UserId"/>
+			</join>
+		</property>
+	</entity>
+
+	<entity name="Community.PostVote" table="Community_PostVote" type="Zongsoft.Community.Models.Post+PostVote, Zongsoft.Community">
+		<key>
+			<property name="PostId"/>
+			<property name="UserId"/>
+		</key>
+	</entity>
+
+	<entity name="Community.History" table="Community_History" type="Zongsoft.Community.Models.History, Zongsoft.Community">
+		<key>
+			<property name="UserId"/>
+			<property name="ThreadId"/>
+		</key>
+
+		<property name="Thread" relationTo="Community.Thread">
+			<join>
+				<member from="ThreadId" to="ThreadId"/>
+			</join>
+		</property>
+	</entity>
+
 	<entity name="Community.UserProfile" table="Community_UserProfile" type="Zongsoft.Community.Models.UserProfile, Zongsoft.Community">
 		<key>
 			<property name="UserId" constructor.parameter="userId"/>

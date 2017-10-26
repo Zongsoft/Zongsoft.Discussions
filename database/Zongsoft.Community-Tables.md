@@ -117,7 +117,6 @@ IsPinned | bool | - | False | 是否置顶
 IsValued | bool | - | False | 是否精华帖
 IsGlobal | bool | - | False | 是否全局贴
 TotalViews | int | 4 | False | 累计阅读数
-TotalLikes | int | 4 | False | 累计点赞数
 TotalReplies | int | 4 | False | 累计回帖数
 PinnedTime | datetime | - | True | 置顶时间
 GlobalTime | datetime | - | True | 全局时间
@@ -145,21 +144,23 @@ Disabled | bool | - | False | 已被禁用(False)
 IsApproved | bool | - | False | 是否审核通过
 IsLocked | bool | - | False | 是否已锁定(锁定则不允许回复)
 IsValued | bool | _ | False | 是否精华帖
-TotalLikes | int | 4 | False | 累计点赞数
+IsThread | bool | - | False | 是否主题内容贴(False)
+TotalUpvotes | int | 4 | False | 累计点赞数
+TotalDownvotes | int | 4 | False | 累计被踩数
 VisitorAddress | nvarchar | 100 | True | 访客地址(IP和位置信息)(192.168.0.1 湖北省武汉市)
 VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息)
 CreatorId | int | 4 | False | 发帖人编号
 CreatedTime | datetime | - | False | 发帖时间
 
 
-### 帖子点赞表 `Community.Liking`
+### 帖子投票表 `Community.PostVote`
 
 字段名称|数据类型|长度|可空|备注
 --------|:------:|:--:|:--:|----:
 PostId | bigint | 8 | False | 主键，帖子编号
 UserId | int | 4 | False | 主键，用户编号
-Points | byte | 1 | False | 赞助积分
-CreatedTime | datetime | - | False | 点赞时间
+Value | byte | 1 | False | 投票数(正数为Upvote，负数为Downvote)
+Tiemstamp | datetime | - | False | 投票时间
 
 
 ### 用户浏览记录表 `Community.History`
@@ -183,8 +184,6 @@ Gender | byte | 1 | False | 用户性别(0:Female, 1:Male)
 PhotoPath | varchar | 200 | True | 照片文件路径
 TotalPosts | int | 4 | False | 累计回复总数
 TotalThreads | int | 4 | False | 累计主题总数
-TotalInLikes | int | 4 | False | 累计收获的赞数
-TotalOutLikes | int | 4 | False | 累计点击的赞数
 MostRecentPostId | bigint | 8 | True | 最后回帖的帖子编号
 MostRecentPostTime | datetime | - | True | 最后回帖的时间
 MostRecentThreadId | int | 4 | True | 最新主题的编号

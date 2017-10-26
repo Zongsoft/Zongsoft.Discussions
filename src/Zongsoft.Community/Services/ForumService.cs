@@ -80,7 +80,7 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Select<Moderator>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId), "User, User.User", Paging.Disable).Select(p => p.User).ToArray();
 		}
 
-		public Thread[] GetGlobalThreads(uint siteId)
+		public Thread[] GetGlobalThreads(uint siteId, Paging paging = null)
 		{
 			var cache = this.Cache;
 
@@ -91,15 +91,15 @@ namespace Zongsoft.Community.Services
 
 			if(globals == null)
 			{
-				var threads = this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("IsGlobal", true), Paging.Page(1, 10), Sorting.Descending("ThreadId"));
-				cache.SetValue(this.GetGlobalCacheKey(siteId), threads.Select(p => p.ThreadId).ToArray());
-				return threads.ToArray();
+				var threads = this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("IsGlobal", true), paging, Sorting.Descending("ThreadId")).ToArray();
+				cache.SetValue(this.GetGlobalCacheKey(siteId), threads.Select(p => p.ThreadId));
+				return threads;
 			}
 
 			return this.DataAccess.Select<Thread>(Condition.In("ThreadId", globals)).ToArray();
 		}
 
-		public Thread[] GetPinnedThreads(uint siteId, ushort forumId)
+		public Thread[] GetPinnedThreads(uint siteId, ushort forumId, Paging paging = null)
 		{
 			var cache = this.Cache;
 
@@ -110,7 +110,7 @@ namespace Zongsoft.Community.Services
 
 			if(pinneds == null)
 			{
-				var threads = this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("IsPinned", true), Paging.Page(1, 10), Sorting.Descending("ThreadId"));
+				var threads = this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("IsPinned", true), paging, Sorting.Descending("ThreadId"));
 				cache.SetValue(this.GetPinnedCacheKey(siteId, forumId), threads.Select(p => p.ThreadId).ToArray());
 				return threads.ToArray();
 			}
@@ -118,10 +118,13 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Select<Thread>(Condition.In("ThreadId", pinneds)).ToArray();
 		}
 
-		public Thread[] GetTopmosts(uint siteId, ushort forumId)
+		public Thread[] GetTopmosts(uint siteId, ushort forumId, int count = 10)
 		{
-			var globals = this.GetGlobalThreads(siteId);
-			var pinneds = this.GetPinnedThreads(siteId, forumId);
+			if(count < 1 || count > 50)
+				count = 10;
+
+			var globals = this.GetGlobalThreads(siteId, Paging.Page(1, count));
+			var pinneds = this.GetPinnedThreads(siteId, forumId, Paging.Page(1, count));
 
 			return globals.Union(pinneds).ToArray();
 		}

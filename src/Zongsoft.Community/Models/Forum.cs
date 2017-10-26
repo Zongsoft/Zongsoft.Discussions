@@ -470,21 +470,6 @@ namespace Zongsoft.Community.Models
 				this.SetPropertyValue(() => this.Moderators, value);
 			}
 		}
-
-		/// <summary>
-		/// 获取或设置论坛的主题集。
-		/// </summary>
-		public IEnumerable<Thread> Threads
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Threads);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Threads, value);
-			}
-		}
 		#endregion
 	}
 }

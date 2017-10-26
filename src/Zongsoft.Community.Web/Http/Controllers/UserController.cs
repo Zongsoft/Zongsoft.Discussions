@@ -41,6 +41,12 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#endregion
 
 		#region 公共方法
+		[ActionName("Histories")]
+		public IEnumerable<History> GetHistories(uint id, [FromRoute("args")]Paging paging = null)
+		{
+			return this.DataService.GetHistories(id, paging);
+		}
+
 		[ActionName("Statistics")]
 		public object GetStatistics(uint id, [FromRoute("args")]string kind = null)
 		{

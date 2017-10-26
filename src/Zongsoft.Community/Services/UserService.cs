@@ -74,6 +74,14 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
+		public IEnumerable<History> GetHistories(uint userId, Paging paging = null)
+		{
+			if(userId == 0)
+				userId = this.EnsureCredential().UserId;
+
+			return this.DataAccess.Select<History>(Condition.Equal("UserId", userId), "Thread", paging);
+		}
+
 		public IEnumerable<Models.Statistics.StatusStatisticResult<MessageMemberStatus>> GetMessageStatistics(uint userId)
 		{
 			return this.DataAccess.Execute<Models.Statistics.StatusStatisticResult<MessageMemberStatus>>("Community.GetMessageStatistics", new Dictionary<string, object> { { "UserId", userId } });

@@ -17,8 +17,20 @@
 		<module name="DataAccessModule" type="Zongsoft.Community.DataAccessModule, Zongsoft.Community" />
 	</modules>
 
-	<extension path="/Workbench/Schemas">
+	<extension path="/Workbench/Schemas/Categories">
 		<object name="Community" title="{res:Text.Community.Title}" description="{res:Text.Community.Description}" />
+	</extension>
+
+	<extension path="/Workbench/Schemas">
+		<object name="Community" value="{path:../Categories/Community}">
+			<object name="FeedbackService" title="{res:Text.FeedbackService.Title}" description="{res:Text.FeedbackService.Description}" />
+			<object name="Forum" title="{res:Text.Forum.Title}" description="{res:Text.Forum.Description}" />
+			<object name="ForumGroup" title="{res:Text.ForumGroup.Title}" description="{res:Text.ForumGroup.Description}" />
+			<object name="Message" title="{res:Text.Message.Title}" description="{res:Text.Message.Description}" />
+			<object name="Post" title="{res:Text.Post.Title}" description="{res:Text.Post.Description}" />
+			<object name="Thread" title="{res:Text.Thread.Title}" description="{res:Text.Thread.Description}" />
+			<object name="User" title="{res:Text.User.Title}" description="{res:Text.User.Description}" />
+		</object>
 	</extension>
 
 	<extension path="/Workbench/Startup">
@@ -27,6 +39,9 @@
 
 	<extension path="/Workspace/Data/DataAccess/Filters">
 		<object name="Community_UserFilter" type="Zongsoft.Community.Data.UserFilter, Zongsoft.Community" />
+		<object name="Community_PostFilter" type="Zongsoft.Community.Data.PostFilter, Zongsoft.Community" />
+		<object name="Community_MessageFilter" type="Zongsoft.Community.Data.MessageFilter, Zongsoft.Community" />
+		<object name="Community_FeedbackFilter" type="Zongsoft.Community.Data.FeedbackFilter, Zongsoft.Community" />
 	</extension>
 
 	<extension path="/Workspace/Services/Providers">

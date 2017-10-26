@@ -33,7 +33,7 @@ namespace Zongsoft.Community.Models
 		private ushort _forumId;
 		private ulong _postId;
 		private ThreadStatus _status;
-		private DateTime _statusTimestamp;
+		private DateTime? _statusTimestamp;
 		private bool _disabled;
 		private bool _isApproved;
 		private bool _isLocked;
@@ -41,10 +41,11 @@ namespace Zongsoft.Community.Models
 		private bool _isValued;
 		private bool _isGlobal;
 		private uint _totalViews;
-		private uint _totalLikes;
 		private uint _totalReplies;
 		private ulong _mostRecentPostId;
 		private uint _mostRecentPostAuthorId;
+		private uint _creatorId;
+		private DateTime _createdTime;
 		#endregion
 
 		#region 构造函数
@@ -189,6 +190,17 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
+		/// 获取主体的封面图片的访问地址。
+		/// </summary>
+		public string CoverPictureUrl
+		{
+			get
+			{
+				return Zongsoft.IO.FileSystem.GetUrl(this.CoverPicturePath);
+			}
+		}
+
+		/// <summary>
 		/// 获取或设置主题的链接地址。
 		/// </summary>
 		public string LinkUrl
@@ -221,7 +233,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的状态变更时间。
 		/// </summary>
-		public DateTime StatusTimestamp
+		public DateTime? StatusTimestamp
 		{
 			get
 			{
@@ -350,21 +362,6 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.TotalViews, ref _totalViews, value);
-			}
-		}
-
-		/// <summary>
-		/// 获取或设置主题的累计点赞总数。
-		/// </summary>
-		public uint TotalLikes
-		{
-			get
-			{
-				return _totalLikes;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TotalLikes, ref _totalLikes, value);
 			}
 		}
 
@@ -510,28 +507,26 @@ namespace Zongsoft.Community.Models
 		{
 			get
 			{
-				if(this.Post == null)
-					return 0;
-
-				return this.Post.CreatorId;
+				return _creatorId;
 			}
 			set
 			{
-				if(this.Post == null)
-					throw new InvalidOperationException();
-
-				this.Post.CreatorId = value;
+				this.SetPropertyValue(nameof(CreatorId), ref _creatorId, value);
 			}
 		}
 
 		/// <summary>
-		/// 获取主题的作者。
+		/// 获取或设置主题的作者。
 		/// </summary>
-		public Zongsoft.Security.Membership.User Creator
+		public UserProfile Creator
 		{
 			get
 			{
-				return this.Post?.Creator;
+				return this.GetPropertyValue(() => this.Creator);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Creator, value);
 			}
 		}
 
@@ -542,32 +537,11 @@ namespace Zongsoft.Community.Models
 		{
 			get
 			{
-				if(this.Post == null)
-					return DateTime.MinValue;
-
-				return this.Post.CreatedTime;
+				return _createdTime;
 			}
 			set
 			{
-				if(this.Post == null)
-					throw new InvalidOperationException();
-
-				this.Post.CreatedTime = value;
-			}
-		}
-
-		/// <summary>
-		/// 获取或设置主题的回帖集。
-		/// </summary>
-		public virtual IEnumerable<Post> Posts
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Posts);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Posts, value);
+				this.SetPropertyValue(nameof(CreatedTime), ref _createdTime, value);
 			}
 		}
 		#endregion

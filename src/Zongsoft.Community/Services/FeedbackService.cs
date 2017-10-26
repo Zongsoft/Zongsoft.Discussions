@@ -19,10 +19,10 @@
 
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 using Zongsoft.Data;
 using Zongsoft.Community.Models;
-using System.Collections.Generic;
 
 namespace Zongsoft.Community.Services
 {
@@ -86,26 +86,6 @@ namespace Zongsoft.Community.Services
 		{
 			//调用基类同名方法
 			return base.OnSelect(condition, scope, paging, sortings);
-		}
-
-		protected override int OnDelete(ICondition condition, string[] cascades)
-		{
-			//获取待删除的数据集
-			var feedbacks = this.Select(condition).ToArray();
-
-			//调用基类同名方法
-			var count = base.OnDelete(condition, cascades);
-
-			if(count > 0)
-			{
-				foreach(var feedback in feedbacks)
-				{
-					if(!Utility.IsContentEmbedded(feedback.ContentType))
-						Utility.DeleteFile(feedback.Content);
-				}
-			}
-
-			return count;
 		}
 
 		protected override int OnInsert(DataDictionary<Feedback> data, string scope)

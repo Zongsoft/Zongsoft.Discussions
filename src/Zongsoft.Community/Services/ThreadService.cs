@@ -22,18 +22,34 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
-using Zongsoft.Runtime.Caching;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
 	[DataSequence("ThreadId", 100000)]
-	[DataSearchKey("Key:Name")]
+	[DataSearchKey("Key:Subject")]
 	public class ThreadService : ServiceBase<Thread>
 	{
+		#region 成员字段
+		private PostService _posting;
+		#endregion
+
 		#region 构造函数
 		public ThreadService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
+		}
+		#endregion
+
+		#region 公共属性
+		public PostService Posting
+		{
+			get
+			{
+				if(_posting == null)
+					_posting = this.ServiceProvider.ResolveRequired<PostService>();
+
+				return _posting;
+			}
 		}
 		#endregion
 
@@ -88,9 +104,6 @@ namespace Zongsoft.Community.Services
 			if(thread.Post != null && !Utility.IsContentEmbedded(thread.Post.ContentType))
 				thread.Post.Content = Utility.ReadTextFile(thread.Post.Content);
 
-			//设置主题的回帖集
-			thread.Posts = this.GetPosts(thread.ThreadId);
-
 			return thread;
 		}
 
@@ -102,9 +115,135 @@ namespace Zongsoft.Community.Services
 			//调用基类同名方法
 			return base.OnSelect(condition, scope, paging, sortings);
 		}
+
+		protected override int OnDelete(ICondition condition, string[] cascades)
+		{
+			var ids = this.DataAccess.Select<Thread>(this.Name, condition, Paging.Disable).Select(p => p.ThreadId).ToArray();
+
+			using(var transaction = new Zongsoft.Transactions.Transaction())
+			{
+				//调用基类同名方法
+				var count = base.OnDelete(condition, cascades);
+
+				if(count > 0)
+					this.DataAccess.Delete<Post>(Condition.In("ThreadId", ids));
+
+				//提交事务
+				transaction.Commit();
+
+				//返回被删除的主题记录数
+				return count;
+			}
+		}
+
+		protected override int OnInsert(DataDictionary<Thread> data, string scope)
+		{
+			var post = data.Get(p => p.Post, null);
+
+			if(post == null || string.IsNullOrEmpty(post.Content))
+				throw new InvalidOperationException("Missing content of the thread.");
+
+			using(var transaction = new Zongsoft.Transactions.Transaction())
+			{
+				//设置主题内容贴编号为零
+				data.Set(p => p.PostId, (ulong)0);
+
+				//调用基类同名方法，插入主题数据
+				var count = base.OnInsert(data, scope);
+
+				if(count < 1)
+					return count;
+
+				//更新主题内容贴的相关属性
+				post.ThreadId = data.Get(p => p.ThreadId);
+				post.ParentId = null;
+				post.IsThread = true;
+				post.SiteId = data.Get(p => p.SiteId);
+				post.CreatorId = data.Get(p => p.CreatorId);
+				post.CreatedTime = data.Get(p => p.CreatedTime);
+
+				//通过帖子服务来新增主题的内容贴
+				count = this.Posting.Insert(post);
+
+				//如果主题内容贴新增成功则提交事务
+				if(count > 0)
+				{
+					//更新新增主题的内容帖子编号
+					this.DataAccess.Update(this.Name, new
+					{
+						ThreadId = data.Get(p => p.ThreadId),
+						PostId = post.PostId,
+					});
+
+					//更新主题数据字典中的内容帖子编号
+					data.Set(p => p.PostId, post.PostId);
+
+					//更新发帖人关联的主题统计信息
+					this.SetUserMostRecentThread(data);
+
+					//提交事务
+					transaction.Commit();
+				}
+
+				return count;
+			}
+		}
+
+		protected override int OnUpdate(DataDictionary<Thread> data, ICondition condition, string scope)
+		{
+			//调用基类同名方法
+			var count = base.OnUpdate(data, condition, scope);
+
+			//获取要更新的主题内容贴
+			var post = data.Get(p => p.Post, null);
+
+			if(post != null)
+			{
+				if(post.PostId == 0)
+				{
+					//优先从主题实体中获取对应的内容贴编号
+					if(data.TryGet(p => p.PostId, out var postId) && postId != 0)
+					{
+						post.PostId = postId;
+					}
+					else
+					{
+						//获取修改主题对应的主题对象
+						var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", data.Get(p => p.ThreadId)), "!, ThreadId, PostId").FirstOrDefault();
+
+						if(thread == null)
+							return count;
+
+						//更新主题内容贴的编号
+						post.PostId = thread.PostId;
+					}
+				}
+
+				return this.Posting.Update(post);
+			}
+
+			return count;
+		}
 		#endregion
 
 		#region 私有方法
+		private bool SetUserMostRecentThread(DataDictionary<Thread> data)
+		{
+			if(data == null)
+				return false;
+
+			if(this.DataAccess.Increment<UserProfile>("TotalThreads", Condition.Equal("UserId", data.Get(p => p.CreatorId))) < 0)
+				return false;
+
+			return this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
+			{
+				UserId = data.Get(p => p.CreatorId),
+				MostRecentThreadId = data.Get(p => p.ThreadId),
+				MostRecentThreadSubject = data.Get(p => p.Subject),
+				MostRecentThreadTime = data.Get(p => p.CreatedTime),
+			}) > 0;
+		}
+
 		private void SetHistory(ulong threadId)
 		{
 			var credential = this.EnsureCredential();

@@ -33,8 +33,6 @@ namespace Zongsoft.Community.Models
 		private Gender _gender;
 		private uint _totalPosts;
 		private uint _totalThreads;
-		private uint _totalInLikes;
-		private uint _totalOutLikes;
 		private ulong? _mostRecentPostId;
 		private DateTime? _mostRecentPostTime;
 		private uint? _mostRecentThreadId;
@@ -165,36 +163,6 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.TotalThreads, ref _totalThreads, value);
-			}
-		}
-
-		/// <summary>
-		/// 获取或设置用户累积收获的点赞数。
-		/// </summary>
-		public uint TotalInLikes
-		{
-			get
-			{
-				return _totalInLikes;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TotalInLikes, ref _totalInLikes, value);
-			}
-		}
-
-		/// <summary>
-		/// 获取或设置用户累积点赞的总数。
-		/// </summary>
-		public uint TotalOutLikes
-		{
-			get
-			{
-				return _totalOutLikes;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TotalOutLikes, ref _totalOutLikes, value);
 			}
 		}
 

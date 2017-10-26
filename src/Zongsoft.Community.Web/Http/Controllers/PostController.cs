@@ -37,5 +37,27 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		{
 		}
 		#endregion
+
+		#region 公共方法
+		[HttpPost]
+		public void Upvote(ulong id, [FromRoute("args")]byte value = 1)
+		{
+			if(!this.DataService.Upvote(id, value))
+				throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+		}
+
+		[HttpPost]
+		public void Downvote(ulong id, [FromRoute("args")]byte value = 1)
+		{
+			if(!this.DataService.Downvote(id, value))
+				throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+		}
+
+		[ActionName("Children")]
+		public IEnumerable<Post> GetChildren(ulong id, [FromUri]Paging paging = null)
+		{
+			return this.DataService.GetChildren(id, paging);
+		}
+		#endregion
 	}
 }

@@ -35,7 +35,9 @@ namespace Zongsoft.Community.Models
 		private bool _isApproved;
 		private bool _isLocked;
 		private bool _isValued;
-		private uint _totalLikes;
+		private bool _isThread;
+		private uint _totalUpvotes;
+		private uint _totalDownvotes;
 		private uint _creatorId;
 		private DateTime _createdTime;
 		#endregion
@@ -229,17 +231,47 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置帖子累计获得的点赞总数。
+		/// 获取或设置一个值，表示帖子是否为主题内容贴。
 		/// </summary>
-		public uint TotalLikes
+		public bool IsThread
 		{
 			get
 			{
-				return _totalLikes;
+				return _isThread;
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.TotalLikes, ref _totalLikes, value);
+				this.SetPropertyValue(nameof(IsThread), ref _isThread, value);
+			}
+		}
+
+		/// <summary>
+		/// 获取或设置帖子的累计点赞总数。
+		/// </summary>
+		public uint TotalUpvotes
+		{
+			get
+			{
+				return _totalUpvotes;
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.TotalUpvotes, ref _totalUpvotes, value);
+			}
+		}
+
+		/// <summary>
+		/// 获取或设置帖子的累计被踩总数。
+		/// </summary>
+		public uint TotalDownvotes
+		{
+			get
+			{
+				return _totalDownvotes;
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.TotalDownvotes, ref _totalDownvotes, value);
 			}
 		}
 
@@ -306,7 +338,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子作者对应的用户对象。
 		/// </summary>
-		public Zongsoft.Security.Membership.User Creator
+		public UserProfile Creator
 		{
 			get
 			{
@@ -331,6 +363,128 @@ namespace Zongsoft.Community.Models
 			{
 				this.SetPropertyValue(() => this.Children, value);
 			}
+		}
+
+		/// <summary>
+		/// 获取或设置帖子的点赞记录集。
+		/// </summary>
+		public IEnumerable<PostVote> Upvotes
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.Upvotes);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Upvotes, value);
+			}
+		}
+
+		/// <summary>
+		/// 获取或设置帖子的被踩记录集。
+		/// </summary>
+		public IEnumerable<PostVote> Downvotes
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.Downvotes);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Downvotes, value);
+			}
+		}
+		#endregion
+
+		#region 嵌套子类
+		/// <summary>
+		/// 表示帖子点赞的实体类。
+		/// </summary>
+		public class PostVote
+		{
+			#region 成员字段
+			private ulong _postId;
+			private uint _userId;
+			private sbyte _value;
+			private DateTime _timestamp;
+			#endregion
+
+			#region 构造函数
+			public PostVote()
+			{
+				_timestamp = DateTime.Now;
+			}
+
+			public PostVote(ulong postId, uint userId, sbyte value)
+			{
+				_postId = postId;
+				_userId = userId;
+				_value = value;
+				_timestamp = DateTime.Now;
+			}
+			#endregion
+
+			#region 公共属性
+			/// <summary>
+			/// 获取或设置投票关联的帖子编号。
+			/// </summary>
+			public ulong PostId
+			{
+				get
+				{
+					return _postId;
+				}
+				set
+				{
+					_postId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置投票的用户编号。
+			/// </summary>
+			public uint UserId
+			{
+				get
+				{
+					return _userId;
+				}
+				set
+				{
+					_userId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置投票值（正数为赞，负数为踩）。
+			/// </summary>
+			public sbyte Value
+			{
+				get
+				{
+					return _value;
+				}
+				set
+				{
+					_value = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置投票的时间。
+			/// </summary>
+			public DateTime Timestamp
+			{
+				get
+				{
+					return _timestamp;
+				}
+				set
+				{
+					_timestamp = value;
+				}
+			}
+			#endregion
 		}
 		#endregion
 	}
