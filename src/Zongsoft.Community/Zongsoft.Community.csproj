@@ -41,18 +41,25 @@
     <Compile Include="Configuration\GeneratlConfiguration.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="DataAccessModule.cs" />
+    <Compile Include="Data\FolderFilter.cs" />
+    <Compile Include="Data\ForumFilter.cs" />
     <Compile Include="Data\MessageFilter.cs" />
     <Compile Include="Data\ContentFilterBase.cs" />
     <Compile Include="Data\FeedbackFilter.cs" />
     <Compile Include="Data\PostFilter.cs" />
     <Compile Include="Data\UserFilter.cs" />
+    <Compile Include="Models\File.cs" />
+    <Compile Include="Models\FileConditional.cs" />
+    <Compile Include="Models\Folder.cs" />
+    <Compile Include="Models\FolderConditional.cs" />
     <Compile Include="Models\Forum.cs" />
-    <Compile Include="Models\ForumAccessibility.cs" />
+    <Compile Include="Models\Accessibility.cs" />
+    <Compile Include="Models\UserKind.cs" />
     <Compile Include="Models\PostConditional.cs" />
     <Compile Include="Models\ThreadConditional.cs" />
     <Compile Include="Models\ForumGroupConditional.cs" />
     <Compile Include="Models\ForumGroup.cs" />
-    <Compile Include="Models\ForumVisiblity.cs" />
+    <Compile Include="Models\Visiblity.cs" />
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\Feedback.cs" />
     <Compile Include="Models\Message.cs" />
@@ -73,6 +80,8 @@
     <Compile Include="Security\AuthenticationWorker.cs" />
     <Compile Include="Security\Credential.cs" />
     <Compile Include="Services\Commands\MessageSendCommand.cs" />
+    <Compile Include="Services\FolderService.cs" />
+    <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\FeedbackService.cs" />
     <Compile Include="Services\PostService.cs" />
     <Compile Include="Services\ThreadService.cs" />
@@ -84,13 +93,16 @@
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Zongsoft.Community.Schemas.plugin" />
     <None Include="Zongsoft.Community.mapping">
       <SubType>Designer</SubType>
     </None>
     <None Include="Zongsoft.Community.option">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Zongsoft.Community.plugin" />
+    <None Include="Zongsoft.Community.plugin">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

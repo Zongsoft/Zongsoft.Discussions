@@ -235,7 +235,7 @@ namespace Zongsoft.Community.Services
 		#region 虚拟方法
 		protected virtual string GetContentFilePath(ulong postId, string contentType)
 		{
-			return string.Format("/posts/post-{0}.txt", postId.ToString());
+			return Utility.GetFilePath(string.Format("posts/post-{0}-{1}.txt", postId.ToString(), Zongsoft.Common.RandomGenerator.GenerateString()));
 		}
 		#endregion
 
@@ -318,6 +318,12 @@ namespace Zongsoft.Community.Services
 			}
 
 			return count > 0;
+		}
+		#endregion
+
+		#region 嵌套子类
+		public class AttachmentService
+		{
 		}
 		#endregion
 	}

@@ -43,6 +43,47 @@ ContactText | varchar | 50 | True | 联系方式
 CreatedTime | datetime | - | False | 反馈时间
 
 
+### 文件夹表 `Community.Folder`
+
+字段名称|数据类型|长度|可空|备注
+--------|:------:|:--:|:--:|----:
+FolderId | int | 4 | False | 主键，文件夹编号
+SiteId | int | 4 | False | 所属站点编号
+Name | nvarchar | 100 | False | 相册名称
+PinYin | varchar | 200 | True | 名称拼音
+Icon | varchar | 50 | True | 图标名
+Visiblity | byte | 1 | False | 可见范围(0:禁用,即不可见; 1:站内用户可见; 2:所有人可见; 3:指定用户)
+Accessibility | byte | 1 | False | 可访问性(0:无限制; 1:注册用户; 2:仅限管理员; 3:指定用户)
+CreatorId | int | 4 | False | 创建人编号
+CreatedTime | datetime | - | False | 创建时间
+Description | varchar | 500 | True | 备注描述
+
+
+### 文件夹用户表 `Community.FolderUser`
+
+字段名称|数据类型|长度|可空|备注
+--------|:------:|:--:|:--:|----:
+FolderId | int | 4 | False | 主键，文件夹编号
+UserId | int | 4 | False | 主键，用户编号
+UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Reader, 3:Writer)
+
+
+### 文件表 `Community.File`
+
+字段名称|数据类型|长度|可空|备注
+--------|:------:|:--:|:--:|----:
+FileId | bigint | 8 | False | 主键，附件编号
+SiteId | int | 4 | True | 所属站点编号
+FolderId | int | 4 | Flase | 所属文件夹编号
+Name | nvarchar | 100 | False | 附件名称
+Path | varchar | 200 | False | 附件路径
+Type | varchar | 50 | False | 附件类型(MIME类型)
+Size | int unsigned | 4 | False | 附件文件大小(单位：字节)
+CreatorId | int | 4 | True | 创建人编号
+CreatedTime | datetime | - | False | 创建时间(上传时间)
+Description | nvarchar | 100 | True | 描述说明
+
+
 ### 论坛分组表 `Community.ForumGroup`
 
 字段名称|数据类型|长度|可空|备注
@@ -69,8 +110,8 @@ CoverPicturePath | varchar | 200 | True | 封面图片路径
 SortOrder | smallint | 2 | False | 排列顺序
 IsPopular | bool | - | False | 是否热门版块
 ApproveEnabled | bool | - | False | 发帖是否需要审核
-Visiblity | byte | 1 | False | 可见范围(0:禁用,即不可见; 1:站内用户可见; 2:所有人可见)
-Accessibility | byte | 1 | False | 可访问性(0:无限制; 1:注册用户; 2:仅限版主)
+Visiblity | byte | 1 | False | 可见范围(0:禁用,即不可见; 1:站内用户可见; 2:所有人可见; 3:指定用户)
+Accessibility | byte | 1 | False | 可访问性(0:无限制; 1:注册用户; 2:仅限版主; 3:指定用户)
 TotalPosts | int | 4 | False | 累计帖子总数
 TotalThreads | int | 4 | False | 累计主题总数
 MostRecentThreadId | bigint | 8 | True | 最新主题的编号
@@ -87,13 +128,14 @@ MostRecentPostTime | datetime | - | True | 最后回帖的时间
 CreatedTime | datetime | - | False | 创建时间
 
 
-### 版主表 `Community.Moderator`
+### 论坛用户表 `Community.ForumUser`
 
 字段名称|数据类型|长度|可空|备注
 --------|:------:|:--:|:--:|----:
 SiteId | int | 4 | False | 主键，站点编号
 ForumId | smallint | 2 | False | 主键，论坛编号
 UserId | int | 4 | False | 主键，用户编号
+UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Reader, 3:Writer)
 
 
 ### 主题表 `Community.Thread`
@@ -165,6 +207,14 @@ UserName | nvarchar | 50 | True | 用户名称
 UserAvatar | nvarchar | 150 | True | 用户头像
 Value | byte | 1 | False | 投票数(正数为Upvote，负数为Downvote)
 Tiemstamp | datetime | - | False | 投票时间
+
+
+### 帖子附件表 `Community.PostAttachment`
+
+字段名称|数据类型|长度|可空|备注
+--------|:------:|:--:|:--:|----:
+PostId | bigint | 8 | False | 主键，帖子编号
+FileId | bigint | 8 | False | 主键，文件编号
 
 
 ### 用户浏览记录表 `Community.History`

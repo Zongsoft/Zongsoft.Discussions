@@ -23,17 +23,20 @@ using System.ComponentModel;
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示论坛可见性的枚举。
+	/// 表示用户种类的枚举。
 	/// </summary>
-	public enum ForumVisiblity : byte
+	public enum UserKind : byte
 	{
-		/// <summary>隐藏，版块被停用</summary>
-		Hidden,
+		/// <summary>未定义</summary>
+		None,
 
-		/// <summary>内部访问，仅限企业员工浏览</summary>
-		Internal,
+		/// <summary>管理员(版主)</summary>
+		Administrator,
 
-		/// <summary>公共，所有用户均可浏览</summary>
-		Public,
+		/// <summary>只读用户</summary>
+		Reader,
+
+		/// <summary>可读写用户</summary>
+		Writer,
 	}
 }

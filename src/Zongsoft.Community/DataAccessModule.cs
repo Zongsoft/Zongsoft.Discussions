@@ -34,13 +34,18 @@ namespace Zongsoft.Community
 		internal const string SECURITY_USER = "Security.User";
 
 		internal const string COMMUNITY_FEEDBACK = "Community.Feedback";
-		internal const string COMMUNITY_FORUM = "Community.Forum";
-		internal const string COMMUNITY_FORUMGROUP = "Community.ForumGroup";
 		internal const string COMMUNITY_MESSAGE = "Community.Message";
 		internal const string COMMUNITY_MESSAGEMEMBER = "Community.MessageMember";
+		internal const string COMMUNITY_FILE = "Community.File";
+		internal const string COMMUNITY_FOLDER = "Community.Folder";
+		internal const string COMMUNITY_FOLDERUSER = "Community.FolderUser";
+		internal const string COMMUNITY_FORUMGROUP = "Community.ForumGroup";
+		internal const string COMMUNITY_FORUM = "Community.Forum";
+		internal const string COMMUNITY_FORUMUSER = "Community.ForumUser";
 		internal const string COMMUNITY_MODERATOR = "Community.Moderator";
 		internal const string COMMUNITY_POST = "Community.Post";
 		internal const string COMMUNITY_POSTVOTING = "Community.PostVoting";
+		internal const string COMMUNITY_POSTATTACHMENT = "Community.PostAttachment";
 		internal const string COMMUNITY_HISTORY = "Community.History";
 		internal const string COMMUNITY_THREAD = "Community.Thread";
 		internal const string COMMUNITY_USERPROFILE = "Community.UserProfile";
@@ -95,6 +100,7 @@ namespace Zongsoft.Community
 			naming.Map<Moderator>(COMMUNITY_MODERATOR);
 			naming.Map<Post>(COMMUNITY_POST);
 			naming.Map<Post.PostVoting>(COMMUNITY_POSTVOTING);
+			naming.Map<Post.PostAttachment>();
 			naming.Map<Thread>(COMMUNITY_THREAD);
 			naming.Map<UserProfile>(COMMUNITY_USERPROFILE);
 		}

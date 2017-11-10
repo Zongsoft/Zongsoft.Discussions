@@ -72,12 +72,16 @@ namespace Zongsoft.Community.Services
 				userId = credential.UserId;
 			}
 
-			return this.GetModerators(siteId, forumId).Any(p => p.UserId == userId);
+			return this.DataAccess.Exists<Forum.ForumUser>(
+				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) &
+				Condition.Equal("UserId", userId) & Condition.Equal("UserKind", UserKind.Administrator));
 		}
 
-		public ICollection<UserProfile> GetModerators(uint siteId, ushort forumId)
+		public IEnumerable<UserProfile> GetModerators(uint siteId, ushort forumId)
 		{
-			return this.DataAccess.Select<Moderator>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId), "User, User.User", Paging.Disable).Select(p => p.User).ToArray();
+			return this.DataAccess.Select<Forum.ForumUser>(
+				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("UserKind", UserKind.Administrator),
+				"User, User.User", Paging.Disable).Select(p => p.User);
 		}
 
 		public Thread[] GetGlobalThreads(uint siteId, Paging paging = null)
@@ -149,6 +153,30 @@ namespace Zongsoft.Community.Services
 			}
 
 			return base.GetKey(values, out singleton);
+		}
+
+		protected override void EnsureRequiredCondition(ref ICondition condition)
+		{
+			//调用基类同名方法
+			base.EnsureRequiredCondition(ref condition);
+
+			//获取当前用户凭证
+			var credential = this.EnsureCredential(false);
+			ICondition requires = null;
+
+			//如果凭证为空或匿名用户则只能获取公共数据
+			if(credential == null || credential.IsEmpty)
+				requires = Condition.Equal("Visiblity", Visiblity.Public);
+			else if(!credential.InAdministrators) //如果不是管理员则只能获取内部或公共数据
+				requires = Condition.In("Visiblity", (byte)Visiblity.Internal, (byte)Visiblity.Public);
+
+			if(requires != null)
+			{
+				if(condition == null)
+					condition = requires;
+				else
+					condition = new ConditionCollection(ConditionCombination.And, requires, condition);
+			}
 		}
 
 		protected override Forum OnGet(ICondition condition, string scope)

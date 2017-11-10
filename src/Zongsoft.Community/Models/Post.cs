@@ -534,6 +534,60 @@ namespace Zongsoft.Community.Models
 			}
 			#endregion
 		}
+
+		/// <summary>
+		/// 表示帖子附件的业务实体类。
+		/// </summary>
+		public class PostAttachment
+		{
+			#region 成员字段
+			private ulong _postId;
+			private ulong _fileId;
+			#endregion
+
+			#region 构造函数
+			public PostAttachment()
+			{
+			}
+
+			public PostAttachment(ulong postId, ulong fileId)
+			{
+				_postId = postId;
+				_fileId = fileId;
+			}
+			#endregion
+			#region 公共属性
+			/// <summary>
+			/// 获取或设置帖子编号。
+			/// </summary>
+			public ulong PostId
+			{
+				get
+				{
+					return _postId;
+				}
+				set
+				{
+					_postId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置帖子的文件编号。
+			/// </summary>
+			public ulong FileId
+			{
+				get
+				{
+					return _fileId;
+				}
+				set
+				{
+					_fileId = value;
+				}
+			}
+			#endregion
+		}
 		#endregion
 	}
 }

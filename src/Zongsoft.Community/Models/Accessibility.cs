@@ -23,17 +23,20 @@ using System.ComponentModel;
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示论坛可访问性(发帖回帖)的枚举。
+	/// 表示可访问性(可写入性)的枚举。
 	/// </summary>
-	public enum ForumAccessibility : byte
+	public enum Accessibility : byte
 	{
 		/// <summary>无限制，所有用户均可访问</summary>
-		All,
+		None,
 
 		/// <summary>登录用户均可访问</summary>
 		Users,
 
-		/// <summary>仅限版主</summary>
-		Moderators
+		/// <summary>仅限管理员</summary>
+		Administrators,
+
+		/// <summary>指定的用户</summary>
+		Specifics,
 	}
 }

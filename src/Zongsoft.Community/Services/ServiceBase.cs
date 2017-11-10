@@ -21,11 +21,16 @@ using System;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
+using Zongsoft.Services;
 
 namespace Zongsoft.Community.Services
 {
 	public abstract class ServiceBase<TEntity> : Zongsoft.Data.DataService<TEntity>
 	{
+		#region 成员字段
+		private Configuration.IConfiguration _configuration;
+		#endregion
+
 		#region 构造函数
 		protected ServiceBase(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
@@ -33,6 +38,21 @@ namespace Zongsoft.Community.Services
 
 		protected ServiceBase(string name, Zongsoft.Services.IServiceProvider serviceProvider) : base(name, serviceProvider)
 		{
+		}
+		#endregion
+
+		#region 公共属性
+		[ServiceDependency]
+		public Configuration.IConfiguration Configuration
+		{
+			get
+			{
+				return _configuration;
+			}
+			set
+			{
+				_configuration = value ?? throw new ArgumentNullException();
+			}
 		}
 		#endregion
 
@@ -51,25 +71,27 @@ namespace Zongsoft.Community.Services
 
 			return null;
 		}
+
+		protected uint GetSiteId()
+		{
+			var credential = this.EnsureCredential(false);
+
+			if(credential == null || credential.IsEmpty)
+				return _configuration.SiteId;
+			else
+				return credential.SiteId;
+		}
 		#endregion
 
 		#region 虚拟方法
-		protected virtual bool EnsureRequiredCondition(ref ICondition condition)
+		protected virtual void EnsureRequiredCondition(ref ICondition condition)
 		{
-			var credential = this.EnsureCredential(false);
-			var isRequired = credential != null && !credential.InAdministrators;
+			ICondition requires = Condition.Equal("SiteId", this.GetSiteId());
 
-			if(isRequired && !string.IsNullOrWhiteSpace(credential.User.PrincipalId))
-			{
-				var requires = Condition.Equal("SiteId", credential.User.PrincipalId);
-
-				if(condition == null)
-					condition = requires;
-				else
-					condition = new ConditionCollection(ConditionCombination.And, requires, condition);
-			}
-
-			return isRequired;
+			if(condition == null)
+				condition = requires;
+			else
+				condition = ConditionCollection.And(condition, requires);
 		}
 
 		protected virtual void EnsureDefaultValues(DataDictionary<TEntity> data)
@@ -89,7 +111,7 @@ namespace Zongsoft.Community.Services
 				});
 
 				//尝试设置所属站点编号
-				data.TrySet("SiteId", () => credential.User.PrincipalId, value =>
+				data.TrySet("SiteId", () => this.GetSiteId(), value =>
 				{
 					return value == null || Zongsoft.Common.Convert.ConvertValue(value, 0) == 0;
 				});

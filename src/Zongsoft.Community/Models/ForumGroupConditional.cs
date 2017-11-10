@@ -52,7 +52,7 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public ForumVisiblity? Visiblity
+		public Visiblity? Visiblity
 		{
 			get
 			{

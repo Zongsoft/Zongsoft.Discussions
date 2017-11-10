@@ -112,7 +112,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛组的可见性。
 		/// </summary>
-		public ForumVisiblity Visiblity
+		public Visiblity Visiblity
 		{
 			get
 			{

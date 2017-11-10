@@ -55,6 +55,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Http\Controllers\FolderController.cs" />
+    <Compile Include="Http\Controllers\FileController.cs" />
     <Compile Include="Http\Controllers\FeedbackController.cs" />
     <Compile Include="Http\Controllers\PostController.cs" />
     <Compile Include="Http\Controllers\ThreadController.cs" />
@@ -72,7 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Zongsoft.Community.Web.plugin" />
+    <None Include="Zongsoft.Community.Web.plugin">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

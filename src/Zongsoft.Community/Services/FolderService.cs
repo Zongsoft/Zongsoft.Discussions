@@ -26,75 +26,79 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSequence("Community:FeedbackId", 100000)]
-	[DataSearchKey("Key:Subject,ContactName,ContactText")]
-	public class FeedbackService : ServiceBase<Feedback>
+	[DataSequence("Community:FolderId", 100000)]
+	[DataSearchKey("Key:Name")]
+	public class FolderService : ServiceBase<Folder>
 	{
 		#region 构造函数
-		public FeedbackService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public FolderService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
 
-		#region 重写方法
-		protected override void EnsureDefaultValues(DataDictionary<Feedback> data)
+		#region 公共方法
+		public string GetFolderDirectory(uint folderId)
 		{
-			//设置创建时间
-			data.TrySet("CreatedTime", DateTime.Now);
-
-			//尝试更新当前反馈的所属站点编号
-			data.TrySet(p => p.SiteId, _ => this.EnsureCredential().SiteId, value => value == 0);
+			return Zongsoft.IO.Path.Combine(
+				this.Configuration.BasePath,
+				$"site-{this.GetSiteId()}/folder-{folderId}/{DateTime.Today.ToString("yyyyMMdd")}/");
 		}
 
-		protected override Feedback OnGet(ICondition condition, string scope)
+		public IEnumerable<Folder.FolderUser> GetUsers(uint folderId, UserKind? userKind = null, Paging paging = null)
 		{
-			//调用基类同名方法
-			var feedback = base.OnGet(condition, scope);
+			ICondition conditions = Condition.Equal("FolderId", folderId);
 
-			if(feedback == null)
+			if(userKind.HasValue)
+				conditions = ConditionCollection.And(conditions, Condition.Equal("UserKind", userKind.Value));
+
+			return this.DataAccess.Select<Folder.FolderUser>(conditions, "User, User.User", paging);
+		}
+
+		public bool SetIcon(uint folderId, string icon)
+		{
+			return this.DataAccess.Update(this.DataAccess.Naming.Get<Folder>(), new
+			{
+				FolderId = folderId,
+				Icon = icon,
+			}) > 0;
+		}
+
+		public bool SetVisiblity(uint folderId, Visiblity visiblity)
+		{
+			return this.DataAccess.Update(this.DataAccess.Naming.Get<Folder>(), new
+			{
+				FolderId = folderId,
+				Visiblity = visiblity,
+			}) > 0;
+		}
+
+		public bool SetAccessibility(uint folderId, Accessibility accessibility)
+		{
+			return this.DataAccess.Update(this.DataAccess.Naming.Get<Folder>(), new
+			{
+				FolderId = folderId,
+				Accessibility = accessibility,
+			}) > 0;
+		}
+		#endregion
+
+		#region 重写方法
+		protected override Folder OnGet(ICondition condition, string scope)
+		{
+			if(string.IsNullOrWhiteSpace(scope))
+				scope = "Creator, Creator.User";
+
+			//调用基类同名方法
+			var folder = base.OnGet(condition, scope);
+
+			if(folder == null)
 				return null;
 
-			//如果内容类型是外部文件（即非嵌入格式），则读取文件内容
-			if(!Utility.IsContentEmbedded(feedback.ContentType))
-				feedback.Content = Utility.ReadTextFile(feedback.Content);
-
-			return feedback;
+			return folder;
 		}
 
-		protected override IEnumerable<Feedback> OnSelect(ICondition condition, string scope, Paging paging, params Sorting[] sortings)
+		protected override int OnInsert(DataDictionary<Folder> data, string scope)
 		{
-			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings);
-		}
-
-		protected override int OnInsert(DataDictionary<Feedback> data, string scope)
-		{
-			string filePath = null;
-
-			//获取原始的内容类型
-			var rawType = data.Get(p => p.ContentType, null);
-
-			//调整内容类型为嵌入格式
-			data.Set(p => p.ContentType, Utility.GetContentType(rawType, true));
-
-			data.TryGet(p => p.Content, (key, value) =>
-			{
-				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
-					return;
-
-				//设置内容文件的存储路径
-				filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId), data.Get(p => p.ContentType));
-
-				//将内容文本写入到文件中
-				Utility.WriteTextFile(filePath, value);
-
-				//更新内容文件的存储路径
-				data.Set(p => p.Content, filePath);
-
-				//更新内容类型为非嵌入格式（即外部文件）
-				data.Set(p => p.ContentType, Utility.GetContentType(data.Get(p => p.ContentType), false));
-			});
-
 			try
 			{
 				//调用基类同名方法
@@ -147,13 +151,6 @@ namespace Zongsoft.Community.Services
 				return count;
 
 			return count;
-		}
-		#endregion
-
-		#region 虚拟方法
-		protected virtual string GetContentFilePath(ulong feedbackId, string contentType)
-		{
-			return Utility.GetFilePath(string.Format("feedbacks/feedback-{0}.txt", feedbackId.ToString()));
 		}
 		#endregion
 	}

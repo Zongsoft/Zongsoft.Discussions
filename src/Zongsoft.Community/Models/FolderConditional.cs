@@ -18,37 +18,37 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class ForumConditional : Zongsoft.Data.Conditional
+	public class FolderConditional : Zongsoft.Data.Conditional
 	{
 		#region 公共属性
-		[Conditional("Name")]
+		[Conditional("Name", "PinYin")]
 		public string Key
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.Key);
+				return this.GetPropertyValue<string>(nameof(Key));
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.Key, value);
+				this.SetPropertyValue(nameof(Key), value);
 			}
 		}
 
+		[Conditional("Name", "PinYin")]
 		public string Name
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.Name);
+				return this.GetPropertyValue<string>(nameof(Name));
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.Name, value);
+				this.SetPropertyValue(nameof(Name), value);
 			}
 		}
 
@@ -56,11 +56,11 @@ namespace Zongsoft.Community.Models
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.Visiblity);
+				return this.GetPropertyValue<Visiblity?>(nameof(Visiblity));
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.Visiblity, value);
+				this.SetPropertyValue(nameof(Visiblity), value);
 			}
 		}
 
@@ -68,23 +68,23 @@ namespace Zongsoft.Community.Models
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.Accessibility);
+				return this.GetPropertyValue<Accessibility?>(nameof(Accessibility));
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.Accessibility, value);
+				this.SetPropertyValue(nameof(Accessibility), value);
 			}
 		}
 
-		public bool? IsPopular
+		public uint? CreatorId
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.IsPopular);
+				return this.GetPropertyValue<uint?>(nameof(CreatorId));
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.IsPopular, value);
+				this.SetPropertyValue(nameof(CreatorId), value);
 			}
 		}
 
@@ -92,11 +92,11 @@ namespace Zongsoft.Community.Models
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.CreatedTime);
+				return this.GetPropertyValue<ConditionalRange<DateTime>>(nameof(CreatedTime));
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.CreatedTime, value);
+				this.SetPropertyValue(nameof(CreatedTime), value);
 			}
 		}
 		#endregion

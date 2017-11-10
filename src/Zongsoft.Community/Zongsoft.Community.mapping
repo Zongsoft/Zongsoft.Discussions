@@ -40,6 +40,62 @@
 		</key>
 	</entity>
 
+	<entity name="Community.File" table="Community_File" type="Zongsoft.Community.Models.File, Zongsoft.Community">
+		<key>
+			<property name="FileId"/>
+		</key>
+
+		<property name="Url" field="" />
+
+		<property name="Folder" relationTo="Community.Folder">
+			<join mode="left">
+				<member from="FolderId" to="FolderId"/>
+			</join>
+		</property>
+
+		<property name="Creator" relationTo="Community.UserProfile">
+			<join>
+				<member from="CreatorId" to="UserId"/>
+			</join>
+		</property>
+	</entity>
+
+	<entity name="Community.Folder" table="Community_Folder" type="Zongsoft.Community.Models.Folder, Zongsoft.Community">
+		<key>
+			<property name="FolderId"/>
+		</key>
+
+		<property name="Folders" field="" />
+		<property name="Files" field="" />
+		<property name="Users" field="" />
+
+		<property name="Branch" relationTo="Branch">
+			<join mode="left">
+				<member from="CorporationId" to="CorporationId"/>
+				<member from="BranchId" to="BranchId"/>
+			</join>
+		</property>
+
+		<property name="Creator" relationTo="Community.UserProfile">
+			<join>
+				<member from="CreatorId" to="UserId"/>
+			</join>
+		</property>
+	</entity>
+
+	<entity name="Community.FolderUser" table="Community_FolderUser" type="Zongsoft.Community.Models.Folder+FolderUser, Zongsoft.Community">
+		<key>
+			<property name="FolderId"/>
+			<property name="UserId"/>
+		</key>
+
+		<property name="User" relationTo="Community.UserProfile">
+			<join>
+				<member from="UserId" to="UserId"/>
+			</join>
+		</property>
+	</entity>
+
 	<entity name="Community.ForumGroup" table="Community_ForumGroup" type="Zongsoft.Community.Models.ForumGroup, Zongsoft.Community">
 		<key>
 			<property name="SiteId"/>
@@ -60,6 +116,20 @@
 			<join>
 				<member from="SiteId" to="SiteId"/>
 				<member from="GroupId" to="GroupId"/>
+			</join>
+		</property>
+	</entity>
+
+	<entity name="Community.ForumUser" table="Community_ForumUser" type="Zongsoft.Community.Models.Forum+ForumUser, Zongsoft.Community">
+		<key>
+			<property name="SiteId"/>
+			<property name="ForumId"/>
+			<property name="UserId" />
+		</key>
+
+		<property name="User" relationTo="Community.UserProfile">
+			<join>
+				<member from="UserId" to="UserId"/>
 			</join>
 		</property>
 	</entity>

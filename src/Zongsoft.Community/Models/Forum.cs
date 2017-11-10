@@ -39,16 +39,16 @@ namespace Zongsoft.Community.Models
 		private uint? _mostRecentThreadAuthorId;
 		private ulong? _mostRecentPostId;
 		private uint? _mostRecentPostAuthorId;
-		private ForumVisiblity _visiblity;
-		private ForumAccessibility _accessibility;
+		private Visiblity _visiblity;
+		private Accessibility _accessibility;
 		private DateTime _createdTime;
 		#endregion
 
 		#region 构造函数
 		public Forum()
 		{
-			this.Visiblity = ForumVisiblity.Public;
-			this.Accessibility = ForumAccessibility.All;
+			this.Visiblity = Visiblity.Public;
+			this.Accessibility = Accessibility.None;
 			this.CreatedTime = DateTime.Now;
 		}
 		#endregion
@@ -218,7 +218,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛的可见性。
 		/// </summary>
-		public ForumVisiblity Visiblity
+		public Visiblity Visiblity
 		{
 			get
 			{
@@ -233,7 +233,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛的可访问性。
 		/// </summary>
-		public ForumAccessibility Accessibility
+		public Accessibility Accessibility
 		{
 			get
 			{
@@ -468,6 +468,113 @@ namespace Zongsoft.Community.Models
 			{
 				this.SetPropertyValue(() => this.Moderators, value);
 			}
+		}
+		#endregion
+
+		#region 嵌套子类
+		/// <summary>
+		/// 表示论坛用户的业务实体类。
+		/// </summary>
+		public class ForumUser
+		{
+			#region 成员字段
+			private uint _siteId;
+			private ushort _forumId;
+			private uint _userId;
+			private UserProfile _user;
+			private UserKind _userKind;
+			#endregion
+
+			#region 构造函数
+			public ForumUser()
+			{
+			}
+
+			public ForumUser(uint siteId, ushort forumId, uint userId, UserKind userKind)
+			{
+				_siteId = siteId;
+				_forumId = forumId;
+				_userId = userId;
+				_userKind = userKind;
+			}
+			#endregion
+
+			#region 公共属性
+			/// <summary>
+			/// 获取或设置站点编号。
+			/// </summary>
+			public uint SiteId
+			{
+				get
+				{
+					return _siteId;
+				}
+				set
+				{
+					_siteId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置论坛编号。
+			/// </summary>
+			public ushort ForumId
+			{
+				get
+				{
+					return _forumId;
+				}
+				set
+				{
+					_forumId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置用户编号。
+			/// </summary>
+			public uint UserId
+			{
+				get
+				{
+					return _userId;
+				}
+				set
+				{
+					_userId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置用户信息。
+			/// </summary>
+			public UserProfile User
+			{
+				get
+				{
+					return _user;
+				}
+				set
+				{
+					_user = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置当前论坛用户的所属种类。
+			/// </summary>
+			public UserKind UserKind
+			{
+				get
+				{
+					return _userKind;
+				}
+				set
+				{
+					_userKind = value;
+				}
+			}
+			#endregion
 		}
 		#endregion
 	}

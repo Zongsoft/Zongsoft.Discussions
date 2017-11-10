@@ -17,6 +17,10 @@
 		</assemblies>
 	</manifest>
 
+	<extension path="/Workspace/Services/Community">
+		<object name="WebFileAccessor" basePath="{opt:/Community/General.BasePath}" type="Zongsoft.Web.WebFileAccessor, Zongsoft.Web" />
+	</extension>
+
 	<!-- 挂载Web.Api路由 -->
 	<extension path="/Workbench/Web/Routes">
 		<route name="Community-Api" kind="api"
@@ -32,8 +36,7 @@
 	</extension>
 
 	<extension path="/Workspace/Web/Controllers/Api/Community">
-		<object name="File" basePath="zfs.oss:/zongsoft-community/" type="Zongsoft.Web.Http.Controllers.FileController, Zongsoft.Web" />
-
+		<object name="File" type="Zongsoft.Community.Web.Http.Controllers.FileController, Zongsoft.Community.Web" />
 		<object name="Feedback" type="Zongsoft.Community.Web.Http.Controllers.FeedbackController, Zongsoft.Community.Web" />
 		<object name="Forum" type="Zongsoft.Community.Web.Http.Controllers.ForumController, Zongsoft.Community.Web" />
 		<object name="ForumGroup" type="Zongsoft.Community.Web.Http.Controllers.ForumGroupController, Zongsoft.Community.Web" />

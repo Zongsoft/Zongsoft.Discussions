@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<plugin name="Zongsoft.Community.Schemas"
+        title="Zongsoft.Community Schemas Plugin"
+        author="Popeye Zhong(9555843@qq.com)"
+        version="1.0"
+        copyright="Copyright(C) Zongsoft Corporation. 2015-2017. All rights reserved."
+        description="Created by Popeye Zhong in 2017-10">
+
+	<manifest>
+		<assemblies>
+			<assembly name="Zongsoft.Community" />
+		</assemblies>
+
+		<dependencies>
+			<dependency name="Zongsoft.Community" />
+		</dependencies>
+	</manifest>
+
+	<extension path="/Workbench/Schemas/Categories">
+		<object name="Community" title="{res:Text.Community.Title}" description="{res:Text.Community.Description}" />
+	</extension>
+
+	<extension path="/Workbench/Schemas">
+		<object name="Community" value="{path:../Categories/Community}">
+			<object name="FeedbackService" title="{res:Text.FeedbackService.Title}" description="{res:Text.FeedbackService.Description}" />
+			<object name="Forum" title="{res:Text.Forum.Title}" description="{res:Text.Forum.Description}" />
+			<object name="ForumGroup" title="{res:Text.ForumGroup.Title}" description="{res:Text.ForumGroup.Description}" />
+			<object name="Message" title="{res:Text.Message.Title}" description="{res:Text.Message.Description}" />
+			<object name="Post" title="{res:Text.Post.Title}" description="{res:Text.Post.Description}" />
+			<object name="Thread" title="{res:Text.Thread.Title}" description="{res:Text.Thread.Description}" />
+			<object name="User" title="{res:Text.User.Title}" description="{res:Text.User.Description}" />
+		</object>
+	</extension>
+</plugin>

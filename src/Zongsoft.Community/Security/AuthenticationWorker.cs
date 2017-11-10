@@ -35,7 +35,6 @@ namespace Zongsoft.Community.Security
 	{
 		#region 成员字段
 		private IDataAccess _dataAccess;
-		private UserService _userService;
 		private IAuthentication _authentication;
 		#endregion
 

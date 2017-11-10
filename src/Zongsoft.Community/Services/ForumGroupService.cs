@@ -37,11 +37,11 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public ICollection<Forum> GetForums(uint siteId, ushort groupId)
+		public IEnumerable<Forum> GetForums(uint siteId, ushort groupId)
 		{
 			return this.DataAccess.Select<Forum>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("GroupId", groupId),
-				Paging.Disable).ToArray();
+				Paging.Disable);
 		}
 		#endregion
 
@@ -57,15 +57,37 @@ namespace Zongsoft.Community.Services
 			return base.GetKey(values, out singleton);
 		}
 
+		protected override void EnsureRequiredCondition(ref ICondition condition)
+		{
+			//调用基类同名方法
+			base.EnsureRequiredCondition(ref condition);
+
+			//获取当前用户凭证
+			var credential = this.EnsureCredential(false);
+			ICondition requires = null;
+
+			//如果凭证为空或匿名用户则只能获取公共数据
+			if(credential == null || credential.IsEmpty)
+				requires = Condition.Equal("Visiblity", Visiblity.Public);
+			else if(!credential.InAdministrators) //如果不是管理员则只能获取内部或公共数据
+				requires = Condition.In("Visiblity", (byte)Visiblity.Internal, (byte)Visiblity.Public);
+
+			if(requires != null)
+			{
+				if(condition == null)
+					condition = requires;
+				else
+					condition = new ConditionCollection(ConditionCombination.And, requires, condition);
+			}
+		}
+
 		protected override ForumGroup OnGet(ICondition condition, string scope)
 		{
 			//调用基类同名方法
 			var group = base.OnGet(condition, scope);
 
 			if(group != null)
-			{
-				group.Forums = this.DataAccess.Select<Forum>(Condition.Equal("GroupId", group.GroupId), Paging.Disable, Sorting.Ascending("SortOrder"));
-			}
+				group.Forums = this.GetForums(group.SiteId, group.GroupId);
 
 			return group;
 		}
@@ -85,6 +107,22 @@ namespace Zongsoft.Community.Services
 
 			return groups;
 		}
+		#endregion
+
+		#region 私有方法
+		//private bool CanVisiblity(Forum forum)
+		//{
+		//	if(forum == null)
+		//		return false;
+
+		//	var credential = this.EnsureCredential();
+
+		//	switch(forum.Visiblity)
+		//	{
+		//		case Visiblity.Hidden:
+		//			return forum.
+		//	}
+		//}
 		#endregion
 	}
 }

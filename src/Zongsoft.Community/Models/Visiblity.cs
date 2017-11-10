@@ -18,31 +18,25 @@
  */
 
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 
-namespace Zongsoft.Community.Configuration
+namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示应用配置信息的接口。
+	/// 表示可见性的枚举。
 	/// </summary>
-	public interface IConfiguration
+	public enum Visiblity : byte
 	{
-		/// <summary>
-		/// 获取或设置默认的站点编号。
-		/// </summary>
-		uint SiteId
-		{
-			get;
-			set;
-		}
+		/// <summary>隐藏，仅限所有人可见</summary>
+		Hidden,
 
-		/// <summary>
-		/// 获取或设置文件存储的基路径。
-		/// </summary>
-		string BasePath
-		{
-			get;
-			set;
-		}
+		/// <summary>内部访问，仅限站内用户浏览</summary>
+		Internal,
+
+		/// <summary>公共，所有用户均可浏览</summary>
+		Public,
+
+		/// <summary>指定的用户</summary>
+		Specifics,
 	}
 }

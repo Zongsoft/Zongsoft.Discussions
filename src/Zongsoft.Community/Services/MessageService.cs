@@ -190,7 +190,7 @@ namespace Zongsoft.Community.Services
 		#region 虚拟方法
 		protected virtual string GetContentFilePath(ulong messageId, string contentType)
 		{
-			return string.Format("/messages/message-{0}.txt", messageId.ToString());
+			return Utility.GetFilePath(string.Format("messages/message-{0}.txt", messageId.ToString()));
 		}
 		#endregion
 	}
