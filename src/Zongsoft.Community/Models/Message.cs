@@ -190,15 +190,15 @@ namespace Zongsoft.Community.Models
 		#endregion
 
 		#region 关联属性
-		public IEnumerable<MessageMember> Members
+		public IEnumerable<MessageUser> Users
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.Members);
+				return this.GetPropertyValue(() => this.Users);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.Members, value);
+				this.SetPropertyValue(() => this.Users, value);
 			}
 		}
 		#endregion
@@ -207,9 +207,9 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 表示消息接受人的业务实体类。
 		/// </summary>
-		public class MessageMember
+		public class MessageUser
 		{
-			public MessageMember(uint userId)
+			public MessageUser(uint userId)
 			{
 				this.UserId = userId;
 			}
@@ -238,13 +238,7 @@ namespace Zongsoft.Community.Models
 				set;
 			}
 
-			public MessageMemberStatus Status
-			{
-				get;
-				set;
-			}
-
-			public DateTime? StatusTimestamp
+			public bool IsRead
 			{
 				get;
 				set;

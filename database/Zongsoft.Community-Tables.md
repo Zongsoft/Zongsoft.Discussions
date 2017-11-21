@@ -19,14 +19,13 @@ CreatorId | int | 4 | False | 发送人编号(零表示系统消息)
 CreatedTime | datetime | - | False | 创建时间
 
 
-### 消息接收人员表 `Community.MessageMember`
+### 消息接收人员表 `Community.MessageUser`
 
 字段名称|数据类型|长度|可空|备注
 --------|:------:|:--:|:--:|----:
 MessageId | bigint | 8 | False | 主键，消息编号
 UserId | int | 4 | False | 主键，用户编号
-Status | byte | 1 | False | 状态(0:None, 1:Read)
-StatusTimestamp | datetime | - | True | 状态更新时间
+IsRead | bool | - | False | 是否已读
 
 
 ### 意见反馈表 `Community.Feedback`
@@ -75,10 +74,10 @@ UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Reader, 3:
 FileId | bigint | 8 | False | 主键，附件编号
 SiteId | int | 4 | True | 所属站点编号
 FolderId | int | 4 | Flase | 所属文件夹编号
-Name | nvarchar | 100 | False | 附件名称
-Path | varchar | 200 | False | 附件路径
-Type | varchar | 50 | False | 附件类型(MIME类型)
-Size | int unsigned | 4 | False | 附件文件大小(单位：字节)
+Name | nvarchar | 100 | False | 文件名称
+Path | varchar | 200 | False | 文件路径
+Type | varchar | 50 | False | 文件类型(MIME类型)
+Size | int unsigned | 4 | False | 文件大小(单位：字节)
 CreatorId | int | 4 | True | 创建人编号
 CreatedTime | datetime | - | False | 创建时间(上传时间)
 Description | nvarchar | 100 | True | 描述说明
@@ -183,18 +182,31 @@ SiteId | int | 4 | False | 所属站点编号
 ThreadId | bigint | 8 | False | 所属主题编号
 Content | varchar | 500 | False | 帖子内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
-ParentId | bigint | 8 | True | 应答的回复编号
 Disabled | bool | - | False | 已被禁用(False)
 IsApproved | bool | - | False | 是否审核通过
 IsLocked | bool | - | False | 是否已锁定(锁定则不允许回复)
 IsValued | bool | _ | False | 是否精华帖
-IsThread | bool | - | False | 是否主题内容贴(False)
 TotalUpvotes | int | 4 | False | 累计点赞数
 TotalDownvotes | int | 4 | False | 累计被踩数
 VisitorAddress | nvarchar | 100 | True | 访客地址(IP和位置信息)(192.168.0.1 湖北省武汉市)
 VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息)
 CreatorId | int | 4 | False | 发帖人编号
 CreatedTime | datetime | - | False | 发帖时间
+
+
+### 帖子回复表 `Community.PostComment`
+
+字段名称|数据类型|长度|可空|备注
+--------|:------:|:--:|:--:|----:
+PostId | bigint | 8 | False | 主键，帖子编号
+SerialId | smallint | 2 | False | 主键，回复序号
+SourceId | smallint | 2 | True | 关联的回复序号
+Content | varchar | 500 | False | 回复内容
+ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
+VisitorAddress | nvarchar | 100 | True | 访客地址(IP和位置信息)(192.168.0.1 湖北省武汉市)
+VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息)
+CreatorId | int | 4 | False | 回复人编号
+CreatedTime | datetime | - | False | 回复时间
 
 
 ### 帖子投票表 `Community.PostVoting`

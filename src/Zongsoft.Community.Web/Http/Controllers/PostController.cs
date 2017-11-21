@@ -65,10 +65,10 @@ namespace Zongsoft.Community.Web.Http.Controllers
 			return this.DataService.GetDownvotes(id, paging);
 		}
 
-		[ActionName("Children")]
-		public IEnumerable<Post> GetChildren(ulong id, [FromUri]Paging paging = null)
+		[ActionName("Comments")]
+		public IEnumerable<Post.PostComment> GetComments(ulong id, [FromUri]Paging paging = null)
 		{
-			return this.DataService.GetChildren(id, paging);
+			return this.DataService.GetComments(id, paging);
 		}
 		#endregion
 	}

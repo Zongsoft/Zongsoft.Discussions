@@ -39,11 +39,11 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#endregion
 
 		#region 公共方法
-		[ActionName("Members")]
+		[ActionName("Users")]
 		[HttpPaging]
-		public IEnumerable<Message.MessageMember> GetMembers(ulong id, [FromRoute("args")]MessageMemberStatus? status = null, [FromRoute("args")]ConditionalRange<DateTime> period = null, [FromUri]Paging paging = null)
+		public IEnumerable<Message.MessageUser> GetUsers(ulong id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
 		{
-			return this.DataService.GetMembers(id, status, period, paging);
+			return this.DataService.GetUsers(id, isRead, paging);
 		}
 		#endregion
 	}

@@ -18,14 +18,11 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using System.Threading.Tasks;
 
-using Zongsoft.Web;
+using Zongsoft.Data;
 using Zongsoft.Web.Http;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
@@ -36,72 +33,42 @@ namespace Zongsoft.Community.Web.Http.Controllers
 	[Authorization(AuthorizationMode.Identity)]
 	public class FolderController : Zongsoft.Web.Http.HttpControllerBase<Folder, FolderConditional, FolderService>
 	{
-		private static readonly DateTime EPOCH = new DateTime(2000, 1, 1);
-
-		#region 成员字段
-		private WebFileAccessor _accessor;
-		#endregion
-
 		#region 构造函数
 		public FolderController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
 
-		#region 公共属性
-		[Zongsoft.Services.ServiceDependency]
-		public WebFileAccessor Accessor
-		{
-			get
-			{
-				return _accessor;
-			}
-			set
-			{
-				if(value == null)
-					throw new ArgumentNullException();
-
-				_accessor = value;
-			}
-		}
-		#endregion
-
 		#region 公共方法
-		[HttpPost]
-		public async Task<IEnumerable<File>> Upload(uint id)
+		[ActionName("Users")]
+		[HttpPaging]
+		public IEnumerable<Folder.FolderUser> GetUsers(uint id, [FromRoute("args")]UserKind? kind = null, [FromUri]Paging paging = null)
 		{
-			var infos = await _accessor.Write(this.Request, this.DataService.GetFolderDirectory(id), args => args.FileName = (DateTime.Now - EPOCH).Seconds + "-" + Zongsoft.Common.RandomGenerator.GenerateString(8));
-			var files = new List<File>();
+			return this.DataService.GetUsers(id, kind, paging);
+		}
 
-			foreach(var info in infos)
-			{
-				if(info == null || !info.IsFile)
-					continue;
+		[HttpPatch]
+		[ActionName("Icon")]
+		public void SetIcon(uint id, [FromRoute("args")]string icon = null)
+		{
+			if(!this.DataService.SetIcon(id, icon))
+				throw new HttpResponseException(HttpStatusCode.NotFound);
+		}
 
-				object name = null;
+		[HttpPatch]
+		[ActionName("Visiblity")]
+		public void SetVisiblity(uint id, [FromRoute("args")]Visiblity visiblity)
+		{
+			if(!this.DataService.SetVisiblity(id, visiblity))
+				throw new HttpResponseException(HttpStatusCode.NotFound);
+		}
 
-				if(info.HasProperties && !info.Properties.TryGetValue("FileName", out name))
-					info.Properties.TryGetValue("DispositionName", out name);
-
-				if(string.IsNullOrWhiteSpace(name as string))
-					name = info.Name;
-
-				var file = new File()
-				{
-					FolderId = id,
-					Name = info.Name,
-					Path = info.Path.Url,
-					Type = info.Type,
-					Size = (uint)Math.Max(0, info.Size),
-				};
-
-				if(this.DataService.Insert(file) > 0)
-					files.Add(file);
-				else
-					await _accessor.Delete(info.Path.FullPath);
-			}
-
-			return files;
+		[HttpPatch]
+		[ActionName("Accessibility")]
+		public void SetAccessibility(uint id, Accessibility accessibility)
+		{
+			if(!this.DataService.SetAccessibility(id, accessibility))
+				throw new HttpResponseException(HttpStatusCode.NotFound);
 		}
 		#endregion
 	}

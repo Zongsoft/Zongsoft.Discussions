@@ -26,19 +26,56 @@ CREATE TABLE IF NOT EXISTS `Community_Message`
   `Status` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态',
   `StatusTimestamp` datetime NULL COMMENT '状态更改时间',
   `StatusDescription` varchar(100) DEFAULT NULL COMMENT '状态描述信息',
-  `CreatorId` int UNSIGNED NOT NULL COMMENT '创人编号(零表示系统消息)',
+  `CreatorId` int UNSIGNED NOT NULL COMMENT '创建人编号(零表示系统消息)',
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`MessageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息(站内通知)表';
 
-CREATE TABLE IF NOT EXISTS `Community_MessageMember`
+CREATE TABLE IF NOT EXISTS `Community_MessageUser`
 (
   `MessageId` bigint UNSIGNED NOT NULL COMMENT '主键，消息编号',
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
-  `Status` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态(0:未读, 1:已读)',
-  `StatusTimestamp` datetime NULL COMMENT '状态更改时间',
+  `IsRead` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否已读',
   PRIMARY KEY (`MessageId`, `UserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息接收人员表';
+
+CREATE TABLE IF NOT EXISTS `Community_Folder`
+(
+  `FolderId` int UNSIGNED NOT NULL COMMENT '主键，文件夹编号',
+  `SiteId` int UNSIGNED NOT NULL COMMENT '站点编号',
+  `Name` nvarchar(100) NOT NULL COMMENT '文件夹名称',
+  `PinYin` nvarchar(200) NOT NULL COMMENT '名称拼音',
+  `Icon` varchar(50) NULL COMMENT '显示图标',
+  `Visiblity` tinyint UNSIGNED NOT NULL DEFAULT 1 COMMENT '可见范围(0:禁用,即不可见; 1:站内用户可见; 2:所有人可见; 3:指定用户)',
+  `Accessibility` tinyint UNSIGNED NOT NULL DEFAULT 1 COMMENT '可访问性(0:无限制; 1:注册用户; 2:仅限管理员; 3:指定用户)',
+  `CreatorId` int UNSIGNED NOT NULL COMMENT '创建人编号',
+  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `Description` varchar(500) DEFAULT NULL COMMENT '描述文本',
+  PRIMARY KEY (`FolderId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件夹表';
+
+CREATE TABLE IF NOT EXISTS `Community_FolderUser`
+(
+  `FolderId` int UNSIGNED NOT NULL COMMENT '主键，文件夹编号',
+  `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
+  `UserKind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户种类(0:None, 1:Administrator, 2:Reader, 3:Writer)',
+  PRIMARY KEY (`FolderId`, `UserId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件夹用户表';
+
+CREATE TABLE IF NOT EXISTS `Community_File`
+(
+  `FileId` bigint UNSIGNED NOT NULL COMMENT '主键，文件编号',
+  `FolderId` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '所属文件夹编号(零表示不属于文件夹)',
+  `SiteId` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '所属站点编号',
+  `Name` nvarchar(100) NOT NULL COMMENT '文件名称',
+  `Path` nvarchar(200) NOT NULL COMMENT '文件路径',
+  `Type` varchar(50) NULL COMMENT '文件类型(MIME类型)',
+  `Size` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '文件大小(单位：字节)',
+  `CreatorId` int UNSIGNED NOT NULL COMMENT '创建人编号',
+  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `Description` varchar(500) DEFAULT NULL COMMENT '描述文本',
+  PRIMARY KEY (`FileId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件（附件）表';
 
 CREATE TABLE IF NOT EXISTS `Community_ForumGroup`
 (
@@ -97,12 +134,10 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   `ThreadId` bigint UNSIGNED NOT NULL COMMENT '所属主题编号',
   `Content` varchar(500) NOT NULL COMMENT '帖子内容',
   `ContentType` varchar(50) DEFAULT NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',
-  `ParentId` bigint UNSIGNED DEFAULT NULL COMMENT '父帖子编号(应答的回复编号)',
   `Disabled` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已禁用',
   `IsApproved` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否已审核通过',
   `IsLocked` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已锁定',
   `IsValued` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否精华帖',
-  `IsThread` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否主题内容贴',
   `TotalUpvotes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计点赞数',
   `TotalDownvotes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计被踩数',
   `VisitorAddress` varchar(100) NULL COMMENT '访客地址(IP和地址信息)',
@@ -112,6 +147,20 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   PRIMARY KEY (`PostId` DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子/回帖表';
 
+CREATE TABLE IF NOT EXISTS `Community_PostComment`
+(
+  `PostId` bigint UNSIGNED NOT NULL COMMENT '主键，帖子编号',
+  `SerialId` smallint UNSIGNED NOT NULL COMMENT '主键，回复序号',
+  `SourceId` smallint UNSIGNED NULL COMMENT '关联的回复序号',
+  `Content` varchar(500) NOT NULL COMMENT '帖子内容',
+  `ContentType` varchar(50) DEFAULT NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',
+  `VisitorAddress` varchar(100) NULL COMMENT '访客地址(IP和地址信息)',
+  `VisitorDescription` varchar(500) NULL COMMENT '访客描述(浏览器代理信息)',
+  `CreatorId` int UNSIGNED NOT NULL COMMENT '回复人编号',
+  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '回复时间',
+  PRIMARY KEY (`PostId`, `SerialId` DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子回复表';
+
 CREATE TABLE IF NOT EXISTS `Community_PostVoting`
 (
   `PostId` bigint UNSIGNED NOT NULL COMMENT '主键，帖子编号',
@@ -120,8 +169,15 @@ CREATE TABLE IF NOT EXISTS `Community_PostVoting`
   `UserAvatar` varchar(150) NULL COMMENT '用户头像',
   `Value` tinyint NOT NULL COMMENT '投票数(正数为Upvote，负数为Downvote)',
   `Tiemstamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '投票时间',
-  PRIMARY KEY (`PostId` DESC, `UserId`)
+  PRIMARY KEY (`PostId`, `UserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子投票表';
+
+CREATE TABLE IF NOT EXISTS `Community_PostAttachment`
+(
+  `PostId` bigint UNSIGNED NOT NULL COMMENT '主键，帖子编号',
+  `FileId` bigint UNSIGNED NOT NULL COMMENT '主键，文件编号',
+  PRIMARY KEY (`PostId`, `FileId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子附件表';
 
 CREATE TABLE IF NOT EXISTS `Community_History`
 (
@@ -185,26 +241,3 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
   PRIMARY KEY (`UserId`),
   INDEX `IX_SiteId` (`SiteId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户配置表';
-
-DELIMITER //
-
-CREATE DEFINER=`develop`@`%` PROCEDURE `Community_GetMessageStatistics`(
-	IN `UserId` INT
-)
-LANGUAGE SQL
-NOT DETERMINISTIC
-CONTAINS SQL
-SQL SECURITY DEFINER
-COMMENT '获取指定用户的站内消息状态统计'
-BEGIN
-
-SELECT
-	m.`Status`,
-	COUNT(m.`Status`) AS 'Count'
-FROM `Community_MessageMember` m
-WHERE m.UserId = `UserId`
-GROUP BY m.`Status`;
-
-END//
-
-DELIMITER ;

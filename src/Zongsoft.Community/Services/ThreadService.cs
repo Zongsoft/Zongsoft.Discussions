@@ -56,11 +56,38 @@ namespace Zongsoft.Community.Services
 		#region 公共方法
 		public IEnumerable<Post> GetPosts(ulong threadId, Paging paging = null)
 		{
+			var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
+
+			if(thread == null)
+				return Enumerable.Empty<Post>();
+
 			var conditions = ConditionCollection.And(
 				Condition.Equal("ThreadId", threadId),
-				Condition.Equal("ParentId", null) | Condition.Equal("ParentId", 0));
+				Condition.NotEqual("PostId", thread.PostId));
 
-			return this.DataAccess.Select<Post>(conditions, paging, Sorting.Descending("PostId"));
+			var posts = this.DataAccess.Select<Post>(conditions, paging, Sorting.Descending("PostId"));
+
+			foreach(var post in posts)
+			{
+				if(post == null)
+					continue;
+
+				if(post.IsApproved)
+				{
+					//如果内容类型是外部文件（即非嵌入格式），则读取文件内容
+					if(!Utility.IsContentEmbedded(post.ContentType))
+						post.Content = Utility.ReadTextFile(post.Content);
+				}
+				else
+				{
+					post.Content = null;
+				}
+
+				//设置帖子的附件集
+				post.Attachments = this.DataAccess.Select<Post.PostAttachment>(Condition.Equal("PostId", post.PostId), "File");
+			}
+
+			return posts;
 		}
 		#endregion
 
@@ -100,9 +127,24 @@ namespace Zongsoft.Community.Services
 			//更新当前用户的浏览记录
 			this.SetHistory(thread.ThreadId);
 
-			//设置主题对应的帖子内容（如果内容类型是外部文件(即非嵌入格式)，则读取文件内容）
-			if(thread.Post != null && !Utility.IsContentEmbedded(thread.Post.ContentType))
-				thread.Post.Content = Utility.ReadTextFile(thread.Post.Content);
+			//更新主题帖子的相关信息
+			if(thread.Post != null)
+			{
+				//设置主题对应的帖子内容（如果内容类型是外部文件(即非嵌入格式)，则读取文件内容）
+				if(!Utility.IsContentEmbedded(thread.Post.ContentType))
+					thread.Post.Content = Utility.ReadTextFile(thread.Post.Content);
+
+				//获取主题对应帖子的投票记录
+				var votes = this.DataAccess.Select<Post.PostVoting>(Condition.Equal("PostId", thread.PostId)).ToArray();
+
+				//设置主题对应帖子的点赞集
+				thread.Post.Upvotes = votes.Where(p => p.Value > 0);
+				//设置主题对应帖子的被踩集
+				thread.Post.Downvotes = votes.Where(p => p.Value < 0);
+
+				//设置主题对应帖子的附件集
+				thread.Post.Attachments = this.DataAccess.Select<Post.PostAttachment>(Condition.Equal("PostId", thread.PostId), "File");
+			}
 
 			return thread;
 		}
@@ -116,14 +158,14 @@ namespace Zongsoft.Community.Services
 			return base.OnSelect(condition, scope, paging, sortings);
 		}
 
-		protected override int OnDelete(ICondition condition, string[] cascades)
+		protected override int OnDelete(ICondition condition, string[] cascades, IDictionary<string, object> states)
 		{
 			var ids = this.DataAccess.Select<Thread>(this.Name, condition, Paging.Disable).Select(p => p.ThreadId).ToArray();
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
 				//调用基类同名方法
-				var count = base.OnDelete(condition, cascades);
+				var count = base.OnDelete(condition, cascades, states);
 
 				if(count > 0)
 					this.DataAccess.Delete<Post>(Condition.In("ThreadId", ids));
@@ -136,12 +178,15 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnInsert(DataDictionary<Thread> data, string scope)
+		protected override int OnInsert(DataDictionary<Thread> data, string scope, IDictionary<string, object> states)
 		{
 			var post = data.Get(p => p.Post, null);
 
 			if(post == null || string.IsNullOrEmpty(post.Content))
 				throw new InvalidOperationException("Missing content of the thread.");
+
+			//判断当前用户是否是新增主题所在论坛的版主
+			var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(data.Get(p => p.SiteId), data.Get(p => p.ForumId));
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
@@ -149,21 +194,19 @@ namespace Zongsoft.Community.Services
 				data.Set(p => p.PostId, (ulong)0);
 
 				//调用基类同名方法，插入主题数据
-				var count = base.OnInsert(data, scope);
+				var count = base.OnInsert(data, scope, states);
 
 				if(count < 1)
 					return count;
 
 				//更新主题内容贴的相关属性
 				post.ThreadId = data.Get(p => p.ThreadId);
-				post.ParentId = null;
-				post.IsThread = true;
 				post.SiteId = data.Get(p => p.SiteId);
 				post.CreatorId = data.Get(p => p.CreatorId);
 				post.CreatedTime = data.Get(p => p.CreatedTime);
 
 				//通过帖子服务来新增主题的内容贴
-				count = this.Posting.Insert(post);
+				count = this.Posting.Insert(post, new Dictionary<string, object> { { PostService.KEY_THREAD_STATE,  data} });
 
 				//如果主题内容贴新增成功则提交事务
 				if(count > 0)

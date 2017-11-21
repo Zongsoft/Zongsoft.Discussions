@@ -35,7 +35,6 @@ namespace Zongsoft.Community.Models
 		private bool _isApproved;
 		private bool _isLocked;
 		private bool _isValued;
-		private bool _isThread;
 		private uint _totalUpvotes;
 		private uint _totalDownvotes;
 		private uint _creatorId;
@@ -141,36 +140,6 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置回帖的父贴编号。
-		/// </summary>
-		public ulong? ParentId
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ParentId);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ParentId, value);
-			}
-		}
-
-		/// <summary>
-		/// 获取或设置回帖的父贴。
-		/// </summary>
-		public Post Parent
-		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Parent);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Parent, value);
-			}
-		}
-
-		/// <summary>
 		/// 获取或设置一个值，表示是否禁用。
 		/// </summary>
 		public bool Disabled
@@ -227,21 +196,6 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.IsValued, ref _isValued, value);
-			}
-		}
-
-		/// <summary>
-		/// 获取或设置一个值，表示帖子是否为主题内容贴。
-		/// </summary>
-		public bool IsThread
-		{
-			get
-			{
-				return _isThread;
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(IsThread), ref _isThread, value);
 			}
 		}
 
@@ -351,17 +305,32 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置帖子的子贴集，即回帖子集。
+		/// 获取或设置帖子的回复集。
 		/// </summary>
-		public IEnumerable<Post> Children
+		public IEnumerable<PostComment> Comments
 		{
 			get
 			{
-				return this.GetPropertyValue(() => this.Children);
+				return this.GetPropertyValue(() => this.Comments);
 			}
 			set
 			{
-				this.SetPropertyValue(() => this.Children, value);
+				this.SetPropertyValue(() => this.Comments, value);
+			}
+		}
+
+		/// <summary>
+		/// 获取或设置帖子的附件集。
+		/// </summary>
+		public IEnumerable<PostAttachment> Attachments
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.Attachments);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Attachments, value);
 			}
 		}
 
@@ -397,6 +366,183 @@ namespace Zongsoft.Community.Models
 		#endregion
 
 		#region 嵌套子类
+		/// <summary>
+		/// 表示帖子回复的业务实体类。
+		/// </summary>
+		public class PostComment
+		{
+			#region 成员字段
+			private ulong _postId;
+			private ushort _serialId;
+			private ushort _sourceId;
+			private string _content;
+			private string _contentType;
+			private string _visitorAddress;
+			private string _visitorDescription;
+			private uint _creatorId;
+			private UserProfile _creator;
+			private DateTime _createdTime;
+			#endregion
+
+			#region 构造函数
+			public PostComment()
+			{
+			}
+			#endregion
+
+			#region 公共属性
+			/// <summary>
+			/// 获取或设置帖子编号。
+			/// </summary>
+			public ulong PostId
+			{
+				get
+				{
+					return _postId;
+				}
+				set
+				{
+					_postId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置回复序号。
+			/// </summary>
+			public ushort SerialId
+			{
+				get
+				{
+					return _serialId;
+				}
+				set
+				{
+					_serialId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置回复关联的源回复序号。
+			/// </summary>
+			public ushort SourceId
+			{
+				get
+				{
+					return _sourceId;
+				}
+				set
+				{
+					_sourceId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置回复的内容。
+			/// </summary>
+			public string Content
+			{
+				get
+				{
+					return _content;
+				}
+				set
+				{
+					_content = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置回复的内容类型。
+			/// </summary>
+			public string ContentType
+			{
+				get
+				{
+					return _contentType;
+				}
+				set
+				{
+					_contentType = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置访问者地址。
+			/// </summary>
+			public string VisitorAddress
+			{
+				get
+				{
+					return _visitorAddress;
+				}
+				set
+				{
+					_visitorAddress = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置访问者描述信息。
+			/// </summary>
+			public string VisitorDescription
+			{
+				get
+				{
+					return _visitorDescription;
+				}
+				set
+				{
+					_visitorDescription = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置回复人编号。
+			/// </summary>
+			public uint CreatorId
+			{
+				get
+				{
+					return _creatorId;
+				}
+				set
+				{
+					_creatorId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置回复人对象。
+			/// </summary>
+			public UserProfile Creator
+			{
+				get
+				{
+					return _creator;
+				}
+				set
+				{
+					_creator = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置回复时间。
+			/// </summary>
+			public DateTime CreatedTime
+			{
+				get
+				{
+					return _createdTime;
+				}
+				set
+				{
+					_createdTime = value;
+				}
+			}
+			#endregion
+		}
+
 		/// <summary>
 		/// 表示帖子投票的业务实体类。
 		/// </summary>
@@ -543,6 +689,7 @@ namespace Zongsoft.Community.Models
 			#region 成员字段
 			private ulong _postId;
 			private ulong _fileId;
+			private File _file;
 			#endregion
 
 			#region 构造函数
@@ -556,6 +703,7 @@ namespace Zongsoft.Community.Models
 				_fileId = fileId;
 			}
 			#endregion
+
 			#region 公共属性
 			/// <summary>
 			/// 获取或设置帖子编号。
@@ -584,6 +732,21 @@ namespace Zongsoft.Community.Models
 				set
 				{
 					_fileId = value;
+				}
+			}
+
+			/// <summary>
+			/// 获取或设置帖子的文件对象。
+			/// </summary>
+			public File File
+			{
+				get
+				{
+					return _file;
+				}
+				set
+				{
+					_file = value;
 				}
 			}
 			#endregion

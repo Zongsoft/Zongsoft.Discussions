@@ -89,7 +89,7 @@ namespace Zongsoft.Community.Services.Commands
 				Content = content,
 				ContentType = contentType,
 				MessageType = messageType,
-				Members = GetUsers(context.Expression.Arguments).Select(uid => new Models.Message.MessageMember(uid)),
+				Users = GetUsers(context.Expression.Arguments).Select(uid => new Models.Message.MessageUser(uid)),
 			};
 
 			if(this.Service.Insert(message) > 0)

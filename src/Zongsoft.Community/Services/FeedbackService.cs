@@ -67,7 +67,7 @@ namespace Zongsoft.Community.Services
 			return base.OnSelect(condition, scope, paging, sortings);
 		}
 
-		protected override int OnInsert(DataDictionary<Feedback> data, string scope)
+		protected override int OnInsert(DataDictionary<Feedback> data, string scope, IDictionary<string, object> states)
 		{
 			string filePath = null;
 
@@ -98,7 +98,7 @@ namespace Zongsoft.Community.Services
 			try
 			{
 				//调用基类同名方法
-				var count = base.OnInsert(data, scope);
+				var count = base.OnInsert(data, scope, states);
 
 				if(count < 1)
 				{

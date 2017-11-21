@@ -15,7 +15,7 @@
 		</property>
 	</entity>
 
-	<entity name="Community.MessageMember" table="Community_MessageMember" type="Zongsoft.Community.Models.Message+MessageMember, Zongsoft.Community">
+	<entity name="Community.MessageUser" table="Community_MessageUser" type="Zongsoft.Community.Models.Message+MessageUser, Zongsoft.Community">
 		<key>
 			<property name="MessageId"/>
 			<property name="UserId"/>
@@ -167,7 +167,7 @@
 			<property name="PostId"/>
 		</key>
 
-		<property name="Children" field="" />
+		<property name="Comments" field="" />
 		<property name="Upvotes" field="" />
 		<property name="Downvotes" field="" />
 
@@ -177,11 +177,18 @@
 			</join>
 		</property>
 
-		<property name="Parent" relationTo="Community.Post">
+		<property name="Creator" relationTo="Community.UserProfile">
 			<join>
-				<member from="ParentId" to="PostId"/>
+				<member from="CreatorId" to="UserId"/>
 			</join>
 		</property>
+	</entity>
+
+	<entity name="Community.PostComment" table="Community_PostComment" type="Zongsoft.Community.Models.Post+PostComment, Zongsoft.Community">
+		<key>
+			<property name="PostId"/>
+			<property name="SerialId"/>
+		</key>
 
 		<property name="Creator" relationTo="Community.UserProfile">
 			<join>
@@ -199,6 +206,19 @@
 		<property name="User" relationTo="Community.UserProfile">
 			<join>
 				<member from="UserId" to="UserId"/>
+			</join>
+		</property>
+	</entity>
+
+	<entity name="Community.PostAttachment" table="Community_PostAttachment" type="Zongsoft.Community.Models.Post+PostAttachment, Zongsoft.Community">
+		<key>
+			<property name="PostId"/>
+			<property name="FileId"/>
+		</key>
+
+		<property name="File" relationTo="Community.File">
+			<join>
+				<member from="FileId" to="FileId"/>
 			</join>
 		</property>
 	</entity>
@@ -231,9 +251,5 @@
 			</join>
 		</property>
 	</entity>
-
-	<procedure name="Community.GetMessageStatistics" procedure="Community_GetMessageStatistics">
-		<parameter name="UserId" />
-	</procedure>
 
 </schema>

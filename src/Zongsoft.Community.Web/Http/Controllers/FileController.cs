@@ -36,6 +36,10 @@ namespace Zongsoft.Community.Web.Http.Controllers
 	[Authorization(AuthorizationMode.Identity)]
 	public class FileController : Zongsoft.Web.Http.HttpControllerBase<File, FileConditional, FileService>
 	{
+		#region 常量定义
+		private static readonly DateTime EPOCH = new DateTime(2000, 1, 1);
+		#endregion
+
 		#region 成员字段
 		private WebFileAccessor _accessor;
 		#endregion
@@ -82,10 +86,12 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IEnumerable<File>> Upload()
+		public async Task<IEnumerable<File>> Upload(uint? id = null)
 		{
-			var infos = await _accessor.Write(this.Request, this.GetDirectory(), args => args.FileName = DateTime.Now.ToString("yyyyMMdd-HHmmss") + "-" + Zongsoft.Common.RandomGenerator.GenerateString(8));
-			var attachments = new List<File>();
+            var files = new List<File>();
+            var infos = await _accessor.Write(this.Request,
+				                              this.DataService.GetDirectory(id),
+			                                  args => args.FileName = (DateTime.Now - EPOCH).Seconds + "-" + Zongsoft.Common.RandomGenerator.GenerateString());
 
 			foreach(var info in infos)
 			{
@@ -102,6 +108,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 				var attachment = new File()
 				{
+                    FolderId = id.HasValue ? id.Value : 0,
 					Name = info.Name,
 					Path = info.Path.Url,
 					Type = info.Type,
@@ -109,12 +116,12 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				};
 
 				if(this.DataService.Insert(attachment) > 0)
-					attachments.Add(attachment);
+					files.Add(attachment);
 				else
 					await _accessor.Delete(info.Path.FullPath);
 			}
 
-			return attachments;
+			return files;
 		}
 
 		public override File Post(File model)
@@ -154,13 +161,6 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 			if(data.Count > 0)
 				base.Patch(id, data);
-		}
-		#endregion
-
-		#region 私有方法
-		private string GetDirectory()
-		{
-			return Common.Utility.GetFilePath(DateTime.Today.ToString("yyyyMMdd") + "/");
 		}
 		#endregion
 	}

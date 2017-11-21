@@ -30,6 +30,10 @@ namespace Zongsoft.Community.Services
 	[DataSearchKey("Thread,ThreadId:ThreadId")]
 	public class PostService : ServiceBase<Post>
 	{
+		#region	常量定义
+		internal const string KEY_THREAD_STATE = "__DataDictionary:Thread__";
+		#endregion
+
 		#region 构造函数
 		public PostService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
@@ -107,9 +111,9 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Select<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.LessThan("Value", 0), paging);
 		}
 
-		public IEnumerable<Post> GetChildren(ulong postId, Paging paging = null)
+		public IEnumerable<Post.PostComment> GetComments(ulong postId, Paging paging = null)
 		{
-			return this.Select(Condition.Equal("ParentId", postId), paging);
+			return this.DataAccess.Select<Post.PostComment>(Condition.Equal("PostId", postId), paging, Sorting.Descending("SerialId"));
 		}
 		#endregion
 
@@ -138,7 +142,7 @@ namespace Zongsoft.Community.Services
 			return base.OnSelect(condition, scope, paging, sortings);
 		}
 
-		protected override int OnInsert(DataDictionary<Post> data, string scope)
+		protected override int OnInsert(DataDictionary<Post> data, string scope, IDictionary<string, object> states)
 		{
 			string filePath = null;
 
@@ -148,6 +152,7 @@ namespace Zongsoft.Community.Services
 			//调整内容类型为嵌入格式
 			data.Set(p => p.ContentType, Utility.GetContentType(rawType, true));
 
+			//尝试更新帖子内容
 			data.TryGet(p => p.Content, (key, value) =>
 			{
 				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
@@ -166,17 +171,59 @@ namespace Zongsoft.Community.Services
 				data.Set(p => p.ContentType, Utility.GetContentType(data.Get(p => p.ContentType), false));
 			});
 
+			//定义一个变量，表示当前帖子是否为主题贴
+			var isThreadPost = false;
+
+			if(states != null && states.TryGetValue(KEY_THREAD_STATE, out var state) && state is DataDictionary<Thread> thread)
+			{
+				//如果状态包中指定了主题对象则表明当前新增贴为主题帖
+				isThreadPost = true;
+
+				//判断当前用户是否是新增主题所在论坛的版主
+				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(thread.Get(p => p.SiteId), thread.Get(p => p.ForumId));
+
+				if(isModerator)
+				{
+					data.Set(p => p.IsApproved, true);
+				}
+				else
+				{
+					var forum = this.DataAccess.Select<Forum>(Condition.Equal("SiteId", thread.Get(p => p.SiteId)) & Condition.Equal("ForumId", thread.Get(p => p.ForumId))).FirstOrDefault();
+
+					if(forum == null)
+						throw new InvalidOperationException("The specified forum is not existed about the new thread.");
+
+					data.Set(p => p.IsApproved, forum.ApproveEnabled ? false : true);
+				}
+			}
+
 			try
 			{
 				using(var transaction = new Zongsoft.Transactions.Transaction())
 				{
 					//调用基类同名方法
-					var count = base.OnInsert(data, scope);
+					var count = base.OnInsert(data, scope, states);
 
 					if(count > 0)
 					{
+						//尝试新增帖子的附件集
+						data.TryGet(p => p.Attachments, (key, attachments) =>
+						{
+							if(attachments == null)
+								return;
+
+							foreach(var attachment in attachments)
+							{
+								attachment.PostId = data.Get(p => p.PostId);
+							}
+
+							this.DataAccess.InsertMany(attachments);
+						});
+
 						//更新发帖人的关联帖子统计信息
-						this.SetMostRecentPost(data);
+						//注意：只有当前帖子不是主题贴才需要更新对应的统计信息
+						if(!isThreadPost)
+							this.SetMostRecentPost(data);
 
 						//提交事务
 						transaction.Commit();
@@ -228,6 +275,18 @@ namespace Zongsoft.Community.Services
 			if(count < 1)
 				return count;
 
+			//尝试更新当前帖子的附件集
+			data.TryGet(p => p.Attachments, (key, attachments) =>
+			{
+				if(attachments == null)
+					return;
+
+				var postId = data.Get(p => p.PostId);
+
+				this.DataAccess.Delete<Post.PostAttachment>(Condition.Equal("PostId", postId));
+				this.DataAccess.InsertMany(attachments.Where(p => p.PostId == postId));
+			});
+
 			return count;
 		}
 		#endregion
@@ -260,7 +319,7 @@ namespace Zongsoft.Community.Services
 		private bool SetMostRecentPost(DataDictionary<Post> data)
 		{
 			//注意：如果当前帖子是主题内容贴则不需要更新对应的统计信息
-			if(data == null || data.Get(p => p.IsThread, false))
+			if(data == null)
 				return false;
 
 			//如果当前帖子没有指定对应的主题编号，则返回失败
@@ -318,12 +377,6 @@ namespace Zongsoft.Community.Services
 			}
 
 			return count > 0;
-		}
-		#endregion
-
-		#region 嵌套子类
-		public class AttachmentService
-		{
 		}
 		#endregion
 	}

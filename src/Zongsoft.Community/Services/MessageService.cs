@@ -37,17 +37,14 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<Message.MessageMember> GetMembers(ulong messageId, MessageMemberStatus? status = null, ConditionalRange<DateTime> period = null, Paging paging = null)
+		public IEnumerable<Message.MessageUser> GetUsers(ulong messageId, bool? isRead = null, Paging paging = null)
 		{
 			var conditions = ConditionCollection.And(Condition.Equal("MessageId", messageId));
 
-			if(status.HasValue)
-				conditions.Add(Condition.Equal("Status", status.Value));
+			if(isRead.HasValue)
+				conditions.Add(Condition.Equal("IsRead", isRead.Value));
 
-			if(period != null && period.HasValue)
-				conditions.Add(period.ToCondition("CreatedTime"));
-
-			return this.DataAccess.Select<Message.MessageMember>(conditions, "User, User.User", paging);
+			return this.DataAccess.Select<Message.MessageUser>(conditions, "User, User.User", paging);
 		}
 		#endregion
 
@@ -73,10 +70,9 @@ namespace Zongsoft.Community.Services
 			if(credential != null && credential.CredentialId != null && credential.CredentialId.Length > 0)
 			{
 				//更新当前用户对该消息的读取状态
-				this.DataAccess.Update(this.DataAccess.Naming.Get<Message.MessageMember>(), new
+				this.DataAccess.Update(this.DataAccess.Naming.Get<Message.MessageUser>(), new
 				{
-					Status = MessageMemberStatus.Read,
-					StatusTimestamp = DateTime.Now,
+					IsRead = true,
 				}, Condition.Equal("MessageId", message.MessageId) & Condition.Equal("UserId", credential.UserId));
 			}
 
@@ -92,7 +88,7 @@ namespace Zongsoft.Community.Services
 			return base.OnSelect(condition, scope, paging, sortings);
 		}
 
-		protected override int OnInsert(DataDictionary<Message> data, string scope)
+		protected override int OnInsert(DataDictionary<Message> data, string scope, IDictionary<string, object> states)
 		{
 			string filePath = null;
 
@@ -122,7 +118,7 @@ namespace Zongsoft.Community.Services
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				var count = base.OnInsert(data, scope);
+				var count = base.OnInsert(data, scope, states);
 
 				if(count < 1)
 				{
@@ -133,7 +129,7 @@ namespace Zongsoft.Community.Services
 					return count;
 				}
 
-				data.TryGet(p => p.Members, (key, members) =>
+				data.TryGet(p => p.Users, (key, members) =>
 				{
 					if(members == null)
 						return;
@@ -143,7 +139,7 @@ namespace Zongsoft.Community.Services
 					foreach(var member in members)
 					{
 						member.MessageId = messageId;
-						member.Status = MessageMemberStatus.None;
+						member.IsRead = false;
 					}
 
 					this.DataAccess.InsertMany(members);

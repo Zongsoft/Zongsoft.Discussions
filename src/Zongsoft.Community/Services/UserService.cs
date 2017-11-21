@@ -82,19 +82,33 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Select<History>(Condition.Equal("UserId", userId), "Thread", paging);
 		}
 
-		public IEnumerable<Models.Statistics.StatusStatisticResult<MessageMemberStatus>> GetMessageStatistics(uint userId)
+		public int GetMessageTotalCount(uint userId = 0)
 		{
-			return this.DataAccess.Execute<Models.Statistics.StatusStatisticResult<MessageMemberStatus>>("Community.GetMessageStatistics", new Dictionary<string, object> { { "UserId", userId } });
+			if(userId == 0)
+				userId = this.EnsureCredential().UserId;
+
+			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId));
 		}
 
-		public IEnumerable<Message.MessageMember> GetMessages(uint userId, MessageMemberStatus? status = null, Paging paging = null)
+		public int GetMessageUnreadCount(uint userId = 0)
 		{
+			if(userId == 0)
+				userId = this.EnsureCredential().UserId;
+
+			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
+		}
+
+		public IEnumerable<Message.MessageUser> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
+		{
+			if(userId == 0)
+				userId = this.EnsureCredential().UserId;
+
 			var conditions = ConditionCollection.And(Condition.Equal("UserId", userId));
 
-			if(status.HasValue)
-				conditions.Add(Condition.Equal("Status", status.Value));
+			if(isRead.HasValue)
+				conditions.Add(Condition.Equal("IsRead", isRead.Value));
 
-			return this.DataAccess.Select<Message.MessageMember>(conditions, "Message", paging);
+			return this.DataAccess.Select<Message.MessageUser>(conditions, "Message", paging);
 		}
 
 		public bool SetStatus(uint userId, UserStatus status)
@@ -131,12 +145,12 @@ namespace Zongsoft.Community.Services
 			return profile;
 		}
 
-		protected override int OnDelete(ICondition condition, params string[] cascades)
+		protected override int OnDelete(ICondition condition, string[] cascades, IDictionary<string, object> states)
 		{
 			throw new NotSupportedException("Not supporte the delete user operation.");
 		}
 
-		protected override int OnInsert(DataDictionary<UserProfile> data, string scope)
+		protected override int OnInsert(DataDictionary<UserProfile> data, string scope, IDictionary<string, object> states)
 		{
 			//获取用户导航属性值
 			data.TryGet(p => p.User, (key, user) =>
@@ -159,7 +173,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//调用基类同名方法（新增用户配置信息）
-			return base.OnInsert(data, scope);
+			return base.OnInsert(data, scope, states);
 		}
 
 		protected override int OnUpdate(DataDictionary<UserProfile> data, ICondition condition, string scope)

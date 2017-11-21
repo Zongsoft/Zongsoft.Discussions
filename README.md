@@ -4,6 +4,33 @@
 
 ## Web接口说明
 
+### 文件处理
+
+- [POST] `api/Community/File/{folderId}/Upload`
+> 上传一个或多个文件到指定的文件夹中，其中`{folderId}`参数不指定或为零则表示不对应到特定的文件夹。
+
+
+### 消息处理
+
+- [GET] `api/Community/Message/{messageId}/Users?IsRead=[true|false]`
+> 获取指定消息编号的接收用户集，其中`IsRead`参数可选。
+
+
+### 用户信息
+
+- [GET] `api/Community/User/{userId}/Count/message-unread`
+> 获取指定用户编号的未读消息数。
+
+- [GET] `api/Community/User/{userId}/Count/message-total`
+> 获取指定用户编号的消息总数。
+
+- [GET] `api/Community/User/{userId}/Messages?IsRead=[true|false]`
+> 获取指定用户编号的消息记录，其中`IsRead`参数可选。
+
+- [GET] `api/Community/User/{userId}/Histories`
+> 获取指定用户编号的浏览历史记录。
+
+
 ### 论坛组与论坛
 
 - [GET] `api/Community/ForumGroup`
@@ -90,7 +117,7 @@
 - [GET] `api/Community/Post/{postId}`
 > 获取指定编号的帖子详细信息。
 
-- [GET] `api/Community/Post/{postId}/Children`
+- [GET] `api/Community/Post/{postId}/Comments`
 > 获取指定编号的帖子的回复列表。
 
 - [POST] `api/Community/Post/{postId}/Upvote/{value}`

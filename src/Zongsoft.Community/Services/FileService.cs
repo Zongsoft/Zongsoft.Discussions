@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
@@ -34,10 +33,20 @@ namespace Zongsoft.Community.Services
 		public FileService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
-		#endregion
+        #endregion
 
-		#region 重写方法
-		protected override File OnGet(ICondition condition, string scope)
+        #region 公共方法
+        public string GetDirectory(uint? folderId = null)
+        {
+            if(folderId.HasValue)
+                return Utility.GetFilePath("/folders/{folderId}/");
+            else
+                return Utility.GetFilePath("files/");
+        }
+        #endregion
+
+        #region 重写方法
+        protected override File OnGet(ICondition condition, string scope)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
@@ -46,14 +55,14 @@ namespace Zongsoft.Community.Services
 			return base.OnGet(condition, scope);
 		}
 
-		protected override int OnInsert(DataDictionary<File> data, string scope)
+		protected override int OnInsert(DataDictionary<File> data, string scope, IDictionary<string, object> states)
 		{
 			var filePath = data.Get(p => p.Path);
 
 			try
 			{
 				//调用基类同名方法
-				var count = base.OnInsert(data, scope);
+				var count = base.OnInsert(data, scope, states);
 
 				if(count < 1)
 				{
@@ -77,13 +86,6 @@ namespace Zongsoft.Community.Services
 		protected override int OnUpdate(DataDictionary<File> data, ICondition condition, string scope)
 		{
 			throw new NotSupportedException();
-		}
-		#endregion
-
-		#region 虚拟方法
-		protected virtual string GetFilePath(uint folderId, string ext)
-		{
-			return Utility.GetFilePath(string.Format("folder-{0}/{2}/-{1}" + ext, folderId.ToString(), fileId.ToString(), DateTime.Now.ToString("yyyyMMdd")));
 		}
 		#endregion
 	}

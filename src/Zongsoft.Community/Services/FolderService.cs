@@ -37,13 +37,6 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public string GetFolderDirectory(uint folderId)
-		{
-			return Zongsoft.IO.Path.Combine(
-				this.Configuration.BasePath,
-				$"site-{this.GetSiteId()}/folder-{folderId}/{DateTime.Today.ToString("yyyyMMdd")}/");
-		}
-
 		public IEnumerable<Folder.FolderUser> GetUsers(uint folderId, UserKind? userKind = null, Paging paging = null)
 		{
 			ICondition conditions = Condition.Equal("FolderId", folderId);
@@ -56,6 +49,9 @@ namespace Zongsoft.Community.Services
 
 		public bool SetIcon(uint folderId, string icon)
 		{
+			if(string.IsNullOrWhiteSpace(icon))
+				icon = null;
+
 			return this.DataAccess.Update(this.DataAccess.Naming.Get<Folder>(), new
 			{
 				FolderId = folderId,
@@ -97,61 +93,65 @@ namespace Zongsoft.Community.Services
 			return folder;
 		}
 
-		protected override int OnInsert(DataDictionary<Folder> data, string scope)
-		{
-			try
-			{
-				//调用基类同名方法
-				var count = base.OnInsert(data, scope);
+		protected override int OnInsert(DataDictionary<Folder> data, string scope, IDictionary<string, object> states)
+        {
+            using(var transaction = new Transactions.Transaction())
+            {
+                //调用基类同名方法
+                var count = base.OnInsert(data, scope, states);
 
-				if(count < 1)
-				{
-					//如果新增记录失败则删除刚创建的文件
-					if(filePath != null && filePath.Length > 0)
-						Utility.DeleteFile(filePath);
-				}
+                if(count < 1)
+                    return count;
 
-				return count;
-			}
-			catch
-			{
-				//删除新建的文件
-				if(filePath != null && filePath.Length > 0)
-					Utility.DeleteFile(filePath);
+                //获取新增的文件夹用户集，并尝试插入该用户集
+                data.TryGet(p => p.Users, (key, users) =>
+                {
+                    if(users == null)
+                        return;
 
-				throw;
-			}
+                    this.DataAccess.InsertMany(users);
+                });
+
+                //提交事务
+                transaction.Commit();
+
+                //返回主表插入的记录数
+                return count;
+            }
 		}
 
-		protected override int OnUpdate(DataDictionary<Feedback> data, ICondition condition, string scope)
-		{
-			//更新内容到文本文件中
-			data.TryGet(p => p.Content, (key, value) =>
-			{
-				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
-					return;
+		protected override int OnUpdate(DataDictionary<Folder> data, ICondition condition, string scope)
+        {
+            using(var transaction = new Transactions.Transaction())
+            {
+                //调用基类同名方法
+                var count = base.OnUpdate(data, condition, scope);
 
-				//根据当前反馈编号，获得其对应的内容文件存储路径
-				var filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId), data.Get(p => p.ContentType));
+                if(count < 1)
+                    return count;
 
-				//将反馈内容写入到对应的存储文件中
-				Utility.WriteTextFile(filePath, value);
+                //获取新增的文件夹用户集，并尝试插入该用户集
+                data.TryGet(p => p.Users, (key, users) =>
+                {
+                    if(users == null)
+                        return;
 
-				//更新当前反馈的内容文件存储路径属性
-				data.Set(p => p.Content, filePath);
+					var folderId = data.Get(p => p.FolderId);
 
-				//更新内容类型为非嵌入格式（即外部文件）
-				data.Set(p => p.ContentType, Utility.GetContentType(data.Get(p => p.ContentType), false));
-			});
+                    //首先清除该文件夹的所有用户集
+                    this.DataAccess.Delete<Folder.FolderUser>(Condition.Equal("FolderId", folderId));
 
-			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, scope);
+                    //新增该文件夹的用户集
+                    this.DataAccess.InsertMany(users.Where(p => p.FolderId == folderId));
+                });
 
-			if(count < 1)
-				return count;
+                //提交事务
+                transaction.Commit();
 
-			return count;
-		}
+                //返回主表插入的记录数
+                return count;
+            }
+        }
 		#endregion
 	}
 }

@@ -146,16 +146,16 @@ namespace Zongsoft.Community.Services
 			return base.OnSelect(condition, scope, paging, sortings);
 		}
 
-		protected override int OnInsert(DataDictionary<TEntity> data, string scope)
+		protected override int OnInsert(DataDictionary<TEntity> data, string scope, IDictionary<string, object> states)
 		{
 			//更新相关字段的默认值
 			this.EnsureDefaultValues(data);
 
 			//调用基类同名方法
-			return base.OnInsert(data, scope);
+			return base.OnInsert(data, scope, states);
 		}
 
-		protected override int OnInsertMany(IEnumerable<DataDictionary<TEntity>> items, string scope)
+		protected override int OnInsertMany(IEnumerable<DataDictionary<TEntity>> items, string scope, IDictionary<string, object> states)
 		{
 			foreach(var item in items)
 			{
@@ -164,7 +164,7 @@ namespace Zongsoft.Community.Services
 			}
 
 			//调用基类同名方法
-			return base.OnInsertMany(items, scope);
+			return base.OnInsertMany(items, scope, states);
 		}
 
 		protected override int OnUpdate(DataDictionary<TEntity> data, ICondition condition, string scope)

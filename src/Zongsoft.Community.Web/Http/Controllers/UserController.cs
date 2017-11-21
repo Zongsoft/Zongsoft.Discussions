@@ -56,17 +56,37 @@ namespace Zongsoft.Community.Web.Http.Controllers
 			switch(kind.ToLowerInvariant())
 			{
 				case "message":
-					return this.DataService.GetMessageStatistics(id);
+					return null;
+					//return this.DataService.GetMessageStatistics(id);
 				default:
 					throw HttpResponseExceptionUtility.BadRequest("Invalid kind of the statistics.");
 			}
 		}
 
+		[ActionName("Count")]
+		public int GetCount(uint id, string args)
+		{
+			if(string.IsNullOrEmpty(args))
+				throw HttpResponseExceptionUtility.BadRequest("Missing arguments of the request.");
+
+			switch(args.ToLowerInvariant())
+			{
+				case "unread":
+				case "message-unread":
+					return this.DataService.GetMessageUnreadCount(id);
+				case "message":
+				case "message-total":
+					return this.DataService.GetMessageTotalCount(id);
+				default:
+					throw HttpResponseExceptionUtility.BadRequest("Invalid argument value.");
+			}
+		}
+
 		[ActionName("Messages")]
 		[HttpPaging]
-		public IEnumerable<Message.MessageMember> GetMessages(uint id, [FromUri]MessageMemberStatus? status = null, [FromUri]Paging paging = null)
+		public IEnumerable<Message.MessageUser> GetMessages(uint id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
 		{
-			return this.DataService.GetMessages(id, status, paging);
+			return this.DataService.GetMessages(id, isRead, paging);
 		}
 
 		[HttpPost]
