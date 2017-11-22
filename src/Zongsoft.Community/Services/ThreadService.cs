@@ -185,9 +185,6 @@ namespace Zongsoft.Community.Services
 			if(post == null || string.IsNullOrEmpty(post.Content))
 				throw new InvalidOperationException("Missing content of the thread.");
 
-			//判断当前用户是否是新增主题所在论坛的版主
-			var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(data.Get(p => p.SiteId), data.Get(p => p.ForumId));
-
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
 				//设置主题内容贴编号为零
