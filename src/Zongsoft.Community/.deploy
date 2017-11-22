@@ -1,5 +1,6 @@
-Zongsoft.Community.plugin
-Zongsoft.Community.option
 Zongsoft.Community.mapping
+Zongsoft.Community.option
+Zongsoft.Community.plugin
+Zongsoft.Community.Schemas.plugin
 
 bin/$(Edition)/Zongsoft.Community.*
