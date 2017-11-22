@@ -46,10 +46,10 @@ namespace Zongsoft.Community.Services
 			data.TrySet(p => p.SiteId, _ => this.EnsureCredential().SiteId, value => value == 0);
 		}
 
-		protected override Feedback OnGet(ICondition condition, string scope)
+		protected override Feedback OnGet(ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			//调用基类同名方法
-			var feedback = base.OnGet(condition, scope);
+			var feedback = base.OnGet(condition, scope, states);
 
 			if(feedback == null)
 				return null;
@@ -61,10 +61,10 @@ namespace Zongsoft.Community.Services
 			return feedback;
 		}
 
-		protected override IEnumerable<Feedback> OnSelect(ICondition condition, string scope, Paging paging, params Sorting[] sortings)
+		protected override IEnumerable<Feedback> OnSelect(ICondition condition, string scope, Paging paging, IDictionary<string, object> states, params Sorting[] sortings)
 		{
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings);
+			return base.OnSelect(condition, scope, paging, states, sortings);
 		}
 
 		protected override int OnInsert(DataDictionary<Feedback> data, string scope, IDictionary<string, object> states)
@@ -119,7 +119,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Feedback> data, ICondition condition, string scope)
+		protected override int OnUpdate(DataDictionary<Feedback> data, ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			//更新内容到文本文件中
 			data.TryGet(p => p.Content, (key, value) =>
@@ -141,7 +141,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, scope);
+			var count = base.OnUpdate(data, condition, scope, states);
 
 			if(count < 1)
 				return count;

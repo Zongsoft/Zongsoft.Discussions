@@ -120,16 +120,16 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override TEntity OnGet(ICondition condition, string scope)
+		protected override TEntity OnGet(ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			//确认必需的查询条件
 			this.EnsureRequiredCondition(ref condition);
 
 			//调用基类同名方法
-			return base.OnGet(condition, scope);
+			return base.OnGet(condition, scope, states);
 		}
 
-		protected override IEnumerable<TEntity> OnSelect(ICondition condition, string scope, Paging paging, params Sorting[] sortings)
+		protected override IEnumerable<TEntity> OnSelect(ICondition condition, string scope, Paging paging, IDictionary<string, object> states, params Sorting[] sortings)
 		{
 			//确认必需的查询条件
 			this.EnsureRequiredCondition(ref condition);
@@ -143,7 +143,7 @@ namespace Zongsoft.Community.Services
 			}
 
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings);
+			return base.OnSelect(condition, scope, paging, states, sortings);
 		}
 
 		protected override int OnInsert(DataDictionary<TEntity> data, string scope, IDictionary<string, object> states)
@@ -167,7 +167,7 @@ namespace Zongsoft.Community.Services
 			return base.OnInsertMany(items, scope, states);
 		}
 
-		protected override int OnUpdate(DataDictionary<TEntity> data, ICondition condition, string scope)
+		protected override int OnUpdate(DataDictionary<TEntity> data, ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "!SiteId, !CreatorId, !CreatedTime";
@@ -175,10 +175,10 @@ namespace Zongsoft.Community.Services
 				scope += ", !SiteId, !CreatorId, !CreatedTime";
 
 			//调用基类同名方法
-			return base.OnUpdate(data, condition, scope);
+			return base.OnUpdate(data, condition, scope, states);
 		}
 
-		protected override int OnUpdateMany(IEnumerable<DataDictionary<TEntity>> items, ICondition condition, string scope)
+		protected override int OnUpdateMany(IEnumerable<DataDictionary<TEntity>> items, string scope, IDictionary<string, object> states)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "!SiteId, !CreatorId, !CreatedTime";
@@ -186,7 +186,7 @@ namespace Zongsoft.Community.Services
 				scope += ", !SiteId, !CreatorId, !CreatedTime";
 
 			//调用基类同名方法
-			return base.OnUpdateMany(items, condition, scope);
+			return base.OnUpdateMany(items, scope, states);
 		}
 		#endregion
 	}

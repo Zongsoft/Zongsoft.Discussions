@@ -128,13 +128,13 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override UserProfile OnGet(ICondition condition, string scope)
+		protected override UserProfile OnGet(ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "User";
 
 			//调用基类同名方法
-			var profile = base.OnGet(condition, scope);
+			var profile = base.OnGet(condition, scope, states);
 
 			if(profile == null)
 				return null;
@@ -176,7 +176,7 @@ namespace Zongsoft.Community.Services
 			return base.OnInsert(data, scope, states);
 		}
 
-		protected override int OnUpdate(DataDictionary<UserProfile> data, ICondition condition, string scope)
+		protected override int OnUpdate(DataDictionary<UserProfile> data, ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号
 			if(!data.TryGet(p => p.UserId, out var userId) || userId == 0)
@@ -196,7 +196,7 @@ namespace Zongsoft.Community.Services
 			}
 
 			//调用基类同名方法
-			return base.OnUpdate(data, condition, scope);
+			return base.OnUpdate(data, condition, scope, states);
 		}
 		#endregion
 

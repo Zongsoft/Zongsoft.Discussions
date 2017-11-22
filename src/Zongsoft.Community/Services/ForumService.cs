@@ -179,10 +179,10 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override Forum OnGet(ICondition condition, string scope)
+		protected override Forum OnGet(ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			//调用基类同名方法
-			var forum = base.OnGet(condition, scope);
+			var forum = base.OnGet(condition, scope, states);
 
 			if(forum == null)
 				return null;

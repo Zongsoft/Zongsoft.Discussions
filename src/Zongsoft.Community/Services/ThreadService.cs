@@ -92,13 +92,13 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Thread OnGet(ICondition condition, string scope)
+		protected override Thread OnGet(ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Post, Creator, Creator.User";
 
 			//调用基类同名方法
-			var thread = base.OnGet(condition, scope);
+			var thread = base.OnGet(condition, scope, states);
 
 			if(thread == null)
 				return null;
@@ -149,13 +149,13 @@ namespace Zongsoft.Community.Services
 			return thread;
 		}
 
-		protected override IEnumerable<Thread> OnSelect(ICondition condition, string scope, Paging paging, params Sorting[] sortings)
+		protected override IEnumerable<Thread> OnSelect(ICondition condition, string scope, Paging paging, IDictionary<string, object> states, params Sorting[] sortings)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
 
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings);
+			return base.OnSelect(condition, scope, paging, states, sortings);
 		}
 
 		protected override int OnDelete(ICondition condition, string[] cascades, IDictionary<string, object> states)
@@ -232,10 +232,10 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Thread> data, ICondition condition, string scope)
+		protected override int OnUpdate(DataDictionary<Thread> data, ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, scope);
+			var count = base.OnUpdate(data, condition, scope, states);
 
 			//获取要更新的主题内容贴
 			var post = data.Get(p => p.Post, null);

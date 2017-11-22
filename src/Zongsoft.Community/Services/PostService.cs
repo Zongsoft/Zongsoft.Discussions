@@ -118,10 +118,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Post OnGet(ICondition condition, string scope)
+		protected override Post OnGet(ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			//调用基类同名方法
-			var post = base.OnGet(condition, scope);
+			var post = base.OnGet(condition, scope, states);
 
 			if(post == null)
 				return null;
@@ -133,13 +133,13 @@ namespace Zongsoft.Community.Services
 			return post;
 		}
 
-		protected override IEnumerable<Post> OnSelect(ICondition condition, string scope, Paging paging, params Sorting[] sortings)
+		protected override IEnumerable<Post> OnSelect(ICondition condition, string scope, Paging paging, IDictionary<string, object> states, params Sorting[] sortings)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
 
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings);
+			return base.OnSelect(condition, scope, paging, states, sortings);
 		}
 
 		protected override int OnInsert(DataDictionary<Post> data, string scope, IDictionary<string, object> states)
@@ -248,7 +248,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Post> data, ICondition condition, string scope)
+		protected override int OnUpdate(DataDictionary<Post> data, ICondition condition, string scope, IDictionary<string, object> states)
 		{
 			//更新内容到文本文件中
 			data.TryGet(p => p.Content, (key, value) =>
@@ -270,7 +270,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, scope);
+			var count = base.OnUpdate(data, condition, scope, states);
 
 			if(count < 1)
 				return count;
