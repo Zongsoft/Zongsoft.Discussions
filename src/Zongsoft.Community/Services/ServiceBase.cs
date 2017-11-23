@@ -129,7 +129,7 @@ namespace Zongsoft.Community.Services
 			return base.OnGet(condition, scope, states);
 		}
 
-		protected override IEnumerable<TEntity> OnSelect(ICondition condition, string scope, Paging paging, IDictionary<string, object> states, params Sorting[] sortings)
+		protected override IEnumerable<TEntity> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
 		{
 			//确认必需的查询条件
 			this.EnsureRequiredCondition(ref condition);
@@ -143,7 +143,7 @@ namespace Zongsoft.Community.Services
 			}
 
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, states, sortings);
+			return base.OnSelect(condition, scope, paging, sortings, states);
 		}
 
 		protected override int OnInsert(DataDictionary<TEntity> data, string scope, IDictionary<string, object> states)

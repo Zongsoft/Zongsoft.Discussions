@@ -149,13 +149,13 @@ namespace Zongsoft.Community.Services
 			return thread;
 		}
 
-		protected override IEnumerable<Thread> OnSelect(ICondition condition, string scope, Paging paging, IDictionary<string, object> states, params Sorting[] sortings)
+		protected override IEnumerable<Thread> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
 
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, states, sortings);
+			return base.OnSelect(condition, scope, paging, sortings, states);
 		}
 
 		protected override int OnDelete(ICondition condition, string[] cascades, IDictionary<string, object> states)

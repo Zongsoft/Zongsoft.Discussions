@@ -92,10 +92,10 @@ namespace Zongsoft.Community.Services
 			return group;
 		}
 
-		protected override IEnumerable<ForumGroup> OnSelect(ICondition condition, string scope, Paging paging, IDictionary<string, object> states, params Sorting[] sortings)
+		protected override IEnumerable<ForumGroup> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
 		{
 			//调用基类同名方法
-			var groups = base.OnSelect(condition, scope, paging, states, sortings);
+			var groups = base.OnSelect(condition, scope, paging, sortings, states);
 
 			//获取所有论坛组的所有论坛
 			var forums = this.DataAccess.Select<Forum>(Condition.In("GroupId", groups.Select(p => p.GroupId)), Paging.Disable).ToArray();

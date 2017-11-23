@@ -61,10 +61,10 @@ namespace Zongsoft.Community.Services
 			return feedback;
 		}
 
-		protected override IEnumerable<Feedback> OnSelect(ICondition condition, string scope, Paging paging, IDictionary<string, object> states, params Sorting[] sortings)
+		protected override IEnumerable<Feedback> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
 		{
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, states, sortings);
+			return base.OnSelect(condition, scope, paging, sortings, states);
 		}
 
 		protected override int OnInsert(DataDictionary<Feedback> data, string scope, IDictionary<string, object> states)
