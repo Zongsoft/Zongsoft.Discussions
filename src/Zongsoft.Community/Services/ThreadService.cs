@@ -92,13 +92,13 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Thread OnGet(ICondition condition, string scope, IDictionary<string, object> states)
+		protected override Thread OnGet(ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Post, Creator, Creator.User";
 
 			//调用基类同名方法
-			var thread = base.OnGet(condition, scope, states);
+			var thread = base.OnGet(condition, scope, state);
 
 			if(thread == null)
 				return null;
@@ -149,23 +149,23 @@ namespace Zongsoft.Community.Services
 			return thread;
 		}
 
-		protected override IEnumerable<Thread> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
+		protected override IEnumerable<Thread> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
 
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings, states);
+			return base.OnSelect(condition, scope, paging, sortings, state);
 		}
 
-		protected override int OnDelete(ICondition condition, string[] cascades, IDictionary<string, object> states)
+		protected override int OnDelete(ICondition condition, string[] cascades, object state)
 		{
 			var ids = this.DataAccess.Select<Thread>(this.Name, condition, Paging.Disable).Select(p => p.ThreadId).ToArray();
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
 				//调用基类同名方法
-				var count = base.OnDelete(condition, cascades, states);
+				var count = base.OnDelete(condition, cascades, state);
 
 				if(count > 0)
 					this.DataAccess.Delete<Post>(Condition.In("ThreadId", ids));
@@ -178,7 +178,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnInsert(DataDictionary<Thread> data, string scope, IDictionary<string, object> states)
+		protected override int OnInsert(DataDictionary<Thread> data, string scope, object state)
 		{
 			var post = data.Get(p => p.Post, null);
 
@@ -191,7 +191,7 @@ namespace Zongsoft.Community.Services
 				data.Set(p => p.PostId, (ulong)0);
 
 				//调用基类同名方法，插入主题数据
-				var count = base.OnInsert(data, scope, states);
+				var count = base.OnInsert(data, scope, state);
 
 				if(count < 1)
 					return count;
@@ -203,7 +203,7 @@ namespace Zongsoft.Community.Services
 				post.CreatedTime = data.Get(p => p.CreatedTime);
 
 				//通过帖子服务来新增主题的内容贴
-				count = this.Posting.Insert(post, new Dictionary<string, object> { { PostService.KEY_THREAD_STATE,  data} });
+				count = this.Posting.Insert(post, data);
 
 				//如果主题内容贴新增成功则提交事务
 				if(count > 0)
@@ -229,10 +229,10 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Thread> data, ICondition condition, string scope, IDictionary<string, object> states)
+		protected override int OnUpdate(DataDictionary<Thread> data, ICondition condition, string scope, object state)
 		{
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, scope, states);
+			var count = base.OnUpdate(data, condition, scope, state);
 
 			//获取要更新的主题内容贴
 			var post = data.Get(p => p.Post, null);

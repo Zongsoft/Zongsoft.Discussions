@@ -79,13 +79,13 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Folder OnGet(ICondition condition, string scope, IDictionary<string, object> states)
+		protected override Folder OnGet(ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
 
 			//调用基类同名方法
-			var folder = base.OnGet(condition, scope, states);
+			var folder = base.OnGet(condition, scope, state);
 
 			if(folder == null)
 				return null;
@@ -93,12 +93,12 @@ namespace Zongsoft.Community.Services
 			return folder;
 		}
 
-		protected override int OnInsert(DataDictionary<Folder> data, string scope, IDictionary<string, object> states)
+		protected override int OnInsert(DataDictionary<Folder> data, string scope, object state)
         {
             using(var transaction = new Transactions.Transaction())
             {
                 //调用基类同名方法
-                var count = base.OnInsert(data, scope, states);
+                var count = base.OnInsert(data, scope, state);
 
                 if(count < 1)
                     return count;
@@ -120,12 +120,12 @@ namespace Zongsoft.Community.Services
             }
 		}
 
-		protected override int OnUpdate(DataDictionary<Folder> data, ICondition condition, string scope, IDictionary<string, object> states)
+		protected override int OnUpdate(DataDictionary<Folder> data, ICondition condition, string scope, object state)
         {
             using(var transaction = new Transactions.Transaction())
             {
                 //调用基类同名方法
-                var count = base.OnUpdate(data, condition, scope, states);
+                var count = base.OnUpdate(data, condition, scope, state);
 
                 if(count < 1)
                     return count;

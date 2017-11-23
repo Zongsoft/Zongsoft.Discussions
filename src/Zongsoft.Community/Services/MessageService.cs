@@ -49,13 +49,13 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Message OnGet(ICondition condition, string scope, IDictionary<string, object> states)
+		protected override Message OnGet(ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
 
 			//调用基类同名方法
-			var message = base.OnGet(condition, scope, states);
+			var message = base.OnGet(condition, scope, state);
 
 			if(message == null)
 				return null;
@@ -79,16 +79,16 @@ namespace Zongsoft.Community.Services
 			return message;
 		}
 
-		protected override IEnumerable<Message> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
+		protected override IEnumerable<Message> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
 
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings, states);
+			return base.OnSelect(condition, scope, paging, sortings, state);
 		}
 
-		protected override int OnInsert(DataDictionary<Message> data, string scope, IDictionary<string, object> states)
+		protected override int OnInsert(DataDictionary<Message> data, string scope, object state)
 		{
 			string filePath = null;
 
@@ -118,7 +118,7 @@ namespace Zongsoft.Community.Services
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				var count = base.OnInsert(data, scope, states);
+				var count = base.OnInsert(data, scope, state);
 
 				if(count < 1)
 				{
@@ -152,7 +152,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Message> data, ICondition condition, string scope, IDictionary<string, object> states)
+		protected override int OnUpdate(DataDictionary<Message> data, ICondition condition, string scope, object state)
 		{
 			//更新内容到文本文件中
 			data.TryGet(p => p.Content, (key, value) =>
@@ -174,7 +174,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, scope, states);
+			var count = base.OnUpdate(data, condition, scope, state);
 
 			if(count < 1)
 				return count;

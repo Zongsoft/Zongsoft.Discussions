@@ -81,10 +81,10 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override ForumGroup OnGet(ICondition condition, string scope, IDictionary<string, object> states)
+		protected override ForumGroup OnGet(ICondition condition, string scope, object state)
 		{
 			//调用基类同名方法
-			var group = base.OnGet(condition, scope, states);
+			var group = base.OnGet(condition, scope, state);
 
 			if(group != null)
 				group.Forums = this.GetForums(group.SiteId, group.GroupId);
@@ -92,10 +92,10 @@ namespace Zongsoft.Community.Services
 			return group;
 		}
 
-		protected override IEnumerable<ForumGroup> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
+		protected override IEnumerable<ForumGroup> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
 		{
 			//调用基类同名方法
-			var groups = base.OnSelect(condition, scope, paging, sortings, states);
+			var groups = base.OnSelect(condition, scope, paging, sortings, state);
 
 			//获取所有论坛组的所有论坛
 			var forums = this.DataAccess.Select<Forum>(Condition.In("GroupId", groups.Select(p => p.GroupId)), Paging.Disable).ToArray();

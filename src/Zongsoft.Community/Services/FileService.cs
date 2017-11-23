@@ -46,23 +46,23 @@ namespace Zongsoft.Community.Services
         #endregion
 
         #region 重写方法
-        protected override File OnGet(ICondition condition, string scope, IDictionary<string, object> states)
+        protected override File OnGet(ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
 
 			//调用基类同名方法
-			return base.OnGet(condition, scope, states);
+			return base.OnGet(condition, scope, state);
 		}
 
-		protected override int OnInsert(DataDictionary<File> data, string scope, IDictionary<string, object> states)
+		protected override int OnInsert(DataDictionary<File> data, string scope, object state)
 		{
 			var filePath = data.Get(p => p.Path);
 
 			try
 			{
 				//调用基类同名方法
-				var count = base.OnInsert(data, scope, states);
+				var count = base.OnInsert(data, scope, state);
 
 				if(count < 1)
 				{
@@ -83,7 +83,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<File> data, ICondition condition, string scope, IDictionary<string, object> states)
+		protected override int OnUpdate(DataDictionary<File> data, ICondition condition, string scope, object state)
 		{
 			throw new NotSupportedException();
 		}

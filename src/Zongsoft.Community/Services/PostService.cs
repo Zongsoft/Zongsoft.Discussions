@@ -30,10 +30,6 @@ namespace Zongsoft.Community.Services
 	[DataSearchKey("Thread,ThreadId:ThreadId")]
 	public class PostService : ServiceBase<Post>
 	{
-		#region	常量定义
-		internal const string KEY_THREAD_STATE = "__DataDictionary:Thread__";
-		#endregion
-
 		#region 构造函数
 		public PostService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
@@ -118,10 +114,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Post OnGet(ICondition condition, string scope, IDictionary<string, object> states)
+		protected override Post OnGet(ICondition condition, string scope, object state)
 		{
 			//调用基类同名方法
-			var post = base.OnGet(condition, scope, states);
+			var post = base.OnGet(condition, scope, state);
 
 			if(post == null)
 				return null;
@@ -133,16 +129,16 @@ namespace Zongsoft.Community.Services
 			return post;
 		}
 
-		protected override IEnumerable<Post> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
+		protected override IEnumerable<Post> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
 
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings, states);
+			return base.OnSelect(condition, scope, paging, sortings, state);
 		}
 
-		protected override int OnInsert(DataDictionary<Post> data, string scope, IDictionary<string, object> states)
+		protected override int OnInsert(DataDictionary<Post> data, string scope, object state)
 		{
 			string filePath = null;
 
@@ -171,14 +167,11 @@ namespace Zongsoft.Community.Services
 				data.Set(p => p.ContentType, Utility.GetContentType(data.Get(p => p.ContentType), false));
 			});
 
-			//定义一个变量，表示当前帖子是否为主题贴
-			var isThreadPost = false;
+			//定义附加数据是否为关联的主题对象
+			var thread = state as DataDictionary<Thread>;
 
-			if(states != null && states.TryGetValue(KEY_THREAD_STATE, out var state) && state is DataDictionary<Thread> thread)
+			if(thread != null)
 			{
-				//如果状态包中指定了主题对象则表明当前新增贴为主题帖
-				isThreadPost = true;
-
 				//判断当前用户是否是新增主题所在论坛的版主
 				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(thread.Get(p => p.SiteId), thread.Get(p => p.ForumId));
 
@@ -202,7 +195,7 @@ namespace Zongsoft.Community.Services
 				using(var transaction = new Zongsoft.Transactions.Transaction())
 				{
 					//调用基类同名方法
-					var count = base.OnInsert(data, scope, states);
+					var count = base.OnInsert(data, scope, state);
 
 					if(count > 0)
 					{
@@ -222,7 +215,7 @@ namespace Zongsoft.Community.Services
 
 						//更新发帖人的关联帖子统计信息
 						//注意：只有当前帖子不是主题贴才需要更新对应的统计信息
-						if(!isThreadPost)
+						if(thread == null)
 							this.SetMostRecentPost(data);
 
 						//提交事务
@@ -248,7 +241,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Post> data, ICondition condition, string scope, IDictionary<string, object> states)
+		protected override int OnUpdate(DataDictionary<Post> data, ICondition condition, string scope, object state)
 		{
 			//更新内容到文本文件中
 			data.TryGet(p => p.Content, (key, value) =>
@@ -270,7 +263,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, scope, states);
+			var count = base.OnUpdate(data, condition, scope, state);
 
 			if(count < 1)
 				return count;

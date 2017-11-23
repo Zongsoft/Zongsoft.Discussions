@@ -120,16 +120,16 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override TEntity OnGet(ICondition condition, string scope, IDictionary<string, object> states)
+		protected override TEntity OnGet(ICondition condition, string scope, object state)
 		{
 			//确认必需的查询条件
 			this.EnsureRequiredCondition(ref condition);
 
 			//调用基类同名方法
-			return base.OnGet(condition, scope, states);
+			return base.OnGet(condition, scope, state);
 		}
 
-		protected override IEnumerable<TEntity> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
+		protected override IEnumerable<TEntity> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
 		{
 			//确认必需的查询条件
 			this.EnsureRequiredCondition(ref condition);
@@ -143,19 +143,19 @@ namespace Zongsoft.Community.Services
 			}
 
 			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings, states);
+			return base.OnSelect(condition, scope, paging, sortings, state);
 		}
 
-		protected override int OnInsert(DataDictionary<TEntity> data, string scope, IDictionary<string, object> states)
+		protected override int OnInsert(DataDictionary<TEntity> data, string scope, object state)
 		{
 			//更新相关字段的默认值
 			this.EnsureDefaultValues(data);
 
 			//调用基类同名方法
-			return base.OnInsert(data, scope, states);
+			return base.OnInsert(data, scope, state);
 		}
 
-		protected override int OnInsertMany(IEnumerable<DataDictionary<TEntity>> items, string scope, IDictionary<string, object> states)
+		protected override int OnInsertMany(IEnumerable<DataDictionary<TEntity>> items, string scope, object state)
 		{
 			foreach(var item in items)
 			{
@@ -164,10 +164,10 @@ namespace Zongsoft.Community.Services
 			}
 
 			//调用基类同名方法
-			return base.OnInsertMany(items, scope, states);
+			return base.OnInsertMany(items, scope, state);
 		}
 
-		protected override int OnUpdate(DataDictionary<TEntity> data, ICondition condition, string scope, IDictionary<string, object> states)
+		protected override int OnUpdate(DataDictionary<TEntity> data, ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "!SiteId, !CreatorId, !CreatedTime";
@@ -175,10 +175,10 @@ namespace Zongsoft.Community.Services
 				scope += ", !SiteId, !CreatorId, !CreatedTime";
 
 			//调用基类同名方法
-			return base.OnUpdate(data, condition, scope, states);
+			return base.OnUpdate(data, condition, scope, state);
 		}
 
-		protected override int OnUpdateMany(IEnumerable<DataDictionary<TEntity>> items, string scope, IDictionary<string, object> states)
+		protected override int OnUpdateMany(IEnumerable<DataDictionary<TEntity>> items, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "!SiteId, !CreatorId, !CreatedTime";
@@ -186,7 +186,7 @@ namespace Zongsoft.Community.Services
 				scope += ", !SiteId, !CreatorId, !CreatedTime";
 
 			//调用基类同名方法
-			return base.OnUpdateMany(items, scope, states);
+			return base.OnUpdateMany(items, scope, state);
 		}
 		#endregion
 	}
