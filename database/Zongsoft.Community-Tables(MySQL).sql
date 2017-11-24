@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `Community_FolderUser`
 (
   `FolderId` int UNSIGNED NOT NULL COMMENT '主键，文件夹编号',
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
-  `UserKind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户种类(0:None, 1:Administrator, 2:Reader, 3:Writer)',
+  `UserKind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户种类(0:None, 1:Administrator, 2:Writer, 3:Reader)',
   PRIMARY KEY (`FolderId`, `UserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件夹用户表';
 
@@ -119,13 +119,14 @@ CREATE TABLE IF NOT EXISTS `Community_Forum`
   PRIMARY KEY (`SiteId`, `ForumId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='论坛表';
 
-CREATE TABLE IF NOT EXISTS `Community_Moderator`
+CREATE TABLE IF NOT EXISTS `Community_ForumUser`
 (
   `SiteId` int UNSIGNED NOT NULL COMMENT '主键，站点编号',
   `ForumId` smallint UNSIGNED NOT NULL COMMENT '主键，论坛编号',
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
+  `UserKind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户种类(0:None, 1:Administrator, 2:Writer, 3:Reader)',
   PRIMARY KEY (`SiteId`, `ForumId`, `UserId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='版主表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='论坛用户表';
 
 CREATE TABLE IF NOT EXISTS `Community_Post`
 (

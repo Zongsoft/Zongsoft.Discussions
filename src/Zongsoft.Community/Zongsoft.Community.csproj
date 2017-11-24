@@ -67,7 +67,6 @@
     <Compile Include="Models\ForumConditional.cs" />
     <Compile Include="Models\MessageConditional.cs" />
     <Compile Include="Models\MessageStatus.cs" />
-    <Compile Include="Models\Moderator.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\Statistics\StatusStatisticResult.cs" />

@@ -88,10 +88,10 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		[HttpPost]
 		public async Task<IEnumerable<File>> Upload(uint? id = null)
 		{
-            var files = new List<File>();
-            var infos = await _accessor.Write(this.Request,
-				                              this.DataService.GetDirectory(id),
-			                                  args => args.FileName = (DateTime.Now - EPOCH).Seconds + "-" + Zongsoft.Common.RandomGenerator.GenerateString());
+			var files = new List<File>();
+			var infos = await _accessor.Write(this.Request,
+				                          this.DataService.GetDirectory(id),
+			                              args => args.FileName = (DateTime.Now - EPOCH).Days.ToString() + "-" + Zongsoft.Common.RandomGenerator.GenerateString());
 
 			foreach(var info in infos)
 			{
@@ -108,7 +108,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 				var attachment = new File()
 				{
-                    FolderId = id.HasValue ? id.Value : 0,
+					FolderId = id.HasValue ? id.Value : 0,
 					Name = info.Name,
 					Path = info.Path.Url,
 					Type = info.Type,

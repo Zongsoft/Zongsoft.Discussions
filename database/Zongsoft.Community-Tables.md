@@ -64,7 +64,7 @@ Description | varchar | 500 | True | 备注描述
 --------|:------:|:--:|:--:|----:
 FolderId | int | 4 | False | 主键，文件夹编号
 UserId | int | 4 | False | 主键，用户编号
-UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Reader, 3:Writer)
+UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Writer, 3:Reader)
 
 
 ### 文件表 `Community.File`
@@ -134,7 +134,7 @@ CreatedTime | datetime | - | False | 创建时间
 SiteId | int | 4 | False | 主键，站点编号
 ForumId | smallint | 2 | False | 主键，论坛编号
 UserId | int | 4 | False | 主键，用户编号
-UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Reader, 3:Writer)
+UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Writer, 3:Reader)
 
 
 ### 主题表 `Community.Thread`

@@ -35,16 +35,16 @@ namespace Zongsoft.Community
 
 		internal const string COMMUNITY_FEEDBACK = "Community.Feedback";
 		internal const string COMMUNITY_MESSAGE = "Community.Message";
-		internal const string COMMUNITY_MESSAGEMEMBER = "Community.MessageMember";
+		internal const string COMMUNITY_MESSAGEUSER = "Community.MessageUser";
 		internal const string COMMUNITY_FILE = "Community.File";
 		internal const string COMMUNITY_FOLDER = "Community.Folder";
 		internal const string COMMUNITY_FOLDERUSER = "Community.FolderUser";
 		internal const string COMMUNITY_FORUMGROUP = "Community.ForumGroup";
 		internal const string COMMUNITY_FORUM = "Community.Forum";
 		internal const string COMMUNITY_FORUMUSER = "Community.ForumUser";
-		internal const string COMMUNITY_MODERATOR = "Community.Moderator";
 		internal const string COMMUNITY_POST = "Community.Post";
 		internal const string COMMUNITY_POSTVOTING = "Community.PostVoting";
+		internal const string COMMUNITY_POSTCOMMENT = "Community.PostComment";
 		internal const string COMMUNITY_POSTATTACHMENT = "Community.PostAttachment";
 		internal const string COMMUNITY_HISTORY = "Community.History";
 		internal const string COMMUNITY_THREAD = "Community.Thread";
@@ -91,16 +91,19 @@ namespace Zongsoft.Community
 		#region 映射方法
 		private void Map(Zongsoft.Data.IDataAccessNaming naming)
 		{
+			naming.Map<File>(COMMUNITY_FILE);
+			naming.Map<Folder>(COMMUNITY_FOLDER);
+			naming.Map<Folder.FolderUser>(COMMUNITY_FOLDERUSER);
 			naming.Map<Feedback>(COMMUNITY_FEEDBACK);
 			naming.Map<Forum>(COMMUNITY_FORUM);
 			naming.Map<ForumGroup>(COMMUNITY_FORUMGROUP);
 			naming.Map<History>(COMMUNITY_HISTORY);
 			naming.Map<Message>(COMMUNITY_MESSAGE);
-			naming.Map<Message.MessageUser>(COMMUNITY_MESSAGEMEMBER);
-			naming.Map<Moderator>(COMMUNITY_MODERATOR);
+			naming.Map<Message.MessageUser>(COMMUNITY_MESSAGEUSER);
 			naming.Map<Post>(COMMUNITY_POST);
 			naming.Map<Post.PostVoting>(COMMUNITY_POSTVOTING);
-			naming.Map<Post.PostAttachment>();
+			naming.Map<Post.PostComment>(COMMUNITY_POSTCOMMENT);
+			naming.Map<Post.PostAttachment>(COMMUNITY_POSTATTACHMENT);
 			naming.Map<Thread>(COMMUNITY_THREAD);
 			naming.Map<UserProfile>(COMMUNITY_USERPROFILE);
 		}

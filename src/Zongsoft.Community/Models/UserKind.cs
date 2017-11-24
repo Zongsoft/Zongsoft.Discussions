@@ -33,10 +33,10 @@ namespace Zongsoft.Community.Models
 		/// <summary>管理员(版主)</summary>
 		Administrator,
 
-		/// <summary>只读用户</summary>
-		Reader,
-
 		/// <summary>可读写用户</summary>
 		Writer,
+
+		/// <summary>只读用户</summary>
+		Reader,
 	}
 }
