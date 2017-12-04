@@ -96,6 +96,7 @@ namespace Zongsoft.Community
 			naming.Map<Folder.FolderUser>(COMMUNITY_FOLDERUSER);
 			naming.Map<Feedback>(COMMUNITY_FEEDBACK);
 			naming.Map<Forum>(COMMUNITY_FORUM);
+			naming.Map<Forum.ForumUser>(COMMUNITY_FORUMUSER);
 			naming.Map<ForumGroup>(COMMUNITY_FORUMGROUP);
 			naming.Map<History>(COMMUNITY_HISTORY);
 			naming.Map<Message>(COMMUNITY_MESSAGE);
