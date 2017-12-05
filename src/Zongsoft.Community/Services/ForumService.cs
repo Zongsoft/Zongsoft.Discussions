@@ -139,7 +139,10 @@ namespace Zongsoft.Community.Services
 			var topmosts = this.GetTopmosts(siteId, forumId);
 
 			//查询指定论坛中的并且排除顶部集中的主题集
-			return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.NotIn("ThreadId", topmosts.Select(p => p.ThreadId)), paging);
+			if(topmosts == null || topmosts.Length == 0)
+				return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId), paging);
+			else
+				return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.NotIn("ThreadId", topmosts.Select(p => p.ThreadId)), paging);
 		}
 		#endregion
 
