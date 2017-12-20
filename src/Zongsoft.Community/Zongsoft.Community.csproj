@@ -59,6 +59,7 @@
     <Compile Include="Models\ThreadConditional.cs" />
     <Compile Include="Models\ForumGroupConditional.cs" />
     <Compile Include="Models\ForumGroup.cs" />
+    <Compile Include="Models\Scoping.cs" />
     <Compile Include="Models\Visiblity.cs" />
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\Feedback.cs" />

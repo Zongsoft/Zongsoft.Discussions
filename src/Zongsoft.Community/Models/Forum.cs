@@ -41,6 +41,7 @@ namespace Zongsoft.Community.Models
 		private uint? _mostRecentPostAuthorId;
 		private Visiblity _visiblity;
 		private Accessibility _accessibility;
+		private uint _creatorId;
 		private DateTime _createdTime;
 		#endregion
 
@@ -437,6 +438,21 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.MostRecentPostTime, value);
+			}
+		}
+
+		/// <summary>
+		/// 获取或设置论坛创建人编号。
+		/// </summary>
+		public uint CreatorId
+		{
+			get
+			{
+				return _creatorId;
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.CreatorId, ref _creatorId, value);
 			}
 		}
 

@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `Community_Feedback`
 (
   `FeedbackId` bigint UNSIGNED NOT NULL COMMENT '主键，反馈编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '站点编号',
+  `Kind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '反馈种类(0:None)',
   `Subject` varchar(100) NOT NULL COMMENT '反馈标题',
   `Content` varchar(500) NOT NULL COMMENT '反馈内容文件',
   `ContentType` varchar(50) DEFAULT NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',

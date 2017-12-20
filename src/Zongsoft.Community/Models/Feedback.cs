@@ -30,6 +30,7 @@ namespace Zongsoft.Community.Models
 		#region 成员字段
 		private ulong _feedbackId;
 		private uint _siteId;
+		private byte _kind;
 		private DateTime _createdTime;
 		#endregion
 
@@ -62,6 +63,18 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.SiteId, ref _siteId, value);
+			}
+		}
+
+		public byte Kind
+		{
+			get
+			{
+				return _kind;
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Kind, ref _kind, value);
 			}
 		}
 

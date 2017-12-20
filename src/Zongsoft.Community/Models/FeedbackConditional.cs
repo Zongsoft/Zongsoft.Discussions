@@ -40,6 +40,18 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
+		public byte? Kind
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.Kind);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Kind, value);
+			}
+		}
+
 		public string Subject
 		{
 			get

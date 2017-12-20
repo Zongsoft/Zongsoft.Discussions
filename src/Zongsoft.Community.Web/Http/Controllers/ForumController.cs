@@ -29,7 +29,6 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	[Authorization(AuthorizationMode.Requires)]
 	public class ForumController : Zongsoft.Web.Http.HttpControllerBase<Forum, ForumConditional, ForumService>
 	{
 		#region 构造函数

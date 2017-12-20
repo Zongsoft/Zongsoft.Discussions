@@ -29,7 +29,6 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	[Authorization(AuthorizationMode.Requires)]
 	public class ThreadController : Zongsoft.Web.Http.HttpControllerBase<Thread, ThreadConditional, ThreadService>
 	{
 		#region 构造函数

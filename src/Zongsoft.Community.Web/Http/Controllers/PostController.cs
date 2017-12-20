@@ -29,7 +29,6 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	[Authorization(AuthorizationMode.Requires)]
 	public class PostController : Zongsoft.Web.Http.HttpControllerBase<Post, PostConditional, PostService>
 	{
 		#region 构造函数

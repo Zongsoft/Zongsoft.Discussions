@@ -43,7 +43,7 @@ namespace Zongsoft.Community.Services
 			data.TrySet("CreatedTime", DateTime.Now);
 
 			//尝试更新当前反馈的所属站点编号
-			data.TrySet(p => p.SiteId, _ => this.EnsureCredential().SiteId, value => value == 0);
+			data.TrySet(p => p.SiteId, _ => this.GetSiteId(), value => value == 0);
 		}
 
 		protected override Feedback OnGet(ICondition condition, string scope, object state)

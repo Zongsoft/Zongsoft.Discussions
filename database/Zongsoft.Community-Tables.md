@@ -34,6 +34,7 @@ IsRead | bool | - | False | 是否已读
 --------|:------:|:--:|:--:|----:
 FeedbackId | bigint | 8 | False | 主键，反馈编号
 SiteId | int | 4 | False | 站点编号
+Kind | byte | 1 | False | 反馈种类(0:None)
 Subject | nvarchar | 100 | False | 反馈标题
 Content | nvarchar | 500 | False | 反馈内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
@@ -124,6 +125,7 @@ MostRecentPostAuthorId | int | 4 | True | 最后回帖的作者编号
 MostRecentPostAuthorName | nvarchar | 50 | True | 最后回帖的作者名
 MostRecentPostAuthorAvatar | varchar | 150 | True | 最后回帖的作者头像
 MostRecentPostTime | datetime | - | True | 最后回帖的时间
+CreatorId | int | 4 | False | 创建人编号
 CreatedTime | datetime | - | False | 创建时间
 
 
