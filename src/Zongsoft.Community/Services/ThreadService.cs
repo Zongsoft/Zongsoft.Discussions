@@ -306,7 +306,11 @@ namespace Zongsoft.Community.Services
 
 		private void SetHistory(ulong threadId)
 		{
-			var credential = this.EnsureCredential();
+			var credential = this.EnsureCredential(false);
+
+			if(credential == null || credential.IsEmpty)
+				return;
+
 			var conditions = Condition.Equal("UserId", credential.UserId) & Condition.Equal("ThreadId", threadId);
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
