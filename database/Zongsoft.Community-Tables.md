@@ -12,6 +12,7 @@ Subject | nvarchar | 100 | False | 消息主题
 Content | nvarchar | 500 | False | 消息内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 MessageType | varchar | 50 | True | 消息类型
+Source | varchar | 50 | True | 消息来源
 Status | byte | 1 | False | 状态
 StatusTimestamp | datetime | - | True | 状态更新时间
 StatusDescription | nvarchar | 100 | True | 状态描述

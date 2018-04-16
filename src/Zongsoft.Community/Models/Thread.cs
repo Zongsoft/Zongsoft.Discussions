@@ -36,6 +36,7 @@ namespace Zongsoft.Community.Models
 		private ThreadStatus _status;
 		private DateTime? _statusTimestamp;
 		private bool _disabled;
+		private bool _visible;
 		private bool _isApproved;
 		private bool _isLocked;
 		private bool _isPinned;
@@ -288,6 +289,21 @@ namespace Zongsoft.Community.Models
 			set
 			{
 				this.SetPropertyValue(() => this.Disabled, ref _disabled, value);
+			}
+		}
+
+		/// <summary>
+		/// 获取或设置主题是否可见。
+		/// </summary>
+		public bool Visible
+		{
+			get
+			{
+				return _visible;
+			}
+			set
+			{
+				this.SetPropertyValue(nameof(Visible), ref _visible, value);
 			}
 		}
 

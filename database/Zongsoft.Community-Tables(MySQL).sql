@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `Community_Message`
   `Content` varchar(500) NOT NULL COMMENT '消息内容',
   `ContentType` varchar(50) DEFAULT NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',
   `MessageType` varchar(50) DEFAULT NULL COMMENT '消息类型',
+  `Source` varchar(50) DEFAULT NULL COMMENT '消息来源',
   `Status` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态',
   `StatusTimestamp` datetime NULL COMMENT '状态更改时间',
   `StatusDescription` varchar(100) DEFAULT NULL COMMENT '状态描述信息',

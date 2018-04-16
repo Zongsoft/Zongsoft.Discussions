@@ -64,6 +64,18 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
+		public string Source
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.Source);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Source, value);
+			}
+		}
+
 		public MessageStatus? Status
 		{
 			get

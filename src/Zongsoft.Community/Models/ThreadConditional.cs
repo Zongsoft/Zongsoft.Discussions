@@ -88,6 +88,18 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
+		public bool? Visible
+		{
+			get
+			{
+				return this.GetPropertyValue(() => this.Visible);
+			}
+			set
+			{
+				this.SetPropertyValue(() => this.Visible, value);
+			}
+		}
+
 		public bool? IsApproved
 		{
 			get

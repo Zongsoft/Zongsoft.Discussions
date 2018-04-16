@@ -29,6 +29,7 @@ namespace Zongsoft.Community.Services.Commands
 	[CommandOption(CONTENT_OPTION, typeof(string), Required = true)]
 	[CommandOption(CONTENTTYPE_OPTION, typeof(string))]
 	[CommandOption(MESSAGETYPE_OPTION, typeof(string))]
+	[CommandOption(SOURCE_OPTION, typeof(string))]
 	public class MessageSendCommand : CommandBase<CommandContext>
 	{
 		#region 常量定义
@@ -36,6 +37,7 @@ namespace Zongsoft.Community.Services.Commands
 		private const string CONTENT_OPTION = "content";
 		private const string CONTENTTYPE_OPTION = "contentType";
 		private const string MESSAGETYPE_OPTION = "messageType";
+		private const string SOURCE_OPTION = "source";
 		#endregion
 
 		#region 成员字段
@@ -73,22 +75,22 @@ namespace Zongsoft.Community.Services.Commands
 		#region 执行方法
 		protected override object OnExecute(CommandContext context)
 		{
-			var subject = context.Expression.Options.GetValue<string>(SUBJECT_OPTION);
-			var content = context.Expression.Options.GetValue<string>(CONTENT_OPTION);
-			var contentType = context.Expression.Options.GetValue<string>(CONTENTTYPE_OPTION);
-			var messageType = context.Expression.Options.GetValue<string>(MESSAGETYPE_OPTION);
-
 			if(context.Expression.Arguments == null || context.Expression.Arguments.Length == 0)
 				throw new CommandException("Missing arguments of the command.");
 
+			var content = context.Expression.Options.GetValue<string>(CONTENT_OPTION);
+			var contentType = context.Expression.Options.GetValue<string>(CONTENTTYPE_OPTION);
+
+			//根据内容类型解析得到真实内容
 			content = GetContent(content, ref contentType);
 
 			var message = new Models.Message()
 			{
-				Subject = subject,
 				Content = content,
 				ContentType = contentType,
-				MessageType = messageType,
+				Source = context.Expression.Options.GetValue<string>(SOURCE_OPTION),
+				Subject = context.Expression.Options.GetValue<string>(SUBJECT_OPTION),
+				MessageType = context.Expression.Options.GetValue<string>(MESSAGETYPE_OPTION),
 				Users = GetUsers(context.Expression.Arguments).Select(uid => new Models.Message.MessageUser(uid)),
 			};
 
