@@ -156,6 +156,7 @@ Status | byte | 1 | False | 状态(0:未发送, 1:发送中, 2:已发送, 3:已�
 StatusTimestamp | datetime | - | False | 状态更新时间
 StatusDescription | nvarchar | 100 | True | 状态描述
 Disabled | bool | - | False | 已被禁用(False)
+Visible | bool | - | False | 是否可见(True)
 IsApproved | bool | - | False | 是否审核通过
 IsLocked | bool | - | False | 已被锁定（锁定则不允许回复）
 IsPinned | bool | - | False | 是否置顶

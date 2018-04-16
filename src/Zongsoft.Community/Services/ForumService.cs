@@ -95,8 +95,13 @@ namespace Zongsoft.Community.Services
 
 			if(globals == null)
 			{
-				var threads = this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("IsGlobal", true), paging, Sorting.Descending("ThreadId")).ToArray();
+				var threads = this.DataAccess.Select<Thread>(
+					Condition.Equal("SiteId", siteId) & Condition.Equal("IsGlobal", true) & Condition.Equal("Visible", true),
+					paging, Sorting.Descending("ThreadId")).ToArray();
+
+				//将全局可见贴的主题编号缓存起来
 				cache.SetValue(this.GetGlobalCacheKey(siteId), threads.Select(p => p.ThreadId));
+
 				return threads;
 			}
 
@@ -114,8 +119,13 @@ namespace Zongsoft.Community.Services
 
 			if(pinneds == null)
 			{
-				var threads = this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("IsPinned", true), paging, Sorting.Descending("ThreadId"));
+				var threads = this.DataAccess.Select<Thread>(
+					Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("IsPinned", true) & Condition.Equal("Visible", true),
+					paging, Sorting.Descending("ThreadId"));
+
+				//将置顶可见贴的主题编号缓存起来
 				cache.SetValue(this.GetPinnedCacheKey(siteId, forumId), threads.Select(p => p.ThreadId).ToArray());
+
 				return threads.ToArray();
 			}
 
@@ -140,9 +150,9 @@ namespace Zongsoft.Community.Services
 
 			//查询指定论坛中的并且排除顶部集中的主题集
 			if(topmosts == null || topmosts.Length == 0)
-				return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId), paging);
+				return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("Visible", true), paging);
 			else
-				return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.NotIn("ThreadId", topmosts.Select(p => p.ThreadId)), paging);
+				return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("Visible", true) & Condition.NotIn("ThreadId", topmosts.Select(p => p.ThreadId)), paging);
 		}
 		#endregion
 

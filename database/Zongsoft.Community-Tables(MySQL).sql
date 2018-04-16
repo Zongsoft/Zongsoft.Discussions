@@ -206,6 +206,7 @@ CREATE TABLE IF NOT EXISTS `Community_Thread`
   `StatusTimestamp` datetime DEFAULT NULL COMMENT '状态更改时间',
   `StatusDescription` varchar(100) DEFAULT NULL COMMENT '状态描述信息',
   `Disabled` tinyint(1) NOT NULL DEFAULT 0 COMMENT '已被禁用',
+  `Visible` tinyint(1) NOT NULL DEFAULT 1 COMMENT '已被可见',
   `IsApproved` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否锁定(锁定则不允许回复)',
   `IsLocked` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否锁定(锁定则不允许回复)',
   `IsPinned` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否置顶',

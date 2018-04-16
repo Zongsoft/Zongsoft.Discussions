@@ -139,7 +139,14 @@ namespace Zongsoft.Community.Services
 				var keys = this.DataAccess.GetKey<TEntity>();
 
 				if(keys != null && keys.Length > 0)
-					sortings = new Sorting[] { Sorting.Descending(keys) };
+				{
+					sortings = new Sorting[keys.Length];
+
+					for(var i = 0; i < keys.Length; i++)
+					{
+						sortings[i] = Sorting.Descending(keys[i]);
+					}
+				}
 			}
 
 			//调用基类同名方法
