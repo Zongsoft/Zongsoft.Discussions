@@ -221,10 +221,16 @@ namespace Zongsoft.Community.Models
 		/// </summary>
 		public class MessageUser
 		{
+			#region 构造函数
+			public MessageUser()
+			{
+			}
+
 			public MessageUser(uint userId)
 			{
 				this.UserId = userId;
 			}
+			#endregion
 
 			public ulong MessageId
 			{

@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
@@ -98,7 +99,7 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
 		}
 
-		public IEnumerable<Message.MessageUser> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
+		public IEnumerable<Message> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
 		{
 			if(userId == 0)
 				userId = this.EnsureCredential().UserId;
@@ -108,7 +109,7 @@ namespace Zongsoft.Community.Services
 			if(isRead.HasValue)
 				conditions.Add(Condition.Equal("IsRead", isRead.Value));
 
-			return this.DataAccess.Select<Message.MessageUser>(conditions, "Message", paging);
+			return this.DataAccess.Select<Message.MessageUser>(conditions, "Message", paging).Select(p => p.Message);
 		}
 
 		public bool SetStatus(uint userId, UserStatus status)

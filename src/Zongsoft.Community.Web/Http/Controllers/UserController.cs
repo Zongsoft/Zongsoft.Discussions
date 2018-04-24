@@ -84,7 +84,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[ActionName("Messages")]
 		[HttpPaging]
-		public IEnumerable<Message.MessageUser> GetMessages(uint id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
+		public IEnumerable<Message> GetMessages(uint id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetMessages(id, isRead, paging);
 		}
