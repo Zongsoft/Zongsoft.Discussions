@@ -219,16 +219,27 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 表示消息接受人的业务实体类。
 		/// </summary>
-		public class MessageUser
+		public struct MessageUser
 		{
 			#region 构造函数
-			public MessageUser()
+			public MessageUser(ulong messageId, uint userId, bool isRead = false)
 			{
+				this.MessageId = messageId;
+				this.UserId = userId;
+				this.IsRead = isRead;
+
+				this.User = null;
+				this.Message = null;
 			}
 
 			public MessageUser(uint userId)
 			{
+				this.MessageId = 0;
 				this.UserId = userId;
+				this.IsRead = false;
+
+				this.User = null;
+				this.Message = null;
 			}
 			#endregion
 

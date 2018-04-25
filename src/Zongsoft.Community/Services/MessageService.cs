@@ -129,20 +129,18 @@ namespace Zongsoft.Community.Services
 					return count;
 				}
 
-				data.TryGet(p => p.Users, (key, members) =>
+				data.TryGet(p => p.Users, (key, users) =>
 				{
-					if(members == null)
+					if(users == null)
 						return;
 
-					var messageId = data.Get(p => p.MessageId);
-
-					foreach(var member in members)
+					IEnumerable<Message.MessageUser> GetMembers(ulong messageId, IEnumerable<Message.MessageUser> members)
 					{
-						member.MessageId = messageId;
-						member.IsRead = false;
+						foreach(var member in members)
+							yield return new Message.MessageUser(messageId, member.UserId);
 					}
 
-					this.DataAccess.InsertMany(members);
+					this.DataAccess.InsertMany(GetMembers(data.Get(p => p.MessageId), users));
 				});
 
 				//提交事务
