@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<plugin name="Zongsoft.Community"
+        title="Zongsoft.Community Plugin"
+        author="Popeye Zhong(zongsoft@qq.com)"
+        version="1.0"
+        copyright="Copyright(C) Zongsoft Corporation. 2015-2017. All rights reserved."
+        description="Created by Popeye Zhong in 2017-05">
+
+	<manifest>
+		<assemblies>
+			<assembly name="Zongsoft.Community" />
+		</assemblies>
+
+		<dependencies>
+			<dependency name="Zongsoft.Data" />
+			<dependency name="Zongsoft.Security" />
+		</dependencies>
+	</manifest>
+
+	<extension path="/Workbench/Startup">
+		<object name="Community_AuthenticationWorker" type="Zongsoft.Community.Security.AuthenticationWorker, Zongsoft.Community" />
+	</extension>
+
+	<extension path="/Workbench/Data/Accessors">
+		<object name="Community" type="Zongsoft.Data.DataAccess, Zongsoft.Data">
+			<object name="Filters" value="{path:../@Filters}" />
+		</object>
+	</extension>
+
+	<extension path="/Workbench/Data">
+		<accessors.default>{path:./Community}</accessors.default>
+	</extension>
+
+	<extension path="/Workbench/Data/Accessors/Community/Filters">
+		<object name="UserFilter" type="Zongsoft.Community.Data.UserFilter, Zongsoft.Community" />
+		<object name="PostFilter" type="Zongsoft.Community.Data.PostFilter, Zongsoft.Community" />
+		<object name="ForumFilter" type="Zongsoft.Community.Data.ForumFilter, Zongsoft.Community" />
+		<object name="FolderFilter" type="Zongsoft.Community.Data.FolderFilter, Zongsoft.Community" />
+		<object name="MessageFilter" type="Zongsoft.Community.Data.MessageFilter, Zongsoft.Community" />
+		<object name="FeedbackFilter" type="Zongsoft.Community.Data.FeedbackFilter, Zongsoft.Community" />
+	</extension>
+
+	<extension path="/Workbench/Executor/Commands">
+		<object name="Community">
+			<object name="Message">
+				<object name="Send" type="Zongsoft.Community.Services.Commands.MessageSendCommand, Zongsoft.Community" />
+			</object>
+		</object>
+	</extension>
+
+	<extension path="/Workspace/Services/Providers">
+		<serviceProvider name="Community" />
+	</extension>
+
+	<extension path="/Workspace/Services/Community">
+		<object name="Configuration" value="{opt:/Community/General}" />
+		<object name="DataAccess" value="{path:/Workbench/Data/Accessors/Community}" />
+
+		<object name="FileService" type="Zongsoft.Community.Services.FileService, Zongsoft.Community" />
+		<object name="FolderService" type="Zongsoft.Community.Services.FolderService, Zongsoft.Community" />
+		<object name="FeedbackService" type="Zongsoft.Community.Services.FeedbackService, Zongsoft.Community" />
+		<object name="ForumService" type="Zongsoft.Community.Services.ForumService, Zongsoft.Community" />
+		<object name="ForumGroupService" type="Zongsoft.Community.Services.ForumGroupService, Zongsoft.Community" />
+		<object name="MessageService" type="Zongsoft.Community.Services.MessageService, Zongsoft.Community" />
+		<object name="PostService" type="Zongsoft.Community.Services.PostService, Zongsoft.Community" />
+		<object name="ThreadService" type="Zongsoft.Community.Services.ThreadService, Zongsoft.Community" />
+		<object name="UserService" type="Zongsoft.Community.Services.UserService, Zongsoft.Community" basePath="{opt:/Community/General.BasePath}" />
+	</extension>
+</plugin>

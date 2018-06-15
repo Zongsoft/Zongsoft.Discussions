@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<options>
+	<option path="/Data">
+		<connectionStrings>
+			<connectionString name="Community"
+			                  provider="mysql"
+			                  value="server=127.0.0.1;user id=sa;Password=******;database=community;persist security info=False;Charset=utf8;Convert zero Datetime=true;Allow zero Datetime=True;SslMode=None;" />
+		</connectionStrings>
+	</option>
+
+	<option path="/Community">
+		<general general.type="Zongsoft.Community.Configuration.GeneratlConfiguration, Zongsoft.Community"
+		         siteId="1" basePath="zfs.oss:/zongsoft-community/" />
+	</option>
+</options>

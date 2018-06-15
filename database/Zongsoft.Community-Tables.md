@@ -189,7 +189,7 @@ ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html,
 Disabled | bool | - | False | 已被禁用(False)
 IsApproved | bool | - | False | 是否审核通过
 IsLocked | bool | - | False | 是否已锁定(锁定则不允许回复)
-IsValued | bool | _ | False | 是否精华帖
+IsValued | bool | - | False | 是否精华帖
 TotalUpvotes | int | 4 | False | 累计点赞数
 TotalDownvotes | int | 4 | False | 累计被踩数
 VisitorAddress | nvarchar | 100 | True | 访客地址(IP和位置信息)(192.168.0.1 湖北省武汉市)

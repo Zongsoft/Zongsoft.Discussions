@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<schema name="Community" version="1.0" xmlns="http://schemas.zongsoft.com/data">
+	<container name="Community">
+		<entity name="Message" table="Community_Message">
+			<key>
+				<member name="MessageId"/>
+			</key>
+
+			<property name="MessageId" type="ulong" nullable="false" />
+			<property name="SiteId" type="uint" nullable="False" />
+			<property name="Subject" type="string" length="100" nullable="False" />
+			<property name="Content" type="string" length="500" nullable="False" />
+			<property name="ContentType" type="string" length="50" nullable="True" />
+			<property name="MessageType" type="string" length="50" nullable="True" />
+			<property name="Source" type="string" length="50" nullable="True" />
+			<property name="Status" type="byte" nullable="False" />
+			<property name="StatusTimestamp" type="datetime" nullable="True" />
+			<property name="StatusDescription" type="string" length="100" nullable="True" />
+			<property name="CreatorId" type="uint" nullable="False" />
+			<property name="CreatedTime" type="datetime" nullable="False" />
+
+			<complexProperty name="Creator" role="UserProfile">
+				<link name="CreatorId" role="UserId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="MessageUser" table="Community_MessageUser">
+			<key>
+				<member name="MessageId"/>
+				<member name="UserId"/>
+			</key>
+
+			<property name="MessageId" type="ulong" nullable="false" />
+			<property name="UserId" type="uint" nullable="false" />
+			<property name="IsRead" type="bool" nullable="false" />
+
+			<complexProperty name="Message" role="Message">
+				<link name="MessageId" role="MessageId" />
+			</complexProperty>
+
+			<complexProperty name="User" role="UserProfile">
+				<member name="UserId" role="UserId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="Feedback" table="Community_Feedback">
+			<key>
+				<member name="FeedbackId"/>
+			</key>
+
+			<property name="FeedbackId" type="ulong" nullable="False" />
+			<property name="SiteId" type="uint" nullable="False" />
+			<property name="Kind" type="byte" nullable="False" />
+			<property name="Subject" type="string" length="100" nullable="False" />
+			<property name="Content" type="string" length="500" nullable="False" />
+			<property name="ContentType" type="string" length="50" nullable="True" />
+			<property name="ContactName" type="string" length="50" nullable="True" />
+			<property name="ContactText" type="string" length="50" nullable="True" />
+			<property name="CreatedTime" type="datetime" nullable="False" />
+		</entity>
+
+		<entity name="File" table="Community_File">
+			<key>
+				<member name="FileId"/>
+			</key>
+
+			<property name="FileId" type="ulong" nullable="False" />
+			<property name="SiteId" type="uint" nullable="True" />
+			<property name="FolderId" type="uint" nullable="Flase" />
+			<property name="Name" type="string" length="100" nullable="False" />
+			<property name="Path" type="string" length="200" nullable="False" />
+			<property name="Type" type="string" length="50" nullable="False" />
+			<property name="Size" type="uint" nullable="False" />
+			<property name="CreatorId" type="uint" nullable="True" />
+			<property name="CreatedTime" type="datetime" nullable="False" />
+			<property name="Description" type="string" length="100" nullable="True" />
+
+			<complexProperty name="Folder" role="Folder">
+				<link name="FolderId" role="FolderId" />
+			</complexProperty>
+
+			<complexProperty name="Creator" role="UserProfile">
+				<link name="CreatorId" role="UserId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="Folder" table="Community_Folder">
+			<key>
+				<member name="FolderId"/>
+			</key>
+
+			<property name="FolderId" type="uint" nullable="False" />
+			<property name="SiteId" type="uint" nullable="False" />
+			<property name="Name" type="string" length="100" nullable="False" />
+			<property name="PinYin" type="string" length="200" nullable="True" />
+			<property name="Icon" type="string" length="50" nullable="True" />
+			<property name="Visiblity" type="byte" nullable="False" />
+			<property name="Accessibility" type="byte" nullable="False" />
+			<property name="CreatorId" type="uint" nullable="False" />
+			<property name="CreatedTime" type="datetime" nullable="False" />
+			<property name="Description" type="string" length="500" nullable="True" />
+
+			<complexProperty name="Files" role="File" multiplicity="*">
+				<link name="FolderId" role="FolderId" />
+			</complexProperty>
+
+			<complexProperty name="Users" role="FolderUser:User" multiplicity="*">
+				<link name="FolderId" role="FolderId" />
+			</complexProperty>
+
+			<complexProperty name="Creator" role="UserProfile">
+				<link name="CreatorId" role="UserId"/>
+			</complexProperty>
+		</entity>
+
+		<entity name="FolderUser" table="Community_FolderUser">
+			<key>
+				<member name="FolderId"/>
+				<member name="UserId"/>
+			</key>
+
+			<property name="FolderId" type="uint" nullable="False" />
+			<property name="UserId" type="uint" nullable="False" />
+			<property name="UserKind" type="byte" nullable="False" />
+
+			<complexProperty name="User" role="UserProfile">
+				<link name="UserId" role="UserId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="ForumGroup" table="Community_ForumGroup">
+			<key>
+				<member name="SiteId"/>
+				<member name="GroupId"/>
+			</key>
+
+			<property name="SiteId" type="uint" nullable="False" />
+			<property name="GroupId" type="ushort" nullable="False" />
+			<property name="Name" type="string" length="50" nullable="False" />
+			<property name="Icon" type="string" length="100" nullable="True" />
+			<property name="Visiblity" type="byte" nullable="False" />
+			<property name="SortOrder" type="short" nullable="False" />
+			<property name="Description" type="string" length="500" nullable="True" />
+
+			<complexProperty name="Forums" role="Forum" multiplicity="*">
+				<link name="SiteId" role="SiteId" />
+				<link name="GroupId" role="GroupId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="Forum" table="Community_Forum">
+			<key>
+				<member name="SiteId"/>
+				<member name="ForumId"/>
+			</key>
+
+			<property name="SiteId" type="uint" nullable="False" />
+			<property name="ForumId" type="ushort" nullable="False" />
+			<property name="GroupId" type="ushort" nullable="False" />
+			<property name="Name" type="string" length="50" nullable="False" />
+			<property name="Description" type="string" length="500" nullable="True" />
+			<property name="CoverPicturePath" type="string" length="200" nullable="True" />
+			<property name="SortOrder" type="short" nullable="False" />
+			<property name="IsPopular" type="bool" nullable="False" />
+			<property name="ApproveEnabled" type="bool" nullable="False" />
+			<property name="Visiblity" type="byte" nullable="False" />
+			<property name="Accessibility" type="byte" nullable="False" />
+			<property name="TotalPosts" type="int" nullable="False" />
+			<property name="TotalThreads" type="int" nullable="False" />
+			<property name="MostRecentThreadId" type="ulong" nullable="True" />
+			<property name="MostRecentThreadSubject" type="string" length="100" nullable="True" />
+			<property name="MostRecentThreadAuthorId" type="int" nullable="True" />
+			<property name="MostRecentThreadAuthorName" type="string" length="50" nullable="True" />
+			<property name="MostRecentThreadAuthorAvatar" type="string" length="150" nullable="True" />
+			<property name="MostRecentThreadTime" type="datetime" nullable="True" />
+			<property name="MostRecentPostId" type="ulong" nullable="True" />
+			<property name="MostRecentPostAuthorId" type="int" nullable="True" />
+			<property name="MostRecentPostAuthorName" type="string" length="50" nullable="True" />
+			<property name="MostRecentPostAuthorAvatar" type="string" length="150" nullable="True" />
+			<property name="MostRecentPostTime" type="datetime" nullable="True" />
+			<property name="CreatorId" type="int" nullable="False" />
+			<property name="CreatedTime" type="datetime" nullable="False" />
+
+			<complexProperty name="Moderators" role="ForumUser:User" multiplicity="*">
+				<link name="SiteId" role="SiteId" />
+				<link name="ForumId" role="ForumId" />
+			</complexProperty>
+
+			<complexProperty name="Group" role="ForumGroup">
+				<link name="SiteId" role="SiteId" />
+				<link name="GroupId" role="GroupId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="ForumUser" table="Community_ForumUser">
+			<key>
+				<member name="SiteId"/>
+				<member name="ForumId"/>
+				<member name="UserId" />
+			</key>
+
+			<property name="SiteId" type="uint" nullable="False" />
+			<property name="ForumId" type="ushort" nullable="False" />
+			<property name="UserId" type="uint" nullable="False" />
+			<property name="UserKind" type="byte" nullable="False" />
+
+			<complexProperty name="User" role="UserProfile">
+				<link name="UserId" role="UserId"/>
+			</complexProperty>
+		</entity>
+
+		<entity name="Thread" table="Community_Thread">
+			<key>
+				<member name="ThreadId"/>
+			</key>
+
+			<property name="ThreadId" type="ulong" nullable="False" />
+			<property name="SiteId" type="uint" nullable="False" />
+			<property name="ForumId" type="ushort" nullable="False" />
+			<property name="Subject" type="string" length="100" nullable="False" />
+			<property name="Summary" type="string" length="500" nullable="True" />
+			<property name="Tags" type="string" length="100" nullable="True" />
+			<property name="PostId" type="ulong" nullable="False" />
+			<property name="CoverPicturePath" type="string" length="200" nullable="True" />
+			<property name="LinkUrl" type="string" length="200" nullable="True" />
+			<property name="Status" type="byte" nullable="False" />
+			<property name="StatusTimestamp" type="datetime" nullable="False" />
+			<property name="StatusDescription" type="string" length="100" nullable="True" />
+			<property name="Disabled" type="bool" nullable="False" />
+			<property name="Visible" type="bool" nullable="False" />
+			<property name="IsApproved" type="bool" nullable="False" />
+			<property name="IsLocked" type="bool" nullable="False" />
+			<property name="IsPinned" type="bool" nullable="False" />
+			<property name="IsValued" type="bool" nullable="False" />
+			<property name="IsGlobal" type="bool" nullable="False" />
+			<property name="TotalViews" type="uint" nullable="False" />
+			<property name="TotalReplies" type="uint" nullable="False" />
+			<property name="PinnedTime" type="datetime" nullable="True" />
+			<property name="GlobalTime" type="datetime" nullable="True" />
+			<property name="ViewedTime" type="datetime" nullable="True" />
+			<property name="MostRecentPostId" type="ulong" nullable="True" />
+			<property name="MostRecentPostAuthorId" type="uint" nullable="True" />
+			<property name="MostRecentPostAuthorName" type="string" length="50" nullable="True" />
+			<property name="MostRecentPostAuthorAvatar" type="string" length="150" nullable="True" />
+			<property name="MostRecentPostTime" type="datetime" nullable="True" />
+			<property name="CreatorId" type="uint" nullable="False" />
+			<property name="CreatedTime" type="datetime" nullable="False" />
+
+			<complexProperty name="Posts" role="Post" multiplicity="*">
+				<link name="ThreadId" role="ThreadId" />
+			</complexProperty>
+
+			<complexProperty name="Forum" role="Forum">
+				<link name="SiteId" role="SiteId" />
+				<link name="ForumId" role="ForumId" />
+			</complexProperty>
+
+			<complexProperty name="Post" role="Post">
+				<link name="PostId" role="PostId" />
+			</complexProperty>
+
+			<complexProperty name="Creator" role="UserProfile">
+				<link name="CreatorId" role="UserId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="Post" table="Community_Post">
+			<key>
+				<member name="PostId"/>
+			</key>
+
+			<property name="PostId" type="ulong" nullable="False" />
+			<property name="SiteId" type="uint" nullable="False" />
+			<property name="ThreadId" type="ulong" nullable="False" />
+			<property name="Content" type="string" length="500" nullable="False" />
+			<property name="ContentType" type="string" length="50" nullable="True" />
+			<property name="Disabled" type="bool" nullable="False" />
+			<property name="IsApproved" type="bool" nullable="False" />
+			<property name="IsLocked" type="bool" nullable="False" />
+			<property name="IsValued" type="bool" nullable="False" />
+			<property name="TotalUpvotes" type="uint" nullable="False" />
+			<property name="TotalDownvotes" type="uint" nullable="False" />
+			<property name="VisitorAddress" type="string" length="100" nullable="True" />
+			<property name="VisitorDescription" type="string" length="500" nullable="True" />
+			<property name="CreatorId" type="uint" nullable="False" />
+			<property name="CreatedTime" type="datetime" nullable="False" />
+
+			<complexProperty name="Attachments" role="PostAttachment" multiplicity="*">
+				<link name="PostId" role="PostId" />
+			</complexProperty>
+
+			<complexProperty name="Comments" role="PostComment" multiplicity="*">
+				<link name="PostId" role="PostId" />
+			</complexProperty>
+
+			<complexProperty name="Votes" role="PostVoting" multiplicity="*">
+				<link name="PostId" role="PostId" />
+			</complexProperty>
+
+			<complexProperty name="Thread" role="Thread">
+				<link name="ThreadId" role="ThreadId" />
+			</complexProperty>
+
+			<complexProperty name="Creator" role="UserProfile">
+				<link name="CreatorId" role="UserId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="PostComment" table="Community_PostComment">
+			<key>
+				<member name="PostId"/>
+				<member name="SerialId"/>
+			</key>
+
+			<property name="PostId" type="ulong" nullable="False" />
+			<property name="SerialId" type="ushort" nullable="False" />
+			<property name="SourceId" type="ushort" nullable="True" />
+			<property name="Content" type="string" length="500" nullable="False" />
+			<property name="ContentType" type="string" length="50" nullable="True" />
+			<property name="VisitorAddress" type="string" length="100" nullable="True" />
+			<property name="VisitorDescription" type="string" length="500" nullable="True" />
+			<property name="CreatorId" type="uint" nullable="False" />
+			<property name="CreatedTime" type="datetime" nullable="False" />
+
+			<complexProperty name="Creator" role="UserProfile">
+				<link name="CreatorId" role="UserId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="PostVoting" table="Community_PostVoting">
+			<key>
+				<member name="PostId"/>
+				<member name="UserId"/>
+			</key>
+
+			<property name="PostId" type="ulong" nullable="False" />
+			<property name="UserId" type="uint" nullable="False" />
+			<property name="UserName" type="string" length="50" nullable="True" />
+			<property name="UserAvatar" type="string" length="150" nullable="True" />
+			<property name="Value" type="byte" nullable="False" />
+			<property name="Tiemstamp" type="datetime" nullable="False" />
+
+			<complexProperty name="User" role="UserProfile">
+				<link name="UserId" role="UserId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="PostAttachment" table="Community_PostAttachment">
+			<key>
+				<member name="PostId"/>
+				<member name="FileId"/>
+			</key>
+
+			<property name="PostId" type="ulong" nullable="False" />
+			<property name="FileId" type="ulong" nullable="False" />
+
+			<complexProperty name="File" role="File">
+				<link name="FileId" role="FileId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="History" table="Community_History">
+			<key>
+				<member name="UserId"/>
+				<member name="ThreadId"/>
+			</key>
+
+			<property name="UserId" type="uint" nullable="False" />
+			<property name="ThreadId" type="ulong" nullable="False" />
+			<property name="Count" type="uint" nullable="False" />
+			<property name="FirstViewedTime" type="datetime" nullable="False" />
+			<property name="MostRecentViewedTime" type="datetime" nullable="False" />
+
+			<complexProperty name="User" role="UserProfile">
+				<link name="UserId" role="UserId" />
+			</complexProperty>
+
+			<complexProperty name="Thread" role="Thread">
+				<link name="ThreadId" role="ThreadId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="UserProfile" table="Community_UserProfile">
+			<key>
+				<member name="UserId" />
+			</key>
+
+			<property name="UserId" type="uint" nullable="False" />
+			<property name="SiteId" type="uint" nullable="False" />
+			<property name="Gender" type="byte" nullable="False" />
+			<property name="PhotoPath" type="string" length="200" nullable="True" />
+			<property name="TotalPosts" type="uint" nullable="False" />
+			<property name="TotalThreads" type="uint" nullable="False" />
+			<property name="MostRecentPostId" type="ulong" nullable="True" />
+			<property name="MostRecentPostTime" type="datetime" nullable="True" />
+			<property name="MostRecentThreadId" type="ulong" nullable="True" />
+			<property name="MostRecentThreadSubject" type="string" length="100" nullable="True" />
+			<property name="MostRecentThreadTime" type="datetime" nullable="True" />
+			<property name="CreatedTime" type="datetime" nullable="False" />
+
+			<complexProperty name="User" role="Security.User">
+				<link name="UserId" role="UserId" />
+			</complexProperty>
+		</entity>
+	</container>
+</schema>
