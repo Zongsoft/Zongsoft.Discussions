@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <plugin name="Zongsoft.Community"
         title="Zongsoft.Community Plugin"
@@ -49,8 +49,14 @@
 		</object>
 	</extension>
 
+	<!-- 挂载“Community”服务提供程序 -->
 	<extension path="/Workspace/Services/Providers">
-		<serviceProvider name="Community" />
+		<object name="Community" type="Zongsoft.Services.PluginServiceProvider, Zongsoft.Plugins" />
+	</extension>
+
+	<!-- 将“Community”服务提供程序链接到默认服务容器 -->
+	<extension path="/Workspace/Services">
+		<object name="Community" value="{path:./Providers/Community}" />
 	</extension>
 
 	<extension path="/Workspace/Services/Community">
