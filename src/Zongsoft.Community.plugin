@@ -56,7 +56,7 @@
 
 	<!-- 将“Community”服务提供程序链接到默认服务容器 -->
 	<extension path="/Workspace/Services">
-		<object name="Community" value="{path:./Providers/Community}" />
+		<object name="Community" value="{path:../Providers/Community}" />
 	</extension>
 
 	<extension path="/Workspace/Services/Community">

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<schema name="Community" version="1.0" xmlns="http://schemas.zongsoft.com/data">
-	<container name="Community">
+<schema name="Community" xmlns="http://schemas.zongsoft.com/data">
+	<container>
 		<entity name="Message" table="Community_Message">
 			<key>
-				<member name="MessageId"/>
+				<member name="MessageId" />
 			</key>
 
 			<property name="MessageId" type="ulong" nullable="false" />
@@ -27,8 +27,8 @@
 
 		<entity name="MessageUser" table="Community_MessageUser">
 			<key>
-				<member name="MessageId"/>
-				<member name="UserId"/>
+				<member name="MessageId" />
+				<member name="UserId" />
 			</key>
 
 			<property name="MessageId" type="ulong" nullable="false" />
@@ -40,13 +40,13 @@
 			</complexProperty>
 
 			<complexProperty name="User" role="UserProfile">
-				<member name="UserId" role="UserId" />
+				<link name="UserId" role="UserId" />
 			</complexProperty>
 		</entity>
 
 		<entity name="Feedback" table="Community_Feedback">
 			<key>
-				<member name="FeedbackId"/>
+				<member name="FeedbackId" />
 			</key>
 
 			<property name="FeedbackId" type="ulong" nullable="False" />
@@ -62,12 +62,12 @@
 
 		<entity name="File" table="Community_File">
 			<key>
-				<member name="FileId"/>
+				<member name="FileId" />
 			</key>
 
 			<property name="FileId" type="ulong" nullable="False" />
 			<property name="SiteId" type="uint" nullable="True" />
-			<property name="FolderId" type="uint" nullable="Flase" />
+			<property name="FolderId" type="uint" nullable="False" />
 			<property name="Name" type="string" length="100" nullable="False" />
 			<property name="Path" type="string" length="200" nullable="False" />
 			<property name="Type" type="string" length="50" nullable="False" />
@@ -87,7 +87,7 @@
 
 		<entity name="Folder" table="Community_Folder">
 			<key>
-				<member name="FolderId"/>
+				<member name="FolderId" />
 			</key>
 
 			<property name="FolderId" type="uint" nullable="False" />
@@ -110,14 +110,14 @@
 			</complexProperty>
 
 			<complexProperty name="Creator" role="UserProfile">
-				<link name="CreatorId" role="UserId"/>
+				<link name="CreatorId" role="UserId" />
 			</complexProperty>
 		</entity>
 
 		<entity name="FolderUser" table="Community_FolderUser">
 			<key>
-				<member name="FolderId"/>
-				<member name="UserId"/>
+				<member name="FolderId" />
+				<member name="UserId" />
 			</key>
 
 			<property name="FolderId" type="uint" nullable="False" />
@@ -131,8 +131,8 @@
 
 		<entity name="ForumGroup" table="Community_ForumGroup">
 			<key>
-				<member name="SiteId"/>
-				<member name="GroupId"/>
+				<member name="SiteId" />
+				<member name="GroupId" />
 			</key>
 
 			<property name="SiteId" type="uint" nullable="False" />
@@ -151,8 +151,8 @@
 
 		<entity name="Forum" table="Community_Forum">
 			<key>
-				<member name="SiteId"/>
-				<member name="ForumId"/>
+				<member name="SiteId" />
+				<member name="ForumId" />
 			</key>
 
 			<property name="SiteId" type="uint" nullable="False" />
@@ -195,8 +195,8 @@
 
 		<entity name="ForumUser" table="Community_ForumUser">
 			<key>
-				<member name="SiteId"/>
-				<member name="ForumId"/>
+				<member name="SiteId" />
+				<member name="ForumId" />
 				<member name="UserId" />
 			</key>
 
@@ -206,13 +206,13 @@
 			<property name="UserKind" type="byte" nullable="False" />
 
 			<complexProperty name="User" role="UserProfile">
-				<link name="UserId" role="UserId"/>
+				<link name="UserId" role="UserId" />
 			</complexProperty>
 		</entity>
 
 		<entity name="Thread" table="Community_Thread">
 			<key>
-				<member name="ThreadId"/>
+				<member name="ThreadId" />
 			</key>
 
 			<property name="ThreadId" type="ulong" nullable="False" />
@@ -267,7 +267,7 @@
 
 		<entity name="Post" table="Community_Post">
 			<key>
-				<member name="PostId"/>
+				<member name="PostId" />
 			</key>
 
 			<property name="PostId" type="ulong" nullable="False" />
@@ -309,8 +309,8 @@
 
 		<entity name="PostComment" table="Community_PostComment">
 			<key>
-				<member name="PostId"/>
-				<member name="SerialId"/>
+				<member name="PostId" />
+				<member name="SerialId" />
 			</key>
 
 			<property name="PostId" type="ulong" nullable="False" />
@@ -330,8 +330,8 @@
 
 		<entity name="PostVoting" table="Community_PostVoting">
 			<key>
-				<member name="PostId"/>
-				<member name="UserId"/>
+				<member name="PostId" />
+				<member name="UserId" />
 			</key>
 
 			<property name="PostId" type="ulong" nullable="False" />
@@ -348,8 +348,8 @@
 
 		<entity name="PostAttachment" table="Community_PostAttachment">
 			<key>
-				<member name="PostId"/>
-				<member name="FileId"/>
+				<member name="PostId" />
+				<member name="FileId" />
 			</key>
 
 			<property name="PostId" type="ulong" nullable="False" />
@@ -362,8 +362,8 @@
 
 		<entity name="History" table="Community_History">
 			<key>
-				<member name="UserId"/>
-				<member name="ThreadId"/>
+				<member name="UserId" />
+				<member name="ThreadId" />
 			</key>
 
 			<property name="UserId" type="uint" nullable="False" />
