@@ -91,7 +91,7 @@ namespace Zongsoft.Community.Services
 			if(condition == null)
 				condition = requires;
 			else
-				condition = ConditionCollection.And(condition, requires);
+				condition = ConditionCollection.And(requires, condition);
 		}
 
 		protected virtual void EnsureDefaultValues(DataDictionary<TEntity> data)

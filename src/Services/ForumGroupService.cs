@@ -68,7 +68,7 @@ namespace Zongsoft.Community.Services
 
 			//如果凭证为空或匿名用户则只能获取公共数据
 			if(credential == null || credential.IsEmpty)
-				requires = Condition.Equal("Visiblity", Visiblity.Public);
+				requires = Condition.Equal("Visiblity", (byte)Visiblity.Public);
 			else if(!credential.InAdministrators) //如果不是管理员则只能获取内部或公共数据
 				requires = Condition.In("Visiblity", (byte)Visiblity.Internal, (byte)Visiblity.Public);
 
@@ -83,13 +83,11 @@ namespace Zongsoft.Community.Services
 
 		protected override ForumGroup OnGet(ICondition condition, string scope, object state)
 		{
+			if(string.IsNullOrEmpty(scope))
+				scope = "Forums";
+
 			//调用基类同名方法
-			var group = base.OnGet(condition, scope, state);
-
-			if(group != null)
-				group.Forums = this.GetForums(group.SiteId, group.GroupId);
-
-			return group;
+			return base.OnGet(condition, scope, state);
 		}
 
 		protected override IEnumerable<ForumGroup> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
