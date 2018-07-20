@@ -1,8 +1,15 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
- * Copyright (C) 2015-2017 Zongsoft Corporation. All rights reserved.
+ * Copyright (C) 2015-2018 Zongsoft Corporation. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,45 +31,37 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class ForumGroupConditional : Zongsoft.Data.Conditional
+	public interface IFeedbackConditional : Zongsoft.Data.IConditional
 	{
-		#region 公共属性
-		[Conditional("Name")]
-		public string Key
+		[Conditional("Subject", "ContactName", "ContactText")]
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Key);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Key, value);
-			}
+			get; set;
 		}
 
-		public string Name
+		byte? Kind
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Name);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Name, value);
-			}
+			get; set;
 		}
 
-		public Visiblity? Visiblity
+		string Subject
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Visiblity);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Visiblity, value);
-			}
+			get; set;
 		}
-		#endregion
+
+		string ContactName
+		{
+			get; set;
+		}
+
+		string ContactText
+		{
+			get; set;
+		}
+
+		ConditionalRange<DateTime> CreatedTime
+		{
+			get; set;
+		}
 	}
 }

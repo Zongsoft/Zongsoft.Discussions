@@ -34,7 +34,7 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization(AuthorizationMode.Identity)]
-	public class FileController : Zongsoft.Web.Http.HttpControllerBase<File, FileConditional, FileService>
+	public class FileController : Zongsoft.Web.Http.HttpControllerBase<IFile, IFileConditional, FileService>
 	{
 		#region 常量定义
 		private static readonly DateTime EPOCH = new DateTime(2000, 1, 1);
@@ -72,7 +72,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		[HttpGet]
 		public HttpResponseMessage Download(string id)
 		{
-			var file = base.Get(id) as File;
+			var file = base.Get(id) as IFile;
 
 			if(file == null || string.IsNullOrWhiteSpace(file.Path))
 				return null;
@@ -86,9 +86,9 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IEnumerable<File>> Upload(uint? id = null)
+		public async Task<IEnumerable<IFile>> Upload(uint? id = null)
 		{
-			var files = new List<File>();
+			var files = new List<IFile>();
 			var infos = await _accessor.Write(this.Request,
 				                          this.DataService.GetDirectory(id),
 			                              args => args.FileName = (DateTime.Now - EPOCH).Days.ToString() + "-" + Zongsoft.Common.RandomGenerator.GenerateString());
@@ -106,14 +106,14 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				if(string.IsNullOrWhiteSpace(name as string))
 					name = info.Name;
 
-				var attachment = new File()
+				var attachment = Zongsoft.Data.Entity.Build<IFile>(p =>
 				{
-					FolderId = id.HasValue ? id.Value : 0,
-					Name = info.Name,
-					Path = info.Path.Url,
-					Type = info.Type,
-					Size = (uint)Math.Max(0, info.Size),
-				};
+					p.FolderId = id.HasValue ? id.Value : 0;
+					p.Name = info.Name;
+					p.Path = info.Path.Url;
+					p.Type = info.Type;
+					p.Size = (uint)Math.Max(0, info.Size);
+				});
 
 				if(this.DataService.Insert(attachment) > 0)
 					files.Add(attachment);
@@ -124,12 +124,12 @@ namespace Zongsoft.Community.Web.Http.Controllers
 			return files;
 		}
 
-		public override File Post(File model)
+		public override IFile Post(IFile model)
 		{
 			throw new HttpResponseException(HttpStatusCode.MethodNotAllowed);
 		}
 
-		public override void Put(File model)
+		public override void Put(IFile model)
 		{
 			throw new HttpResponseException(HttpStatusCode.MethodNotAllowed);
 		}

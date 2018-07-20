@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("ThreadId", 100000)]
 	[DataSearchKey("Key:Subject")]
-	public class ThreadService : ServiceBase<Thread>
+	public class ThreadService : ServiceBase<IThread>
 	{
 		#region 成员字段
 		private PostService _posting;
@@ -54,18 +54,18 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<Post> GetPosts(ulong threadId, Paging paging = null)
+		public IEnumerable<IPost> GetPosts(ulong threadId, Paging paging = null)
 		{
-			var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
+			var thread = this.DataAccess.Select<IThread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
 
 			if(thread == null)
-				return Enumerable.Empty<Post>();
+				return Enumerable.Empty<IPost>();
 
 			var conditions = ConditionCollection.And(
 				Condition.Equal("ThreadId", threadId),
 				Condition.NotEqual("PostId", thread.PostId));
 
-			var posts = this.DataAccess.Select<Post>(conditions, paging, Sorting.Descending("PostId"));
+			var posts = this.DataAccess.Select<IPost>(conditions, paging, Sorting.Descending("PostId"));
 
 			foreach(var post in posts)
 			{
@@ -84,7 +84,7 @@ namespace Zongsoft.Community.Services
 				}
 
 				//设置帖子的附件集
-				post.Attachments = this.DataAccess.Select<Post.PostAttachment>(Condition.Equal("PostId", post.PostId), "File");
+				post.Attachments = this.DataAccess.Select<PostAttachment>(Condition.Equal("PostId", post.PostId), "File");
 			}
 
 			return posts;
@@ -92,7 +92,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Thread OnGet(ICondition condition, string scope, object state)
+		protected override IThread OnGet(ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User, Post, Post.Attachments, Post.Comments, Post.Votes";
@@ -138,7 +138,7 @@ namespace Zongsoft.Community.Services
 			return thread;
 		}
 
-		protected override IEnumerable<Thread> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
+		protected override IEnumerable<IThread> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
@@ -149,7 +149,7 @@ namespace Zongsoft.Community.Services
 
 		protected override int OnDelete(ICondition condition, string[] cascades, object state)
 		{
-			var ids = this.DataAccess.Select<Thread>(this.Name, condition, Paging.Disable).Select(p => p.ThreadId).ToArray();
+			var ids = this.DataAccess.Select<IThread>(this.Name, condition, Paging.Disable).Select(p => p.ThreadId).ToArray();
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
@@ -157,7 +157,7 @@ namespace Zongsoft.Community.Services
 				var count = base.OnDelete(condition, cascades, state);
 
 				if(count > 0)
-					this.DataAccess.Delete<Post>(Condition.In("ThreadId", ids));
+					this.DataAccess.Delete<IPost>(Condition.In("ThreadId", ids));
 
 				//提交事务
 				transaction.Commit();
@@ -167,7 +167,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnInsert(DataDictionary<Thread> data, string scope, object state)
+		protected override int OnInsert(DataDictionary<IThread> data, string scope, object state)
 		{
 			var post = data.Get(p => p.Post, null);
 
@@ -218,7 +218,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Thread> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(DataDictionary<IThread> data, ICondition condition, string scope, object state)
 		{
 			//调用基类同名方法
 			var count = base.OnUpdate(data, condition, scope, state);
@@ -238,7 +238,7 @@ namespace Zongsoft.Community.Services
 					else
 					{
 						//获取修改主题对应的主题对象
-						var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", data.Get(p => p.ThreadId)), "!, ThreadId, PostId").FirstOrDefault();
+						var thread = this.DataAccess.Select<IThread>(Condition.Equal("ThreadId", data.Get(p => p.ThreadId)), "!, ThreadId, PostId").FirstOrDefault();
 
 						if(thread == null)
 							return count;
@@ -256,7 +256,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 私有方法
-		private bool SetMostRecentThread(DataDictionary<Thread> data)
+		private bool SetMostRecentThread(DataDictionary<IThread> data)
 		{
 			if(data == null)
 				return false;
@@ -266,7 +266,7 @@ namespace Zongsoft.Community.Services
 			var count = 0;
 
 			//更新当前主题所属论坛的最后发帖信息
-			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Forum>(), new
+			count += this.DataAccess.Update(this.DataAccess.Naming.Get<IForum>(), new
 			{
 				SiteId = data.Get(p => p.SiteId),
 				ForumId = data.Get(p => p.ForumId),
@@ -279,9 +279,9 @@ namespace Zongsoft.Community.Services
 			});
 
 			//递增当前发帖人的累计主题数，并且更新发帖人的最后发表的主题信息
-			if(this.DataAccess.Increment<UserProfile>("TotalThreads", Condition.Equal("UserId", data.Get(p => p.CreatorId))) > 0)
+			if(this.DataAccess.Increment<IUserProfile>("TotalThreads", Condition.Equal("UserId", data.Get(p => p.CreatorId))) > 0)
 			{
-				count += this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
+				count += this.DataAccess.Update(this.DataAccess.Naming.Get<IUserProfile>(), new
 				{
 					UserId = data.Get(p => p.CreatorId),
 					MostRecentThreadId = data.Get(p => p.ThreadId),
@@ -305,10 +305,10 @@ namespace Zongsoft.Community.Services
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
 				//递增当前用户对当前主题的累计浏览量
-				if(this.DataAccess.Increment<History>("Count", conditions) > 0)
+				if(this.DataAccess.Increment<IHistory>("Count", conditions) > 0)
 				{
 					//更新当前用户对当前主题的最后浏览时间
-					this.DataAccess.Update(this.DataAccess.Naming.Get<History>(), new
+					this.DataAccess.Update(this.DataAccess.Naming.Get<IHistory>(), new
 					{
 						MostRecentViewedTime = DateTime.Now,
 					}, conditions);
@@ -316,7 +316,11 @@ namespace Zongsoft.Community.Services
 				else
 				{
 					//尝试新增一条用户的浏览记录
-					this.DataAccess.Insert(new History(credential.UserId, threadId));
+					this.DataAccess.Insert(Entity.Build<IHistory>(p =>
+					{
+						p.UserId = credential.UserId;
+						p.ThreadId = threadId;
+					}));
 				}
 			}
 		}

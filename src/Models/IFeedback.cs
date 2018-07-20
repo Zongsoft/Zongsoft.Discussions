@@ -27,23 +27,56 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
+	/// 表示意见反馈的业务实体接口。
 	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public interface IFeedback : Zongsoft.Data.IEntity
 	{
-		public TStatus Status
+		ulong FeedbackId
 		{
-			get;
-			set;
+			get; set;
 		}
 
-		public uint Count
+		uint SiteId
 		{
-			get;
-			set;
+			get; set;
+		}
+
+		byte Kind
+		{
+			get; set;
+		}
+
+		string Subject
+		{
+			get; set;
+		}
+
+		string Content
+		{
+			get; set;
+		}
+
+		string ContentType
+		{
+			get; set;
+		}
+
+		string ContactName
+		{
+			get; set;
+		}
+
+		string ContactText
+		{
+			get; set;
+		}
+
+		DateTime CreatedTime
+		{
+			get; set;
 		}
 	}
 }

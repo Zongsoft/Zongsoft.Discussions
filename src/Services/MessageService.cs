@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("MessageId", 100000)]
 	[DataSearchKey("Status:Stauts", "Creator,CreatorId:CreatorId", "Key:Subject")]
-	public class MessageService : ServiceBase<Message>
+	public class MessageService : ServiceBase<IMessage>
 	{
 		#region 构造函数
 		public MessageService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -37,19 +37,19 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<Message.MessageUser> GetUsers(ulong messageId, bool? isRead = null, Paging paging = null)
+		public IEnumerable<MessageUser> GetUsers(ulong messageId, bool? isRead = null, Paging paging = null)
 		{
 			var conditions = ConditionCollection.And(Condition.Equal("MessageId", messageId));
 
 			if(isRead.HasValue)
 				conditions.Add(Condition.Equal("IsRead", isRead.Value));
 
-			return this.DataAccess.Select<Message.MessageUser>(conditions, "User, User.User", paging);
+			return this.DataAccess.Select<MessageUser>(conditions, "User, User.User", paging);
 		}
 		#endregion
 
 		#region 重写方法
-		protected override Message OnGet(ICondition condition, string scope, object state)
+		protected override IMessage OnGet(ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
@@ -70,7 +70,7 @@ namespace Zongsoft.Community.Services
 			if(credential != null && credential.CredentialId != null && credential.CredentialId.Length > 0)
 			{
 				//更新当前用户对该消息的读取状态
-				this.DataAccess.Update(this.DataAccess.Naming.Get<Message.MessageUser>(), new
+				this.DataAccess.Update(this.DataAccess.Naming.Get<MessageUser>(), new
 				{
 					IsRead = true,
 				}, Condition.Equal("MessageId", message.MessageId) & Condition.Equal("UserId", credential.UserId));
@@ -79,7 +79,7 @@ namespace Zongsoft.Community.Services
 			return message;
 		}
 
-		protected override IEnumerable<Message> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
+		protected override IEnumerable<IMessage> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
@@ -88,7 +88,7 @@ namespace Zongsoft.Community.Services
 			return base.OnSelect(condition, scope, paging, sortings, state);
 		}
 
-		protected override int OnInsert(DataDictionary<Message> data, string scope, object state)
+		protected override int OnInsert(DataDictionary<IMessage> data, string scope, object state)
 		{
 			string filePath = null;
 
@@ -134,10 +134,10 @@ namespace Zongsoft.Community.Services
 					if(users == null)
 						return;
 
-					IEnumerable<Message.MessageUser> GetMembers(ulong messageId, IEnumerable<Message.MessageUser> members)
+					IEnumerable<MessageUser> GetMembers(ulong messageId, IEnumerable<MessageUser> members)
 					{
 						foreach(var member in members)
-							yield return new Message.MessageUser(messageId, member.UserId);
+							yield return new MessageUser(messageId, member.UserId);
 					}
 
 					this.DataAccess.InsertMany(GetMembers(data.Get(p => p.MessageId), users));
@@ -150,7 +150,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Message> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(DataDictionary<IMessage> data, ICondition condition, string scope, object state)
 		{
 			//更新内容到文本文件中
 			data.TryGet(p => p.Content, (key, value) =>

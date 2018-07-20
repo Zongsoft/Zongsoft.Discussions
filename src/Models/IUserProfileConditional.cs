@@ -1,8 +1,15 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
- * Copyright (C) 2015-2017 Zongsoft Corporation. All rights reserved.
+ * Copyright (C) 2015-2018 Zongsoft Corporation. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,58 +30,28 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class UserProfileConditional : Zongsoft.Data.Conditional
+	public interface IUserProfileConditional : Zongsoft.Data.IConditional
 	{
-		#region 公共属性
 		[Conditional("User.Name", "User.PhoneNumber", "User.Email", "User.FullName")]
-		public string Key
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Key);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Key, value);
-			}
+			get; set;
 		}
 
-		public uint? SiteId
+		uint? SiteId
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.SiteId);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.SiteId, value);
-			}
+			get; set;
 		}
 
 		[Conditional("User.Name", "User.PhoneNumber", "User.Email")]
-		public string Identity
+		string Identity
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Identity);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Identity, value);
-			}
+			get; set;
 		}
 
-		public Gender? Gender
+		Gender? Gender
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Gender);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Gender, value);
-			}
+			get; set;
 		}
-		#endregion
 	}
 }

@@ -119,7 +119,12 @@ namespace Zongsoft.Community.Security
 
 				if(uint.TryParse(e.User.PrincipalId, out siteId))
 				{
-					userProfile = new UserProfile(e.User.UserId, siteId);
+					userProfile = Entity.Build<IUserProfile>(p =>
+					{
+						p.UserId = e.User.UserId;
+						p.SiteId = siteId;
+					});
+
 					this.DataAccess.Insert(userProfile);
 				}
 			}
@@ -130,9 +135,9 @@ namespace Zongsoft.Community.Security
 		#endregion
 
 		#region 私有方法
-		private UserProfile GetUserProfile(uint userId)
+		private IUserProfile GetUserProfile(uint userId)
 		{
-			return this.DataAccess.Select<UserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
+			return this.DataAccess.Select<IUserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
 		}
 		#endregion
 	}

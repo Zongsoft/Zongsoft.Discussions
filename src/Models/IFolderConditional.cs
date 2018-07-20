@@ -25,25 +25,43 @@
  */
 
 using System;
-using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+using Zongsoft.Data;
+
+namespace Zongsoft.Community.Models
 {
-	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
-	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public interface IFolderConditional : Zongsoft.Data.IConditional
 	{
-		public TStatus Status
+		[Conditional("Name", "PinYin")]
+		string Key
 		{
-			get;
-			set;
+			get; set;
 		}
 
-		public uint Count
+		[Conditional("Name", "PinYin")]
+		string Name
 		{
-			get;
-			set;
+			get; set;
+		}
+
+		Visiblity? Visiblity
+		{
+			get; set;
+		}
+
+		Accessibility? Accessibility
+		{
+			get; set;
+		}
+
+		uint? CreatorId
+		{
+			get; set;
+		}
+
+		ConditionalRange<DateTime> CreatedTime
+		{
+			get; set;
 		}
 	}
 }

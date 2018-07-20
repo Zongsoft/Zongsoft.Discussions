@@ -28,7 +28,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	public class UserService : ServiceBase<UserProfile>
+	public class UserService : ServiceBase<IUserProfile>
 	{
 		#region 成员字段
 		private string _basePath;
@@ -75,12 +75,12 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<History> GetHistories(uint userId, Paging paging = null)
+		public IEnumerable<IHistory> GetHistories(uint userId, Paging paging = null)
 		{
 			if(userId == 0)
 				userId = this.EnsureCredential().UserId;
 
-			return this.DataAccess.Select<History>(Condition.Equal("UserId", userId), "Thread", paging);
+			return this.DataAccess.Select<IHistory>(Condition.Equal("UserId", userId), "Thread", paging);
 		}
 
 		public int GetMessageTotalCount(uint userId = 0)
@@ -88,7 +88,7 @@ namespace Zongsoft.Community.Services
 			if(userId == 0)
 				userId = this.EnsureCredential().UserId;
 
-			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId));
+			return this.DataAccess.Count<MessageUser>(Condition.Equal("UserId", userId));
 		}
 
 		public int GetMessageUnreadCount(uint userId = 0)
@@ -96,10 +96,10 @@ namespace Zongsoft.Community.Services
 			if(userId == 0)
 				userId = this.EnsureCredential().UserId;
 
-			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
+			return this.DataAccess.Count<MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
 		}
 
-		public IEnumerable<Message> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
+		public IEnumerable<IMessage> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
 		{
 			if(userId == 0)
 				userId = this.EnsureCredential().UserId;
@@ -109,7 +109,7 @@ namespace Zongsoft.Community.Services
 			if(isRead.HasValue)
 				conditions.Add(Condition.Equal("IsRead", isRead.Value));
 
-			return this.DataAccess.Select<Message.MessageUser>(conditions, "Message", paging).Select(p => p.Message);
+			return this.DataAccess.Select<MessageUser>(conditions, "Message", paging).Select(p => p.Message);
 		}
 
 		public bool SetStatus(uint userId, UserStatus status)
@@ -129,7 +129,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override UserProfile OnGet(ICondition condition, string scope, object state)
+		protected override IUserProfile OnGet(ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "User";
@@ -151,7 +151,7 @@ namespace Zongsoft.Community.Services
 			throw new NotSupportedException("Not supporte the delete user operation.");
 		}
 
-		protected override int OnInsert(DataDictionary<UserProfile> data, string scope, object state)
+		protected override int OnInsert(DataDictionary<IUserProfile> data, string scope, object state)
 		{
 			//获取用户导航属性值
 			data.TryGet(p => p.User, (key, user) =>
@@ -177,7 +177,7 @@ namespace Zongsoft.Community.Services
 			return base.OnInsert(data, scope, state);
 		}
 
-		protected override int OnUpdate(DataDictionary<UserProfile> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(DataDictionary<IUserProfile> data, ICondition condition, string scope, object state)
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号
 			if(!data.TryGet(p => p.UserId, out var userId) || userId == 0)

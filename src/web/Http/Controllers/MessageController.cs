@@ -30,7 +30,7 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization(AuthorizationMode.Requires)]
-	public class MessageController : Zongsoft.Web.Http.HttpControllerBase<Message, MessageConditional, MessageService>
+	public class MessageController : Zongsoft.Web.Http.HttpControllerBase<IMessage, IMessageConditional, MessageService>
 	{
 		#region 构造函数
 		public MessageController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -41,7 +41,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#region 公共方法
 		[ActionName("Users")]
 		[HttpPaging]
-		public IEnumerable<Message.MessageUser> GetUsers(ulong id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
+		public IEnumerable<MessageUser> GetUsers(ulong id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetUsers(id, isRead, paging);
 		}

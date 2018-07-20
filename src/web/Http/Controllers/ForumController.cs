@@ -29,7 +29,7 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class ForumController : Zongsoft.Web.Http.HttpControllerBase<Forum, ForumConditional, ForumService>
+	public class ForumController : Zongsoft.Web.Http.HttpControllerBase<IForum, IForumConditional, ForumService>
 	{
 		#region 构造函数
 		public ForumController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -39,32 +39,32 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Moderators")]
-		public IEnumerable<UserProfile> GetModerators([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId)
+		public IEnumerable<IUserProfile> GetModerators([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId)
 		{
 			return this.DataService.GetModerators(siteId, forumId);
 		}
 
 		[ActionName("Globals")]
-		public IEnumerable<Thread> GetGlobalThreads(uint id, [FromUri]Paging paging = null)
+		public IEnumerable<IThread> GetGlobalThreads(uint id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetGlobalThreads(id, paging);
 		}
 
 		[ActionName("Pinneds")]
-		public IEnumerable<Thread> GetPinnedThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
+		public IEnumerable<IThread> GetPinnedThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetPinnedThreads(siteId, forumId, paging);
 		}
 
 		[ActionName("Topmosts")]
-		public IEnumerable<Thread> GetTopmosts([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromRoute("args")]int count = 0)
+		public IEnumerable<IThread> GetTopmosts([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromRoute("args")]int count = 0)
 		{
 			return this.DataService.GetTopmosts(siteId, forumId, count);
 		}
 
 		[ActionName("Threads")]
 		[HttpPaging]
-		public IEnumerable<Thread> GetThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
+		public IEnumerable<IThread> GetThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetThreads(siteId, forumId, paging);
 		}

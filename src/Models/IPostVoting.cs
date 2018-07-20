@@ -27,23 +27,67 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
+	/// 表示帖子投票的实体接口。
 	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public interface IPostVoting : Zongsoft.Data.IEntity
 	{
-		public TStatus Status
+		/// <summary>
+		/// 获取或设置投票关联的帖子编号。
+		/// </summary>
+		ulong PostId
 		{
-			get;
-			set;
+			get; set;
 		}
 
-		public uint Count
+		/// <summary>
+		/// 获取或设置投票的用户编号。
+		/// </summary>
+		uint UserId
 		{
-			get;
-			set;
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置投票的用户对象。
+		/// </summary>
+		IUserProfile User
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置投票的用户名称。
+		/// </summary>
+		string UserName
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置投票的用户头像。
+		/// </summary>
+		string UserAvatar
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置投票值（正数为赞，负数为踩）。
+		/// </summary>
+		sbyte Value
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置投票的时间。
+		/// </summary>
+		DateTime Timestamp
+		{
+			get; set;
 		}
 	}
 }

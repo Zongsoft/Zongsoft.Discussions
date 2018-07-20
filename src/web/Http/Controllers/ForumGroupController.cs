@@ -29,7 +29,7 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class ForumGroupController : Zongsoft.Web.Http.HttpControllerBase<ForumGroup, ForumGroupConditional, ForumGroupService>
+	public class ForumGroupController : Zongsoft.Web.Http.HttpControllerBase<IForumGroup, IForumGroupConditional, ForumGroupService>
 	{
 		#region 构造函数
 		public ForumGroupController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -39,7 +39,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Forums")]
-		public IEnumerable<Forum> GetForums([FromRoute("id")]uint siteId, [FromRoute("id")]ushort groupId)
+		public IEnumerable<IForum> GetForums([FromRoute("id")]uint siteId, [FromRoute("id")]ushort groupId)
 		{
 			return this.DataService.GetForums(siteId, groupId);
 		}

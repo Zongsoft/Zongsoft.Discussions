@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("Community:FeedbackId", 100000)]
 	[DataSearchKey("Key:Subject,ContactName,ContactText")]
-	public class FeedbackService : ServiceBase<Feedback>
+	public class FeedbackService : ServiceBase<IFeedback>
 	{
 		#region 构造函数
 		public FeedbackService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -37,7 +37,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override void EnsureDefaultValues(DataDictionary<Feedback> data)
+		protected override void EnsureDefaultValues(DataDictionary<IFeedback> data)
 		{
 			//设置创建时间
 			data.TrySet("CreatedTime", DateTime.Now);
@@ -46,7 +46,7 @@ namespace Zongsoft.Community.Services
 			data.TrySet(p => p.SiteId, _ => this.GetSiteId(), value => value == 0);
 		}
 
-		protected override Feedback OnGet(ICondition condition, string scope, object state)
+		protected override IFeedback OnGet(ICondition condition, string scope, object state)
 		{
 			//调用基类同名方法
 			var feedback = base.OnGet(condition, scope, state);
@@ -61,13 +61,13 @@ namespace Zongsoft.Community.Services
 			return feedback;
 		}
 
-		protected override IEnumerable<Feedback> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
+		protected override IEnumerable<IFeedback> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
 		{
 			//调用基类同名方法
 			return base.OnSelect(condition, scope, paging, sortings, state);
 		}
 
-		protected override int OnInsert(DataDictionary<Feedback> data, string scope, object state)
+		protected override int OnInsert(DataDictionary<IFeedback> data, string scope, object state)
 		{
 			string filePath = null;
 
@@ -119,7 +119,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Feedback> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(DataDictionary<IFeedback> data, ICondition condition, string scope, object state)
 		{
 			//更新内容到文本文件中
 			data.TryGet(p => p.Content, (key, value) =>

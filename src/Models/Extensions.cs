@@ -27,23 +27,37 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+namespace Zongsoft.Community.Models
 {
-	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
-	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public static class FileExtension
 	{
-		public TStatus Status
+		public static string GetUrl(IFile file)
 		{
-			get;
-			set;
+			return Zongsoft.IO.FileSystem.GetUrl(file.Path);
 		}
+	}
 
-		public uint Count
+	public static class ForumExtension
+	{
+		public static string GetCoverPictureUrl(IForum forum)
 		{
-			get;
-			set;
+			return Zongsoft.IO.FileSystem.GetUrl(forum.CoverPicturePath);
+		}
+	}
+
+	public static class ThreadExtension
+	{
+		public static string GetCoverPictureUrl(IThread thread)
+		{
+			return Zongsoft.IO.FileSystem.GetUrl(thread.CoverPicturePath);
+		}
+	}
+
+	public static class UserExtension
+	{
+		public static string GetPhotoUrl(IUserProfile user)
+		{
+			return Zongsoft.IO.FileSystem.GetUrl(user.PhotoPath);
 		}
 	}
 }

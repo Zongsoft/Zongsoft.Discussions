@@ -27,23 +27,41 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+using Zongsoft.Data;
+
+namespace Zongsoft.Community.Models
 {
-	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
-	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public interface IForumConditional : Zongsoft.Data.IConditional
 	{
-		public TStatus Status
+		[Conditional("Name")]
+		string Key
 		{
-			get;
-			set;
+			get; set;
 		}
 
-		public uint Count
+		string Name
 		{
-			get;
-			set;
+			get; set;
+		}
+
+		Visiblity? Visiblity
+		{
+			get; set;
+		}
+
+		Accessibility? Accessibility
+		{
+			get; set;
+		}
+
+		bool? IsPopular
+		{
+			get; set;
+		}
+
+		ConditionalRange<DateTime> CreatedTime
+		{
+			get; set;
 		}
 	}
 }

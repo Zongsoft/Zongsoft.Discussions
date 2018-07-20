@@ -25,25 +25,53 @@
  */
 
 using System;
-using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+using Zongsoft.Data;
+
+namespace Zongsoft.Community.Models
 {
-	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
-	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public interface IFileConditional : Zongsoft.Data.IConditional
 	{
-		public TStatus Status
+		[Conditional("Name", "Description")]
+		string Key
 		{
-			get;
-			set;
+			get; set;
 		}
 
-		public uint Count
+		ulong? FileId
 		{
-			get;
-			set;
+			get; set;
+		}
+
+		[Conditional("Name")]
+		string Name
+		{
+			get; set;
+		}
+
+		string Type
+		{
+			get; set;
+		}
+
+		ConditionalRange<uint> Size
+		{
+			get; set;
+		}
+
+		uint? FolderId
+		{
+			get; set;
+		}
+
+		uint? CreatorId
+		{
+			get; set;
+		}
+
+		ConditionalRange<DateTime> CreatedTime
+		{
+			get; set;
 		}
 	}
 }

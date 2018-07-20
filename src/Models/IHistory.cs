@@ -27,23 +27,59 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
+	/// 表示用户浏览记录的实体接口。
 	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public interface IHistory : Zongsoft.Data.IEntity
 	{
-		public TStatus Status
+		/// <summary>
+		/// 获取或设置用户的编号。
+		/// </summary>
+		uint UserId
 		{
-			get;
-			set;
+			get; set;
 		}
 
-		public uint Count
+		/// <summary>
+		/// 获取或设置浏览的主题编号。
+		/// </summary>
+		ulong ThreadId
 		{
-			get;
-			set;
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置浏览的主题对象。
+		/// </summary>
+		IThread Thread
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置累计浏览次数。
+		/// </summary>
+		uint Count
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置首次浏览的时间。
+		/// </summary>
+		DateTime FirstViewedTime
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置最后浏览的时间。
+		/// </summary>
+		DateTime MostRecentViewedTime
+		{
+			get; set;
 		}
 	}
 }

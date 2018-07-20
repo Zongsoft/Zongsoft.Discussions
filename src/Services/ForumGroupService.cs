@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("SiteId, GroupId", 101)]
 	[DataSearchKey("Key:Name")]
-	public class ForumGroupService : ServiceBase<ForumGroup>
+	public class ForumGroupService : ServiceBase<IForumGroup>
 	{
 		#region 构造函数
 		public ForumGroupService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -37,9 +37,9 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<Forum> GetForums(uint siteId, ushort groupId)
+		public IEnumerable<IForum> GetForums(uint siteId, ushort groupId)
 		{
-			return this.DataAccess.Select<Forum>(
+			return this.DataAccess.Select<IForum>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("GroupId", groupId),
 				Paging.Disable);
 		}
@@ -81,7 +81,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override ForumGroup OnGet(ICondition condition, string scope, object state)
+		protected override IForumGroup OnGet(ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrEmpty(scope))
 				scope = "Forums";
@@ -90,13 +90,13 @@ namespace Zongsoft.Community.Services
 			return base.OnGet(condition, scope, state);
 		}
 
-		protected override IEnumerable<ForumGroup> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
+		protected override IEnumerable<IForumGroup> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
 		{
 			//调用基类同名方法
 			var groups = base.OnSelect(condition, scope, paging, sortings, state);
 
 			//获取所有论坛组的所有论坛
-			var forums = this.DataAccess.Select<Forum>(Condition.In("GroupId", groups.Select(p => p.GroupId)), Paging.Disable).ToArray();
+			var forums = this.DataAccess.Select<IForum>(Condition.In("GroupId", groups.Select(p => p.GroupId)), Paging.Disable).ToArray();
 
 			foreach(var group in groups)
 			{

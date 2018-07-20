@@ -27,20 +27,60 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
+	/// 表示消息接受人的业务实体类。
 	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public struct MessageUser
 	{
-		public TStatus Status
+		#region 构造函数
+		public MessageUser(ulong messageId, uint userId, bool isRead = false)
+		{
+			this.MessageId = messageId;
+			this.UserId = userId;
+			this.IsRead = isRead;
+
+			this.User = null;
+			this.Message = null;
+		}
+
+		public MessageUser(uint userId)
+		{
+			this.MessageId = 0;
+			this.UserId = userId;
+			this.IsRead = false;
+
+			this.User = null;
+			this.Message = null;
+		}
+		#endregion
+
+		public ulong MessageId
 		{
 			get;
 			set;
 		}
 
-		public uint Count
+		public IMessage Message
+		{
+			get;
+			set;
+		}
+
+		public uint UserId
+		{
+			get;
+			set;
+		}
+
+		public IUserProfile User
+		{
+			get;
+			set;
+		}
+
+		public bool IsRead
 		{
 			get;
 			set;

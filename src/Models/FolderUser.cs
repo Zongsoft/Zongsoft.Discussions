@@ -27,23 +27,65 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+namespace Zongsoft.Community.Models
 {
-	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
-	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public struct FolderUser
 	{
-		public TStatus Status
+		#region 成员字段
+		private uint _folderId;
+		private uint _userId;
+		private UserKind _userKind;
+		private IUserProfile _user;
+		#endregion
+
+		#region 公共属性
+		public uint FolderId
 		{
-			get;
-			set;
+			get
+			{
+				return _folderId;
+			}
+			set
+			{
+				_folderId = value;
+			}
 		}
 
-		public uint Count
+		public uint UserId
 		{
-			get;
-			set;
+			get
+			{
+				return _userId;
+			}
+			set
+			{
+				_userId = value;
+			}
 		}
+
+		public IUserProfile User
+		{
+			get
+			{
+				return _user;
+			}
+			set
+			{
+				_user = value;
+			}
+		}
+
+		public UserKind UserKind
+		{
+			get
+			{
+				return _userKind;
+			}
+			set
+			{
+				_userKind = value;
+			}
+		}
+		#endregion
 	}
 }

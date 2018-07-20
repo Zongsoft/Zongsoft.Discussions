@@ -32,7 +32,7 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization(AuthorizationMode.Requires)]
-	public class UserController : Zongsoft.Web.Http.HttpControllerBase<UserProfile, UserProfileConditional, UserService>
+	public class UserController : Zongsoft.Web.Http.HttpControllerBase<IUserProfile, IUserProfileConditional, UserService>
 	{
 		#region 构造函数
 		public UserController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -42,7 +42,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Histories")]
-		public IEnumerable<History> GetHistories(uint id, [FromRoute("args")]Paging paging = null)
+		public IEnumerable<IHistory> GetHistories(uint id, [FromRoute("args")]Paging paging = null)
 		{
 			return this.DataService.GetHistories(id, paging);
 		}
@@ -84,7 +84,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[ActionName("Messages")]
 		[HttpPaging]
-		public IEnumerable<Message> GetMessages(uint id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
+		public IEnumerable<IMessage> GetMessages(uint id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetMessages(id, isRead, paging);
 		}

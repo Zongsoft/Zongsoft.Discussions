@@ -84,15 +84,15 @@ namespace Zongsoft.Community.Services.Commands
 			//根据内容类型解析得到真实内容
 			content = GetContent(content, ref contentType);
 
-			var message = new Models.Message()
+			var message = Zongsoft.Data.Entity.Build<Models.IMessage>(p =>
 			{
-				Content = content,
-				ContentType = contentType,
-				Source = context.Expression.Options.GetValue<string>(SOURCE_OPTION),
-				Subject = context.Expression.Options.GetValue<string>(SUBJECT_OPTION),
-				MessageType = context.Expression.Options.GetValue<string>(MESSAGETYPE_OPTION),
-				Users = GetUsers(context.Expression.Arguments).Select(uid => new Models.Message.MessageUser(uid)),
-			};
+				p.Content = content;
+				p.ContentType = contentType;
+				p.Source = context.Expression.Options.GetValue<string>(SOURCE_OPTION);
+				p.Subject = context.Expression.Options.GetValue<string>(SUBJECT_OPTION);
+				p.MessageType = context.Expression.Options.GetValue<string>(MESSAGETYPE_OPTION);
+				p.Users = GetUsers(context.Expression.Arguments).Select(uid => new Models.MessageUser(uid));
+			});
 
 			if(this.Service.Insert(message) > 0)
 				return message;

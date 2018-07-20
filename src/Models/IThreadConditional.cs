@@ -27,23 +27,76 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+using Zongsoft.Data;
+
+namespace Zongsoft.Community.Models
 {
-	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
-	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public interface IThreadConditional : Zongsoft.Data.IConditional
 	{
-		public TStatus Status
+		[Conditional("Name")]
+		string Key
 		{
-			get;
-			set;
+			get; set;
 		}
 
-		public uint Count
+		string Subject
 		{
-			get;
-			set;
+			get; set;
+		}
+
+		ThreadStatus? Status
+		{
+			get; set;
+		}
+
+		ConditionalRange<DateTime> StatusTimestamp
+		{
+			get; set;
+		}
+
+		bool? Disabled
+		{
+			get; set;
+		}
+
+		bool? Visible
+		{
+			get; set;
+		}
+
+		bool? IsApproved
+		{
+			get; set;
+		}
+
+		bool? IsLocked
+		{
+			get; set;
+		}
+
+		bool? IsPinned
+		{
+			get; set;
+		}
+
+		bool? IsValued
+		{
+			get; set;
+		}
+
+		bool? IsGlobal
+		{
+			get; set;
+		}
+
+		uint? CreatorId
+		{
+			get; set;
+		}
+
+		ConditionalRange<DateTime> CreatedTime
+		{
+			get; set;
 		}
 	}
 }

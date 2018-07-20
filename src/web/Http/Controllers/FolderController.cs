@@ -31,7 +31,7 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization(AuthorizationMode.Identity)]
-	public class FolderController : Zongsoft.Web.Http.HttpControllerBase<Folder, FolderConditional, FolderService>
+	public class FolderController : Zongsoft.Web.Http.HttpControllerBase<IFolder, IFolderConditional, FolderService>
 	{
 		#region 构造函数
 		public FolderController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -42,7 +42,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#region 公共方法
 		[ActionName("Users")]
 		[HttpPaging]
-		public IEnumerable<Folder.FolderUser> GetUsers(uint id, [FromRoute("args")]UserKind? kind = null, [FromUri]Paging paging = null)
+		public IEnumerable<FolderUser> GetUsers(uint id, [FromRoute("args")]UserKind? kind = null, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetUsers(id, kind, paging);
 		}

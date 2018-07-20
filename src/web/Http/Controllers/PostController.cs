@@ -29,7 +29,7 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class PostController : Zongsoft.Web.Http.HttpControllerBase<Post, PostConditional, PostService>
+	public class PostController : Zongsoft.Web.Http.HttpControllerBase<IPost, IPostConditional, PostService>
 	{
 		#region 构造函数
 		public PostController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -53,19 +53,19 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[ActionName("Upvotes")]
-		public IEnumerable<Post.PostVoting> GetUpvotes(ulong id, [FromUri]Paging paging = null)
+		public IEnumerable<IPostVoting> GetUpvotes(ulong id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetUpvotes(id, paging);
 		}
 
 		[ActionName("Downvotes")]
-		public IEnumerable<Post.PostVoting> GetDownvotes(ulong id, [FromUri]Paging paging = null)
+		public IEnumerable<IPostVoting> GetDownvotes(ulong id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetDownvotes(id, paging);
 		}
 
 		[ActionName("Comments")]
-		public IEnumerable<Post.PostComment> GetComments(ulong id, [FromUri]Paging paging = null)
+		public IEnumerable<IPostComment> GetComments(ulong id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetComments(id, paging);
 		}

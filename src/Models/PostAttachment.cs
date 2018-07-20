@@ -27,23 +27,73 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
+	/// 表示帖子附件的结构。
 	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public struct PostAttachment
 	{
-		public TStatus Status
+		#region 成员字段
+		private ulong _postId;
+		private ulong _fileId;
+		private IFile _file;
+		#endregion
+
+		#region 构造函数
+		public PostAttachment(ulong postId, ulong fileId)
 		{
-			get;
-			set;
+			_postId = postId;
+			_fileId = fileId;
+			_file = null;
+		}
+		#endregion
+
+		#region 公共属性
+		/// <summary>
+		/// 获取或设置帖子编号。
+		/// </summary>
+		public ulong PostId
+		{
+			get
+			{
+				return _postId;
+			}
+			set
+			{
+				_postId = value;
+			}
 		}
 
-		public uint Count
+		/// <summary>
+		/// 获取或设置帖子的文件编号。
+		/// </summary>
+		public ulong FileId
 		{
-			get;
-			set;
+			get
+			{
+				return _fileId;
+			}
+			set
+			{
+				_fileId = value;
+			}
 		}
+
+		/// <summary>
+		/// 获取或设置帖子的文件对象。
+		/// </summary>
+		public IFile File
+		{
+			get
+			{
+				return _file;
+			}
+			set
+			{
+				_file = value;
+			}
+		}
+		#endregion
 	}
 }

@@ -27,7 +27,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("Community:FileId", 100000)]
 	[DataSearchKey("Key:Name")]
-	public class FileService : ServiceBase<File>
+	public class FileService : ServiceBase<IFile>
 	{
 		#region 构造函数
 		public FileService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -46,7 +46,7 @@ namespace Zongsoft.Community.Services
         #endregion
 
         #region 重写方法
-        protected override File OnGet(ICondition condition, string scope, object state)
+        protected override IFile OnGet(ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
@@ -55,7 +55,7 @@ namespace Zongsoft.Community.Services
 			return base.OnGet(condition, scope, state);
 		}
 
-		protected override int OnInsert(DataDictionary<File> data, string scope, object state)
+		protected override int OnInsert(DataDictionary<IFile> data, string scope, object state)
 		{
 			var filePath = data.Get(p => p.Path);
 
@@ -83,7 +83,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<File> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(DataDictionary<IFile> data, ICondition condition, string scope, object state)
 		{
 			throw new NotSupportedException();
 		}

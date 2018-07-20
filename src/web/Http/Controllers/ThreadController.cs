@@ -29,7 +29,7 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class ThreadController : Zongsoft.Web.Http.HttpControllerBase<Thread, ThreadConditional, ThreadService>
+	public class ThreadController : Zongsoft.Web.Http.HttpControllerBase<IThread, IThreadConditional, ThreadService>
 	{
 		#region 构造函数
 		public ThreadController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -40,7 +40,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#region 公共方法
 		[ActionName("Posts")]
 		[HttpPaging]
-		public IEnumerable<Post> GetPosts(ulong id, [FromUri]Paging paging = null)
+		public IEnumerable<IPost> GetPosts(ulong id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetPosts(id, paging);
 		}

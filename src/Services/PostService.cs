@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("PostId", 100000)]
 	[DataSearchKey("Thread,ThreadId:ThreadId")]
-	public class PostService : ServiceBase<Post>
+	public class PostService : ServiceBase<IPost>
 	{
 		#region 构造函数
 		public PostService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -46,11 +46,15 @@ namespace Zongsoft.Community.Services
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				this.DataAccess.Delete<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
-				this.DataAccess.Insert(new Post.PostVoting(postId, credential.UserId, (sbyte)Math.Min(value, (byte)100))
+				this.DataAccess.Delete<IPostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
+
+				var voting = Entity.Build<IPostVoting>(p =>
 				{
-					UserName = credential.User.FullName,
-					UserAvatar = credential.User.Avatar,
+					p.PostId = postId;
+					p.UserId = credential.UserId;
+					p.Value = (sbyte)Math.Min(value, (byte)100);
+					p.UserName = credential.User.FullName;
+					p.UserAvatar = credential.User.Avatar;
 				});
 
 				//如果帖子投票统计信息更新成功
@@ -76,12 +80,18 @@ namespace Zongsoft.Community.Services
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				this.DataAccess.Delete<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
-				this.DataAccess.Insert(new Post.PostVoting(postId, credential.UserId, (sbyte)-Math.Min(value, (byte)100))
+				this.DataAccess.Delete<IPostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
+
+				var voting = Entity.Build<IPostVoting>(p =>
 				{
-					UserName = credential.User.FullName,
-					UserAvatar = credential.User.Avatar,
+					p.PostId = postId;
+					p.UserId = credential.UserId;
+					p.Value = (sbyte)-Math.Min(value, (byte)100);
+					p.UserName = credential.User.FullName;
+					p.UserAvatar = credential.User.Avatar;
 				});
+
+				this.DataAccess.Insert(voting);
 
 				//如果帖子投票统计信息更新成功
 				if(this.SetPostVotes(postId))
@@ -97,24 +107,24 @@ namespace Zongsoft.Community.Services
 			return false;
 		}
 
-		public IEnumerable<Post.PostVoting> GetUpvotes(ulong postId, Paging paging = null)
+		public IEnumerable<IPostVoting> GetUpvotes(ulong postId, Paging paging = null)
 		{
-			return this.DataAccess.Select<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.GreaterThan("Value", 0), paging);
+			return this.DataAccess.Select<IPostVoting>(Condition.Equal("PostId", postId) & Condition.GreaterThan("Value", 0), paging);
 		}
 
-		public IEnumerable<Post.PostVoting> GetDownvotes(ulong postId, Paging paging = null)
+		public IEnumerable<IPostVoting> GetDownvotes(ulong postId, Paging paging = null)
 		{
-			return this.DataAccess.Select<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.LessThan("Value", 0), paging);
+			return this.DataAccess.Select<IPostVoting>(Condition.Equal("PostId", postId) & Condition.LessThan("Value", 0), paging);
 		}
 
-		public IEnumerable<Post.PostComment> GetComments(ulong postId, Paging paging = null)
+		public IEnumerable<IPostComment> GetComments(ulong postId, Paging paging = null)
 		{
-			return this.DataAccess.Select<Post.PostComment>(Condition.Equal("PostId", postId), paging, Sorting.Descending("SerialId"));
+			return this.DataAccess.Select<IPostComment>(Condition.Equal("PostId", postId), paging, Sorting.Descending("SerialId"));
 		}
 		#endregion
 
 		#region 重写方法
-		protected override Post OnGet(ICondition condition, string scope, object state)
+		protected override IPost OnGet(ICondition condition, string scope, object state)
 		{
 			//调用基类同名方法
 			var post = base.OnGet(condition, scope, state);
@@ -129,7 +139,7 @@ namespace Zongsoft.Community.Services
 			return post;
 		}
 
-		protected override IEnumerable<Post> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
+		protected override IEnumerable<IPost> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
@@ -138,7 +148,7 @@ namespace Zongsoft.Community.Services
 			return base.OnSelect(condition, scope, paging, sortings, state);
 		}
 
-		protected override int OnInsert(DataDictionary<Post> data, string scope, object state)
+		protected override int OnInsert(DataDictionary<IPost> data, string scope, object state)
 		{
 			string filePath = null;
 
@@ -168,7 +178,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//定义附加数据是否为关联的主题对象
-			var thread = state as DataDictionary<Thread>;
+			var thread = state as DataDictionary<IThread>;
 
 			if(thread != null)
 			{
@@ -181,7 +191,7 @@ namespace Zongsoft.Community.Services
 				}
 				else
 				{
-					var forum = this.DataAccess.Select<Forum>(Condition.Equal("SiteId", thread.Get(p => p.SiteId)) & Condition.Equal("ForumId", thread.Get(p => p.ForumId))).FirstOrDefault();
+					var forum = this.DataAccess.Select<IForum>(Condition.Equal("SiteId", thread.Get(p => p.SiteId)) & Condition.Equal("ForumId", thread.Get(p => p.ForumId))).FirstOrDefault();
 
 					if(forum == null)
 						throw new InvalidOperationException("The specified forum is not existed about the new thread.");
@@ -205,12 +215,12 @@ namespace Zongsoft.Community.Services
 							if(attachments == null)
 								return;
 
-							foreach(var attachment in attachments)
-							{
-								attachment.PostId = data.Get(p => p.PostId);
-							}
+							//foreach(var attachment in attachments)
+							//{
+							//	attachment.PostId = data.Get(p => p.PostId);
+							//}
 
-							this.DataAccess.InsertMany(attachments);
+							//this.DataAccess.InsertMany(attachments);
 						});
 
 						//更新发帖人的关联帖子统计信息
@@ -241,7 +251,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Post> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(DataDictionary<IPost> data, ICondition condition, string scope, object state)
 		{
 			//更新内容到文本文件中
 			data.TryGet(p => p.Content, (key, value) =>
@@ -276,7 +286,7 @@ namespace Zongsoft.Community.Services
 
 				var postId = data.Get(p => p.PostId);
 
-				this.DataAccess.Delete<Post.PostAttachment>(Condition.Equal("PostId", postId));
+				this.DataAccess.Delete<PostAttachment>(Condition.Equal("PostId", postId));
 				this.DataAccess.InsertMany(attachments.Where(p => p.PostId == postId));
 			});
 
@@ -295,13 +305,13 @@ namespace Zongsoft.Community.Services
 		private bool SetPostVotes(ulong postId)
 		{
 			//获取当前帖子的点赞总数，即统计帖子投票表中投票数大于零的记录数
-			var upvotes = this.DataAccess.Count<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.GreaterThan("Value", 0));
+			var upvotes = this.DataAccess.Count<IPostVoting>(Condition.Equal("PostId", postId) & Condition.GreaterThan("Value", 0));
 
 			//获取当前帖子的被踩总数，即统计帖子投票表中投票数小于零的记录数
-			var downvotes = this.DataAccess.Count<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.LessThan("Value", 0));
+			var downvotes = this.DataAccess.Count<IPostVoting>(Condition.Equal("PostId", postId) & Condition.LessThan("Value", 0));
 
 			//更新指定帖子的累计点赞总数和累计被踩总数
-			return this.DataAccess.Update(this.DataAccess.Naming.Get<Post>(), new
+			return this.DataAccess.Update(this.DataAccess.Naming.Get<IPost>(), new
 			{
 				PostId = postId,
 				TotalUpvotes = upvotes,
@@ -309,7 +319,7 @@ namespace Zongsoft.Community.Services
 			}) > 0;
 		}
 
-		private bool SetMostRecentPost(DataDictionary<Post> data)
+		private bool SetMostRecentPost(DataDictionary<IPost> data)
 		{
 			//注意：如果当前帖子是主题内容贴则不需要更新对应的统计信息
 			if(data == null)
@@ -322,13 +332,13 @@ namespace Zongsoft.Community.Services
 				return false;
 
 			//如果当前帖子对应的主题是不存在的，则返回失败
-			var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
+			var thread = this.DataAccess.Select<IThread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
 
 			if(thread == null)
 				return false;
 
 			//递增新增贴所属的主题的累计回帖总数
-			if(this.DataAccess.Increment<Thread>("TotalReplies", Condition.Equal("ThreadId", threadId)) < 0)
+			if(this.DataAccess.Increment<IThread>("TotalReplies", Condition.Equal("ThreadId", threadId)) < 0)
 				return false;
 
 			var userId = data.Get(p => p.CreatorId);
@@ -336,7 +346,7 @@ namespace Zongsoft.Community.Services
 			var count = 0;
 
 			//更新当前帖子所属主题的最后回帖信息
-			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Thread>(), new
+			count += this.DataAccess.Update(this.DataAccess.Naming.Get<IThread>(), new
 			{
 				ThreadId = threadId,
 				MostRecentPostId = data.Get(p => p.PostId),
@@ -347,7 +357,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//更新当前帖子所属论坛的最后回帖信息
-			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Forum>(), new
+			count += this.DataAccess.Update(this.DataAccess.Naming.Get<IForum>(), new
 			{
 				SiteId = thread.SiteId,
 				ForumId = thread.ForumId,
@@ -359,9 +369,9 @@ namespace Zongsoft.Community.Services
 			});
 
 			//递增当前发帖人的累计回帖数，并且更新发帖人的最后回帖信息
-			if(this.DataAccess.Increment<UserProfile>("TotalPosts", Condition.Equal("UserId", data.Get(p => p.CreatorId))) > 0)
+			if(this.DataAccess.Increment<IUserProfile>("TotalPosts", Condition.Equal("UserId", data.Get(p => p.CreatorId))) > 0)
 			{
-				count += this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
+				count += this.DataAccess.Update(this.DataAccess.Naming.Get<IUserProfile>(), new
 				{
 					UserId = data.Get(p => p.CreatorId),
 					MostRecentPostId = data.Get(p => p.PostId),

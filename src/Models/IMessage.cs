@@ -27,23 +27,81 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示按状态分组统计结果的实体类。
+	/// 表示消息的业务实体接口。
 	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public interface IMessage : Zongsoft.Data.IEntity
 	{
-		public TStatus Status
+		ulong MessageId
 		{
-			get;
-			set;
+			get; set;
 		}
 
-		public uint Count
+		uint SiteId
 		{
-			get;
-			set;
+			get; set;
+		}
+
+		string Subject
+		{
+			get; set;
+		}
+
+		string Content
+		{
+			get; set;
+		}
+
+		string ContentType
+		{
+			get; set;
+		}
+
+		string MessageType
+		{
+			get; set;
+		}
+
+		string Source
+		{
+			get; set;
+		}
+
+		MessageStatus Status
+		{
+			get; set;
+		}
+
+		DateTime? StatusTimestamp
+		{
+			get; set;
+		}
+
+		string StatusDescription
+		{
+			get; set;
+		}
+
+		uint? CreatorId
+		{
+			get; set;
+		}
+
+		IUserProfile Creator
+		{
+			get; set;
+		}
+
+		DateTime CreatedTime
+		{
+			get; set;
+		}
+
+		IEnumerable<MessageUser> Users
+		{
+			get; set;
 		}
 	}
 }

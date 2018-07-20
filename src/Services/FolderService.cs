@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("Community:FolderId", 100000)]
 	[DataSearchKey("Key:Name")]
-	public class FolderService : ServiceBase<Folder>
+	public class FolderService : ServiceBase<IFolder>
 	{
 		#region 构造函数
 		public FolderService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -37,14 +37,14 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<Folder.FolderUser> GetUsers(uint folderId, UserKind? userKind = null, Paging paging = null)
+		public IEnumerable<FolderUser> GetUsers(uint folderId, UserKind? userKind = null, Paging paging = null)
 		{
 			ICondition conditions = Condition.Equal("FolderId", folderId);
 
 			if(userKind.HasValue)
 				conditions = ConditionCollection.And(conditions, Condition.Equal("UserKind", userKind.Value));
 
-			return this.DataAccess.Select<Folder.FolderUser>(conditions, "User, User.User", paging);
+			return this.DataAccess.Select<FolderUser>(conditions, "User, User.User", paging);
 		}
 
 		public bool SetIcon(uint folderId, string icon)
@@ -52,7 +52,7 @@ namespace Zongsoft.Community.Services
 			if(string.IsNullOrWhiteSpace(icon))
 				icon = null;
 
-			return this.DataAccess.Update(this.DataAccess.Naming.Get<Folder>(), new
+			return this.DataAccess.Update(this.DataAccess.Naming.Get<IFolder>(), new
 			{
 				FolderId = folderId,
 				Icon = icon,
@@ -61,7 +61,7 @@ namespace Zongsoft.Community.Services
 
 		public bool SetVisiblity(uint folderId, Visiblity visiblity)
 		{
-			return this.DataAccess.Update(this.DataAccess.Naming.Get<Folder>(), new
+			return this.DataAccess.Update(this.DataAccess.Naming.Get<IFolder>(), new
 			{
 				FolderId = folderId,
 				Visiblity = visiblity,
@@ -70,7 +70,7 @@ namespace Zongsoft.Community.Services
 
 		public bool SetAccessibility(uint folderId, Accessibility accessibility)
 		{
-			return this.DataAccess.Update(this.DataAccess.Naming.Get<Folder>(), new
+			return this.DataAccess.Update(this.DataAccess.Naming.Get<IFolder>(), new
 			{
 				FolderId = folderId,
 				Accessibility = accessibility,
@@ -79,7 +79,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Folder OnGet(ICondition condition, string scope, object state)
+		protected override IFolder OnGet(ICondition condition, string scope, object state)
 		{
 			if(string.IsNullOrWhiteSpace(scope))
 				scope = "Creator, Creator.User";
@@ -93,7 +93,7 @@ namespace Zongsoft.Community.Services
 			return folder;
 		}
 
-		protected override int OnInsert(DataDictionary<Folder> data, string scope, object state)
+		protected override int OnInsert(DataDictionary<IFolder> data, string scope, object state)
         {
             using(var transaction = new Transactions.Transaction())
             {
@@ -120,7 +120,7 @@ namespace Zongsoft.Community.Services
             }
 		}
 
-		protected override int OnUpdate(DataDictionary<Folder> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(DataDictionary<IFolder> data, ICondition condition, string scope, object state)
         {
             using(var transaction = new Transactions.Transaction())
             {
@@ -139,7 +139,7 @@ namespace Zongsoft.Community.Services
 					var folderId = data.Get(p => p.FolderId);
 
                     //首先清除该文件夹的所有用户集
-                    this.DataAccess.Delete<Folder.FolderUser>(Condition.Equal("FolderId", folderId));
+                    this.DataAccess.Delete<FolderUser>(Condition.Equal("FolderId", folderId));
 
                     //新增该文件夹的用户集
                     this.DataAccess.InsertMany(users.Where(p => p.FolderId == folderId));
