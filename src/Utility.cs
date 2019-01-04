@@ -151,7 +151,7 @@ namespace Zongsoft.Community
 		/// </remarks>
 		public static string GetFilePath(uint siteId, uint userId, string relativePath = null)
 		{
-			var basePath = Zongsoft.ComponentModel.ApplicationContextBase.Current.OptionManager.GetOptionValue("/Community/General.BasePath") as string;
+			var basePath = ApplicationContext.Current.Options.GetOptionValue("/Community/General.BasePath") as string;
 
 			if(string.IsNullOrWhiteSpace(basePath))
 				return string.Empty;
@@ -178,7 +178,7 @@ namespace Zongsoft.Community
 
 			if(siteId == 0 || userId == 0)
 			{
-				var principal = Zongsoft.ComponentModel.ApplicationContextBase.Current.Principal as Zongsoft.Security.CredentialPrincipal;
+				var principal = ApplicationContext.Current.Principal as Zongsoft.Security.CredentialPrincipal;
 
 				if(principal != null && principal.Identity.IsAuthenticated)
 				{

@@ -24,80 +24,38 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class ForumConditional : Zongsoft.Data.Conditional
+	public interface ForumConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Name")]
-		public string Key
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Key);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Key, value);
-			}
+			get; set;
 		}
 
-		public string Name
+		string Name
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Name);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Name, value);
-			}
+			get; set;
 		}
 
-		public Visiblity? Visiblity
+		Visiblity? Visiblity
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Visiblity);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Visiblity, value);
-			}
+			get; set;
 		}
 
-		public Accessibility? Accessibility
+		Accessibility? Accessibility
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Accessibility);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Accessibility, value);
-			}
+			get; set;
 		}
 
-		public bool? IsPopular
+		bool? IsPopular
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.IsPopular);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsPopular, value);
-			}
+			get; set;
 		}
 
-		public ConditionalRange<DateTime> CreatedTime
+		Range<DateTime> CreatedTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CreatedTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatedTime, value);
-			}
+			get; set;
 		}
 		#endregion
 	}

@@ -35,7 +35,7 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 重写方法
-		protected override void OnSelected(DataSelectContext context)
+		protected override void OnSelected(DataSelectContextBase context)
 		{
 			//调用基类同名方法
 			base.OnSelected(context);

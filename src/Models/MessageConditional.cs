@@ -24,104 +24,48 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class MessageConditional : Zongsoft.Data.Conditional
+	public interface MessageConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Subject")]
-		public string Key
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Key);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Key, value);
-			}
+			get; set;
 		}
 
-		public string Subject
+		string Subject
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Subject);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Subject, value);
-			}
+			get; set;
 		}
 
-		public string MessageType
+		string MessageType
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MessageType);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MessageType, value);
-			}
+			get; set;
 		}
 
-		public string Source
+		string Source
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Source);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Source, value);
-			}
+			get; set;
 		}
 
-		public MessageStatus? Status
+		MessageStatus? Status
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Status);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Status, value);
-			}
+			get; set;
 		}
 
-		public ConditionalRange<DateTime> StatusTimestamp
+		Range<DateTime> StatusTimestamp
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.StatusTimestamp);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.StatusTimestamp, value);
-			}
+			get; set;
 		}
 
-		public uint? CreatorId
+		uint? CreatorId
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CreatorId);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatorId, value);
-			}
+			get; set;
 		}
 
-		public ConditionalRange<DateTime> CreatedTime
+		Range<DateTime> CreatedTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CreatedTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatedTime, value);
-			}
+			get; set;
 		}
 		#endregion
 	}

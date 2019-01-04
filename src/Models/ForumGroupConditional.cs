@@ -24,44 +24,23 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class ForumGroupConditional : Zongsoft.Data.Conditional
+	public interface ForumGroupConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Name")]
-		public string Key
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Key);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Key, value);
-			}
+			get; set;
 		}
 
-		public string Name
+		string Name
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Name);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Name, value);
-			}
+			get; set;
 		}
 
-		public Visiblity? Visiblity
+		Visiblity? Visiblity
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Visiblity);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Visiblity, value);
-			}
+			get; set;
 		}
 		#endregion
 	}

@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("Community:FeedbackId", 100000)]
 	[DataSearchKey("Key:Subject,ContactName,ContactText")]
-	public class FeedbackService : ServiceBase<Feedback>
+	public class FeedbackService : DataService<Feedback>
 	{
 		#region 构造函数
 		public FeedbackService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -37,19 +37,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override void EnsureDefaultValues(DataDictionary<Feedback> data)
-		{
-			//设置创建时间
-			data.TrySet("CreatedTime", DateTime.Now);
-
-			//尝试更新当前反馈的所属站点编号
-			data.TrySet(p => p.SiteId, _ => this.GetSiteId(), value => value == 0);
-		}
-
-		protected override Feedback OnGet(ICondition condition, string scope, object state)
+		protected override Feedback OnGet(ICondition condition, string schema, object state)
 		{
 			//调用基类同名方法
-			var feedback = base.OnGet(condition, scope, state);
+			var feedback = base.OnGet(condition, schema, state);
 
 			if(feedback == null)
 				return null;
@@ -61,44 +52,38 @@ namespace Zongsoft.Community.Services
 			return feedback;
 		}
 
-		protected override IEnumerable<Feedback> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
-		{
-			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings, state);
-		}
-
-		protected override int OnInsert(DataDictionary<Feedback> data, string scope, object state)
+		protected override int OnInsert(IDataDictionary<Feedback> data, string schema, object state)
 		{
 			string filePath = null;
 
 			//获取原始的内容类型
-			var rawType = data.Get(p => p.ContentType, null);
+			var rawType = data.GetValue(p => p.ContentType, null);
 
 			//调整内容类型为嵌入格式
-			data.Set(p => p.ContentType, Utility.GetContentType(rawType, true));
+			data.SetValue(p => p.ContentType, Utility.GetContentType(rawType, true));
 
-			data.TryGet(p => p.Content, (key, value) =>
+			data.TryGetValue(p => p.Content, (key, value) =>
 			{
 				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
 					return;
 
 				//设置内容文件的存储路径
-				filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId), data.Get(p => p.ContentType));
+				filePath = this.GetContentFilePath(data.GetValue(p => p.FeedbackId), data.GetValue(p => p.ContentType));
 
 				//将内容文本写入到文件中
 				Utility.WriteTextFile(filePath, value);
 
 				//更新内容文件的存储路径
-				data.Set(p => p.Content, filePath);
+				data.SetValue(p => p.Content, filePath);
 
 				//更新内容类型为非嵌入格式（即外部文件）
-				data.Set(p => p.ContentType, Utility.GetContentType(data.Get(p => p.ContentType), false));
+				data.SetValue(p => p.ContentType, Utility.GetContentType(data.GetValue(p => p.ContentType), false));
 			});
 
 			try
 			{
 				//调用基类同名方法
-				var count = base.OnInsert(data, scope, state);
+				var count = base.OnInsert(data, schema, state);
 
 				if(count < 1)
 				{
@@ -119,29 +104,29 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Feedback> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(IDataDictionary<Feedback> data, ICondition condition, string schema, object state)
 		{
 			//更新内容到文本文件中
-			data.TryGet(p => p.Content, (key, value) =>
+			data.TryGetValue(p => p.Content, (key, value) =>
 			{
 				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
 					return;
 
 				//根据当前反馈编号，获得其对应的内容文件存储路径
-				var filePath = this.GetContentFilePath(data.Get(p => p.FeedbackId), data.Get(p => p.ContentType));
+				var filePath = this.GetContentFilePath(data.GetValue(p => p.FeedbackId), data.GetValue(p => p.ContentType));
 
 				//将反馈内容写入到对应的存储文件中
 				Utility.WriteTextFile(filePath, value);
 
 				//更新当前反馈的内容文件存储路径属性
-				data.Set(p => p.Content, filePath);
+				data.SetValue(p => p.Content, filePath);
 
 				//更新内容类型为非嵌入格式（即外部文件）
-				data.Set(p => p.ContentType, Utility.GetContentType(data.Get(p => p.ContentType), false));
+				data.SetValue(p => p.ContentType, Utility.GetContentType(data.GetValue(p => p.ContentType), false));
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, scope, state);
+			var count = base.OnUpdate(data, condition, schema, state);
 
 			if(count < 1)
 				return count;

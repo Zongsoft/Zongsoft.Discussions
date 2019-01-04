@@ -24,116 +24,53 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class PostConditional : Zongsoft.Data.Conditional
+	public interface PostConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Content")]
-		public string Key
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Key);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Key, value);
-			}
+			get; set;
 		}
 
-		public string Content
+		string Content
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Content);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Content, value);
-			}
+			get; set;
 		}
 
-		public ulong? ParentId
+		ulong? ParentId
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ParentId);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ParentId, value);
-			}
+			get; set;
 		}
 
-		public bool? Disabled
+		bool? Disabled
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Disabled);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Disabled, value);
-			}
+			get; set;
 		}
 
-		public bool? IsApproved
+		bool? IsApproved
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.IsApproved);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsApproved, value);
-			}
+			get; set;
 		}
 
-		public bool? IsLocked
+		bool? IsLocked
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.IsLocked);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsLocked, value);
-			}
+			get; set;
 		}
 
-		public bool? IsValued
+		bool? IsValued
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.IsValued);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsValued, value);
-			}
+			get; set;
 		}
 
-		public uint? CreatorId
+		uint? CreatorId
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CreatorId);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatorId, value);
-			}
+			get; set;
 		}
 
-		public ConditionalRange<DateTime> CreatedTime
+		Range<DateTime> CreatedTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CreatedTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatedTime, value);
-			}
+			get; set;
 		}
 		#endregion
 	}

@@ -23,81 +23,39 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class FolderConditional : Zongsoft.Data.Conditional
+	public interface FolderConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Name", "PinYin")]
-		public string Key
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue<string>(nameof(Key));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Key), value);
-			}
+			get; set;
 		}
 
 		[Conditional("Name", "PinYin")]
-		public string Name
+		string Name
 		{
-			get
-			{
-				return this.GetPropertyValue<string>(nameof(Name));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Name), value);
-			}
+			get; set;
 		}
 
-		public Visiblity? Visiblity
+		Visiblity? Visiblity
 		{
-			get
-			{
-				return this.GetPropertyValue<Visiblity?>(nameof(Visiblity));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Visiblity), value);
-			}
+			get; set;
 		}
 
-		public Accessibility? Accessibility
+		Accessibility? Accessibility
 		{
-			get
-			{
-				return this.GetPropertyValue<Accessibility?>(nameof(Accessibility));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Accessibility), value);
-			}
+			get; set;
 		}
 
-		public uint? CreatorId
+		uint? CreatorId
 		{
-			get
-			{
-				return this.GetPropertyValue<uint?>(nameof(CreatorId));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(CreatorId), value);
-			}
+			get; set;
 		}
 
-		public ConditionalRange<DateTime> CreatedTime
+		Range<DateTime> CreatedTime
 		{
-			get
-			{
-				return this.GetPropertyValue<ConditionalRange<DateTime>>(nameof(CreatedTime));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(CreatedTime), value);
-			}
+			get; set;
 		}
 		#endregion
 	}

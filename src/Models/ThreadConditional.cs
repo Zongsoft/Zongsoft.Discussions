@@ -24,164 +24,73 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class ThreadConditional : Zongsoft.Data.Conditional
+	public interface ThreadConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Name")]
-		public string Key
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Key);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Key, value);
-			}
+			get; set;
 		}
 
-		public string Subject
+		string Subject
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Subject);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Subject, value);
-			}
+			get; set;
 		}
 
-		public ThreadStatus? Status
+		ThreadStatus? Status
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Status);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Status, value);
-			}
+			get; set;
 		}
 
-		public ConditionalRange<DateTime> StatusTimestamp
+		Range<DateTime> StatusTimestamp
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.StatusTimestamp);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.StatusTimestamp, value);
-			}
+			get; set;
 		}
 
-		public bool? Disabled
+		bool? Disabled
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Disabled);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Disabled, value);
-			}
+			get; set;
 		}
 
-		public bool? Visible
+		bool? Visible
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Visible);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Visible, value);
-			}
+			get; set;
 		}
 
-		public bool? IsApproved
+		bool? IsApproved
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.IsApproved);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsApproved, value);
-			}
+			get; set;
 		}
 
-		public bool? IsLocked
+		bool? IsLocked
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.IsLocked);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsLocked, value);
-			}
+			get; set;
 		}
 
-		public bool? IsPinned
+		bool? IsPinned
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.IsPinned);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsPinned, value);
-			}
+			get; set;
 		}
 
-		public bool? IsValued
+		bool? IsValued
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.IsValued);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsValued, value);
-			}
+			get; set;
 		}
 
-		public bool? IsGlobal
+		bool? IsGlobal
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.IsGlobal);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsGlobal, value);
-			}
+			get; set;
 		}
 
-		public uint? CreatorId
+		uint? CreatorId
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CreatorId);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatorId, value);
-			}
+			get; set;
 		}
 
-		public ConditionalRange<DateTime> CreatedTime
+		Range<DateTime> CreatedTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CreatedTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatedTime, value);
-			}
+			get; set;
 		}
 		#endregion
 	}

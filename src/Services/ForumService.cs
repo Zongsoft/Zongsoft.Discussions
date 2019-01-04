@@ -29,7 +29,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("SiteId, ForumId", 101)]
 	[DataSearchKey("Key:Name")]
-	public class ForumService : ServiceBase<Forum>
+	public class ForumService : DataService<Forum>
 	{
 		#region 成员字段
 		private ICache _cache;
@@ -63,14 +63,7 @@ namespace Zongsoft.Community.Services
 		public bool IsModerator(uint siteId, ushort forumId, uint? userId = null)
 		{
 			if(userId == null)
-			{
-				var credential = this.EnsureCredential(false);
-
-				if(credential == null)
-					return false;
-
-				userId = credential.UserId;
-			}
+				userId = this.Credential?.UserId;
 
 			return this.DataAccess.Exists<Forum.ForumUser>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) &
@@ -168,42 +161,29 @@ namespace Zongsoft.Community.Services
 			return base.GetKey(values, out singleton);
 		}
 
-		protected override void EnsureRequiredCondition(ref ICondition condition)
+		protected override ICondition OnValidate(DataAccessMethod method, ICondition condition)
 		{
 			//调用基类同名方法
-			base.EnsureRequiredCondition(ref condition);
+			condition = base.OnValidate(method, condition);
 
 			//获取当前用户凭证
-			var credential = this.EnsureCredential(false);
+			var credential = this.Credential;
+
 			ICondition requires = null;
 
 			//如果凭证为空或匿名用户则只能获取公共数据
 			if(credential == null || credential.IsEmpty)
-				requires = Condition.Equal("Visiblity", Visiblity.Public);
-			else if(!credential.InAdministrators) //如果不是管理员则只能获取内部或公共数据
-				requires = Condition.In("Visiblity", (byte)Visiblity.Internal, (byte)Visiblity.Public);
+				requires = Condition.Equal("Visiblity", (byte)Visiblity.Public);
+			//else if(!credential.InAdministrators) //如果不是管理员则只能获取内部或公共数据
+			//	requires = Condition.In("Visiblity", (byte)Visiblity.Internal, (byte)Visiblity.Public);
 
-			if(requires != null)
-			{
-				if(condition == null)
-					condition = requires;
-				else
-					condition = new ConditionCollection(ConditionCombination.And, requires, condition);
-			}
-		}
+			if(requires == null)
+				return condition;
 
-		protected override Forum OnGet(ICondition condition, string scope, object state)
-		{
-			//调用基类同名方法
-			var forum = base.OnGet(condition, scope, state);
-
-			if(forum == null)
-				return null;
-
-			//获取当前论坛的版主集
-			forum.Moderators = this.GetModerators(forum.SiteId, forum.ForumId);
-
-			return forum;
+			if(condition == null)
+				return requires;
+			else
+				return ConditionCollection.And(condition, requires);
 		}
 		#endregion
 

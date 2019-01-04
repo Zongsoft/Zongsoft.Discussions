@@ -24,80 +24,38 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class FeedbackConditional : Zongsoft.Data.Conditional
+	public interface FeedbackConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Subject", "ContactName", "ContactText")]
-		public string Key
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Key);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Key, value);
-			}
+			get; set;
 		}
 
-		public byte? Kind
+		byte? Kind
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Kind);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Kind, value);
-			}
+			get; set;
 		}
 
-		public string Subject
+		string Subject
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Subject);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Subject, value);
-			}
+			get; set;
 		}
 
-		public string ContactName
+		string ContactName
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ContactName);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ContactName, value);
-			}
+			get; set;
 		}
 
-		public string ContactText
+		string ContactText
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ContactText);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ContactText, value);
-			}
+			get; set;
 		}
 
-		public ConditionalRange<DateTime> CreatedTime
+		Range<DateTime> CreatedTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CreatedTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatedTime, value);
-			}
+			get; set;
 		}
 		#endregion
 	}

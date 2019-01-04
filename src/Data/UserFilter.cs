@@ -39,7 +39,7 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 重写方法
-		protected override void OnDeleting(DataDeleteContext context)
+		protected override void OnDeleting(DataDeleteContextBase context)
 		{
 			if(string.Equals(context.Name, context.DataAccess.Naming.Get<User>(), StringComparison.OrdinalIgnoreCase))
 				context.States[DELETED_RESULTS] = context.DataAccess.Select<User>(context.Name, context.Condition, Paging.Disable).ToArray();
@@ -47,7 +47,7 @@ namespace Zongsoft.Community.Data
 				context.States[DELETED_RESULTS] = context.DataAccess.Select<Models.UserProfile>(context.Name, context.Condition, Paging.Disable).ToArray();
 		}
 
-		protected override void OnDeleted(DataDeleteContext context)
+		protected override void OnDeleted(DataDeleteContextBase context)
 		{
 			if(context.States.TryGetValue(DELETED_RESULTS, out var items))
 				this.OnDeleted(items as IEnumerable);

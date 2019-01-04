@@ -23,57 +23,29 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class UserProfileConditional : Zongsoft.Data.Conditional
+	public interface UserProfileConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("User.Name", "User.PhoneNumber", "User.Email", "User.FullName")]
-		public string Key
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Key);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Key, value);
-			}
+			get; set;
 		}
 
-		public uint? SiteId
+		uint? SiteId
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.SiteId);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.SiteId, value);
-			}
+			get; set;
 		}
 
 		[Conditional("User.Name", "User.PhoneNumber", "User.Email")]
-		public string Identity
+		string Identity
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Identity);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Identity, value);
-			}
+			get; set;
 		}
 
-		public Gender? Gender
+		Gender? Gender
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Gender);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Gender, value);
-			}
+			get; set;
 		}
 		#endregion
 	}

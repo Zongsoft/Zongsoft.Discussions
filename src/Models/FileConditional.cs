@@ -23,105 +23,49 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public class FileConditional : Zongsoft.Data.Conditional
+	public interface FileConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Name", "Description")]
-		public string Key
+		string Key
 		{
-			get
-			{
-				return this.GetPropertyValue<string>(nameof(Key));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Key), value);
-			}
+			get; set;
 		}
 
-		public ulong? FileId
+		ulong? FileId
 		{
-			get
-			{
-				return this.GetPropertyValue<ulong?>(nameof(FileId));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(FileId), value);
-			}
+			get; set;
 		}
 
 		[Conditional("Name")]
-		public string Name
+		string Name
 		{
-			get
-			{
-				return this.GetPropertyValue<string>(nameof(Name));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Name), value);
-			}
+			get; set;
 		}
 
-		public string Type
+		string Type
 		{
-			get
-			{
-				return this.GetPropertyValue<string>(nameof(Type));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Type), value);
-			}
+			get; set;
 		}
 
-		public ConditionalRange<uint> Size
+		Range<uint> Size
 		{
-			get
-			{
-				return this.GetPropertyValue<ConditionalRange<uint>>(nameof(Size));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Size), value);
-			}
+			get; set;
 		}
 
-		public uint? FolderId
+		uint? FolderId
 		{
-			get
-			{
-				return this.GetPropertyValue<uint?>(nameof(FolderId));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(FolderId), value);
-			}
+			get; set;
 		}
 
-		public uint? CreatorId
+		uint? CreatorId
 		{
-			get
-			{
-				return this.GetPropertyValue<uint?>(nameof(CreatorId));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(CreatorId), value);
-			}
+			get; set;
 		}
 
-		public ConditionalRange<DateTime> CreatedTime
+		Range<DateTime> CreatedTime
 		{
-			get
-			{
-				return this.GetPropertyValue<ConditionalRange<DateTime>>(nameof(CreatedTime));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(CreatedTime), value);
-			}
+			get; set;
 		}
 		#endregion
 	}

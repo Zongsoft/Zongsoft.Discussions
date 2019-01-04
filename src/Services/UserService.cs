@@ -28,7 +28,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	public class UserService : ServiceBase<UserProfile>
+	public class UserService : DataService<UserProfile>
 	{
 		#region 成员字段
 		private string _basePath;
@@ -78,7 +78,7 @@ namespace Zongsoft.Community.Services
 		public IEnumerable<History> GetHistories(uint userId, Paging paging = null)
 		{
 			if(userId == 0)
-				userId = this.EnsureCredential().UserId;
+				userId = this.Credential.UserId;
 
 			return this.DataAccess.Select<History>(Condition.Equal("UserId", userId), "Thread", paging);
 		}
@@ -86,7 +86,7 @@ namespace Zongsoft.Community.Services
 		public int GetMessageTotalCount(uint userId = 0)
 		{
 			if(userId == 0)
-				userId = this.EnsureCredential().UserId;
+				userId = this.Credential.UserId;
 
 			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId));
 		}
@@ -94,7 +94,7 @@ namespace Zongsoft.Community.Services
 		public int GetMessageUnreadCount(uint userId = 0)
 		{
 			if(userId == 0)
-				userId = this.EnsureCredential().UserId;
+				userId = this.Credential.UserId;
 
 			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
 		}
@@ -102,7 +102,7 @@ namespace Zongsoft.Community.Services
 		public IEnumerable<Message> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
 		{
 			if(userId == 0)
-				userId = this.EnsureCredential().UserId;
+				userId = this.Credential.UserId;
 
 			var conditions = ConditionCollection.And(Condition.Equal("UserId", userId));
 
@@ -129,13 +129,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override UserProfile OnGet(ICondition condition, string scope, object state)
+		protected override UserProfile OnGet(ICondition condition, string schema, object state)
 		{
-			if(string.IsNullOrWhiteSpace(scope))
-				scope = "User";
-
 			//调用基类同名方法
-			var profile = base.OnGet(condition, scope, state);
+			var profile = base.OnGet(condition, schema, state);
 
 			if(profile == null)
 				return null;
@@ -146,15 +143,10 @@ namespace Zongsoft.Community.Services
 			return profile;
 		}
 
-		protected override int OnDelete(ICondition condition, string[] cascades, object state)
-		{
-			throw new NotSupportedException("Not supporte the delete user operation.");
-		}
-
-		protected override int OnInsert(DataDictionary<UserProfile> data, string scope, object state)
+		protected override int OnInsert(IDataDictionary<UserProfile> data, string schema, object state)
 		{
 			//获取用户导航属性值
-			data.TryGet(p => p.User, (key, user) =>
+			data.TryGetValue(p => p.User, (key, user) =>
 			{
 				//默认设置用户状态为可用
 				user.Status = UserStatus.Active;
@@ -162,7 +154,7 @@ namespace Zongsoft.Community.Services
 				//如果未显式指定用户的命名空间，则使用当前用户的命名空间
 				if(string.IsNullOrWhiteSpace(user.Namespace))
 				{
-					user.Namespace = this.EnsureCredential().User.Namespace;
+					user.Namespace = this.Credential.User.Namespace;
 				}
 
 				//创建基础用户账户
@@ -170,21 +162,21 @@ namespace Zongsoft.Community.Services
 					throw new InvalidOperationException($"The '{user.Name}' user create failed.");
 
 				//更新用户编号
-				data.Set(p => p.UserId, user.UserId);
+				data.SetValue(p => p.UserId, user.UserId);
 			});
 
 			//调用基类同名方法（新增用户配置信息）
-			return base.OnInsert(data, scope, state);
+			return base.OnInsert(data, schema, state);
 		}
 
-		protected override int OnUpdate(DataDictionary<UserProfile> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(IDataDictionary<UserProfile> data, ICondition condition, string schema, object state)
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号
-			if(!data.TryGet(p => p.UserId, out var userId) || userId == 0)
-				data.Set(p => p.UserId, userId = this.EnsureCredential().UserId);
+			if(!data.TryGetValue(p => p.UserId, out var userId) || userId == 0)
+				data.SetValue(p => p.UserId, userId = this.Credential.UserId);
 
 			//获取用户导航属性值
-			User user = data.Get(p => p.User, null);
+			User user = data.GetValue(p => p.User, null);
 
 			if(user != null && user.HasChanges())
 			{
@@ -197,7 +189,7 @@ namespace Zongsoft.Community.Services
 			}
 
 			//调用基类同名方法
-			return base.OnUpdate(data, condition, scope, state);
+			return base.OnUpdate(data, condition, schema, state);
 		}
 		#endregion
 

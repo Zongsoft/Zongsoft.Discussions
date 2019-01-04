@@ -23,13 +23,9 @@
 	</extension>
 
 	<extension path="/Workbench/Data/Accessors">
-		<object name="Community" type="Zongsoft.Data.DataAccess, Zongsoft.Data">
+		<object name="Community">
 			<object name="Filters" value="{path:../@Filters}" />
 		</object>
-	</extension>
-
-	<extension path="/Workbench/Data">
-		<accessors.default>{path:./Community}</accessors.default>
 	</extension>
 
 	<extension path="/Workbench/Data/Accessors/Community/Filters">
@@ -60,8 +56,8 @@
 	</extension>
 
 	<extension path="/Workspace/Services/Community">
+		<object name="Data" value="{path:/Workbench/Data/Accessors/Community}" />
 		<object name="Configuration" value="{opt:/Community/General}" />
-		<object name="DataAccess" value="{path:/Workbench/Data/Accessors/Community}" />
 
 		<object name="FileService" type="Zongsoft.Community.Services.FileService, Zongsoft.Community" />
 		<object name="FolderService" type="Zongsoft.Community.Services.FolderService, Zongsoft.Community" />

@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("Community:FolderId", 100000)]
 	[DataSearchKey("Key:Name")]
-	public class FolderService : ServiceBase<Folder>
+	public class FolderService : DataService<Folder>
 	{
 		#region 构造函数
 		public FolderService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -79,64 +79,23 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Folder OnGet(ICondition condition, string scope, object state)
-		{
-			if(string.IsNullOrWhiteSpace(scope))
-				scope = "Creator, Creator.User";
-
-			//调用基类同名方法
-			var folder = base.OnGet(condition, scope, state);
-
-			if(folder == null)
-				return null;
-
-			return folder;
-		}
-
-		protected override int OnInsert(DataDictionary<Folder> data, string scope, object state)
+		protected override int OnUpdate(IDataDictionary<Folder> data, ICondition condition, string schema, object state)
         {
             using(var transaction = new Transactions.Transaction())
             {
                 //调用基类同名方法
-                var count = base.OnInsert(data, scope, state);
+                var count = base.OnUpdate(data, condition, schema, state);
 
                 if(count < 1)
                     return count;
 
                 //获取新增的文件夹用户集，并尝试插入该用户集
-                data.TryGet(p => p.Users, (key, users) =>
+                data.TryGetValue(p => p.Users, (key, users) =>
                 {
                     if(users == null)
                         return;
 
-                    this.DataAccess.InsertMany(users);
-                });
-
-                //提交事务
-                transaction.Commit();
-
-                //返回主表插入的记录数
-                return count;
-            }
-		}
-
-		protected override int OnUpdate(DataDictionary<Folder> data, ICondition condition, string scope, object state)
-        {
-            using(var transaction = new Transactions.Transaction())
-            {
-                //调用基类同名方法
-                var count = base.OnUpdate(data, condition, scope, state);
-
-                if(count < 1)
-                    return count;
-
-                //获取新增的文件夹用户集，并尝试插入该用户集
-                data.TryGet(p => p.Users, (key, users) =>
-                {
-                    if(users == null)
-                        return;
-
-					var folderId = data.Get(p => p.FolderId);
+					var folderId = data.GetValue(p => p.FolderId);
 
                     //首先清除该文件夹的所有用户集
                     this.DataAccess.Delete<Folder.FolderUser>(Condition.Equal("FolderId", folderId));

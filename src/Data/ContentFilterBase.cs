@@ -47,12 +47,12 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 重写方法
-		protected override void OnDeleting(DataDeleteContext context)
+		protected override void OnDeleting(DataDeleteContextBase context)
 		{
 			context.States[DELETED_RESULTS] = context.DataAccess.Select<TEntity>(context.Name, context.Condition, _scope, Paging.Disable).ToArray();
 		}
 
-		protected override void OnDeleted(DataDeleteContext context)
+		protected override void OnDeleted(DataDeleteContextBase context)
 		{
 			if(context.States.TryGetValue(DELETED_RESULTS, out var items))
 				this.OnDeleted(items as IEnumerable);

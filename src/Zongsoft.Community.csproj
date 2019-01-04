@@ -86,7 +86,7 @@
     <Compile Include="Services\ForumService.cs" />
     <Compile Include="Services\ForumGroupService.cs" />
     <Compile Include="Services\MessageService.cs" />
-    <Compile Include="Services\ServiceBase.cs" />
+    <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>

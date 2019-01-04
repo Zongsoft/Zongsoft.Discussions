@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("ThreadId", 100000)]
 	[DataSearchKey("Key:Subject")]
-	public class ThreadService : ServiceBase<Thread>
+	public class ThreadService : DataService<Thread>
 	{
 		#region 成员字段
 		private PostService _posting;
@@ -92,13 +92,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Thread OnGet(ICondition condition, string scope, object state)
+		protected override Thread OnGet(ICondition condition, string schema, object state)
 		{
-			if(string.IsNullOrWhiteSpace(scope))
-				scope = "Creator, Creator.User, Post, Post.Attachments, Post.Comments, Post.Votes";
-
 			//调用基类同名方法
-			var thread = base.OnGet(condition, scope, state);
+			var thread = base.OnGet(condition, schema, state);
 
 			if(thread == null)
 				return null;
@@ -138,38 +135,9 @@ namespace Zongsoft.Community.Services
 			return thread;
 		}
 
-		protected override IEnumerable<Thread> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
+		protected override int OnInsert(IDataDictionary<Thread> data, string schema, object state)
 		{
-			if(string.IsNullOrWhiteSpace(scope))
-				scope = "Creator, Creator.User";
-
-			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings, state);
-		}
-
-		protected override int OnDelete(ICondition condition, string[] cascades, object state)
-		{
-			var ids = this.DataAccess.Select<Thread>(this.Name, condition, Paging.Disable).Select(p => p.ThreadId).ToArray();
-
-			using(var transaction = new Zongsoft.Transactions.Transaction())
-			{
-				//调用基类同名方法
-				var count = base.OnDelete(condition, cascades, state);
-
-				if(count > 0)
-					this.DataAccess.Delete<Post>(Condition.In("ThreadId", ids));
-
-				//提交事务
-				transaction.Commit();
-
-				//返回被删除的主题记录数
-				return count;
-			}
-		}
-
-		protected override int OnInsert(DataDictionary<Thread> data, string scope, object state)
-		{
-			var post = data.Get(p => p.Post, null);
+			var post = data.GetValue(p => p.Post, null);
 
 			if(post == null || string.IsNullOrEmpty(post.Content))
 				throw new InvalidOperationException("Missing content of the thread.");
@@ -177,19 +145,19 @@ namespace Zongsoft.Community.Services
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
 				//设置主题内容贴编号为零
-				data.Set(p => p.PostId, (ulong)0);
+				data.SetValue(p => p.PostId, (ulong)0);
 
 				//调用基类同名方法，插入主题数据
-				var count = base.OnInsert(data, scope, state);
+				var count = base.OnInsert(data, schema, state);
 
 				if(count < 1)
 					return count;
 
 				//更新主题内容贴的相关属性
-				post.ThreadId = data.Get(p => p.ThreadId);
-				post.SiteId = data.Get(p => p.SiteId);
-				post.CreatorId = data.Get(p => p.CreatorId);
-				post.CreatedTime = data.Get(p => p.CreatedTime);
+				post.ThreadId = data.GetValue(p => p.ThreadId);
+				post.SiteId = data.GetValue(p => p.SiteId);
+				post.CreatorId = data.GetValue(p => p.CreatorId);
+				post.CreatedTime = data.GetValue(p => p.CreatedTime);
 
 				//通过帖子服务来新增主题的内容贴
 				count = this.Posting.Insert(post, data);
@@ -200,12 +168,12 @@ namespace Zongsoft.Community.Services
 					//更新新增主题的内容帖子编号
 					this.DataAccess.Update(this.Name, new
 					{
-						ThreadId = data.Get(p => p.ThreadId),
+						ThreadId = data.GetValue(p => p.ThreadId),
 						PostId = post.PostId,
 					});
 
 					//更新主题数据字典中的内容帖子编号
-					data.Set(p => p.PostId, post.PostId);
+					data.SetValue(p => p.PostId, post.PostId);
 
 					//更新发帖人关联的主题统计信息
 					this.SetMostRecentThread(data);
@@ -218,27 +186,27 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Thread> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(IDataDictionary<Thread> data, ICondition condition, string schema, object state)
 		{
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, scope, state);
+			var count = base.OnUpdate(data, condition, schema, state);
 
 			//获取要更新的主题内容贴
-			var post = data.Get(p => p.Post, null);
+			var post = data.GetValue(p => p.Post, null);
 
 			if(post != null)
 			{
 				if(post.PostId == 0)
 				{
 					//优先从主题实体中获取对应的内容贴编号
-					if(data.TryGet(p => p.PostId, out var postId) && postId != 0)
+					if(data.TryGetValue(p => p.PostId, out var postId) && postId != 0)
 					{
 						post.PostId = postId;
 					}
 					else
 					{
 						//获取修改主题对应的主题对象
-						var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", data.Get(p => p.ThreadId)), "!, ThreadId, PostId").FirstOrDefault();
+						var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", data.GetValue(p => p.ThreadId)), "!, ThreadId, PostId").FirstOrDefault();
 
 						if(thread == null)
 							return count;
@@ -256,37 +224,37 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 私有方法
-		private bool SetMostRecentThread(DataDictionary<Thread> data)
+		private bool SetMostRecentThread(IDataDictionary<Thread> data)
 		{
 			if(data == null)
 				return false;
 
-			var userId = data.Get(p => p.CreatorId);
-			var user = Utility.GetUser(userId, this.EnsureCredential());
+			var userId = data.GetValue(p => p.CreatorId);
+			var user = Utility.GetUser(userId, this.Credential);
 			var count = 0;
 
 			//更新当前主题所属论坛的最后发帖信息
 			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Forum>(), new
 			{
-				SiteId = data.Get(p => p.SiteId),
-				ForumId = data.Get(p => p.ForumId),
-				MostRecentThreadId = data.Get(p => p.ThreadId),
-				MostRecentThreadSubject = data.Get(p => p.Subject),
-				MostRecentThreadTime = data.Get(p => p.CreatedTime),
+				SiteId = data.GetValue(p => p.SiteId),
+				ForumId = data.GetValue(p => p.ForumId),
+				MostRecentThreadId = data.GetValue(p => p.ThreadId),
+				MostRecentThreadSubject = data.GetValue(p => p.Subject),
+				MostRecentThreadTime = data.GetValue(p => p.CreatedTime),
 				MostRecentThreadAuthorId = userId,
 				MostRecentThreadAuthorName = user?.FullName,
 				MostRecentThreadAuthorAvatar = user?.Avatar,
 			});
 
 			//递增当前发帖人的累计主题数，并且更新发帖人的最后发表的主题信息
-			if(this.DataAccess.Increment<UserProfile>("TotalThreads", Condition.Equal("UserId", data.Get(p => p.CreatorId))) > 0)
+			if(this.DataAccess.Increment<UserProfile>("TotalThreads", Condition.Equal("UserId", data.GetValue(p => p.CreatorId))) > 0)
 			{
 				count += this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
 				{
-					UserId = data.Get(p => p.CreatorId),
-					MostRecentThreadId = data.Get(p => p.ThreadId),
-					MostRecentThreadSubject = data.Get(p => p.Subject),
-					MostRecentThreadTime = data.Get(p => p.CreatedTime),
+					UserId = data.GetValue(p => p.CreatorId),
+					MostRecentThreadId = data.GetValue(p => p.ThreadId),
+					MostRecentThreadSubject = data.GetValue(p => p.Subject),
+					MostRecentThreadTime = data.GetValue(p => p.CreatedTime),
 				});
 			}
 
@@ -295,7 +263,7 @@ namespace Zongsoft.Community.Services
 
 		private void SetHistory(ulong threadId)
 		{
-			var credential = this.EnsureCredential(false);
+			var credential = this.Credential;
 
 			if(credential == null || credential.IsEmpty)
 				return;

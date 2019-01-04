@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("MessageId", 100000)]
 	[DataSearchKey("Status:Stauts", "Creator,CreatorId:CreatorId", "Key:Subject")]
-	public class MessageService : ServiceBase<Message>
+	public class MessageService : DataService<Message>
 	{
 		#region 构造函数
 		public MessageService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -49,13 +49,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Message OnGet(ICondition condition, string scope, object state)
+		protected override Message OnGet(ICondition condition, string schema, object state)
 		{
-			if(string.IsNullOrWhiteSpace(scope))
-				scope = "Creator, Creator.User";
-
 			//调用基类同名方法
-			var message = base.OnGet(condition, scope, state);
+			var message = base.OnGet(condition, schema, state);
 
 			if(message == null)
 				return null;
@@ -65,7 +62,7 @@ namespace Zongsoft.Community.Services
 				message.Content = Utility.ReadTextFile(message.Content);
 
 			//获取当前用户的凭证
-			var credential = this.EnsureCredential(false);
+			var credential = this.Credential;
 
 			if(credential != null && credential.CredentialId != null && credential.CredentialId.Length > 0)
 			{
@@ -79,46 +76,37 @@ namespace Zongsoft.Community.Services
 			return message;
 		}
 
-		protected override IEnumerable<Message> OnSelect(ICondition condition, string scope, Paging paging, Sorting[] sortings, object state)
-		{
-			if(string.IsNullOrWhiteSpace(scope))
-				scope = "Creator, Creator.User";
-
-			//调用基类同名方法
-			return base.OnSelect(condition, scope, paging, sortings, state);
-		}
-
-		protected override int OnInsert(DataDictionary<Message> data, string scope, object state)
+		protected override int OnInsert(IDataDictionary<Message> data, string schema, object state)
 		{
 			string filePath = null;
 
 			//获取原始的内容类型
-			var rawType = data.Get(p => p.ContentType, null);
+			var rawType = data.GetValue(p => p.ContentType, null);
 
 			//调整内容类型为嵌入格式
-			data.Set(p => p.ContentType, Utility.GetContentType(rawType, true));
+			data.SetValue(p => p.ContentType, Utility.GetContentType(rawType, true));
 
-			data.TryGet(p => p.Content, (key, value) =>
+			data.TryGetValue(p => p.Content, (key, value) =>
 			{
 				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
 					return;
 
 				//设置内容文件的存储路径
-				filePath = this.GetContentFilePath(data.Get(p => p.MessageId), data.Get(p => p.ContentType));
+				filePath = this.GetContentFilePath(data.GetValue(p => p.MessageId), data.GetValue(p => p.ContentType));
 
 				//将内容文本写入到文件中
 				Utility.WriteTextFile(filePath, value);
 
 				//更新内容文件的存储路径
-				data.Set(p => p.Content, filePath);
+				data.SetValue(p => p.Content, filePath);
 
 				//更新内容类型为非嵌入格式（即外部文件）
-				data.Set(p => p.ContentType, Utility.GetContentType(data.Get(p => p.ContentType), false));
+				data.SetValue(p => p.ContentType, Utility.GetContentType(data.GetValue(p => p.ContentType), false));
 			});
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				var count = base.OnInsert(data, scope, state);
+				var count = base.OnInsert(data, schema, state);
 
 				if(count < 1)
 				{
@@ -129,7 +117,7 @@ namespace Zongsoft.Community.Services
 					return count;
 				}
 
-				data.TryGet(p => p.Users, (key, users) =>
+				data.TryGetValue(p => p.Users, (key, users) =>
 				{
 					if(users == null)
 						return;
@@ -140,7 +128,7 @@ namespace Zongsoft.Community.Services
 							yield return new Message.MessageUser(messageId, member.UserId);
 					}
 
-					this.DataAccess.InsertMany(GetMembers(data.Get(p => p.MessageId), users));
+					this.DataAccess.InsertMany(GetMembers(data.GetValue(p => p.MessageId), users));
 				});
 
 				//提交事务
@@ -150,29 +138,29 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(DataDictionary<Message> data, ICondition condition, string scope, object state)
+		protected override int OnUpdate(IDataDictionary<Message> data, ICondition condition, string schema, object state)
 		{
 			//更新内容到文本文件中
-			data.TryGet(p => p.Content, (key, value) =>
+			data.TryGetValue(p => p.Content, (key, value) =>
 			{
 				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
 					return;
 
 				//根据当前反馈编号，获得其对应的内容文件存储路径
-				var filePath = this.GetContentFilePath(data.Get(p => p.MessageId), data.Get(p => p.ContentType));
+				var filePath = this.GetContentFilePath(data.GetValue(p => p.MessageId), data.GetValue(p => p.ContentType));
 
 				//将反馈内容写入到对应的存储文件中
 				Utility.WriteTextFile(filePath, value);
 
 				//更新当前反馈的内容文件存储路径属性
-				data.Set(p => p.Content, filePath);
+				data.SetValue(p => p.Content, filePath);
 
 				//更新内容类型为非嵌入格式（即外部文件）
-				data.Set(p => p.ContentType, Utility.GetContentType(data.Get(p => p.ContentType), false));
+				data.SetValue(p => p.ContentType, Utility.GetContentType(data.GetValue(p => p.ContentType), false));
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, scope, state);
+			var count = base.OnUpdate(data, condition, schema, state);
 
 			if(count < 1)
 				return count;
