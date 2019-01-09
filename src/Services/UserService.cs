@@ -129,7 +129,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override UserProfile OnGet(ICondition condition, string schema, object state)
+		protected override UserProfile OnGet(ICondition condition, ISchema schema, object state)
 		{
 			//调用基类同名方法
 			var profile = base.OnGet(condition, schema, state);
@@ -143,7 +143,7 @@ namespace Zongsoft.Community.Services
 			return profile;
 		}
 
-		protected override int OnInsert(IDataDictionary<UserProfile> data, string schema, object state)
+		protected override int OnInsert(IDataDictionary<UserProfile> data, ISchema schema, object state)
 		{
 			//获取用户导航属性值
 			data.TryGetValue(p => p.User, (key, user) =>
@@ -169,7 +169,7 @@ namespace Zongsoft.Community.Services
 			return base.OnInsert(data, schema, state);
 		}
 
-		protected override int OnUpdate(IDataDictionary<UserProfile> data, ICondition condition, string schema, object state)
+		protected override int OnUpdate(IDataDictionary<UserProfile> data, ICondition condition, ISchema schema, object state)
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号
 			if(!data.TryGetValue(p => p.UserId, out var userId) || userId == 0)

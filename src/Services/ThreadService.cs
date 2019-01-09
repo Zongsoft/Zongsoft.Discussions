@@ -92,7 +92,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Thread OnGet(ICondition condition, string schema, object state)
+		protected override Thread OnGet(ICondition condition, ISchema schema, object state)
 		{
 			//调用基类同名方法
 			var thread = base.OnGet(condition, schema, state);
@@ -135,7 +135,7 @@ namespace Zongsoft.Community.Services
 			return thread;
 		}
 
-		protected override int OnInsert(IDataDictionary<Thread> data, string schema, object state)
+		protected override int OnInsert(IDataDictionary<Thread> data, ISchema schema, object state)
 		{
 			var post = data.GetValue(p => p.Post, null);
 
@@ -186,7 +186,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<Thread> data, ICondition condition, string schema, object state)
+		protected override int OnUpdate(IDataDictionary<Thread> data, ICondition condition, ISchema schema, object state)
 		{
 			//调用基类同名方法
 			var count = base.OnUpdate(data, condition, schema, state);

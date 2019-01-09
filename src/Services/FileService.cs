@@ -46,7 +46,7 @@ namespace Zongsoft.Community.Services
         #endregion
 
         #region 重写方法
-		protected override int OnInsert(IDataDictionary<File> data, string schema, object state)
+		protected override int OnInsert(IDataDictionary<File> data, ISchema schema, object state)
 		{
 			var filePath = data.GetValue(p => p.Path);
 

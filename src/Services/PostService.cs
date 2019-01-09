@@ -114,7 +114,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Post OnGet(ICondition condition, string schema, object state)
+		protected override Post OnGet(ICondition condition, ISchema schema, object state)
 		{
 			//调用基类同名方法
 			var post = base.OnGet(condition, schema, state);
@@ -129,7 +129,7 @@ namespace Zongsoft.Community.Services
 			return post;
 		}
 
-		protected override int OnInsert(IDataDictionary<Post> data, string schema, object state)
+		protected override int OnInsert(IDataDictionary<Post> data, ISchema schema, object state)
 		{
 			string filePath = null;
 
@@ -232,7 +232,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<Post> data, ICondition condition, string schema, object state)
+		protected override int OnUpdate(IDataDictionary<Post> data, ICondition condition, ISchema schema, object state)
 		{
 			//更新内容到文本文件中
 			data.TryGetValue(p => p.Content, (key, value) =>

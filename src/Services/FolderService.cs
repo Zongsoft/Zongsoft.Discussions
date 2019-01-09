@@ -79,7 +79,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override int OnUpdate(IDataDictionary<Folder> data, ICondition condition, string schema, object state)
+		protected override int OnUpdate(IDataDictionary<Folder> data, ICondition condition, ISchema schema, object state)
         {
             using(var transaction = new Transactions.Transaction())
             {
