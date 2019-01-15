@@ -41,10 +41,9 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Users")]
-		[HttpPaging]
-		public IEnumerable<Folder.FolderUser> GetUsers(uint id, [FromRoute("args")]UserKind? kind = null, [FromUri]Paging paging = null)
+		public object GetUsers(uint id, [FromRoute("args")]UserKind? kind = null, [FromUri]Paging paging = null)
 		{
-			return this.DataService.GetUsers(id, kind, paging);
+			return this.GetResult(this.DataService.GetUsers(id, kind, paging));
 		}
 
 		[HttpPatch]

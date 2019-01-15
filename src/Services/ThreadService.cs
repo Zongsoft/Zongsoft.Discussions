@@ -92,10 +92,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Thread OnGet(ICondition condition, ISchema schema, object state)
+		protected override Thread OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
 		{
 			//调用基类同名方法
-			var thread = base.OnGet(condition, schema, state);
+			var thread = base.OnGet(condition, schema, state, out paginator);
 
 			if(thread == null)
 				return null;

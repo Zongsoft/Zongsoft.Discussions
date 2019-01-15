@@ -63,10 +63,9 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[ActionName("Threads")]
-		[HttpPaging]
-		public IEnumerable<Thread> GetThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
+		public object GetThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
 		{
-			return this.DataService.GetThreads(siteId, forumId, paging);
+			return this.GetResult(this.DataService.GetThreads(siteId, forumId, paging));
 		}
 		#endregion
 	}

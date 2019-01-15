@@ -39,10 +39,9 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Posts")]
-		[HttpPaging]
-		public IEnumerable<Post> GetPosts(ulong id, [FromUri]Paging paging = null)
+		public object GetPosts(ulong id, [FromUri]Paging paging = null)
 		{
-			return this.DataService.GetPosts(id, paging);
+			return this.GetResult(this.DataService.GetPosts(id, paging));
 		}
 		#endregion
 	}

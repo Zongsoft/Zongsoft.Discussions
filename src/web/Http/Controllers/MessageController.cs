@@ -40,10 +40,9 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Users")]
-		[HttpPaging]
-		public IEnumerable<Message.MessageUser> GetUsers(ulong id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
+		public object GetUsers(ulong id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
 		{
-			return this.DataService.GetUsers(id, isRead, paging);
+			return this.GetResult(this.DataService.GetUsers(id, isRead, paging));
 		}
 		#endregion
 	}

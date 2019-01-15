@@ -129,10 +129,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override UserProfile OnGet(ICondition condition, ISchema schema, object state)
+		protected override UserProfile OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
 		{
 			//调用基类同名方法
-			var profile = base.OnGet(condition, schema, state);
+			var profile = base.OnGet(condition, schema, state, out paginator);
 
 			if(profile == null)
 				return null;
