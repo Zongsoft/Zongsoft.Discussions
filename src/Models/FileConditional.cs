@@ -23,7 +23,7 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public interface FileConditional : IEntity
+	public interface IFileConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Name", "Description")]

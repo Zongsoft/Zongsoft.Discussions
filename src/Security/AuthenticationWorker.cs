@@ -19,11 +19,9 @@
 
 using System;
 using System.Linq;
-using System.Collections.Generic;
 
 using Zongsoft.Data;
 using Zongsoft.Services;
-using Zongsoft.Resources;
 using Zongsoft.Security.Membership;
 
 using Zongsoft.Community.Models;
@@ -110,29 +108,18 @@ namespace Zongsoft.Community.Security
 				return;
 
 			//获取当前登录用户所对应的用户配置对象
-			var userProfile = this.GetUserProfile(e.User.UserId);
-
-			//如果对应的用户配置对象没有存在则新增一个
-			if(userProfile == null)
-			{
-				uint siteId = 0;
-
-				if(uint.TryParse(e.User.PrincipalId, out siteId))
-				{
-					userProfile = new UserProfile(e.User.UserId, siteId);
-					this.DataAccess.Insert(userProfile);
-				}
-			}
+			var profile = this.GetUserProfile(e.User.UserId);
 
 			//设置当前用户的扩展属性
-			e.Parameters.Add("Community.UserProfile", userProfile);
+			if(profile != null)
+				e.Parameters.Add("Zongsoft.Community.UserProfile", profile);
 		}
 		#endregion
 
 		#region 私有方法
-		private UserProfile GetUserProfile(uint userId)
+		private IUserProfile GetUserProfile(uint userId)
 		{
-			return this.DataAccess.Select<UserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
+			return this.DataAccess.Select<IUserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
 		}
 		#endregion
 	}

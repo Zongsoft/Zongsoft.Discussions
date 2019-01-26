@@ -24,7 +24,7 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public interface FeedbackConditional : IEntity
+	public interface IFeedbackConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Subject", "ContactName", "ContactText")]

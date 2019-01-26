@@ -33,7 +33,7 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 构造函数
-		public UserFilter() : base(new DataAccessMethod[] { DataAccessMethod.Delete }, typeof(Models.UserProfile), typeof(User))
+		public UserFilter() : base(new DataAccessMethod[] { DataAccessMethod.Delete }, typeof(Models.IUserProfile), typeof(User))
 		{
 		}
 		#endregion
@@ -41,10 +41,8 @@ namespace Zongsoft.Community.Data
 		#region 重写方法
 		protected override void OnDeleting(DataDeleteContextBase context)
 		{
-			if(string.Equals(context.Name, context.DataAccess.Naming.Get<User>(), StringComparison.OrdinalIgnoreCase))
-				context.States[DELETED_RESULTS] = context.DataAccess.Select<User>(context.Name, context.Condition, Paging.Disable).ToArray();
-			else if(string.Equals(context.Name, context.DataAccess.Naming.Get<Models.UserProfile>(), StringComparison.OrdinalIgnoreCase))
-				context.States[DELETED_RESULTS] = context.DataAccess.Select<Models.UserProfile>(context.Name, context.Condition, Paging.Disable).ToArray();
+			if(string.Equals(context.Name, context.DataAccess.Naming.Get<Models.IUserProfile>(), StringComparison.OrdinalIgnoreCase))
+				context.States[DELETED_RESULTS] = context.DataAccess.Select<Models.IUserProfile>(context.Name, context.Condition, Paging.Disable).ToArray();
 		}
 
 		protected override void OnDeleted(DataDeleteContextBase context)
@@ -62,20 +60,10 @@ namespace Zongsoft.Community.Data
 
 			foreach(var item in items)
 			{
-				var user = item as User;
+				var profile = item as Models.IUserProfile;
 
-				if(user != null)
-				{
-					if(!string.IsNullOrWhiteSpace(user.Avatar))
-						Zongsoft.IO.FileSystem.File.DeleteAsync(user.Avatar);
-				}
-				else
-				{
-					var userProfile = item as Models.UserProfile;
-
-					if(userProfile != null && !string.IsNullOrWhiteSpace(userProfile.PhotoPath))
-						Zongsoft.IO.FileSystem.File.DeleteAsync(userProfile.PhotoPath);
-				}
+				if(profile != null && !string.IsNullOrWhiteSpace(profile.PhotoPath))
+					Zongsoft.IO.FileSystem.File.DeleteAsync(profile.PhotoPath);
 			}
 		}
 		#endregion

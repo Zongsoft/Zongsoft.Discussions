@@ -44,7 +44,10 @@ namespace Zongsoft.Community.Security
 		{
 			get
 			{
-				return Zongsoft.Common.Convert.ConvertValue<uint>(this.User.PrincipalId);
+				if(this.Parameters.TryGetValue("Zongsoft.Community.UserProfile", out var value) && value is Models.IUserProfile profile)
+					return profile.SiteId;
+
+				return 0;
 			}
 		}
 		#endregion

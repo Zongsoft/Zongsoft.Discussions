@@ -31,7 +31,7 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization(AuthorizationMode.Identity)]
-	public class FolderController : Zongsoft.Web.Http.HttpControllerBase<Folder, FolderConditional, FolderService>
+	public class FolderController : Zongsoft.Web.Http.HttpControllerBase<IFolder, IFolderConditional, FolderService>
 	{
 		#region 构造函数
 		public FolderController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)

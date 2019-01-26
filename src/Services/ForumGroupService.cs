@@ -37,9 +37,9 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<Forum> GetForums(uint siteId, ushort groupId)
+		public IEnumerable<IForum> GetForums(uint siteId, ushort groupId)
 		{
-			return this.DataAccess.Select<Forum>(
+			return this.DataAccess.Select<IForum>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("GroupId", groupId),
 				Paging.Disable);
 		}

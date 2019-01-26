@@ -29,7 +29,7 @@ namespace Zongsoft.Community.Data
 	public class ForumFilter : DataAccessFilterBase
 	{
 		#region 构造函数
-		public ForumFilter() : base(nameof(Forum))
+		public ForumFilter() : base(nameof(IForum))
 		{
 		}
 		#endregion
@@ -43,7 +43,7 @@ namespace Zongsoft.Community.Data
 			//设置查询结果的过滤器
 			context.ResultFilter = (ctx, item) =>
 			{
-				var forum = item as Forum;
+				var forum = item as IForum;
 
 				if(forum == null)
 					return false;
@@ -55,7 +55,7 @@ namespace Zongsoft.Community.Data
 					if(credential == null || credential.IsEmpty)
 						return false;
 
-					return context.DataAccess.Exists<Forum.ForumUser>(
+					return context.DataAccess.Exists<ForumUser>(
 						Condition.Equal("SiteId", forum.SiteId) &
 						Condition.Equal("ForumId", forum.ForumId) &
 						Condition.Equal("UserId", credential.UserId));

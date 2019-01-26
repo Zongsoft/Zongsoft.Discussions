@@ -142,7 +142,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛组中的论坛集。
 		/// </summary>
-		public IEnumerable<Forum> Forums
+		public IEnumerable<IForum> Forums
 		{
 			get
 			{

@@ -24,15 +24,9 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public interface ForumConditional : IEntity
+	public interface IForumConditional : IEntity
 	{
 		#region 公共属性
-		[Conditional("Name")]
-		string Key
-		{
-			get; set;
-		}
-
 		string Name
 		{
 			get; set;

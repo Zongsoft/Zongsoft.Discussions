@@ -39,18 +39,16 @@ namespace Zongsoft.Community.Services
 		#region 公共方法
 		public bool Upvote(ulong postId, byte value = 1)
 		{
-			var credential = this.Credential;
-
 			if(value == 0)
 				value = 1;
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				this.DataAccess.Delete<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
-				this.DataAccess.Insert(new Post.PostVoting(postId, credential.UserId, (sbyte)Math.Min(value, (byte)100))
+				this.DataAccess.Delete<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", this.User.UserId));
+				this.DataAccess.Insert(new Post.PostVoting(postId, this.User.UserId, (sbyte)Math.Min(value, (byte)100))
 				{
-					UserName = credential.User.FullName,
-					UserAvatar = credential.User.Avatar,
+					UserName = this.User.FullName,
+					UserAvatar = this.User.Avatar,
 				});
 
 				//如果帖子投票统计信息更新成功
@@ -69,18 +67,16 @@ namespace Zongsoft.Community.Services
 
 		public bool Downvote(ulong postId, byte value = 1)
 		{
-			var credential = this.Credential;
-
 			if(value == 0)
 				value = 1;
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				this.DataAccess.Delete<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", credential.UserId));
-				this.DataAccess.Insert(new Post.PostVoting(postId, credential.UserId, (sbyte)-Math.Min(value, (byte)100))
+				this.DataAccess.Delete<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", this.User.UserId));
+				this.DataAccess.Insert(new Post.PostVoting(postId, this.User.UserId, (sbyte)-Math.Min(value, (byte)100))
 				{
-					UserName = credential.User.FullName,
-					UserAvatar = credential.User.Avatar,
+					UserName = this.User.FullName,
+					UserAvatar = this.User.Avatar,
 				});
 
 				//如果帖子投票统计信息更新成功
@@ -172,7 +168,7 @@ namespace Zongsoft.Community.Services
 				}
 				else
 				{
-					var forum = this.DataAccess.Select<Forum>(Condition.Equal("SiteId", thread.GetValue(p => p.SiteId)) & Condition.Equal("ForumId", thread.GetValue(p => p.ForumId))).FirstOrDefault();
+					var forum = this.DataAccess.Select<IForum>(Condition.Equal("SiteId", thread.GetValue(p => p.SiteId)) & Condition.Equal("ForumId", thread.GetValue(p => p.ForumId))).FirstOrDefault();
 
 					if(forum == null)
 						throw new InvalidOperationException("The specified forum is not existed about the new thread.");
@@ -323,7 +319,7 @@ namespace Zongsoft.Community.Services
 				return false;
 
 			var userId = data.GetValue(p => p.CreatorId);
-			var user = Utility.GetUser(userId, this.Credential);
+			var user = this.DataAccess.Select<IUserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
 			var count = 0;
 
 			//更新当前帖子所属主题的最后回帖信息
@@ -338,7 +334,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//更新当前帖子所属论坛的最后回帖信息
-			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Forum>(), new
+			count += this.DataAccess.Update(this.DataAccess.Naming.Get<IForum>(), new
 			{
 				SiteId = thread.SiteId,
 				ForumId = thread.ForumId,
@@ -350,9 +346,9 @@ namespace Zongsoft.Community.Services
 			});
 
 			//递增当前发帖人的累计回帖数，并且更新发帖人的最后回帖信息
-			if(this.DataAccess.Increment<UserProfile>("TotalPosts", Condition.Equal("UserId", data.GetValue(p => p.CreatorId))) > 0)
+			if(this.DataAccess.Increment<IUserProfile>("TotalPosts", Condition.Equal("UserId", data.GetValue(p => p.CreatorId))) > 0)
 			{
-				count += this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
+				count += this.DataAccess.Update(this.DataAccess.Naming.Get<IUserProfile>(), new
 				{
 					UserId = data.GetValue(p => p.CreatorId),
 					MostRecentPostId = data.GetValue(p => p.PostId),

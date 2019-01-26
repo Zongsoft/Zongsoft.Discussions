@@ -27,7 +27,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("Community:FileId", 100000)]
 	[DataSearchKey("Key:Name")]
-	public class FileService : DataService<File>
+	public class FileService : DataService<IFile>
 	{
 		#region 构造函数
 		public FileService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -46,7 +46,7 @@ namespace Zongsoft.Community.Services
         #endregion
 
         #region 重写方法
-		protected override int OnInsert(IDataDictionary<File> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<IFile> data, ISchema schema, object state)
 		{
 			var filePath = data.GetValue(p => p.Path);
 

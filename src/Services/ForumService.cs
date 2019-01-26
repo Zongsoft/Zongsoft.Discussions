@@ -29,7 +29,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("SiteId, ForumId", 101)]
 	[DataSearchKey("Key:Name")]
-	public class ForumService : DataService<Forum>
+	public class ForumService : DataService<IForum>
 	{
 		#region 成员字段
 		private ICache _cache;
@@ -65,14 +65,14 @@ namespace Zongsoft.Community.Services
 			if(userId == null)
 				userId = this.Credential?.UserId;
 
-			return this.DataAccess.Exists<Forum.ForumUser>(
+			return this.DataAccess.Exists<ForumUser>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) &
 				Condition.Equal("UserId", userId) & Condition.Equal("UserKind", UserKind.Administrator));
 		}
 
-		public IEnumerable<UserProfile> GetModerators(uint siteId, ushort forumId)
+		public IEnumerable<IUserProfile> GetModerators(uint siteId, ushort forumId)
 		{
-			return this.DataAccess.Select<Forum.ForumUser>(
+			return this.DataAccess.Select<ForumUser>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("UserKind", UserKind.Administrator),
 				"User, User.User", Paging.Disable).Select(p => p.User);
 		}

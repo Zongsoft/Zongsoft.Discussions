@@ -23,10 +23,10 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public interface UserProfileConditional : IEntity
+	public interface IUserProfileConditional : IEntity
 	{
 		#region 公共属性
-		[Conditional("User.Name", "User.PhoneNumber", "User.Email", "User.FullName")]
+		[Conditional("Name", "PhoneNumber", "Email", "FullName")]
 		string Key
 		{
 			get; set;
@@ -37,7 +37,7 @@ namespace Zongsoft.Community.Models
 			get; set;
 		}
 
-		[Conditional("User.Name", "User.PhoneNumber", "User.Email")]
+		[Conditional("Name", "PhoneNumber", "Email")]
 		string Identity
 		{
 			get; set;

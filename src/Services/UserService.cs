@@ -28,7 +28,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	public class UserService : DataService<UserProfile>
+	public class UserService : DataService<IUserProfile>
 	{
 		#region 成员字段
 		private string _basePath;
@@ -129,7 +129,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override UserProfile OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
+		protected override IUserProfile OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
 		{
 			//调用基类同名方法
 			var profile = base.OnGet(condition, schema, state, out paginator);
@@ -137,17 +137,16 @@ namespace Zongsoft.Community.Services
 			if(profile == null)
 				return null;
 
-			if(profile.User == null)
-				profile.User = this.UserProvider.GetUser(profile.UserId);
-
 			return profile;
 		}
 
-		protected override int OnInsert(IDataDictionary<UserProfile> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<IUserProfile> data, ISchema schema, object state)
 		{
-			//获取用户导航属性值
-			data.TryGetValue(p => p.User, (key, user) =>
+			//调用基类同名方法（新增用户配置信息）
+			if(base.OnInsert(data, schema, state) > 0)
 			{
+				var user = new User(data.GetValue(p => p.UserId), data.GetValue(p => p.Name));
+
 				//默认设置用户状态为可用
 				user.Status = UserStatus.Active;
 
@@ -163,30 +162,16 @@ namespace Zongsoft.Community.Services
 
 				//更新用户编号
 				data.SetValue(p => p.UserId, user.UserId);
-			});
+			}
 
-			//调用基类同名方法（新增用户配置信息）
-			return base.OnInsert(data, schema, state);
+			return 1;
 		}
 
-		protected override int OnUpdate(IDataDictionary<UserProfile> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<IUserProfile> data, ICondition condition, ISchema schema, object state)
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号
 			if(!data.TryGetValue(p => p.UserId, out var userId) || userId == 0)
 				data.SetValue(p => p.UserId, userId = this.Credential.UserId);
-
-			//获取用户导航属性值
-			User user = data.GetValue(p => p.User, null);
-
-			if(user != null && user.HasChanges())
-			{
-				//确认用户编号是否有效
-				if(user.UserId == 0)
-					user.UserId = userId;
-
-				//更新用户数据（注意，只更新指定范围内的字段，以免覆盖掉其他字段）
-				this.UserProvider.UpdateUsers(new[] { user }, "!, " + string.Join(",", user.GetChangedProperties().Keys));
-			}
 
 			//调用基类同名方法
 			return base.OnUpdate(data, condition, schema, state);

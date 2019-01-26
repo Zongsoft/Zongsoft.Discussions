@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("Community:FeedbackId", 100000)]
 	[DataSearchKey("Key:Subject,ContactName,ContactText")]
-	public class FeedbackService : DataService<Feedback>
+	public class FeedbackService : DataService<IFeedback>
 	{
 		#region 构造函数
 		public FeedbackService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -37,7 +37,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Feedback OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
+		protected override IFeedback OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
 		{
 			//调用基类同名方法
 			var feedback = base.OnGet(condition, schema, state, out paginator);
@@ -52,7 +52,7 @@ namespace Zongsoft.Community.Services
 			return feedback;
 		}
 
-		protected override int OnInsert(IDataDictionary<Feedback> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<IFeedback> data, ISchema schema, object state)
 		{
 			string filePath = null;
 
@@ -104,7 +104,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<Feedback> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<IFeedback> data, ICondition condition, ISchema schema, object state)
 		{
 			//更新内容到文本文件中
 			data.TryGetValue(p => p.Content, (key, value) =>

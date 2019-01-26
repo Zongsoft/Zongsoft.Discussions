@@ -25,129 +25,52 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示意见反馈的业务实体类。
 	/// </summary>
-	public class Feedback : Zongsoft.Common.ModelBase
+	public interface IFeedback : Zongsoft.Data.IEntity
 	{
-		#region 成员字段
-		private ulong _feedbackId;
-		private uint _siteId;
-		private byte _kind;
-		private DateTime _createdTime;
-		#endregion
-
-		#region 构造函数
-		public Feedback()
-		{
-			this.CreatedTime = DateTime.Now;
-		}
-		#endregion
-
 		#region 公共属性
-		public ulong FeedbackId
+		ulong FeedbackId
 		{
-			get
-			{
-				return _feedbackId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.FeedbackId, ref _feedbackId, value);
-			}
+			get; set;
 		}
 
-		public uint SiteId
+		uint SiteId
 		{
-			get
-			{
-				return _siteId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.SiteId, ref _siteId, value);
-			}
+			get; set;
 		}
 
-		public byte Kind
+		byte Kind
 		{
-			get
-			{
-				return _kind;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Kind, ref _kind, value);
-			}
+			get; set;
 		}
 
-		public string Subject
+		string Subject
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Subject);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Subject, value);
-			}
+			get; set;
 		}
 
-		public string Content
+		string Content
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Content);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Content, value);
-			}
+			get; set;
 		}
 
-		public string ContentType
+		string ContentType
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ContentType);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ContentType, value);
-			}
+			get; set;
 		}
 
-		public string ContactName
+		string ContactName
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ContactName);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ContactName, value);
-			}
+			get; set;
 		}
 
-		public string ContactText
+		string ContactText
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ContactText);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ContactText, value);
-			}
+			get; set;
 		}
 
-		public DateTime CreatedTime
+		DateTime CreatedTime
 		{
-			get
-			{
-				return _createdTime;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatedTime, ref _createdTime, value);
-			}
+			get; set;
 		}
 		#endregion
 	}

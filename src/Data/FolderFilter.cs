@@ -29,7 +29,7 @@ namespace Zongsoft.Community.Data
 	public class FolderFilter : DataAccessFilterBase
 	{
 		#region 构造函数
-		public FolderFilter() : base(nameof(Folder))
+		public FolderFilter() : base(nameof(IFolder))
 		{
 		}
 		#endregion
@@ -43,7 +43,7 @@ namespace Zongsoft.Community.Data
 			//设置查询结果的过滤器
 			context.ResultFilter = (ctx, item) =>
 			{
-				var folder = item as Folder;
+				var folder = item as IFolder;
 
 				if(folder == null)
 					return false;
@@ -55,7 +55,7 @@ namespace Zongsoft.Community.Data
 					if(credential == null || credential.IsEmpty)
 						return false;
 
-					return context.DataAccess.Exists<Folder.FolderUser>(
+					return context.DataAccess.Exists<FolderUser>(
 						Condition.Equal("FolderId", folder.FolderId) &
 						Condition.Equal("UserId", credential.UserId));
 				}

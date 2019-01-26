@@ -176,7 +176,7 @@ namespace Zongsoft.Community.Models
 			}
 		}
 
-		public UserProfile Creator
+		public IUserProfile Creator
 		{
 			get
 			{
@@ -261,7 +261,7 @@ namespace Zongsoft.Community.Models
 				set;
 			}
 
-			public UserProfile User
+			public IUserProfile User
 			{
 				get;
 				set;

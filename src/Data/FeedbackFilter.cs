@@ -23,16 +23,16 @@ using System.Collections;
 
 namespace Zongsoft.Community.Data
 {
-	public class FeedbackFilter : ContentFilterBase<Models.Feedback>
+	public class FeedbackFilter : ContentFilterBase<Models.IFeedback>
 	{
 		#region 构造函数
-		public FeedbackFilter() : base(nameof(Models.Feedback), "FeedbackId, Content, ContentType")
+		public FeedbackFilter() : base(nameof(Models.IFeedback), "FeedbackId, Content, ContentType")
 		{
 		}
 		#endregion
 
 		#region 重写方法
-		protected override void DeleteContentFile(Models.Feedback entity)
+		protected override void DeleteContentFile(Models.IFeedback entity)
 		{
 			if(!Utility.IsContentEmbedded(entity.ContentType))
 				Utility.DeleteFile(entity.Content);

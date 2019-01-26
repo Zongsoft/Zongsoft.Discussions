@@ -293,7 +293,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子作者对应的用户对象。
 		/// </summary>
-		public UserProfile Creator
+		public IUserProfile Creator
 		{
 			get
 			{
@@ -388,7 +388,7 @@ namespace Zongsoft.Community.Models
 			private string _visitorAddress;
 			private string _visitorDescription;
 			private uint _creatorId;
-			private UserProfile _creator;
+			private IUserProfile _creator;
 			private DateTime _createdTime;
 			#endregion
 
@@ -522,7 +522,7 @@ namespace Zongsoft.Community.Models
 			/// <summary>
 			/// 获取或设置回复人对象。
 			/// </summary>
-			public UserProfile Creator
+			public IUserProfile Creator
 			{
 				get
 				{
@@ -559,7 +559,7 @@ namespace Zongsoft.Community.Models
 			#region 成员字段
 			private ulong _postId;
 			private uint _userId;
-			private UserProfile _user;
+			private IUserProfile _user;
 			private string _userName;
 			private string _userAvatar;
 			private sbyte _value;
@@ -615,7 +615,7 @@ namespace Zongsoft.Community.Models
 			/// <summary>
 			/// 获取或设置投票的用户对象。
 			/// </summary>
-			public UserProfile User
+			public IUserProfile User
 			{
 				get
 				{
@@ -697,7 +697,7 @@ namespace Zongsoft.Community.Models
 			#region 成员字段
 			private ulong _postId;
 			private ulong _fileId;
-			private File _file;
+			private IFile _file;
 			#endregion
 
 			#region 构造函数
@@ -746,7 +746,7 @@ namespace Zongsoft.Community.Models
 			/// <summary>
 			/// 获取或设置帖子的文件对象。
 			/// </summary>
-			public File File
+			public IFile File
 			{
 				get
 				{

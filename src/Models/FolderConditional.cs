@@ -23,7 +23,7 @@ using Zongsoft.Data;
 
 namespace Zongsoft.Community.Models
 {
-	public interface FolderConditional : IEntity
+	public interface IFolderConditional : IEntity
 	{
 		#region 公共属性
 		[Conditional("Name", "PinYin")]

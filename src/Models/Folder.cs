@@ -25,157 +25,87 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示文件夹的业务实体类。
 	/// </summary>
-	public class Folder : Zongsoft.Common.ModelBase
+	public interface IFolder : Zongsoft.Data.IEntity
 	{
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置文件夹编号。
 		/// </summary>
-		public uint FolderId
+		uint FolderId
 		{
-			get
-			{
-				return this.GetPropertyValue<uint>(nameof(FolderId));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(FolderId), value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置文件夹名称。
 		/// </summary>
-		public string Name
+		string Name
 		{
-			get
-			{
-				return this.GetPropertyValue<string>(nameof(Name));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Name), value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置名称的拼音。
 		/// </summary>
-		public string PinYin
+		string PinYin
 		{
-			get
-			{
-				return this.GetPropertyValue<string>(nameof(PinYin));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(PinYin), value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置图标名。
 		/// </summary>
-		public string Icon
+		string Icon
 		{
-			get
-			{
-				return this.GetPropertyValue<string>(nameof(Icon));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Icon), value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置所属站点编号。
 		/// </summary>
-		public uint SiteId
+		uint SiteId
 		{
-			get
-			{
-				return this.GetPropertyValue<uint>(nameof(SiteId));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(SiteId), value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置可见性。
 		/// </summary>
-		public Visiblity Visiblity
+		Visiblity Visiblity
 		{
-			get
-			{
-				return this.GetPropertyValue<Visiblity>(nameof(Visiblity));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Visiblity), value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置可访问性。
 		/// </summary>
-		public Accessibility Accessibility
+		Accessibility Accessibility
 		{
-			get
-			{
-				return this.GetPropertyValue<Accessibility>(nameof(Accessibility));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Accessibility), value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置创建人编号。
 		/// </summary>
-		public uint CreatorId
+		uint CreatorId
 		{
-			get
-			{
-				return this.GetPropertyValue<uint>(nameof(CreatorId));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(CreatorId), value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置创建人对象。
 		/// </summary>
-		public UserProfile Creator
+		IUserProfile Creator
 		{
-			get
-			{
-				return this.GetPropertyValue<UserProfile>(nameof(Creator));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Creator), value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置创建时间。
 		/// </summary>
-		public DateTime CreatedTime
+		DateTime CreatedTime
 		{
-			get
-			{
-				return this.GetPropertyValue<DateTime>(nameof(CreatedTime));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(CreatedTime), value);
-			}
+			get; set;
 		}
 		#endregion
 
@@ -183,78 +113,34 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置文件夹指定用户集合。
 		/// </summary>
-		public IEnumerable<FolderUser> Users
+		IEnumerable<FolderUser> Users
 		{
-			get
-			{
-				return this.GetPropertyValue<ICollection<FolderUser>>(nameof(Users));
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Users), value);
-			}
+			get; set;
 		}
 		#endregion
+	}
 
-		#region 嵌套子类
-		public class FolderUser
+	public struct FolderUser
+	{
+		#region 公共属性
+		public uint FolderId
 		{
-			#region 成员字段
-			private uint _folderId;
-			private uint _userId;
-			private UserKind _userKind;
-			private UserProfile _user;
-			#endregion
+			get; set;
+		}
 
-			#region 公共属性
-			public uint FolderId
-			{
-				get
-				{
-					return _folderId;
-				}
-				set
-				{
-					_folderId = value;
-				}
-			}
+		public uint UserId
+		{
+			get; set;
+		}
 
-			public uint UserId
-			{
-				get
-				{
-					return _userId;
-				}
-				set
-				{
-					_userId = value;
-				}
-			}
+		public IUserProfile User
+		{
+			get; set;
+		}
 
-			public UserProfile User
-			{
-				get
-				{
-					return _user;
-				}
-				set
-				{
-					_user = value;
-				}
-			}
-
-			public UserKind UserKind
-			{
-				get
-				{
-					return _userKind;
-				}
-				set
-				{
-					_userKind = value;
-				}
-			}
-			#endregion
+		public UserKind UserKind
+		{
+			get; set;
 		}
 		#endregion
 	}

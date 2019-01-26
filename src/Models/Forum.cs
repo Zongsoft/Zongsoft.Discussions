@@ -25,573 +25,297 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示论坛的业务实体类。
 	/// </summary>
-	public class Forum : Zongsoft.Common.ModelBase
+	public interface IForum : Zongsoft.Data.IEntity
 	{
-		#region 成员字段
-		private uint _siteId;
-		private ushort _forumId;
-		private ushort _groupId;
-		private ushort _sortOrder;
-		private bool _isPopular;
-		private uint _totalPosts;
-		private uint _totalThreads;
-		private ulong? _mostRecentThreadId;
-		private uint? _mostRecentThreadAuthorId;
-		private ulong? _mostRecentPostId;
-		private uint? _mostRecentPostAuthorId;
-		private Visiblity _visiblity;
-		private Accessibility _accessibility;
-		private uint _creatorId;
-		private DateTime _createdTime;
-		#endregion
-
-		#region 构造函数
-		public Forum()
-		{
-			this.Visiblity = Visiblity.Public;
-			this.Accessibility = Accessibility.None;
-			this.CreatedTime = DateTime.Now;
-		}
-		#endregion
-
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置站点编号，主键。
 		/// </summary>
-		public uint SiteId
+		uint SiteId
 		{
-			get
-			{
-				return _siteId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.SiteId, ref _siteId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛编号，主键。
 		/// </summary>
-		public ushort ForumId
+		ushort ForumId
 		{
-			get
-			{
-				return _forumId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ForumId, ref _forumId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛所属的组号。
 		/// </summary>
-		public ushort GroupId
+		ushort GroupId
 		{
-			get
-			{
-				return _groupId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.GroupId, ref _groupId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛所属的 <see cref="ForumGroup"/> 分组对象。
 		/// </summary>
-		public ForumGroup Group
+		ForumGroup Group
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Group);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Group, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛所在分组中的排列序号。
 		/// </summary>
-		public ushort SortOrder
+		ushort SortOrder
 		{
-			get
-			{
-				return _sortOrder;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.SortOrder, ref _sortOrder, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛的名称(标题)。
 		/// </summary>
-		public string Name
+		string Name
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Name);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Name, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛的描述文本。
 		/// </summary>
-		public string Description
+		string Description
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Description);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Description, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛的封面图片路径。
 		/// </summary>
-		public string CoverPicturePath
+		string CoverPicturePath
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CoverPicturePath);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CoverPicturePath, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取论坛封面图片的外部访问地址。
 		/// </summary>
-		public string CoverPictureUrl
+		[Zongsoft.Data.Entity.Property(Zongsoft.Data.Entity.PropertyImplementationMode.Extension, typeof(ForumExtension))]
+		string CoverPictureUrl
 		{
-			get
-			{
-				return Zongsoft.IO.FileSystem.GetUrl(this.CoverPicturePath);
-			}
+			get;
 		}
 
 		/// <summary>
 		/// 获取或设置一个值，表示论坛是否为热门版块。
 		/// </summary>
-		public bool IsPopular
+		bool IsPopular
 		{
-			get
-			{
-				return _isPopular;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsPopular, ref _isPopular, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置一个值，表示发帖是否需要审核。
 		/// </summary>
-		public bool ApproveEnabled
+		bool ApproveEnabled
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ApproveEnabled);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ApproveEnabled, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛的可见性。
 		/// </summary>
-		public Visiblity Visiblity
+		Visiblity Visiblity
 		{
-			get
-			{
-				return _visiblity;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Visiblity, ref _visiblity, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛的可访问性。
 		/// </summary>
-		public Accessibility Accessibility
+		Accessibility Accessibility
 		{
-			get
-			{
-				return _accessibility;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Accessibility, ref _accessibility, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中的累计帖子总数。
 		/// </summary>
-		public uint TotalPosts
+		uint TotalPosts
 		{
-			get
-			{
-				return _totalPosts;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TotalPosts, ref _totalPosts, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中的累积主题总数。
 		/// </summary>
-		public uint TotalThreads
+		uint TotalThreads
 		{
-			get
-			{
-				return _totalThreads;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TotalThreads, ref _totalThreads, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中最新主题的编号。
 		/// </summary>
-		public ulong? MostRecentThreadId
+		ulong? MostRecentThreadId
 		{
-			get
-			{
-				return _mostRecentThreadId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentThreadId, ref _mostRecentThreadId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中最新主题的标题。
 		/// </summary>
-		public string MostRecentThreadSubject
+		string MostRecentThreadSubject
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MostRecentThreadSubject);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentThreadSubject, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中最新主题的作者编号。
 		/// </summary>
-		public uint? MostRecentThreadAuthorId
+		uint? MostRecentThreadAuthorId
 		{
-			get
-			{
-				return _mostRecentThreadAuthorId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentThreadAuthorId, ref _mostRecentThreadAuthorId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中最新主题的作者名称。
 		/// </summary>
-		public string MostRecentThreadAuthorName
+		string MostRecentThreadAuthorName
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MostRecentThreadAuthorName);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentThreadAuthorName, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中最新主题的作者头像。
 		/// </summary>
-		public string MostRecentThreadAuthorAvatar
+		string MostRecentThreadAuthorAvatar
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MostRecentThreadAuthorAvatar);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentThreadAuthorAvatar, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中最新主题的发布时间。
 		/// </summary>
-		public DateTime? MostRecentThreadTime
+		DateTime? MostRecentThreadTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MostRecentThreadTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentThreadTime, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的最后回帖编号。
 		/// </summary>
-		public ulong? MostRecentPostId
+		ulong? MostRecentPostId
 		{
-			get
-			{
-				return _mostRecentPostId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentPostId, ref _mostRecentPostId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中最后回帖的作者编号。
 		/// </summary>
-		public uint? MostRecentPostAuthorId
+		uint? MostRecentPostAuthorId
 		{
-			get
-			{
-				return _mostRecentPostAuthorId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentPostAuthorId, ref _mostRecentPostAuthorId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中最后回帖的作者名称。
 		/// </summary>
-		public string MostRecentPostAuthorName
+		string MostRecentPostAuthorName
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MostRecentPostAuthorName);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentPostAuthorName, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中最后回帖的作者头像。
 		/// </summary>
-		public string MostRecentPostAuthorAvatar
+		string MostRecentPostAuthorAvatar
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MostRecentPostAuthorAvatar);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentPostAuthorAvatar, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛中最后回帖的时间。
 		/// </summary>
-		public DateTime? MostRecentPostTime
+		DateTime? MostRecentPostTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MostRecentPostTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentPostTime, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛创建人编号。
 		/// </summary>
-		public uint CreatorId
+		uint CreatorId
 		{
-			get
-			{
-				return _creatorId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatorId, ref _creatorId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛的创建时间。
 		/// </summary>
-		public DateTime CreatedTime
+		DateTime CreatedTime
 		{
-			get
-			{
-				return _createdTime;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatedTime, ref _createdTime, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛的版主集。
 		/// </summary>
-		public IEnumerable<UserProfile> Moderators
+		IEnumerable<IUserProfile> Moderators
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Moderators);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Moderators, value);
-			}
+			get; set;
 		}
 		#endregion
+	}
 
-		#region 嵌套子类
+	/// <summary>
+	/// 表示论坛用户的业务实体类。
+	/// </summary>
+	public class ForumUser
+	{
+		#region 公共属性
 		/// <summary>
-		/// 表示论坛用户的业务实体类。
+		/// 获取或设置站点编号。
 		/// </summary>
-		public class ForumUser
+		public uint SiteId
 		{
-			#region 成员字段
-			private uint _siteId;
-			private ushort _forumId;
-			private uint _userId;
-			private UserProfile _user;
-			private UserKind _userKind;
-			#endregion
+			get; set;
+		}
 
-			#region 构造函数
-			public ForumUser()
-			{
-			}
+		/// <summary>
+		/// 获取或设置论坛编号。
+		/// </summary>
+		public ushort ForumId
+		{
+			get; set;
+		}
 
-			public ForumUser(uint siteId, ushort forumId, uint userId, UserKind userKind)
-			{
-				_siteId = siteId;
-				_forumId = forumId;
-				_userId = userId;
-				_userKind = userKind;
-			}
-			#endregion
+		/// <summary>
+		/// 获取或设置用户编号。
+		/// </summary>
+		public uint UserId
+		{
+			get; set;
+		}
 
-			#region 公共属性
-			/// <summary>
-			/// 获取或设置站点编号。
-			/// </summary>
-			public uint SiteId
-			{
-				get
-				{
-					return _siteId;
-				}
-				set
-				{
-					_siteId = value;
-				}
-			}
+		/// <summary>
+		/// 获取或设置用户信息。
+		/// </summary>
+		public IUserProfile User
+		{
+			get; set;
+		}
 
-			/// <summary>
-			/// 获取或设置论坛编号。
-			/// </summary>
-			public ushort ForumId
-			{
-				get
-				{
-					return _forumId;
-				}
-				set
-				{
-					_forumId = value;
-				}
-			}
-
-			/// <summary>
-			/// 获取或设置用户编号。
-			/// </summary>
-			public uint UserId
-			{
-				get
-				{
-					return _userId;
-				}
-				set
-				{
-					_userId = value;
-				}
-			}
-
-			/// <summary>
-			/// 获取或设置用户信息。
-			/// </summary>
-			public UserProfile User
-			{
-				get
-				{
-					return _user;
-				}
-				set
-				{
-					_user = value;
-				}
-			}
-
-			/// <summary>
-			/// 获取或设置当前论坛用户的所属种类。
-			/// </summary>
-			public UserKind UserKind
-			{
-				get
-				{
-					return _userKind;
-				}
-				set
-				{
-					_userKind = value;
-				}
-			}
-			#endregion
+		/// <summary>
+		/// 获取或设置当前论坛用户的所属种类。
+		/// </summary>
+		public UserKind UserKind
+		{
+			get; set;
 		}
 		#endregion
+	}
+
+	internal static class ForumExtension
+	{
+		public static string GetCoverPictureUrl(IForum forum)
+		{
+			return Zongsoft.IO.FileSystem.GetUrl(forum.CoverPicturePath);
+		}
 	}
 }

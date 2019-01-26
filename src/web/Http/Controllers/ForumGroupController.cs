@@ -39,7 +39,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Forums")]
-		public IEnumerable<Forum> GetForums([FromRoute("id")]uint siteId, [FromRoute("id")]ushort groupId)
+		public IEnumerable<IForum> GetForums([FromRoute("id")]uint siteId, [FromRoute("id")]ushort groupId)
 		{
 			return this.DataService.GetForums(siteId, groupId);
 		}

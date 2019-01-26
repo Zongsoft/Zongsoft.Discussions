@@ -105,7 +105,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题所属的论坛对象。
 		/// </summary>
-		public Forum Forum
+		public IForum Forum
 		{
 			get
 			{
@@ -550,7 +550,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的作者。
 		/// </summary>
-		public UserProfile Creator
+		public IUserProfile Creator
 		{
 			get
 			{

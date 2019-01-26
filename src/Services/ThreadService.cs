@@ -230,11 +230,11 @@ namespace Zongsoft.Community.Services
 				return false;
 
 			var userId = data.GetValue(p => p.CreatorId);
-			var user = Utility.GetUser(userId, this.Credential);
+			var user = this.DataAccess.Select<IUserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
 			var count = 0;
 
 			//更新当前主题所属论坛的最后发帖信息
-			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Forum>(), new
+			count += this.DataAccess.Update(this.DataAccess.Naming.Get<IForum>(), new
 			{
 				SiteId = data.GetValue(p => p.SiteId),
 				ForumId = data.GetValue(p => p.ForumId),
@@ -247,9 +247,9 @@ namespace Zongsoft.Community.Services
 			});
 
 			//递增当前发帖人的累计主题数，并且更新发帖人的最后发表的主题信息
-			if(this.DataAccess.Increment<UserProfile>("TotalThreads", Condition.Equal("UserId", data.GetValue(p => p.CreatorId))) > 0)
+			if(this.DataAccess.Increment<IUserProfile>("TotalThreads", Condition.Equal("UserId", data.GetValue(p => p.CreatorId))) > 0)
 			{
-				count += this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
+				count += this.DataAccess.Update(this.DataAccess.Naming.Get<IUserProfile>(), new
 				{
 					UserId = data.GetValue(p => p.CreatorId),
 					MostRecentThreadId = data.GetValue(p => p.ThreadId),

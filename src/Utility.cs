@@ -186,7 +186,10 @@ namespace Zongsoft.Community
 						userId = principal.Identity.Credential.UserId;
 
 					if(siteId == 0)
-						uint.TryParse(principal.Identity.Credential.User.PrincipalId, out siteId);
+					{
+						if(principal.Identity.Credential.Parameters.TryGetValue("Zongsoft.Community.UserProfile", out var value) && value is Models.IUserProfile profile)
+							siteId = profile.SiteId;
+					}
 				}
 			}
 
@@ -204,22 +207,6 @@ namespace Zongsoft.Community
 				else
 					return Zongsoft.IO.Path.Combine(basePath, "site-" + siteId.ToString(), "user-" + userId.ToString(), relativePath);
 			}
-		}
-
-		public static User GetUser(uint userId, Credential credential)
-		{
-			if(userId == 0)
-				return null;
-
-			if(credential != null && credential.UserId == userId)
-				return credential.User;
-
-			var userProvider = ServiceProviderFactory.Instance.Default.Resolve<IUserProvider>();
-
-			if(userProvider != null)
-				return userProvider.GetUser(userId);
-
-			return null;
 		}
 	}
 }
