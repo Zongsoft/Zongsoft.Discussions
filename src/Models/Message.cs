@@ -20,259 +20,185 @@
 using System;
 using System.Collections.Generic;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
 	/// 表示消息的业务实体类。
 	/// </summary>
-	public class Message : Zongsoft.Common.ModelBase
+	public interface IMessage : Zongsoft.Data.IEntity
 	{
-		#region 成员字段
-		private ulong _messageId;
-		private uint _siteId;
-		private MessageStatus _status;
-		private DateTime? _statusTimestamp;
-		private uint? _creatorId;
-		private DateTime _createdTime;
-		#endregion
-
-		#region 构造函数
-		public Message()
-		{
-			this.CreatedTime = DateTime.Now;
-		}
-		#endregion
-
 		#region 公共属性
-		public ulong MessageId
+		ulong MessageId
 		{
-			get
-			{
-				return _messageId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MessageId, ref _messageId, value);
-			}
+			get; set;
 		}
 
-		public uint SiteId
+		uint SiteId
 		{
-			get
-			{
-				return _siteId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.SiteId, ref _siteId, value);
-			}
+			get; set;
 		}
 
-		public string Subject
+		string Subject
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Subject);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Subject, value);
-			}
+			get; set;
 		}
 
-		public string Content
+		string Content
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Content);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Content, value);
-			}
+			get; set;
 		}
 
-		public string ContentType
+		string ContentType
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ContentType);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ContentType, value);
-			}
+			get; set;
 		}
 
-		public string MessageType
+		string MessageType
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MessageType);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MessageType, value);
-			}
+			get; set;
 		}
 
-		public string Source
+		string Source
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Source);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Source, value);
-			}
+			get; set;
 		}
 
-		public MessageStatus Status
+		MessageStatus Status
 		{
-			get
-			{
-				return _status;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Status, ref _status, value);
-			}
+			get; set;
 		}
 
-		public DateTime? StatusTimestamp
+		DateTime? StatusTimestamp
 		{
-			get
-			{
-				return _statusTimestamp;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.StatusTimestamp, ref _statusTimestamp, value);
-			}
+			get; set;
 		}
 
-		public string StatusDescription
+		string StatusDescription
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.StatusDescription);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.StatusDescription, value);
-			}
+			get; set;
 		}
 
-		public uint? CreatorId
+		uint? CreatorId
 		{
-			get
-			{
-				return _creatorId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatorId, ref _creatorId, value);
-			}
+			get; set;
 		}
 
-		public IUserProfile Creator
+		IUserProfile Creator
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Creator);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Creator, value);
-			}
+			get; set;
 		}
 
-		public DateTime CreatedTime
+		DateTime CreatedTime
 		{
-			get
-			{
-				return _createdTime;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CreatedTime, ref _createdTime, value);
-			}
+			get; set;
 		}
 		#endregion
 
 		#region 关联属性
-		public IEnumerable<MessageUser> Users
+		IEnumerable<MessageUser> Users
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Users);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Users, value);
-			}
+			get; set;
+		}
+		#endregion
+	}
+
+	public interface IMessageConditional : IEntity
+	{
+		#region 公共属性
+		string Subject
+		{
+			get; set;
+		}
+
+		string MessageType
+		{
+			get; set;
+		}
+
+		string Source
+		{
+			get; set;
+		}
+
+		MessageStatus? Status
+		{
+			get; set;
+		}
+
+		Range<DateTime> StatusTimestamp
+		{
+			get; set;
+		}
+
+		uint? CreatorId
+		{
+			get; set;
+		}
+
+		Range<DateTime> CreatedTime
+		{
+			get; set;
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// 表示消息接受人的业务实体类。
+	/// </summary>
+	public struct MessageUser
+	{
+		#region 构造函数
+		public MessageUser(ulong messageId, uint userId, bool isRead = false)
+		{
+			this.MessageId = messageId;
+			this.UserId = userId;
+			this.IsRead = isRead;
+
+			this.User = null;
+			this.Message = null;
+		}
+
+		public MessageUser(uint userId)
+		{
+			this.MessageId = 0;
+			this.UserId = userId;
+			this.IsRead = false;
+
+			this.User = null;
+			this.Message = null;
 		}
 		#endregion
 
-		#region 嵌套子类
-		/// <summary>
-		/// 表示消息接受人的业务实体类。
-		/// </summary>
-		public struct MessageUser
+		public ulong MessageId
 		{
-			#region 构造函数
-			public MessageUser(ulong messageId, uint userId, bool isRead = false)
-			{
-				this.MessageId = messageId;
-				this.UserId = userId;
-				this.IsRead = isRead;
-
-				this.User = null;
-				this.Message = null;
-			}
-
-			public MessageUser(uint userId)
-			{
-				this.MessageId = 0;
-				this.UserId = userId;
-				this.IsRead = false;
-
-				this.User = null;
-				this.Message = null;
-			}
-			#endregion
-
-			public ulong MessageId
-			{
-				get;
-				set;
-			}
-
-			public Message Message
-			{
-				get;
-				set;
-			}
-
-			public uint UserId
-			{
-				get;
-				set;
-			}
-
-			public IUserProfile User
-			{
-				get;
-				set;
-			}
-
-			public bool IsRead
-			{
-				get;
-				set;
-			}
+			get;
+			set;
 		}
-		#endregion
+
+		public IMessage Message
+		{
+			get;
+			set;
+		}
+
+		public uint UserId
+		{
+			get;
+			set;
+		}
+
+		public IUserProfile User
+		{
+			get;
+			set;
+		}
+
+		public bool IsRead
+		{
+			get;
+			set;
+		}
 	}
 }

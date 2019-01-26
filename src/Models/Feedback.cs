@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
@@ -69,6 +71,42 @@ namespace Zongsoft.Community.Models
 		}
 
 		DateTime CreatedTime
+		{
+			get; set;
+		}
+		#endregion
+	}
+
+	public interface IFeedbackConditional : IEntity
+	{
+		#region 公共属性
+		[Conditional("Subject", "ContactName", "ContactText")]
+		string Key
+		{
+			get; set;
+		}
+
+		byte? Kind
+		{
+			get; set;
+		}
+
+		string Subject
+		{
+			get; set;
+		}
+
+		string ContactName
+		{
+			get; set;
+		}
+
+		string ContactText
+		{
+			get; set;
+		}
+
+		Range<DateTime> CreatedTime
 		{
 			get; set;
 		}

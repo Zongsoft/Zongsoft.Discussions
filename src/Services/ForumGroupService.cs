@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("SiteId, GroupId", 101)]
 	[DataSearchKey("Key:Name")]
-	public class ForumGroupService : DataService<ForumGroup>
+	public class ForumGroupService : DataService<IForumGroup>
 	{
 		#region 构造函数
 		public ForumGroupService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)

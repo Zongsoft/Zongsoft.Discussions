@@ -19,6 +19,8 @@
 
 using System;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
@@ -128,6 +130,53 @@ namespace Zongsoft.Community.Models
 		/// 获取或设置描述信息。
 		/// </summary>
 		string Description
+		{
+			get; set;
+		}
+		#endregion
+	}
+
+	public interface IFileConditional : IEntity
+	{
+		#region 公共属性
+		[Conditional("Name", "Description")]
+		string Key
+		{
+			get; set;
+		}
+
+		ulong? FileId
+		{
+			get; set;
+		}
+
+		[Conditional("Name")]
+		string Name
+		{
+			get; set;
+		}
+
+		string Type
+		{
+			get; set;
+		}
+
+		Range<uint> Size
+		{
+			get; set;
+		}
+
+		uint? FolderId
+		{
+			get; set;
+		}
+
+		uint? CreatorId
+		{
+			get; set;
+		}
+
+		Range<DateTime> CreatedTime
 		{
 			get; set;
 		}

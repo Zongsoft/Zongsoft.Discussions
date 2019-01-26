@@ -23,16 +23,16 @@ using System.Collections;
 
 namespace Zongsoft.Community.Data
 {
-	public class PostFilter : ContentFilterBase<Models.Post>
+	public class PostFilter : ContentFilterBase<Models.IPost>
 	{
 		#region 构造函数
-		public PostFilter() : base(nameof(Models.Post), "PostId, Content, ContentType")
+		public PostFilter() : base(nameof(Models.IPost), "PostId, Content, ContentType")
 		{
 		}
 		#endregion
 
 		#region 重写方法
-		protected override void DeleteContentFile(Models.Post entity)
+		protected override void DeleteContentFile(Models.IPost entity)
 		{
 			if(!Utility.IsContentEmbedded(entity.ContentType))
 				Utility.DeleteFile(entity.Content);

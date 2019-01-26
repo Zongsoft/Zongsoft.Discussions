@@ -25,7 +25,7 @@ namespace Zongsoft.Community.Models.Statistics
 	/// <summary>
 	/// 表示按状态分组统计结果的实体类。
 	/// </summary>
-	public class StatusStatisticResult<TStatus> where TStatus : struct
+	public struct StatusStatisticResult<TStatus> where TStatus : struct
 	{
 		public TStatus Status
 		{

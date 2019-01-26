@@ -42,7 +42,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Histories")]
-		public IEnumerable<History> GetHistories(uint id, [FromRoute("args")]Paging paging = null)
+		public IEnumerable<IHistory> GetHistories(uint id, [FromRoute("args")]Paging paging = null)
 		{
 			return this.DataService.GetHistories(id, paging);
 		}

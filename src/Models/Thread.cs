@@ -20,562 +20,369 @@
 using System;
 using System.Collections.Generic;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
 	/// 表示主题的业务实体类。
 	/// </summary>
-	public class Thread : Zongsoft.Common.ModelBase
+	public interface IThread : Zongsoft.Data.IEntity
 	{
-		#region 成员字段
-		private ulong _threadId;
-		private uint _siteId;
-		private ushort _forumId;
-		private ulong _postId;
-		private string _tags;
-		private ThreadStatus _status;
-		private DateTime? _statusTimestamp;
-		private bool _disabled;
-		private bool _visible;
-		private bool _isApproved;
-		private bool _isLocked;
-		private bool _isPinned;
-		private bool _isValued;
-		private bool _isGlobal;
-		private uint _totalViews;
-		private uint _totalReplies;
-		private ulong? _mostRecentPostId;
-		private uint? _mostRecentPostAuthorId;
-		private uint _creatorId;
-		private DateTime _createdTime;
-		#endregion
-
-		#region 构造函数
-		public Thread()
-		{
-		}
-		#endregion
-
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置主题编号，主键。
 		/// </summary>
-		public ulong ThreadId
+		ulong ThreadId
 		{
-			get
-			{
-				return _threadId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ThreadId, ref _threadId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题所属的站点编号。
 		/// </summary>
-		public uint SiteId
+		uint SiteId
 		{
-			get
-			{
-				return _siteId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.SiteId, ref _siteId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题所属的论坛编号。
 		/// </summary>
-		public ushort ForumId
+		ushort ForumId
 		{
-			get
-			{
-				return _forumId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ForumId, ref _forumId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题所属的论坛对象。
 		/// </summary>
-		public IForum Forum
+		IForum Forum
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Forum);
-			}
-			set{
-				this.SetPropertyValue(() => this.Forum, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的标题。
 		/// </summary>
-		public string Subject
+		string Subject
 		{
-			get
-			{
-				return this.GetPropertyValue(() => Subject);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Subject, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的内容摘要。
 		/// </summary>
-		public string Summary
+		string Summary
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Summary);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Summary, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的标签集。
 		/// </summary>
-		public string Tags
+		string Tags
 		{
-			get
-			{
-				return _tags;
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Tags), ref _tags, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的内容帖子编号。
 		/// </summary>
-		public ulong PostId
+		ulong PostId
 		{
-			get
-			{
-				return _postId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.PostId, ref _postId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的内容帖子对象。
 		/// </summary>
-		public Post Post
+		IPost Post
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Post);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Post, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的封面图片路径。
 		/// </summary>
-		public string CoverPicturePath
+		string CoverPicturePath
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.CoverPicturePath);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.CoverPicturePath, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取主体的封面图片的访问地址。
 		/// </summary>
-		public string CoverPictureUrl
+		[Entity.Property(Entity.PropertyImplementationMode.Extension, typeof(ThreadExtension))]
+		string CoverPictureUrl
 		{
-			get
-			{
-				return Zongsoft.IO.FileSystem.GetUrl(this.CoverPicturePath);
-			}
+			get;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的链接地址。
 		/// </summary>
-		public string LinkUrl
+		string LinkUrl
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.LinkUrl);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.LinkUrl, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的状态。
 		/// </summary>
-		public ThreadStatus Status
+		ThreadStatus Status
 		{
-			get
-			{
-				return _status;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Status, ref _status, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的状态变更时间。
 		/// </summary>
-		public DateTime? StatusTimestamp
+		DateTime? StatusTimestamp
 		{
-			get
-			{
-				return _statusTimestamp;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.StatusTimestamp, ref _statusTimestamp, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的状态描述文本。
 		/// </summary>
-		public string StatusDescription
+		string StatusDescription
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.StatusDescription);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.StatusDescription, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题是否被禁用，如果禁用则不显示。
 		/// </summary>
-		public bool Disabled
+		bool Disabled
 		{
-			get
-			{
-				return _disabled;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Disabled, ref _disabled, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题是否可见。
 		/// </summary>
-		public bool Visible
+		bool Visible
 		{
-			get
-			{
-				return _visible;
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Visible), ref _visible, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题是否已经审核通过。
 		/// </summary>
-		public bool IsApproved
+		bool IsApproved
 		{
-			get
-			{
-				return _isApproved;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsApproved, ref _isApproved, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题是否被锁定，如果锁定则不允许回复。
 		/// </summary>
-		public bool IsLocked
+		bool IsLocked
 		{
-			get
-			{
-				return _isLocked;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsLocked, ref _isLocked, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题是否置顶。
 		/// </summary>
-		public bool IsPinned
+		bool IsPinned
 		{
-			get
-			{
-				return _isPinned;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsPinned, ref _isPinned, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题是否为精华帖。
 		/// </summary>
-		public bool IsValued
+		bool IsValued
 		{
-			get
-			{
-				return _isValued;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsValued, ref _isValued, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题是否为全局贴。
 		/// </summary>
-		public bool IsGlobal
+		bool IsGlobal
 		{
-			get
-			{
-				return _isGlobal;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.IsGlobal, ref _isGlobal, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的累计浏览总数。
 		/// </summary>
-		public uint TotalViews
+		uint TotalViews
 		{
-			get
-			{
-				return _totalViews;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TotalViews, ref _totalViews, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的回帖总数。
 		/// </summary>
-		public uint TotalReplies
+		uint TotalReplies
 		{
-			get
-			{
-				return _totalReplies;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.TotalReplies, ref _totalReplies, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的置顶时间。
 		/// </summary>
-		public DateTime? PinnedTime
+		DateTime? PinnedTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.PinnedTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.PinnedTime, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的全局发布的时间。
 		/// </summary>
-		public DateTime? GlobalTime
+		DateTime? GlobalTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.GlobalTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.GlobalTime, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置最后被阅读的时间。
 		/// </summary>
-		public DateTime? ViewedTime
+		DateTime? ViewedTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.ViewedTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ViewedTime, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的最后回帖编号。
 		/// </summary>
-		public ulong? MostRecentPostId
+		ulong? MostRecentPostId
 		{
-			get
-			{
-				return _mostRecentPostId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentPostId, ref _mostRecentPostId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的最后回帖作者编号。
 		/// </summary>
-		public uint? MostRecentPostAuthorId
+		uint? MostRecentPostAuthorId
 		{
-			get
-			{
-				return _mostRecentPostAuthorId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentPostAuthorId, ref _mostRecentPostAuthorId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的最后回帖作者名称。
 		/// </summary>
-		public string MostRecentPostAuthorName
+		string MostRecentPostAuthorName
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MostRecentPostAuthorName);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentPostAuthorName, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的最后回帖作者头像。
 		/// </summary>
-		public string MostRecentPostAuthorAvatar
+		string MostRecentPostAuthorAvatar
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MostRecentPostAuthorAvatar);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentPostAuthorAvatar, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的最后回帖时间。
 		/// </summary>
-		public DateTime? MostRecentPostTime
+		DateTime? MostRecentPostTime
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.MostRecentPostTime);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentPostTime, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的作者编号。
 		/// </summary>
-		public uint CreatorId
+		uint CreatorId
 		{
-			get
-			{
-				return _creatorId;
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(CreatorId), ref _creatorId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的作者。
 		/// </summary>
-		public IUserProfile Creator
+		IUserProfile Creator
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Creator);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Creator, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置主题的创建时间。
 		/// </summary>
-		public DateTime CreatedTime
+		DateTime CreatedTime
 		{
-			get
-			{
-				return _createdTime;
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(CreatedTime), ref _createdTime, value);
-			}
+			get; set;
 		}
 		#endregion
+	}
+
+	public interface IThreadConditional : IEntity
+	{
+		#region 公共属性
+		string Subject
+		{
+			get; set;
+		}
+
+		ThreadStatus? Status
+		{
+			get; set;
+		}
+
+		Range<DateTime> StatusTimestamp
+		{
+			get; set;
+		}
+
+		bool? Disabled
+		{
+			get; set;
+		}
+
+		bool? Visible
+		{
+			get; set;
+		}
+
+		bool? IsApproved
+		{
+			get; set;
+		}
+
+		bool? IsLocked
+		{
+			get; set;
+		}
+
+		bool? IsPinned
+		{
+			get; set;
+		}
+
+		bool? IsValued
+		{
+			get; set;
+		}
+
+		bool? IsGlobal
+		{
+			get; set;
+		}
+
+		uint? CreatorId
+		{
+			get; set;
+		}
+
+		Range<DateTime> CreatedTime
+		{
+			get; set;
+		}
+		#endregion
+	}
+
+	internal static class ThreadExtension
+	{
+		public static string GetCoverPictureUrl(IThread thread)
+		{
+			return Zongsoft.IO.FileSystem.GetUrl(thread.CoverPicturePath);
+		}
 	}
 }

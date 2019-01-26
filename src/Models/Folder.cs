@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
@@ -114,6 +116,43 @@ namespace Zongsoft.Community.Models
 		/// 获取或设置文件夹指定用户集合。
 		/// </summary>
 		IEnumerable<FolderUser> Users
+		{
+			get; set;
+		}
+		#endregion
+	}
+
+	public interface IFolderConditional : IEntity
+	{
+		#region 公共属性
+		[Conditional("Name", "PinYin")]
+		string Key
+		{
+			get; set;
+		}
+
+		[Conditional("Name", "PinYin")]
+		string Name
+		{
+			get; set;
+		}
+
+		Visiblity? Visiblity
+		{
+			get; set;
+		}
+
+		Accessibility? Accessibility
+		{
+			get; set;
+		}
+
+		uint? CreatorId
+		{
+			get; set;
+		}
+
+		Range<DateTime> CreatedTime
 		{
 			get; set;
 		}

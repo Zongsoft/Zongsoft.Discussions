@@ -25,122 +25,55 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示用户浏览记录的实体类。
 	/// </summary>
-	public class History : Zongsoft.Common.ModelBase
+	public interface IHistory : Zongsoft.Data.IEntity
 	{
-		#region 成员字段
-		private uint _userId;
-		private ulong _threadId;
-		private Thread _thread;
-		private uint _count;
-		private DateTime _firstViewedTime;
-		private DateTime _mostRecentViewedTime;
-		#endregion
-
-		#region 构造函数
-		public History()
-		{
-			this.Count = 1;
-			this.FirstViewedTime = this.MostRecentViewedTime = DateTime.Now;
-		}
-
-		public History(uint userId, ulong threadId)
-		{
-			this.UserId = userId;
-			this.ThreadId = threadId;
-			this.Count = 1;
-			this.FirstViewedTime = this.MostRecentViewedTime = DateTime.Now;
-		}
-		#endregion
-
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置用户的编号。
 		/// </summary>
-		public uint UserId
+		uint UserId
 		{
-			get
-			{
-				return _userId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.UserId, ref _userId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置浏览的主题编号。
 		/// </summary>
-		public ulong ThreadId
+		ulong ThreadId
 		{
-			get
-			{
-				return _threadId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.ThreadId, ref _threadId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置浏览的主题对象。
 		/// </summary>
-		public Thread Thread
+		IThread Thread
 		{
-			get
-			{
-				return _thread;
-			}
-			set
-			{
-				this.SetPropertyValue(nameof(Thread), ref _thread, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置累计浏览次数。
 		/// </summary>
-		public uint Count
+		uint Count
 		{
-			get
-			{
-				return _count;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Count, ref _count, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置首次浏览的时间。
 		/// </summary>
-		public DateTime FirstViewedTime
+		DateTime FirstViewedTime
 		{
-			get
-			{
-				return _firstViewedTime;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.FirstViewedTime, ref _firstViewedTime, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置最后浏览的时间。
 		/// </summary>
-		public DateTime MostRecentViewedTime
+		DateTime MostRecentViewedTime
 		{
-			get
-			{
-				return _mostRecentViewedTime;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.MostRecentViewedTime, ref _mostRecentViewedTime, value);
-			}
+			get; set;
 		}
 		#endregion
 	}

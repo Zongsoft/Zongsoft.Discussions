@@ -20,138 +20,99 @@
 using System;
 using System.Collections.Generic;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
 	/// 表示论坛分组的业务实体类。
 	/// </summary>
-	public class ForumGroup : Zongsoft.Common.ModelBase
+	public interface IForumGroup : Zongsoft.Data.IEntity
 	{
-		#region 成员字段
-		private uint _siteId;
-		private ushort _groupId;
-		private ushort _sortOrder;
-		#endregion
-
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置论坛组所属的站点编号，复合主键。
 		/// </summary>
-		public uint SiteId
+		uint SiteId
 		{
-			get
-			{
-				return _siteId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.SiteId, ref _siteId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛组的编号，复合主键。
 		/// </summary>
-		public ushort GroupId
+		ushort GroupId
 		{
-			get
-			{
-				return _groupId;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.GroupId, ref _groupId, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛组所在站点中的排列序号。
 		/// </summary>
-		public ushort SortOrder
+		ushort SortOrder
 		{
-			get
-			{
-				return _sortOrder;
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.SortOrder, ref _sortOrder, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛组的名称。
 		/// </summary>
-		public string Name
+		string Name
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Name);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Name, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛组的图标。
 		/// </summary>
-		public string Icon
+		string Icon
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Icon);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Icon, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛组的可见性。
 		/// </summary>
-		public Visiblity Visiblity
+		Visiblity Visiblity
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Visiblity);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Visiblity, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛组的描述文本。
 		/// </summary>
-		public string Description
+		string Description
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Description);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Description, value);
-			}
+			get; set;
 		}
 
 		/// <summary>
 		/// 获取或设置论坛组中的论坛集。
 		/// </summary>
-		public IEnumerable<IForum> Forums
+		IEnumerable<IForum> Forums
 		{
-			get
-			{
-				return this.GetPropertyValue(() => this.Forums);
-			}
-			set
-			{
-				this.SetPropertyValue(() => this.Forums, value);
-			}
+			get; set;
+		}
+		#endregion
+	}
+
+	public interface IForumGroupConditional : IEntity
+	{
+		#region 公共属性
+		[Conditional("Name")]
+		string Key
+		{
+			get; set;
+		}
+
+		string Name
+		{
+			get; set;
+		}
+
+		Visiblity? Visiblity
+		{
+			get; set;
 		}
 		#endregion
 	}

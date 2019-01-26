@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
@@ -53,9 +55,9 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置论坛所属的 <see cref="ForumGroup"/> 分组对象。
+		/// 获取或设置论坛所属的 <see cref="IForumGroup"/> 分组对象。
 		/// </summary>
-		ForumGroup Group
+		IForumGroup Group
 		{
 			get; set;
 		}
@@ -257,6 +259,36 @@ namespace Zongsoft.Community.Models
 		/// 获取或设置论坛的版主集。
 		/// </summary>
 		IEnumerable<IUserProfile> Moderators
+		{
+			get; set;
+		}
+		#endregion
+	}
+
+	public interface IForumConditional : IEntity
+	{
+		#region 公共属性
+		string Name
+		{
+			get; set;
+		}
+
+		Visiblity? Visiblity
+		{
+			get; set;
+		}
+
+		Accessibility? Accessibility
+		{
+			get; set;
+		}
+
+		bool? IsPopular
+		{
+			get; set;
+		}
+
+		Range<DateTime> CreatedTime
 		{
 			get; set;
 		}

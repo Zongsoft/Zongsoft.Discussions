@@ -29,7 +29,7 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class ForumGroupController : Zongsoft.Web.Http.HttpControllerBase<ForumGroup, ForumGroupConditional, ForumGroupService>
+	public class ForumGroupController : Zongsoft.Web.Http.HttpControllerBase<IForumGroup, IForumGroupConditional, ForumGroupService>
 	{
 		#region 构造函数
 		public ForumGroupController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)

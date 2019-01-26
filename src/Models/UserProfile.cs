@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
@@ -153,6 +155,27 @@ namespace Zongsoft.Community.Models
 		/// 获取或设置用户配置信息的创建时间。
 		/// </summary>
 		DateTime CreatedTime
+		{
+			get; set;
+		}
+		#endregion
+	}
+
+	public interface IUserProfileConditional : IEntity
+	{
+		#region 公共属性
+		uint? SiteId
+		{
+			get; set;
+		}
+
+		[Conditional("Name", "PhoneNumber", "Email")]
+		string Identity
+		{
+			get; set;
+		}
+
+		Gender? Gender
 		{
 			get; set;
 		}

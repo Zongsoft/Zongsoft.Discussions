@@ -29,7 +29,7 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class ThreadController : Zongsoft.Web.Http.HttpControllerBase<Thread, ThreadConditional, ThreadService>
+	public class ThreadController : Zongsoft.Web.Http.HttpControllerBase<IThread, IThreadConditional, ThreadService>
 	{
 		#region 构造函数
 		public ThreadController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)

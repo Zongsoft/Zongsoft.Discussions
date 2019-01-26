@@ -30,7 +30,7 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization(AuthorizationMode.Requires)]
-	public class MessageController : Zongsoft.Web.Http.HttpControllerBase<Message, MessageConditional, MessageService>
+	public class MessageController : Zongsoft.Web.Http.HttpControllerBase<IMessage, IMessageConditional, MessageService>
 	{
 		#region 构造函数
 		public MessageController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)

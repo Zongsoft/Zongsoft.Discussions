@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Services
 {
 	[DataSequence("ThreadId", 100000)]
 	[DataSearchKey("Key:Subject")]
-	public class ThreadService : DataService<Thread>
+	public class ThreadService : DataService<IThread>
 	{
 		#region 成员字段
 		private PostService _posting;
@@ -54,18 +54,18 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<Post> GetPosts(ulong threadId, Paging paging = null)
+		public IEnumerable<IPost> GetPosts(ulong threadId, Paging paging = null)
 		{
-			var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
+			var thread = this.DataAccess.Select<IThread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
 
 			if(thread == null)
-				return Enumerable.Empty<Post>();
+				return Enumerable.Empty<IPost>();
 
 			var conditions = ConditionCollection.And(
 				Condition.Equal("ThreadId", threadId),
 				Condition.NotEqual("PostId", thread.PostId));
 
-			var posts = this.DataAccess.Select<Post>(conditions, paging, Sorting.Descending("PostId"));
+			var posts = this.DataAccess.Select<IPost>(conditions, paging, Sorting.Descending("PostId"));
 
 			foreach(var post in posts)
 			{
@@ -84,7 +84,7 @@ namespace Zongsoft.Community.Services
 				}
 
 				//设置帖子的附件集
-				post.Attachments = this.DataAccess.Select<Post.PostAttachment>(Condition.Equal("PostId", post.PostId), "File");
+				post.Attachments = this.DataAccess.Select<PostAttachment>(Condition.Equal("PostId", post.PostId), "File");
 			}
 
 			return posts;
@@ -92,7 +92,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Thread OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
+		protected override IThread OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
 		{
 			//调用基类同名方法
 			var thread = base.OnGet(condition, schema, state, out paginator);
@@ -135,7 +135,7 @@ namespace Zongsoft.Community.Services
 			return thread;
 		}
 
-		protected override int OnInsert(IDataDictionary<Thread> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<IThread> data, ISchema schema, object state)
 		{
 			var post = data.GetValue(p => p.Post, null);
 
@@ -186,7 +186,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<Thread> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<IThread> data, ICondition condition, ISchema schema, object state)
 		{
 			//调用基类同名方法
 			var count = base.OnUpdate(data, condition, schema, state);
@@ -206,7 +206,7 @@ namespace Zongsoft.Community.Services
 					else
 					{
 						//获取修改主题对应的主题对象
-						var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", data.GetValue(p => p.ThreadId)), "!, ThreadId, PostId").FirstOrDefault();
+						var thread = this.DataAccess.Select<IThread>(Condition.Equal("ThreadId", data.GetValue(p => p.ThreadId)), "!, ThreadId, PostId").FirstOrDefault();
 
 						if(thread == null)
 							return count;
@@ -224,7 +224,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 私有方法
-		private bool SetMostRecentThread(IDataDictionary<Thread> data)
+		private bool SetMostRecentThread(IDataDictionary<IThread> data)
 		{
 			if(data == null)
 				return false;
@@ -273,10 +273,10 @@ namespace Zongsoft.Community.Services
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
 				//递增当前用户对当前主题的累计浏览量
-				if(this.DataAccess.Increment<History>("Count", conditions) > 0)
+				if(this.DataAccess.Increment<IHistory>("Count", conditions) > 0)
 				{
 					//更新当前用户对当前主题的最后浏览时间
-					this.DataAccess.Update(this.DataAccess.Naming.Get<History>(), new
+					this.DataAccess.Update<IHistory>(new
 					{
 						MostRecentViewedTime = DateTime.Now,
 					}, conditions);
@@ -284,7 +284,10 @@ namespace Zongsoft.Community.Services
 				else
 				{
 					//尝试新增一条用户的浏览记录
-					this.DataAccess.Insert(new History(credential.UserId, threadId));
+					this.DataAccess.Insert(Entity.Build<IHistory>(history => {
+						history.UserId = credential.UserId;
+						history.ThreadId = threadId;
+					}));
 				}
 			}
 		}

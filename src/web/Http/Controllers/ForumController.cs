@@ -45,19 +45,19 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[ActionName("Globals")]
-		public IEnumerable<Thread> GetGlobalThreads(uint id, [FromUri]Paging paging = null)
+		public IEnumerable<IThread> GetGlobalThreads(uint id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetGlobalThreads(id, paging);
 		}
 
 		[ActionName("Pinneds")]
-		public IEnumerable<Thread> GetPinnedThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
+		public IEnumerable<IThread> GetPinnedThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetPinnedThreads(siteId, forumId, paging);
 		}
 
 		[ActionName("Topmosts")]
-		public IEnumerable<Thread> GetTopmosts([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromRoute("args")]int count = 0)
+		public IEnumerable<IThread> GetTopmosts([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromRoute("args")]int count = 0)
 		{
 			return this.DataService.GetTopmosts(siteId, forumId, count);
 		}

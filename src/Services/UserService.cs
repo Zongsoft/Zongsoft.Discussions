@@ -75,12 +75,12 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<History> GetHistories(uint userId, Paging paging = null)
+		public IEnumerable<IHistory> GetHistories(uint userId, Paging paging = null)
 		{
 			if(userId == 0)
 				userId = this.Credential.UserId;
 
-			return this.DataAccess.Select<History>(Condition.Equal("UserId", userId), "Thread", paging);
+			return this.DataAccess.Select<IHistory>(Condition.Equal("UserId", userId), "Thread", paging);
 		}
 
 		public int GetMessageTotalCount(uint userId = 0)
@@ -88,7 +88,7 @@ namespace Zongsoft.Community.Services
 			if(userId == 0)
 				userId = this.Credential.UserId;
 
-			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId));
+			return this.DataAccess.Count<MessageUser>(Condition.Equal("UserId", userId));
 		}
 
 		public int GetMessageUnreadCount(uint userId = 0)
@@ -96,10 +96,10 @@ namespace Zongsoft.Community.Services
 			if(userId == 0)
 				userId = this.Credential.UserId;
 
-			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
+			return this.DataAccess.Count<MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
 		}
 
-		public IEnumerable<Message> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
+		public IEnumerable<IMessage> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
 		{
 			if(userId == 0)
 				userId = this.Credential.UserId;
@@ -109,7 +109,7 @@ namespace Zongsoft.Community.Services
 			if(isRead.HasValue)
 				conditions.Add(Condition.Equal("IsRead", isRead.Value));
 
-			return this.DataAccess.Select<Message.MessageUser>(conditions, "Message", paging).Select(p => p.Message);
+			return this.DataAccess.Select<MessageUser>(conditions, "Message", paging).Select(p => p.Message);
 		}
 
 		public bool SetStatus(uint userId, UserStatus status)
