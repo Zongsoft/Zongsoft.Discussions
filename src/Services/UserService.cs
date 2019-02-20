@@ -78,7 +78,7 @@ namespace Zongsoft.Community.Services
 		public IEnumerable<IHistory> GetHistories(uint userId, Paging paging = null)
 		{
 			if(userId == 0)
-				userId = this.Credential.UserId;
+				userId = this.Credential.User.UserId;
 
 			return this.DataAccess.Select<IHistory>(Condition.Equal("UserId", userId), "Thread", paging);
 		}
@@ -86,7 +86,7 @@ namespace Zongsoft.Community.Services
 		public int GetMessageTotalCount(uint userId = 0)
 		{
 			if(userId == 0)
-				userId = this.Credential.UserId;
+				userId = this.Credential.User.UserId;
 
 			return this.DataAccess.Count<MessageUser>(Condition.Equal("UserId", userId));
 		}
@@ -94,7 +94,7 @@ namespace Zongsoft.Community.Services
 		public int GetMessageUnreadCount(uint userId = 0)
 		{
 			if(userId == 0)
-				userId = this.Credential.UserId;
+				userId = this.Credential.User.UserId;
 
 			return this.DataAccess.Count<MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
 		}
@@ -102,7 +102,7 @@ namespace Zongsoft.Community.Services
 		public IEnumerable<IMessage> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
 		{
 			if(userId == 0)
-				userId = this.Credential.UserId;
+				userId = this.Credential.User.UserId;
 
 			var conditions = ConditionCollection.And(Condition.Equal("UserId", userId));
 
@@ -119,12 +119,18 @@ namespace Zongsoft.Community.Services
 
 		public bool SetAvatar(uint userId, string avatar)
 		{
-			return this.UserProvider.SetAvatar(userId, avatar);
+			return this.DataAccess.Update(this.Name, new
+			{
+				Avatar = avatar
+			}, Condition.Equal(nameof(IUserProfile.UserId), userId)) > 0;
 		}
 
 		public bool SetPhotoPath(uint userId, string path)
 		{
-			return this.DataAccess.Update(this.Name, new { PhotoPath = path }, Condition.Equal("UserId", userId)) > 0;
+			return this.DataAccess.Update(this.Name, new
+			{
+				PhotoPath = path
+			}, Condition.Equal(nameof(IUserProfile.UserId), userId)) > 0;
 		}
 		#endregion
 
@@ -145,7 +151,11 @@ namespace Zongsoft.Community.Services
 			//调用基类同名方法（新增用户配置信息）
 			if(base.OnInsert(data, schema, state) > 0)
 			{
-				var user = new User(data.GetValue(p => p.UserId), data.GetValue(p => p.Name));
+				var user = Entity.Build<IUser>(u =>
+				{
+					u.UserId = data.GetValue(p => p.UserId);
+					u.Name = data.GetValue(p => p.Name);
+				});
 
 				//默认设置用户状态为可用
 				user.Status = UserStatus.Active;
@@ -157,7 +167,7 @@ namespace Zongsoft.Community.Services
 				}
 
 				//创建基础用户账户
-				if(!this.UserProvider.CreateUser(user, user.Name.Trim().ToLowerInvariant()))
+				if(!this.UserProvider.Create(user, user.Name.Trim().ToLowerInvariant()))
 					throw new InvalidOperationException($"The '{user.Name}' user create failed.");
 
 				//更新用户编号
@@ -171,7 +181,7 @@ namespace Zongsoft.Community.Services
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号
 			if(!data.TryGetValue(p => p.UserId, out var userId) || userId == 0)
-				data.SetValue(p => p.UserId, userId = this.Credential.UserId);
+				data.SetValue(p => p.UserId, userId = this.Credential.User.UserId);
 
 			//调用基类同名方法
 			return base.OnUpdate(data, condition, schema, state);

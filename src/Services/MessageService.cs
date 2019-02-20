@@ -70,7 +70,7 @@ namespace Zongsoft.Community.Services
 				this.DataAccess.Update(this.DataAccess.Naming.Get<MessageUser>(), new
 				{
 					IsRead = true,
-				}, Condition.Equal("MessageId", message.MessageId) & Condition.Equal("UserId", credential.UserId));
+				}, Condition.Equal("MessageId", message.MessageId) & Condition.Equal("UserId", credential.User.UserId));
 			}
 
 			return message;

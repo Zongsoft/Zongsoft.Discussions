@@ -63,7 +63,7 @@ namespace Zongsoft.Community.Services
 		public bool IsModerator(uint siteId, ushort forumId, uint? userId = null)
 		{
 			if(userId == null)
-				userId = this.Credential?.UserId;
+				userId = this.Credential?.User.UserId;
 
 			return this.DataAccess.Exists<ForumUser>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) &

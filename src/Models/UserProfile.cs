@@ -27,37 +27,13 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示社区子系统中的用户设置信息。
 	/// </summary>
-	public interface IUserProfile : Zongsoft.Data.IEntity
+	public interface IUserProfile : Zongsoft.Security.Membership.IUserIdentity, Zongsoft.Data.IEntity
 	{
 		#region 公共属性
-		/// <summary>
-		/// 获取或设置用户编号。
-		/// </summary>
-		uint UserId
-		{
-			get; set;
-		}
-
 		/// <summary>
 		/// 获取或设置用户所属的站点编号。
 		/// </summary>
 		uint SiteId
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置用户名称。
-		/// </summary>
-		string Name
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置用户全称（昵称）。
-		/// </summary>
-		string FullName
 		{
 			get; set;
 		}
@@ -147,14 +123,6 @@ namespace Zongsoft.Community.Models
 		/// 获取或设置用户最新主题的发布时间。
 		/// </summary>
 		DateTime? MostRecentThreadTime
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置用户配置信息的创建时间。
-		/// </summary>
-		DateTime CreatedTime
 		{
 			get; set;
 		}

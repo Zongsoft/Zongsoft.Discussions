@@ -57,7 +57,7 @@ namespace Zongsoft.Community.Data
 
 					return context.DataAccess.Exists<FolderUser>(
 						Condition.Equal("FolderId", folder.FolderId) &
-						Condition.Equal("UserId", credential.UserId));
+						Condition.Equal("UserId", credential.User.UserId));
 				}
 
 				return true;

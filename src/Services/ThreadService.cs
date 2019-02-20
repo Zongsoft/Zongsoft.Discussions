@@ -268,7 +268,7 @@ namespace Zongsoft.Community.Services
 			if(credential == null || credential.IsEmpty)
 				return;
 
-			var conditions = Condition.Equal("UserId", credential.UserId) & Condition.Equal("ThreadId", threadId);
+			var conditions = Condition.Equal("UserId", credential.User.UserId) & Condition.Equal("ThreadId", threadId);
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
@@ -285,7 +285,7 @@ namespace Zongsoft.Community.Services
 				{
 					//尝试新增一条用户的浏览记录
 					this.DataAccess.Insert(Entity.Build<IHistory>(history => {
-						history.UserId = credential.UserId;
+						history.UserId = credential.User.UserId;
 						history.ThreadId = threadId;
 					}));
 				}

@@ -183,7 +183,7 @@ namespace Zongsoft.Community
 				if(principal != null && principal.Identity.IsAuthenticated)
 				{
 					if(userId == 0)
-						userId = principal.Identity.Credential.UserId;
+						userId = principal.Identity.Credential.User.UserId;
 
 					if(siteId == 0)
 					{

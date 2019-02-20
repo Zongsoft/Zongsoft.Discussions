@@ -58,7 +58,7 @@ namespace Zongsoft.Community.Data
 					return context.DataAccess.Exists<ForumUser>(
 						Condition.Equal("SiteId", forum.SiteId) &
 						Condition.Equal("ForumId", forum.ForumId) &
-						Condition.Equal("UserId", credential.UserId));
+						Condition.Equal("UserId", credential.User.UserId));
 				}
 
 				return true;
