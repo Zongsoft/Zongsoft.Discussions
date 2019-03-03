@@ -41,6 +41,14 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#endregion
 
 		#region 公共方法
+		[HttpPatch]
+		[ActionName("Status")]
+		public void SetStatus(uint id, [FromRoute("args")]UserStatus status)
+		{
+			if(!this.DataService.SetStatus(id, status))
+				throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+		}
+
 		[ActionName("Histories")]
 		public IEnumerable<IHistory> GetHistories(uint id, [FromRoute("args")]Paging paging = null)
 		{
@@ -88,46 +96,18 @@ namespace Zongsoft.Community.Web.Http.Controllers
 			return this.GetResult(this.DataService.GetMessages(id, isRead, paging));
 		}
 
-		[HttpPost]
-		public async Task<Zongsoft.IO.FileInfo> Upload(uint id, string args)
+		[HttpPatch, HttpPost]
+		[ActionName("Avatar")]
+		public Task<Zongsoft.IO.FileInfo> SetAvatar(uint id, string args)
 		{
-			if(string.IsNullOrWhiteSpace(args))
-				throw HttpResponseExceptionUtility.BadRequest("Missing the args.");
-
-			if(!string.Equals(args, "avatar", StringComparison.OrdinalIgnoreCase) && !string.Equals(args, "photo", StringComparison.OrdinalIgnoreCase))
-				throw HttpResponseExceptionUtility.BadRequest($"Invalid '{args}' value of the argument.");
-
-			var path = Zongsoft.IO.Path.Parse(this.DataService.GetFilePath(id, args));
-			var accessor = new Zongsoft.Web.WebFileAccessor();
-			var info = (await accessor.Write(this.Request, path.DirectoryUrl, e => e.FileName = path.FileName)).FirstOrDefault();
-
-			if(info != null)
-			{
-				if(string.Equals(args, "avatar", StringComparison.OrdinalIgnoreCase))
-					this.DataService.SetAvatar(id, info.Path.Url);
-				else if(string.Equals(args, "photo", StringComparison.OrdinalIgnoreCase))
-					this.DataService.SetPhotoPath(id, info.Path.Url);
-
-				info.Url = info.Url + "?" + Zongsoft.Common.RandomGenerator.GenerateString();
-			}
-
-			return info;
+			return this.Upload(this.DataService.GetFilePath(id, "avatar"));
 		}
-		#endregion
 
-		#region 重写方法
-		public override void Patch(string id, IDictionary<string, object> data)
+		[HttpPatch, HttpPost]
+		[ActionName("Photo")]
+		public Task<Zongsoft.IO.FileInfo> SetPhoto(uint id, string args)
 		{
-			uint userId;
-
-			if(!uint.TryParse(id, out userId))
-				throw HttpResponseExceptionUtility.BadRequest($"The '{id}' id value must be a integer.");
-
-			if(data.TryGetValue("Status", out var status) && status != null)
-			{
-				if(!this.DataService.SetStatus(userId, Zongsoft.Common.Convert.ConvertValue(status, UserStatus.Active)))
-					throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
-			}
+			return this.Upload(this.DataService.GetFilePath(id, "photo"));
 		}
 		#endregion
 	}

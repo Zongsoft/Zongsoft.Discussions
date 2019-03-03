@@ -66,6 +66,10 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				_accessor = value;
 			}
 		}
+
+		protected override bool CanCreate => false;
+		protected override bool CanDelete => false;
+		protected override bool CanUpdate => false;
 		#endregion
 
 		#region 公共方法
@@ -122,45 +126,6 @@ namespace Zongsoft.Community.Web.Http.Controllers
 			}
 
 			return files;
-		}
-
-		public override IFile Post(IFile model)
-		{
-			throw new HttpResponseException(HttpStatusCode.MethodNotAllowed);
-		}
-
-		public override void Put(IFile model)
-		{
-			throw new HttpResponseException(HttpStatusCode.MethodNotAllowed);
-		}
-
-		public override void Patch(string id, IDictionary<string, object> data)
-		{
-			int mark = 0;
-			object siteId, folderId, name, description;
-
-			if(data.TryGetValue("SiteId", out siteId))
-				mark = 1;
-			if(data.TryGetValue("FolderId", out folderId))
-				mark = 2;
-			if(data.TryGetValue("Name", out name))
-				mark &= 4;
-			if(data.TryGetValue("Description", out description))
-				mark &= 8;
-
-			data.Clear();
-
-			if((mark & 1) == 1)
-				data["SiteId"] = siteId;
-			if((mark & 2) == 2)
-				data["FolderId"] = folderId;
-			if((mark & 4) == 4)
-				data["Name"] = name;
-			if((mark & 8) == 8)
-				data["Description"] = description;
-
-			if(data.Count > 0)
-				base.Patch(id, data);
 		}
 		#endregion
 	}
