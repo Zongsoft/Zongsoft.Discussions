@@ -7,7 +7,7 @@
 				<member name="MessageId" />
 			</key>
 
-			<property name="MessageId" type="ulong" nullable="false" />
+			<property name="MessageId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="False" />
 			<property name="Subject" type="string" length="100" nullable="False" />
 			<property name="Content" type="string" length="500" nullable="False" />
@@ -49,7 +49,7 @@
 				<member name="FeedbackId" />
 			</key>
 
-			<property name="FeedbackId" type="ulong" nullable="False" />
+			<property name="FeedbackId" type="ulong" nullable="False" sequence="#" />
 			<property name="SiteId" type="uint" nullable="False" />
 			<property name="Kind" type="byte" nullable="False" />
 			<property name="Subject" type="string" length="100" nullable="False" />
@@ -65,7 +65,7 @@
 				<member name="FileId" />
 			</key>
 
-			<property name="FileId" type="ulong" nullable="False" />
+			<property name="FileId" type="ulong" nullable="False" sequence="#" />
 			<property name="SiteId" type="uint" nullable="True" />
 			<property name="FolderId" type="uint" nullable="False" />
 			<property name="Name" type="string" length="100" nullable="False" />
@@ -90,7 +90,7 @@
 				<member name="FolderId" />
 			</key>
 
-			<property name="FolderId" type="uint" nullable="False" />
+			<property name="FolderId" type="uint" nullable="False" sequence="#" />
 			<property name="SiteId" type="uint" nullable="False" />
 			<property name="Name" type="string" length="100" nullable="False" />
 			<property name="PinYin" type="string" length="200" nullable="True" />
@@ -136,7 +136,7 @@
 			</key>
 
 			<property name="SiteId" type="uint" nullable="False" />
-			<property name="GroupId" type="ushort" nullable="False" />
+			<property name="GroupId" type="ushort" nullable="False" sequence="#SiteId" />
 			<property name="Name" type="string" length="50" nullable="False" />
 			<property name="Icon" type="string" length="100" nullable="True" />
 			<property name="Visiblity" type="byte" nullable="False" />
@@ -156,7 +156,7 @@
 			</key>
 
 			<property name="SiteId" type="uint" nullable="False" />
-			<property name="ForumId" type="ushort" nullable="False" />
+			<property name="ForumId" type="ushort" nullable="False" sequence="#SiteId" />
 			<property name="GroupId" type="ushort" nullable="False" />
 			<property name="Name" type="string" length="50" nullable="False" />
 			<property name="Description" type="string" length="500" nullable="True" />
@@ -215,7 +215,7 @@
 				<member name="ThreadId" />
 			</key>
 
-			<property name="ThreadId" type="ulong" nullable="False" />
+			<property name="ThreadId" type="ulong" nullable="False" sequence="#" />
 			<property name="SiteId" type="uint" nullable="False" />
 			<property name="ForumId" type="ushort" nullable="False" />
 			<property name="Subject" type="string" length="100" nullable="False" />
@@ -270,7 +270,7 @@
 				<member name="PostId" />
 			</key>
 
-			<property name="PostId" type="ulong" nullable="False" />
+			<property name="PostId" type="ulong" nullable="False" sequence="#" />
 			<property name="SiteId" type="uint" nullable="False" />
 			<property name="ThreadId" type="ulong" nullable="False" />
 			<property name="Content" type="string" length="500" nullable="False" />
