@@ -26,7 +26,6 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSequence("PostId", 100000)]
 	[DataSearchKey("Thread,ThreadId:ThreadId")]
 	public class PostService : DataService<IPost>
 	{

@@ -26,7 +26,6 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSequence("Community:FeedbackId", 100000)]
 	[DataSearchKey("Key:Subject,ContactName,ContactText")]
 	public class FeedbackService : DataService<IFeedback>
 	{

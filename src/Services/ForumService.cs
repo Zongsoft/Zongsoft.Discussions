@@ -27,7 +27,6 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSequence("SiteId, ForumId", 101)]
 	[DataSearchKey("Key:Name")]
 	public class ForumService : DataService<IForum>
 	{

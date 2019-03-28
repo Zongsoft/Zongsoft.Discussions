@@ -26,7 +26,6 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSequence("Community:FolderId", 100000)]
 	[DataSearchKey("Key:Name")]
 	public class FolderService : DataService<IFolder>
 	{

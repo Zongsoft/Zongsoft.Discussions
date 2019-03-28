@@ -25,7 +25,6 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSequence("Community:FileId", 100000)]
 	[DataSearchKey("Key:Name")]
 	public class FileService : DataService<IFile>
 	{
