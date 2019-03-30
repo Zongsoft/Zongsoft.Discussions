@@ -160,7 +160,7 @@ namespace Zongsoft.Community.Services
 			return base.GetKey(values, out singleton);
 		}
 
-		protected override ICondition OnValidate(DataAccessMethod method, ICondition condition)
+		protected override ICondition OnValidate(Method method, ICondition condition)
 		{
 			//调用基类同名方法
 			condition = base.OnValidate(method, condition);
