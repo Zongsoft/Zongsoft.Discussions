@@ -71,7 +71,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 验证方法
-		protected override ICondition OnValidate(DataAccessMethod method, ICondition condition)
+		protected override ICondition OnValidate(Method method, ICondition condition)
 		{
 			var user = this.User ?? throw new Zongsoft.Security.Membership.AuthorizationException();
 			var requires = ConditionCollection.And(Condition.Equal("SiteId", user.SiteId));
@@ -82,11 +82,11 @@ namespace Zongsoft.Community.Services
 			return requires;
 		}
 
-		protected override void OnValidate(DataAccessMethod method, IDataDictionary<TEntity> data)
+		protected override void OnValidate(Method method, IDataDictionary<TEntity> data)
 		{
 			var user = this.User ?? throw new Zongsoft.Security.Membership.AuthorizationException();
 
-			switch(method)
+			switch(method.Kind)
 			{
 				case DataAccessMethod.Insert:
 					//尝试设置所属站点编号
