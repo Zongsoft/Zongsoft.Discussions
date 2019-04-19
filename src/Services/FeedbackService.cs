@@ -26,7 +26,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearchKey("Key:Subject,ContactName,ContactText")]
+	[DataSearcher("Subject,ContactName,ContactText")]
 	public class FeedbackService : DataService<IFeedback>
 	{
 		#region 构造函数

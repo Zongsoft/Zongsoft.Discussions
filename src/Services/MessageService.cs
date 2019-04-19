@@ -26,7 +26,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearchKey("Status:Stauts", "Creator,CreatorId:CreatorId", "Key:Subject")]
+	[DataSearcher("Stauts:Status", "Creator,CreatorId:CreatorId", "Subject")]
 	public class MessageService : DataService<IMessage>
 	{
 		#region 构造函数

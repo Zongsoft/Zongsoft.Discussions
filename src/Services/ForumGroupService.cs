@@ -26,7 +26,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearchKey("Key:Name")]
+	[DataSearcher("Name")]
 	public class ForumGroupService : DataService<IForumGroup>
 	{
 		#region 构造函数

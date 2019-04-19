@@ -25,7 +25,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearchKey("Key:Name")]
+	[DataSearcher("Name")]
 	public class FileService : DataService<IFile>
 	{
 		#region 构造函数

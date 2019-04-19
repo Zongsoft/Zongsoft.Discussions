@@ -26,7 +26,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearchKey("Thread,ThreadId:ThreadId")]
+	[DataSearcher("Thread,ThreadId:ThreadId")]
 	public class PostService : DataService<IPost>
 	{
 		#region 构造函数
