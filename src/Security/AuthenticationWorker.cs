@@ -33,7 +33,7 @@ namespace Zongsoft.Community.Security
 	{
 		#region 成员字段
 		private IDataAccess _dataAccess;
-		private IAuthentication _authentication;
+		private IAuthenticator _authentication;
 		#endregion
 
 		#region 构造函数
@@ -66,7 +66,7 @@ namespace Zongsoft.Community.Security
 		/// 获取或设置身份验证服务。
 		/// </summary>
 		[ServiceDependency]
-		public IAuthentication Authentication
+		public IAuthenticator Authentication
 		{
 			get
 			{
