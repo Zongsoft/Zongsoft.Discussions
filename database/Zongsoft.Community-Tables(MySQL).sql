@@ -232,8 +232,12 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
 (
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '用户所属的站点编号',
+  `Name` varchar(50) NOT NULL COMMENT '用户名称',
+  `Nickname` nvarchar(50) NULL COMMENT '用户昵称',
+  `Email` varchar(50) NULL COMMENT '用户绑定的邮箱地址',
+  `Phone` varchar(50) NULL COMMENT '用户绑定的手机号码',
+  `Avatar` varchar(200) NULL COMMENT '用户头像',
   `Gender` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户性别(0:Female, 1:Male)',
-  `PhotoPath` varchar(200) DEFAULT NULL COMMENT '照片文件路径',
   `TotalPosts` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计回复总数',
   `TotalThreads` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计主题总数',
   `MostRecentPostId` bigint UNSIGNED DEFAULT NULL COMMENT '最后回帖的帖子编号',
@@ -241,7 +245,11 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
   `MostRecentThreadId` bigint UNSIGNED DEFAULT NULL COMMENT '最新主题的编号',
   `MostRecentThreadSubject` nvarchar(100) DEFAULT NULL COMMENT '最新主题的标题',
   `MostRecentThreadTime` datetime DEFAULT NULL COMMENT '最新主题的发布时间',
-  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `Creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `Modification` datetime NULL COMMENT '最后修改时间',
+  `Description` nvarchar(500) NULL COMMENT '描述信息',
   PRIMARY KEY (`UserId`),
-  INDEX `IX_SiteId` (`SiteId`)
+  UNIQUE INDEX `UX_User_Name` (`SiteId`, `Name`),
+  UNIQUE INDEX `UX_User_Email` (`SiteId`, `Email`),
+  UNIQUE INDEX `UX_User_Phone` (`SiteId`, `Phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户配置表';

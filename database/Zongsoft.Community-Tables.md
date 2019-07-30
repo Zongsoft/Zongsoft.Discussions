@@ -250,6 +250,11 @@ MostRecentViewedTime | datetime | - | False | 最后浏览时间
 --------|:------:|:--:|:--:|----:
 UserId | int | 4 | False | 主键，用户编号
 SiteId | int | 4 | False | 用户所属站点编号
+Name | varchar | 50 | False | 用户名称
+Nickname | nvarchar | 50 | True | 用户昵称
+Email | varchar | 50 | True | 用户绑定的邮箱地址
+Phone | varchar | 50 | True | 用户绑定的手机号码
+Avatar | varchar | 200 | True | 用户头像
 Gender | byte | 1 | False | 用户性别(0:Female, 1:Male)
 PhotoPath | varchar | 200 | True | 照片文件路径
 TotalPosts | int | 4 | False | 累计回复总数
@@ -259,4 +264,6 @@ MostRecentPostTime | datetime | - | True | 最后回帖的时间
 MostRecentThreadId | bigint | 8 | True | 最新主题的编号
 MostRecentThreadSubject | nvarchar | 100 | True | 最新主题的标题
 MostRecentThreadTime | datetime | - | True | 最新主题的发布时间
-CreatedTime | datetime | - | False | 创建时间
+Creation | datetime | - | False | 创建时间
+Modification | datetime | - | True | 最后修改时间
+Description | nvarchar | 50 | True | 描述信息

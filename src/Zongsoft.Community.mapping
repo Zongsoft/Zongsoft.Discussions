@@ -388,8 +388,12 @@
 
 			<property name="UserId" type="uint" nullable="False" />
 			<property name="SiteId" type="uint" nullable="False" />
+			<property name="Name" type="string" length="50" nullable="False" />
+			<property name="Nickname" type="string" length="50" nullable="False" />
+			<property name="Email" type="string" length="50" nullable="True" />
+			<property name="Phone" type="string" length="50" nullable="True" />
+			<property name="Avatar" type="string" length="200" nullable="True" />
 			<property name="Gender" type="byte" nullable="False" />
-			<property name="PhotoPath" type="string" length="200" nullable="True" />
 			<property name="TotalPosts" type="uint" nullable="False" />
 			<property name="TotalThreads" type="uint" nullable="False" />
 			<property name="MostRecentPostId" type="ulong" nullable="True" />
@@ -397,11 +401,9 @@
 			<property name="MostRecentThreadId" type="ulong" nullable="True" />
 			<property name="MostRecentThreadSubject" type="string" length="100" nullable="True" />
 			<property name="MostRecentThreadTime" type="datetime" nullable="True" />
-			<property name="CreatedTime" type="datetime" nullable="False" />
-
-			<complexProperty name="User" role="Security.User">
-				<link name="UserId" role="UserId" />
-			</complexProperty>
+			<property name="Creation" type="datetime" nullable="False" default="now()" />
+			<property name="Modification" type="datetime" nullable="True" />
+			<property name="Description" type="string" length="500" nullable="True" />
 		</entity>
 	</container>
 </schema>
