@@ -26,18 +26,18 @@ using Zongsoft.Security.Membership;
 
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
+using Zongsoft.Common;
 
 namespace Zongsoft.Community.Security
 {
-	public class AuthenticationWorker : Zongsoft.Services.WorkerBase
+	public class AuthenticationFilter : Zongsoft.Common.IExecutionFilter<AuthenticationContext>, Zongsoft.Common.IExecutionFilter
 	{
 		#region 成员字段
 		private IDataAccess _dataAccess;
-		private IAuthenticator _authentication;
 		#endregion
 
 		#region 构造函数
-		public AuthenticationWorker()
+		public AuthenticationFilter()
 		{
 		}
 		#endregion
@@ -55,64 +55,28 @@ namespace Zongsoft.Community.Security
 			}
 			set
 			{
-				if(value == null)
-					throw new ArgumentNullException();
-
-				_dataAccess = value;
-			}
-		}
-
-		/// <summary>
-		/// 获取或设置身份验证服务。
-		/// </summary>
-		[ServiceDependency]
-		public IAuthenticator Authentication
-		{
-			get
-			{
-				return _authentication;
-			}
-			set
-			{
-				if(value == null)
-					throw new ArgumentNullException();
-
-				_authentication = value;
+				_dataAccess = value ?? throw new ArgumentNullException();
 			}
 		}
 		#endregion
 
-		#region 重写方法
-		protected override void OnStart(string[] args)
-		{
-			var authentication = this.Authentication;
-
-			if(authentication != null)
-				authentication.Authenticated += OnAuthenticated;
-		}
-
-		protected override void OnStop(string[] args)
-		{
-			var authentication = this.Authentication;
-
-			if(authentication != null)
-				authentication.Authenticated -= OnAuthenticated;
-		}
-		#endregion
-
-		#region 验证处理
-		private void OnAuthenticated(object sender, AuthenticatedEventArgs e)
+		#region 过滤方法
+		public void OnFiltered(AuthenticationContext context)
 		{
 			//如果身份验证失败则退出
-			if(!e.IsAuthenticated)
+			if(!context.IsAuthenticated)
 				return;
 
 			//获取当前登录用户所对应的用户配置对象
-			var profile = this.GetUserProfile(e.User.UserId);
+			var profile = this.GetUserProfile(context.User.UserId);
 
 			//设置当前用户的扩展属性
 			if(profile != null)
-				e.Parameters.Add("Zongsoft.Community.UserProfile", profile);
+				context.Parameters.Add("Zongsoft.Community.UserProfile", profile);
+		}
+
+		public void OnFiltering(AuthenticationContext context)
+		{
 		}
 		#endregion
 
@@ -120,6 +84,18 @@ namespace Zongsoft.Community.Security
 		private IUserProfile GetUserProfile(uint userId)
 		{
 			return this.DataAccess.Select<IUserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
+		}
+
+		void IExecutionFilter.OnFiltered(object context)
+		{
+			if(context is AuthenticationContext ctx)
+				this.OnFiltered(ctx);
+		}
+
+		void IExecutionFilter.OnFiltering(object context)
+		{
+			if(context is AuthenticationContext ctx)
+				this.OnFiltering(ctx);
 		}
 		#endregion
 	}
