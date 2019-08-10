@@ -18,8 +18,8 @@
 		</dependencies>
 	</manifest>
 
-	<extension path="/Workbench/Startup">
-		<object name="Community_AuthenticationWorker" type="Zongsoft.Community.Security.AuthenticationWorker, Zongsoft.Community" />
+	<extension path="/Workbench/Security/Authentication/Filters">
+		<object name="Community_AuthenticationFilter" type="Zongsoft.Community.Security.AuthenticationFilter, Zongsoft.Community" />
 	</extension>
 
 	<extension path="/Workbench/Data/Accessors">
