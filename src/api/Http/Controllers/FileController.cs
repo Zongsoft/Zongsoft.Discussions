@@ -95,7 +95,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 			var files = new List<IFile>();
 			var infos = await _accessor.Write(this.Request,
 				                          this.DataService.GetDirectory(id),
-			                              args => args.FileName = (DateTime.Now - EPOCH).Days.ToString() + "-" + Zongsoft.Common.RandomGenerator.GenerateString());
+			                              args => args.FileName = (DateTime.Now - EPOCH).Days.ToString() + "-" + Zongsoft.Common.Randomizer.GenerateString());
 
 			foreach(var info in infos)
 			{

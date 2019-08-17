@@ -259,7 +259,7 @@ namespace Zongsoft.Community.Services
 		#region 虚拟方法
 		protected virtual string GetContentFilePath(ulong postId, string contentType)
 		{
-			return Utility.GetFilePath(string.Format("posts/post-{0}-{1}.txt", postId.ToString(), Zongsoft.Common.RandomGenerator.GenerateString()));
+			return Utility.GetFilePath(string.Format("posts/post-{0}-{1}.txt", postId.ToString(), Zongsoft.Common.Randomizer.GenerateString()));
 		}
 		#endregion
 
