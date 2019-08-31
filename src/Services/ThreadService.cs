@@ -283,7 +283,7 @@ namespace Zongsoft.Community.Services
 				else
 				{
 					//尝试新增一条用户的浏览记录
-					this.DataAccess.Insert(Entity.Build<IHistory>(history => {
+					this.DataAccess.Insert(Model.Build<IHistory>(history => {
 						history.UserId = credential.User.UserId;
 						history.ThreadId = threadId;
 					}));

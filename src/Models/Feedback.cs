@@ -27,7 +27,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示意见反馈的业务实体类。
 	/// </summary>
-	public interface IFeedback : Zongsoft.Data.IEntity
+	public interface IFeedback : Zongsoft.Data.IModel
 	{
 		#region 公共属性
 		ulong FeedbackId
@@ -77,7 +77,7 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public interface IFeedbackConditional : IEntity
+	public interface IFeedbackConditional : IModel
 	{
 		#region 公共属性
 		[Conditional("Subject", "ContactName", "ContactText")]

@@ -84,7 +84,7 @@ namespace Zongsoft.Community.Services.Commands
 			//根据内容类型解析得到真实内容
 			content = GetContent(content, ref contentType);
 
-			var message = Zongsoft.Data.Entity.Build<Models.IMessage>(entity =>
+			var message = Zongsoft.Data.Model.Build<Models.IMessage>(entity =>
 			{
 				entity.Content = content;
 				entity.ContentType = contentType;

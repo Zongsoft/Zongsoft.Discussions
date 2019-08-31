@@ -28,7 +28,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示帖子的业务实体类。
 	/// </summary>
-	public interface IPost : Zongsoft.Data.IEntity
+	public interface IPost : Zongsoft.Data.IModel
 	{
 		#region 公共属性
 		/// <summary>
@@ -194,7 +194,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取帖子的点赞记录集。
 		/// </summary>
-		[Entity.Property(Entity.PropertyImplementationMode.Extension, typeof(PostExtension))]
+		[Model.Property(Model.PropertyImplementationMode.Extension, typeof(PostExtension))]
 		[Runtime.Serialization.SerializationMember(Runtime.Serialization.SerializationMemberBehavior.Ignored)]
 		IEnumerable<PostVoting> Upvotes
 		{
@@ -204,7 +204,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取帖子的被踩记录集。
 		/// </summary>
-		[Entity.Property(Entity.PropertyImplementationMode.Extension, typeof(PostExtension))]
+		[Model.Property(Model.PropertyImplementationMode.Extension, typeof(PostExtension))]
 		[Runtime.Serialization.SerializationMember(Runtime.Serialization.SerializationMemberBehavior.Ignored)]
 		IEnumerable<PostVoting> Downvotes
 		{
@@ -213,7 +213,7 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public interface IPostConditional : IEntity
+	public interface IPostConditional : IModel
 	{
 		#region 公共属性
 		string Content

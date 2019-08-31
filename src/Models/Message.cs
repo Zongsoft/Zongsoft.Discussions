@@ -27,7 +27,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示消息的业务实体类。
 	/// </summary>
-	public interface IMessage : Zongsoft.Data.IEntity
+	public interface IMessage : Zongsoft.Data.IModel
 	{
 		#region 公共属性
 		ulong MessageId
@@ -104,7 +104,7 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public interface IMessageConditional : IEntity
+	public interface IMessageConditional : IModel
 	{
 		#region 公共属性
 		string Subject

@@ -151,7 +151,7 @@ namespace Zongsoft.Community.Services
 			//调用基类同名方法（新增用户配置信息）
 			if(base.OnInsert(data, schema, state) > 0)
 			{
-				var user = Entity.Build<IUser>(u =>
+				var user = Model.Build<IUser>(u =>
 				{
 					u.UserId = data.GetValue(p => p.UserId);
 					u.Name = data.GetValue(p => p.Name);

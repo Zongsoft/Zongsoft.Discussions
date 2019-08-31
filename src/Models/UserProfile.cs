@@ -27,7 +27,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示社区子系统中的用户设置信息。
 	/// </summary>
-	public interface IUserProfile : Zongsoft.Security.Membership.IUserIdentity, Zongsoft.Data.IEntity
+	public interface IUserProfile : Zongsoft.Security.Membership.IUserIdentity, Zongsoft.Data.IModel
 	{
 		#region 公共属性
 		/// <summary>
@@ -65,7 +65,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取用户的照片文件访问URL。
 		/// </summary>
-		[Zongsoft.Data.Entity.Property(Zongsoft.Data.Entity.PropertyImplementationMode.Extension, typeof(UserProfileExtension))]
+		[Model.Property(Model.PropertyImplementationMode.Extension, typeof(UserProfileExtension))]
 		string PhotoUrl
 		{
 			get;
@@ -129,7 +129,7 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public interface IUserProfileConditional : IEntity
+	public interface IUserProfileConditional : IModel
 	{
 		#region 公共属性
 		uint? SiteId

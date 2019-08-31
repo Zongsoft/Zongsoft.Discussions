@@ -26,7 +26,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示文件的实体类。
 	/// </summary>
-	public interface IFile : Zongsoft.Data.IEntity
+	public interface IFile : Zongsoft.Data.IModel
 	{
 		#region 公共属性
 		/// <summary>
@@ -80,7 +80,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取附件文件的访问URL。
 		/// </summary>
-		[Zongsoft.Data.Entity.Property(Zongsoft.Data.Entity.PropertyImplementationMode.Extension, typeof(FileExtension))]
+		[Zongsoft.Data.Model.Property(Zongsoft.Data.Model.PropertyImplementationMode.Extension, typeof(FileExtension))]
 		string Url
 		{
 			get;
@@ -136,7 +136,7 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public interface IFileConditional : IEntity
+	public interface IFileConditional : IModel
 	{
 		#region 公共属性
 		[Conditional("Name", "Description")]

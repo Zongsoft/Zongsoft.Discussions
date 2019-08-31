@@ -27,7 +27,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示论坛分组的业务实体类。
 	/// </summary>
-	public interface IForumGroup : Zongsoft.Data.IEntity
+	public interface IForumGroup : Zongsoft.Data.IModel
 	{
 		#region 公共属性
 		/// <summary>
@@ -96,7 +96,7 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public interface IForumGroupConditional : IEntity
+	public interface IForumGroupConditional : IModel
 	{
 		#region 公共属性
 		[Conditional("Name")]

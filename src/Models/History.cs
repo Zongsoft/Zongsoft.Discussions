@@ -25,7 +25,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示用户浏览记录的实体类。
 	/// </summary>
-	public interface IHistory : Zongsoft.Data.IEntity
+	public interface IHistory : Zongsoft.Data.IModel
 	{
 		#region 公共属性
 		/// <summary>

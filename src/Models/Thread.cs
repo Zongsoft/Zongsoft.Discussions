@@ -27,7 +27,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示主题的业务实体类。
 	/// </summary>
-	public interface IThread : Zongsoft.Data.IEntity
+	public interface IThread : Zongsoft.Data.IModel
 	{
 		#region 公共属性
 		/// <summary>
@@ -113,7 +113,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取主体的封面图片的访问地址。
 		/// </summary>
-		[Entity.Property(Entity.PropertyImplementationMode.Extension, typeof(ThreadExtension))]
+		[Model.Property(Model.PropertyImplementationMode.Extension, typeof(ThreadExtension))]
 		string CoverPictureUrl
 		{
 			get;
@@ -313,7 +313,7 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public interface IThreadConditional : IEntity
+	public interface IThreadConditional : IModel
 	{
 		#region 公共属性
 		string Subject

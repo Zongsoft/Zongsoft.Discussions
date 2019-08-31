@@ -110,7 +110,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				if(string.IsNullOrWhiteSpace(name as string))
 					name = info.Name;
 
-				var attachment = Zongsoft.Data.Entity.Build<IFile>(file =>
+				var attachment = Zongsoft.Data.Model.Build<IFile>(file =>
 				{
 					file.FolderId = id.HasValue ? id.Value : 0;
 					file.Name = info.Name;

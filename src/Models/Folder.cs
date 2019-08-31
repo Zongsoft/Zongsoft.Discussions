@@ -27,7 +27,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示文件夹的业务实体类。
 	/// </summary>
-	public interface IFolder : Zongsoft.Data.IEntity
+	public interface IFolder : Zongsoft.Data.IModel
 	{
 		#region 公共属性
 		/// <summary>
@@ -122,7 +122,7 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public interface IFolderConditional : IEntity
+	public interface IFolderConditional : IModel
 	{
 		#region 公共属性
 		[Conditional("Name", "PinYin")]

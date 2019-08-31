@@ -27,7 +27,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示论坛的业务实体类。
 	/// </summary>
-	public interface IForum : Zongsoft.Data.IEntity
+	public interface IForum : Zongsoft.Data.IModel
 	{
 		#region 公共属性
 		/// <summary>
@@ -97,7 +97,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取论坛封面图片的外部访问地址。
 		/// </summary>
-		[Zongsoft.Data.Entity.Property(Zongsoft.Data.Entity.PropertyImplementationMode.Extension, typeof(ForumExtension))]
+		[Zongsoft.Data.Model.Property(Zongsoft.Data.Model.PropertyImplementationMode.Extension, typeof(ForumExtension))]
 		string CoverPictureUrl
 		{
 			get;
@@ -265,7 +265,7 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public interface IForumConditional : IEntity
+	public interface IForumConditional : IModel
 	{
 		#region 公共属性
 		string Name
