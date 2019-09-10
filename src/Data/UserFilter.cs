@@ -33,7 +33,7 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 构造函数
-		public UserFilter() : base(new DataAccessMethod[] { DataAccessMethod.Delete }, typeof(Models.IUserProfile), typeof(IUser))
+		public UserFilter() : base("UserProfile", DataAccessMethod.Delete)
 		{
 		}
 		#endregion

@@ -32,16 +32,16 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 私有变量
-		private string _scope;
+		private string _schema;
 		#endregion
 
 		#region 构造函数
-		protected ContentFilterBase(string name, string scope = null) : base(new DataAccessMethod[] { DataAccessMethod.Delete }, name)
+		protected ContentFilterBase(string name, string schema = null) : base(name, DataAccessMethod.Delete)
 		{
 			if(string.IsNullOrWhiteSpace(name))
 				throw new ArgumentNullException(nameof(name));
 
-			_scope = scope;
+			_schema = schema;
 			DELETED_RESULTS = "deleted:" + name.Trim().ToLowerInvariant();
 		}
 		#endregion
@@ -49,7 +49,7 @@ namespace Zongsoft.Community.Data
 		#region 重写方法
 		protected override void OnDeleting(DataDeleteContextBase context)
 		{
-			context.States[DELETED_RESULTS] = context.DataAccess.Select<TEntity>(context.Name, context.Condition, _scope, Paging.Disable).ToArray();
+			context.States[DELETED_RESULTS] = context.DataAccess.Select<TEntity>(context.Name, context.Condition, _schema, Paging.Disable).ToArray();
 		}
 
 		protected override void OnDeleted(DataDeleteContextBase context)
