@@ -114,7 +114,7 @@ namespace Zongsoft.Community.Services
 		{
 			if(sortings == null || sortings.Length == 0)
 			{
-				var keys = this.DataAccess.GetKey<TEntity>();
+				var keys = this.DataAccess.Metadata.Entities.Get(this.Name).Key;
 
 				if(keys != null && keys.Length > 0)
 				{
@@ -122,7 +122,7 @@ namespace Zongsoft.Community.Services
 
 					for(var i = 0; i < keys.Length; i++)
 					{
-						sortings[i] = Sorting.Descending(keys[i]);
+						sortings[i] = Sorting.Descending(keys[i].Name);
 					}
 				}
 			}
