@@ -97,7 +97,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置创建人对象。
 		/// </summary>
-		IUserProfile Creator
+		UserProfile Creator
 		{
 			get; set;
 		}
@@ -172,7 +172,7 @@ namespace Zongsoft.Community.Models
 			get; set;
 		}
 
-		public IUserProfile User
+		public UserProfile User
 		{
 			get; set;
 		}

@@ -111,9 +111,9 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置创建人的<see cref="Models.IUserProfile"/>用户信息。
+		/// 获取或设置创建人的<see cref="Models.UserProfile"/>用户信息。
 		/// </summary>
-		IUserProfile Creator
+		UserProfile Creator
 		{
 			get; set;
 		}

@@ -69,7 +69,7 @@ namespace Zongsoft.Community.Services
 				Condition.Equal("UserId", userId) & Condition.Equal("UserKind", UserKind.Administrator));
 		}
 
-		public IEnumerable<IUserProfile> GetModerators(uint siteId, ushort forumId)
+		public IEnumerable<UserProfile> GetModerators(uint siteId, ushort forumId)
 		{
 			return this.DataAccess.Select<ForumUser>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("UserKind", UserKind.Administrator),

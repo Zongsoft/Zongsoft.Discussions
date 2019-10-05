@@ -27,13 +27,51 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示社区子系统中的用户设置信息。
 	/// </summary>
-	public interface IUserProfile : Zongsoft.Security.Membership.IUserIdentity, Zongsoft.Data.IModel
+	public abstract class UserProfile : Zongsoft.Security.Membership.IUserIdentity
 	{
+		#region 构造函数
+		protected UserProfile()
+		{
+		}
+		#endregion
+
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置用户所属的站点编号。
 		/// </summary>
-		uint SiteId
+		public abstract uint SiteId
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置用户编号。
+		/// </summary>
+		public abstract uint UserId
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置用户名称。
+		/// </summary>
+		public abstract string Name
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置用户全称（昵称）。
+		/// </summary>
+		public abstract string FullName
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置用户的所属命名空间。
+		/// </summary>
+		public abstract string Namespace
 		{
 			get; set;
 		}
@@ -41,7 +79,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置头像标识。
 		/// </summary>
-		string Avatar
+		public abstract string Avatar
 		{
 			get; set;
 		}
@@ -49,7 +87,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户性别。
 		/// </summary>
-		Gender Gender
+		public abstract Gender Gender
 		{
 			get; set;
 		}
@@ -57,7 +95,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户的照片文件路径。
 		/// </summary>
-		string PhotoPath
+		public abstract string PhotoPath
 		{
 			get; set;
 		}
@@ -65,16 +103,15 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取用户的照片文件访问URL。
 		/// </summary>
-		[Model.Property(Model.PropertyImplementationMode.Extension, typeof(UserProfileExtension))]
-		string PhotoUrl
+		public string PhotoUrl
 		{
-			get;
+			get => Zongsoft.IO.FileSystem.GetUrl(this.PhotoPath);
 		}
 
 		/// <summary>
 		/// 获取或设置用户累计发布的帖子总数。
 		/// </summary>
-		uint TotalPosts
+		public abstract uint TotalPosts
 		{
 			get; set;
 		}
@@ -82,7 +119,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户累积发布的主题总数。
 		/// </summary>
-		uint TotalThreads
+		public abstract uint TotalThreads
 		{
 			get; set;
 		}
@@ -90,7 +127,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户最后回帖的帖子编号。
 		/// </summary>
-		ulong? MostRecentPostId
+		public abstract ulong? MostRecentPostId
 		{
 			get; set;
 		}
@@ -98,7 +135,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户最后回帖的时间。
 		/// </summary>
-		DateTime? MostRecentPostTime
+		public abstract DateTime? MostRecentPostTime
 		{
 			get; set;
 		}
@@ -106,7 +143,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户最新发布的主题编号。
 		/// </summary>
-		ulong? MostRecentThreadId
+		public abstract ulong? MostRecentThreadId
 		{
 			get; set;
 		}
@@ -114,7 +151,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户最新发布的主题标题。
 		/// </summary>
-		string MostRecentThreadSubject
+		public abstract string MostRecentThreadSubject
 		{
 			get; set;
 		}
@@ -122,39 +159,49 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户最新主题的发布时间。
 		/// </summary>
-		DateTime? MostRecentThreadTime
+		public abstract DateTime? MostRecentThreadTime
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置用户的描述信息。
+		/// </summary>
+		public abstract string Description
 		{
 			get; set;
 		}
 		#endregion
 	}
 
-	public interface IUserProfileConditional : IModel
+	public abstract class UserProfileConditional : IModel
 	{
 		#region 公共属性
-		uint? SiteId
+		public abstract uint? SiteId
 		{
 			get; set;
 		}
 
 		[Conditional("Name", "PhoneNumber", "Email")]
-		string Identity
+		public abstract string Identity
 		{
 			get; set;
 		}
 
-		Gender? Gender
+		public abstract Gender? Gender
 		{
 			get; set;
 		}
 		#endregion
-	}
 
-	internal static class UserProfileExtension
-	{
-		public static string GetPhotoUrl(IUserProfile profile)
-		{
-			return Zongsoft.IO.FileSystem.GetUrl(profile.PhotoPath);
-		}
+		#region 模型方法
+		public abstract int Count();
+		public abstract IDictionary<string, object> GetChanges();
+		public abstract bool HasChanges(params string[] names);
+		public abstract bool Reset(string name, out object value);
+		public abstract void Reset(params string[] names);
+		public abstract bool TryGetValue(string name, out object value);
+		public abstract bool TrySetValue(string name, object value);
+		#endregion
 	}
 }

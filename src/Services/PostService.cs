@@ -304,7 +304,7 @@ namespace Zongsoft.Community.Services
 				return false;
 
 			var userId = data.GetValue(p => p.CreatorId);
-			var user = this.DataAccess.Select<IUserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
+			var user = this.DataAccess.Select<UserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
 			var count = 0;
 
 			//更新当前帖子所属主题的最后回帖信息
@@ -331,9 +331,9 @@ namespace Zongsoft.Community.Services
 			});
 
 			//递增当前发帖人的累计回帖数，并且更新发帖人的最后回帖信息
-			if(this.DataAccess.Increment<IUserProfile>("TotalPosts", Condition.Equal("UserId", data.GetValue(p => p.CreatorId))) > 0)
+			if(this.DataAccess.Increment<UserProfile>("TotalPosts", Condition.Equal("UserId", data.GetValue(p => p.CreatorId))) > 0)
 			{
-				count += this.DataAccess.Update(this.DataAccess.Naming.Get<IUserProfile>(), new
+				count += this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
 				{
 					UserId = data.GetValue(p => p.CreatorId),
 					MostRecentPostId = data.GetValue(p => p.PostId),

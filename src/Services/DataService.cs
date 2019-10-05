@@ -58,12 +58,12 @@ namespace Zongsoft.Community.Services
 		/// <summary>
 		/// 获取当前安全主体对应的用户。
 		/// </summary>
-		protected Models.IUserProfile User
+		protected Models.UserProfile User
 		{
 			get
 			{
 				if(this.Credential != null && this.Credential.Parameters.TryGetValue("Zongsoft.Community.UserProfile", out var value))
-					return value as Models.IUserProfile;
+					return value as Models.UserProfile;
 
 				return null;
 			}

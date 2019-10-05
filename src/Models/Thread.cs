@@ -298,7 +298,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的作者。
 		/// </summary>
-		IUserProfile Creator
+		UserProfile Creator
 		{
 			get; set;
 		}

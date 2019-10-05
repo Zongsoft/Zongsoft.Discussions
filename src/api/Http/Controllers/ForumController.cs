@@ -39,7 +39,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Moderators")]
-		public IEnumerable<IUserProfile> GetModerators([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId)
+		public IEnumerable<UserProfile> GetModerators([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId)
 		{
 			return this.DataService.GetModerators(siteId, forumId);
 		}

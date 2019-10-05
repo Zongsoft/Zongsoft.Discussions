@@ -258,7 +258,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛的版主集。
 		/// </summary>
-		IEnumerable<IUserProfile> Moderators
+		IEnumerable<UserProfile> Moderators
 		{
 			get; set;
 		}
@@ -328,7 +328,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户信息。
 		/// </summary>
-		public IUserProfile User
+		public UserProfile User
 		{
 			get; set;
 		}

@@ -27,50 +27,50 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示意见反馈的业务实体类。
 	/// </summary>
-	public interface IFeedback : Zongsoft.Data.IModel
+	public abstract class Feedback
 	{
 		#region 公共属性
-		ulong FeedbackId
+		public abstract ulong FeedbackId
 		{
 			get; set;
 		}
 
-		uint SiteId
+		public abstract uint SiteId
 		{
 			get; set;
 		}
 
-		byte Kind
+		public abstract byte Kind
 		{
 			get; set;
 		}
 
-		string Subject
+		public abstract string Subject
 		{
 			get; set;
 		}
 
-		string Content
+		public abstract string Content
 		{
 			get; set;
 		}
 
-		string ContentType
+		public abstract string ContentType
 		{
 			get; set;
 		}
 
-		string ContactName
+		public abstract string ContactName
 		{
 			get; set;
 		}
 
-		string ContactText
+		public abstract string ContactText
 		{
 			get; set;
 		}
 
-		DateTime CreatedTime
+		public abstract DateTime CreatedTime
 		{
 			get; set;
 		}

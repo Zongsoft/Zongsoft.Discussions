@@ -28,7 +28,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	public class UserService : DataService<IUserProfile>
+	public class UserService : DataService<UserProfile>
 	{
 		#region 成员字段
 		private string _basePath;
@@ -122,7 +122,7 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Update(this.Name, new
 			{
 				Avatar = avatar
-			}, Condition.Equal(nameof(IUserProfile.UserId), userId)) > 0;
+			}, Condition.Equal(nameof(UserProfile.UserId), userId)) > 0;
 		}
 
 		public bool SetPhotoPath(uint userId, string path)
@@ -130,12 +130,12 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Update(this.Name, new
 			{
 				PhotoPath = path
-			}, Condition.Equal(nameof(IUserProfile.UserId), userId)) > 0;
+			}, Condition.Equal(nameof(UserProfile.UserId), userId)) > 0;
 		}
 		#endregion
 
 		#region 重写方法
-		protected override IUserProfile OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
+		protected override UserProfile OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
 		{
 			//调用基类同名方法
 			var profile = base.OnGet(condition, schema, state, out paginator);
@@ -146,7 +146,7 @@ namespace Zongsoft.Community.Services
 			return profile;
 		}
 
-		protected override int OnInsert(IDataDictionary<IUserProfile> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<UserProfile> data, ISchema schema, object state)
 		{
 			//调用基类同名方法（新增用户配置信息）
 			if(base.OnInsert(data, schema, state) > 0)
@@ -177,7 +177,7 @@ namespace Zongsoft.Community.Services
 			return 1;
 		}
 
-		protected override int OnUpdate(IDataDictionary<IUserProfile> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<UserProfile> data, ICondition condition, ISchema schema, object state)
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号
 			if(!data.TryGetValue(p => p.UserId, out var userId) || userId == 0)

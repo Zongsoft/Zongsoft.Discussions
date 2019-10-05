@@ -81,9 +81,9 @@ namespace Zongsoft.Community.Security
 		#endregion
 
 		#region 私有方法
-		private IUserProfile GetUserProfile(uint userId)
+		private UserProfile GetUserProfile(uint userId)
 		{
-			return this.DataAccess.Select<IUserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
+			return this.DataAccess.Select<UserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
 		}
 
 		void IExecutionFilter.OnFiltered(object context)

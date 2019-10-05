@@ -32,7 +32,7 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization(AuthorizationMode.Requires)]
-	public class UserController : Zongsoft.Web.Http.HttpControllerBase<IUserProfile, IUserProfileConditional, UserService>
+	public class UserController : Zongsoft.Web.Http.HttpControllerBase<UserProfile, UserProfileConditional, UserService>
 	{
 		#region 构造函数
 		public UserController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)

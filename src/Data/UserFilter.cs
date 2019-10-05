@@ -41,8 +41,8 @@ namespace Zongsoft.Community.Data
 		#region 重写方法
 		protected override void OnDeleting(DataDeleteContextBase context)
 		{
-			if(string.Equals(context.Name, context.DataAccess.Naming.Get<Models.IUserProfile>(), StringComparison.OrdinalIgnoreCase))
-				context.States[DELETED_RESULTS] = context.DataAccess.Select<Models.IUserProfile>(context.Name, context.Condition, Paging.Disable).ToArray();
+			if(string.Equals(context.Name, context.DataAccess.Naming.Get<Models.UserProfile>(), StringComparison.OrdinalIgnoreCase))
+				context.States[DELETED_RESULTS] = context.DataAccess.Select<Models.UserProfile>(context.Name, context.Condition, Paging.Disable).ToArray();
 		}
 
 		protected override void OnDeleted(DataDeleteContextBase context)
@@ -60,7 +60,7 @@ namespace Zongsoft.Community.Data
 
 			foreach(var item in items)
 			{
-				var profile = item as Models.IUserProfile;
+				var profile = item as Models.UserProfile;
 
 				if(profile != null && !string.IsNullOrWhiteSpace(profile.PhotoPath))
 					Zongsoft.IO.FileSystem.File.DeleteAsync(profile.PhotoPath);

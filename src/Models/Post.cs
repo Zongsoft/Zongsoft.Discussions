@@ -162,7 +162,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子作者对应的用户对象。
 		/// </summary>
-		IUserProfile Creator
+		UserProfile Creator
 		{
 			get; set;
 		}
@@ -272,7 +272,7 @@ namespace Zongsoft.Community.Models
 		private string _visitorAddress;
 		private string _visitorDescription;
 		private uint _creatorId;
-		private IUserProfile _creator;
+		private UserProfile _creator;
 		private DateTime _createdTime;
 		#endregion
 
@@ -406,7 +406,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置回复人对象。
 		/// </summary>
-		public IUserProfile Creator
+		public UserProfile Creator
 		{
 			get
 			{
@@ -443,7 +443,7 @@ namespace Zongsoft.Community.Models
 		#region 成员字段
 		private ulong _postId;
 		private uint _userId;
-		private IUserProfile _user;
+		private UserProfile _user;
 		private string _userName;
 		private string _userAvatar;
 		private sbyte _value;
@@ -499,7 +499,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置投票的用户对象。
 		/// </summary>
-		public IUserProfile User
+		public UserProfile User
 		{
 			get
 			{

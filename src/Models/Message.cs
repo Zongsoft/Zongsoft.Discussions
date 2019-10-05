@@ -85,7 +85,7 @@ namespace Zongsoft.Community.Models
 			get; set;
 		}
 
-		IUserProfile Creator
+		UserProfile Creator
 		{
 			get; set;
 		}
@@ -189,7 +189,7 @@ namespace Zongsoft.Community.Models
 			set;
 		}
 
-		public IUserProfile User
+		public UserProfile User
 		{
 			get;
 			set;

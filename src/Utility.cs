@@ -187,7 +187,7 @@ namespace Zongsoft.Community
 
 					if(siteId == 0)
 					{
-						if(principal.Identity.Credential.Parameters.TryGetValue("Zongsoft.Community.UserProfile", out var value) && value is Models.IUserProfile profile)
+						if(principal.Identity.Credential.Parameters.TryGetValue("Zongsoft.Community.UserProfile", out var value) && value is Models.UserProfile profile)
 							siteId = profile.SiteId;
 					}
 				}
