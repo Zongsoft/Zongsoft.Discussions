@@ -48,10 +48,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override IMessage OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
+		protected override IMessage OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
 		{
 			//调用基类同名方法
-			var message = base.OnGet(condition, schema, state, out paginator);
+			var message = base.OnGet(condition, schema, states, out paginator);
 
 			if(message == null)
 				return null;
@@ -75,7 +75,7 @@ namespace Zongsoft.Community.Services
 			return message;
 		}
 
-		protected override int OnInsert(IDataDictionary<IMessage> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<IMessage> data, ISchema schema, IDictionary<string, object> states)
 		{
 			string filePath = null;
 
@@ -105,7 +105,7 @@ namespace Zongsoft.Community.Services
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				var count = base.OnInsert(data, schema, state);
+				var count = base.OnInsert(data, schema, states);
 
 				if(count < 1)
 				{
@@ -137,7 +137,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<IMessage> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<IMessage> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
 		{
 			//更新内容到文本文件中
 			data.TryGetValue(p => p.Content, (key, value) =>
@@ -159,7 +159,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, schema, state);
+			var count = base.OnUpdate(data, condition, schema, states);
 
 			if(count < 1)
 				return count;

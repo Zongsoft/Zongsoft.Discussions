@@ -36,10 +36,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Feedback OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
+		protected override Feedback OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
 		{
 			//调用基类同名方法
-			var feedback = base.OnGet(condition, schema, state, out paginator);
+			var feedback = base.OnGet(condition, schema, states, out paginator);
 
 			if(feedback == null)
 				return null;
@@ -51,7 +51,7 @@ namespace Zongsoft.Community.Services
 			return feedback;
 		}
 
-		protected override int OnInsert(IDataDictionary<Feedback> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<Feedback> data, ISchema schema, IDictionary<string, object> states)
 		{
 			string filePath = null;
 
@@ -82,7 +82,7 @@ namespace Zongsoft.Community.Services
 			try
 			{
 				//调用基类同名方法
-				var count = base.OnInsert(data, schema, state);
+				var count = base.OnInsert(data, schema, states);
 
 				if(count < 1)
 				{
@@ -103,7 +103,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<Feedback> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<Feedback> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
 		{
 			//更新内容到文本文件中
 			data.TryGetValue(p => p.Content, (key, value) =>
@@ -125,7 +125,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, schema, state);
+			var count = base.OnUpdate(data, condition, schema, states);
 
 			if(count < 1)
 				return count;

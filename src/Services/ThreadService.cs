@@ -91,10 +91,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override IThread OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
+		protected override IThread OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
 		{
 			//调用基类同名方法
-			var thread = base.OnGet(condition, schema, state, out paginator);
+			var thread = base.OnGet(condition, schema, states, out paginator);
 
 			if(thread == null)
 				return null;
@@ -134,7 +134,7 @@ namespace Zongsoft.Community.Services
 			return thread;
 		}
 
-		protected override int OnInsert(IDataDictionary<IThread> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<IThread> data, ISchema schema, IDictionary<string, object> states)
 		{
 			var post = data.GetValue(p => p.Post, null);
 
@@ -147,7 +147,7 @@ namespace Zongsoft.Community.Services
 				data.SetValue(p => p.PostId, (ulong)0);
 
 				//调用基类同名方法，插入主题数据
-				var count = base.OnInsert(data, schema, state);
+				var count = base.OnInsert(data, schema, states);
 
 				if(count < 1)
 					return count;
@@ -185,10 +185,10 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<IThread> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<IThread> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
 		{
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, schema, state);
+			var count = base.OnUpdate(data, condition, schema, states);
 
 			//获取要更新的主题内容贴
 			var post = data.GetValue(p => p.Post, null);

@@ -110,7 +110,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override IEnumerable<TEntity> OnSelect(ICondition condition, ISchema schema, Paging paging, Sorting[] sortings, object state)
+		protected override IEnumerable<TEntity> OnSelect(ICondition condition, ISchema schema, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
 		{
 			if(sortings == null || sortings.Length == 0)
 			{
@@ -128,10 +128,10 @@ namespace Zongsoft.Community.Services
 			}
 
 			//调用基类同名方法
-			return base.OnSelect(condition, schema, paging, sortings, state);
+			return base.OnSelect(condition, schema, paging, sortings, states);
 		}
 
-		protected override int OnUpdate(IDataDictionary<TEntity> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<TEntity> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
 		{
 			//排除不能变更的字段
 			schema.Exclude("SiteId")
@@ -139,10 +139,10 @@ namespace Zongsoft.Community.Services
 			      .Exclude("CreatedTime");
 
 			//调用基类同名方法
-			return base.OnUpdate(data, condition, schema, state);
+			return base.OnUpdate(data, condition, schema, states);
 		}
 
-		protected override int OnUpdateMany(IEnumerable<IDataDictionary<TEntity>> items, ISchema schema, object state)
+		protected override int OnUpdateMany(IEnumerable<IDataDictionary<TEntity>> items, ISchema schema, IDictionary<string, object> states)
 		{
 			//排除不能变更的字段
 			schema.Exclude("SiteId")
@@ -150,7 +150,7 @@ namespace Zongsoft.Community.Services
 				  .Exclude("CreatedTime");
 
 			//调用基类同名方法
-			return base.OnUpdateMany(items, schema, state);
+			return base.OnUpdateMany(items, schema, states);
 		}
 		#endregion
 	}

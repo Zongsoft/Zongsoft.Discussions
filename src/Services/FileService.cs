@@ -45,14 +45,14 @@ namespace Zongsoft.Community.Services
         #endregion
 
         #region 重写方法
-		protected override int OnInsert(IDataDictionary<IFile> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<IFile> data, ISchema schema, IDictionary<string, object> states)
 		{
 			var filePath = data.GetValue(p => p.Path);
 
 			try
 			{
 				//调用基类同名方法
-				var count = base.OnInsert(data, schema, state);
+				var count = base.OnInsert(data, schema, states);
 
 				if(count < 1)
 				{

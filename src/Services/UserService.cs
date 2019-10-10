@@ -135,10 +135,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override UserProfile OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
+		protected override UserProfile OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
 		{
 			//调用基类同名方法
-			var profile = base.OnGet(condition, schema, state, out paginator);
+			var profile = base.OnGet(condition, schema, states, out paginator);
 
 			if(profile == null)
 				return null;
@@ -146,10 +146,10 @@ namespace Zongsoft.Community.Services
 			return profile;
 		}
 
-		protected override int OnInsert(IDataDictionary<UserProfile> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<UserProfile> data, ISchema schema, IDictionary<string, object> states)
 		{
 			//调用基类同名方法（新增用户配置信息）
-			if(base.OnInsert(data, schema, state) > 0)
+			if(base.OnInsert(data, schema, states) > 0)
 			{
 				var user = Model.Build<IUser>(u =>
 				{
@@ -177,14 +177,14 @@ namespace Zongsoft.Community.Services
 			return 1;
 		}
 
-		protected override int OnUpdate(IDataDictionary<UserProfile> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<UserProfile> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号
 			if(!data.TryGetValue(p => p.UserId, out var userId) || userId == 0)
 				data.SetValue(p => p.UserId, userId = this.Credential.User.UserId);
 
 			//调用基类同名方法
-			return base.OnUpdate(data, condition, schema, state);
+			return base.OnUpdate(data, condition, schema, states);
 		}
 		#endregion
 

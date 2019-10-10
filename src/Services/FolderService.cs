@@ -78,12 +78,12 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override int OnUpdate(IDataDictionary<IFolder> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<IFolder> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
         {
             using(var transaction = new Transactions.Transaction())
             {
                 //调用基类同名方法
-                var count = base.OnUpdate(data, condition, schema, state);
+                var count = base.OnUpdate(data, condition, schema, states);
 
                 if(count < 1)
                     return count;

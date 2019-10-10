@@ -109,10 +109,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override IPost OnGet(ICondition condition, ISchema schema, object state, out IPaginator paginator)
+		protected override IPost OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
 		{
 			//调用基类同名方法
-			var post = base.OnGet(condition, schema, state, out paginator);
+			var post = base.OnGet(condition, schema, states, out paginator);
 
 			if(post == null)
 				return null;
@@ -124,7 +124,7 @@ namespace Zongsoft.Community.Services
 			return post;
 		}
 
-		protected override int OnInsert(IDataDictionary<IPost> data, ISchema schema, object state)
+		protected override int OnInsert(IDataDictionary<IPost> data, ISchema schema, IDictionary<string, object> states)
 		{
 			string filePath = null;
 
@@ -153,13 +153,28 @@ namespace Zongsoft.Community.Services
 				data.SetValue(p => p.ContentType, Utility.GetContentType(data.GetValue(p => p.ContentType), false));
 			});
 
-			//定义附加数据是否为关联的主题对象
-			var thread = state as IDataDictionary<IThread>;
+			object threadObject = null;
 
-			if(thread != null)
+			//附加数据是否包含了关联的主题对象
+			if(states != null && states.TryGetValue("Thread", out threadObject) && threadObject != null)
 			{
+				uint siteId = 0;
+				ushort forumId = 0;
+
+				if(threadObject is IThread thread)
+				{
+					siteId = thread.SiteId;
+					forumId = thread.ForumId;
+				}
+				else if(threadObject is IDataDictionary<IThread> dictionary)
+				{
+					siteId = dictionary.GetValue(p => p.SiteId);
+					forumId = dictionary.GetValue(p => p.ForumId);
+				}
+
 				//判断当前用户是否是新增主题所在论坛的版主
-				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(thread.GetValue(p => p.SiteId), thread.GetValue(p => p.ForumId));
+				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>()
+				                      .IsModerator(siteId, forumId);
 
 				if(isModerator)
 				{
@@ -167,7 +182,9 @@ namespace Zongsoft.Community.Services
 				}
 				else
 				{
-					var forum = this.DataAccess.Select<IForum>(Condition.Equal("SiteId", thread.GetValue(p => p.SiteId)) & Condition.Equal("ForumId", thread.GetValue(p => p.ForumId))).FirstOrDefault();
+					var forum = this.DataAccess.Select<IForum>(
+						Condition.Equal(nameof(IForum.SiteId), siteId) &
+						Condition.Equal(nameof(IForum.ForumId), forumId)).FirstOrDefault();
 
 					if(forum == null)
 						throw new InvalidOperationException("The specified forum is not existed about the new thread.");
@@ -181,13 +198,13 @@ namespace Zongsoft.Community.Services
 				using(var transaction = new Zongsoft.Transactions.Transaction())
 				{
 					//调用基类同名方法
-					var count = base.OnInsert(data, schema.Include(nameof(IPost.Attachments)), state);
+					var count = base.OnInsert(data, schema.Include(nameof(IPost.Attachments)), states);
 
 					if(count > 0)
 					{
 						//更新发帖人的关联帖子统计信息
 						//注意：只有当前帖子不是主题贴才需要更新对应的统计信息
-						if(thread == null)
+						if(threadObject == null)
 							this.SetMostRecentPost(data);
 
 						//提交事务
@@ -213,7 +230,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<IPost> data, ICondition condition, ISchema schema, object state)
+		protected override int OnUpdate(IDataDictionary<IPost> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
 		{
 			//更新内容到文本文件中
 			data.TryGetValue(p => p.Content, (key, value) =>
@@ -235,7 +252,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, schema, state);
+			var count = base.OnUpdate(data, condition, schema, states);
 
 			if(count < 1)
 				return count;
