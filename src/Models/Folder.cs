@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -27,13 +34,13 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示文件夹的业务实体类。
 	/// </summary>
-	public interface IFolder : Zongsoft.Data.IModel
+	public abstract class Folder
 	{
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置文件夹编号。
 		/// </summary>
-		uint FolderId
+		public abstract uint FolderId
 		{
 			get; set;
 		}
@@ -41,7 +48,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置文件夹名称。
 		/// </summary>
-		string Name
+		public abstract string Name
 		{
 			get; set;
 		}
@@ -49,7 +56,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置名称的拼音。
 		/// </summary>
-		string PinYin
+		public abstract string PinYin
 		{
 			get; set;
 		}
@@ -57,7 +64,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置图标名。
 		/// </summary>
-		string Icon
+		public abstract string Icon
 		{
 			get; set;
 		}
@@ -65,23 +72,15 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置所属站点编号。
 		/// </summary>
-		uint SiteId
+		public abstract uint SiteId
 		{
 			get; set;
 		}
 
 		/// <summary>
-		/// 获取或设置可见性。
+		/// 获取或设置分享性。
 		/// </summary>
-		Visiblity Visiblity
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置可访问性。
-		/// </summary>
-		Accessibility Accessibility
+		public abstract Shareability Shareability
 		{
 			get; set;
 		}
@@ -89,7 +88,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置创建人编号。
 		/// </summary>
-		uint CreatorId
+		public abstract uint CreatorId
 		{
 			get; set;
 		}
@@ -97,7 +96,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置创建人对象。
 		/// </summary>
-		UserProfile Creator
+		public abstract UserProfile Creator
 		{
 			get; set;
 		}
@@ -105,7 +104,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置创建时间。
 		/// </summary>
-		DateTime CreatedTime
+		public abstract DateTime CreatedTime
 		{
 			get; set;
 		}
@@ -115,69 +114,94 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置文件夹指定用户集合。
 		/// </summary>
-		IEnumerable<FolderUser> Users
+		public abstract IEnumerable<FolderUser> Users
 		{
 			get; set;
 		}
 		#endregion
-	}
 
-	public interface IFolderConditional : IModel
-	{
-		#region 公共属性
-		[Conditional("Name", "PinYin")]
-		string Key
+		#region 嵌套结构
+		/// <summary>
+		/// 表示文件夹用户的实体结构。
+		/// </summary>
+		public struct FolderUser : IEquatable<FolderUser>
 		{
-			get; set;
-		}
+			#region 公共字段
+			/// <summary>文件夹编号。</summary>
+			public uint FolderId;
+			/// <summary>用户编号。</summary>
+			public uint UserId;
+			/// <summary>权限定义。</summary>
+			public Permission Permission;
+			/// <summary>过期时间，如果为空(null)则表示永不过期。</summary>
+			public DateTime? Expiration;
 
-		[Conditional("Name", "PinYin")]
-		string Name
-		{
-			get; set;
-		}
+			/// <summary>文件夹对象。</summary>
+			public Folder Folder;
+			/// <summary>用户对象。</summary>
+			public UserProfile User;
+			#endregion
 
-		Visiblity? Visiblity
-		{
-			get; set;
-		}
+			#region 重写方法
+			public bool Equals(FolderUser other)
+			{
+				return this.FolderId == other.FolderId &&
+				       this.UserId == other.UserId;
+			}
 
-		Accessibility? Accessibility
-		{
-			get; set;
-		}
+			public override bool Equals(object obj)
+			{
+				if(obj == null || obj.GetType() != typeof(FolderUser))
+					return false;
 
-		uint? CreatorId
-		{
-			get; set;
-		}
+				return this.Equals((FolderUser)obj);
+			}
 
-		Range<DateTime> CreatedTime
-		{
-			get; set;
+			public override int GetHashCode()
+			{
+				return (int)(this.FolderId ^ this.UserId);
+			}
+
+			public override string ToString()
+			{
+				var text = this.FolderId.ToString() + "-" +
+				           this.UserId.ToString() + ":" +
+				           this.Permission.ToString();
+
+				if(this.Expiration.HasValue)
+					text += "@" + this.Expiration.Value.ToString();
+
+				return text;
+			}
+			#endregion
 		}
 		#endregion
 	}
 
-	public struct FolderUser
+	/// <summary>
+	/// 表示文件夹的查询条件实体类。
+	/// </summary>
+	public abstract class FolderConditional : ConditionalBase
 	{
 		#region 公共属性
-		public uint FolderId
+		[Conditional("Name", "PinYin")]
+		public abstract string Name
 		{
 			get; set;
 		}
 
-		public uint UserId
+		[Conditional(ConditionOperator.In)]
+		public abstract Shareability[] Shareability
 		{
 			get; set;
 		}
 
-		public UserProfile User
+		public abstract uint? CreatorId
 		{
 			get; set;
 		}
 
-		public UserKind UserKind
+		public abstract Range<DateTime> CreatedTime
 		{
 			get; set;
 		}

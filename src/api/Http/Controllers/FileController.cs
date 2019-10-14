@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <9555843@qq.com>
  * 
@@ -34,7 +41,7 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization(AuthorizationMode.Identity)]
-	public class FileController : Zongsoft.Web.Http.HttpControllerBase<IFile, IFileConditional, FileService>
+	public class FileController : Zongsoft.Web.Http.HttpControllerBase<File, FileConditional, FileService>
 	{
 		#region 常量定义
 		private static readonly DateTime EPOCH = new DateTime(2000, 1, 1);
@@ -76,7 +83,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		[HttpGet]
 		public HttpResponseMessage Download(string id)
 		{
-			var file = base.Get(id) as IFile;
+			var file = base.Get(id) as File;
 
 			if(file == null || string.IsNullOrWhiteSpace(file.Path))
 				return null;
@@ -90,9 +97,9 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IEnumerable<IFile>> Upload(uint? id = null)
+		public async Task<IEnumerable<File>> Upload(uint? id = null)
 		{
-			var files = new List<IFile>();
+			var files = new List<File>();
 			var infos = await _accessor.Write(this.Request,
 				                          this.DataService.GetDirectory(id),
 			                              args => args.FileName = (DateTime.Now - EPOCH).Days.ToString() + "-" + Zongsoft.Common.Randomizer.GenerateString());
@@ -110,7 +117,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				if(string.IsNullOrWhiteSpace(name as string))
 					name = info.Name;
 
-				var attachment = Zongsoft.Data.Model.Build<IFile>(file =>
+				var attachment = Zongsoft.Data.Model.Build<File>(file =>
 				{
 					file.FolderId = id.HasValue ? id.Value : 0;
 					file.Name = info.Name;

@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -18,6 +25,7 @@
  */
 
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
@@ -27,13 +35,13 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示主题的业务实体类。
 	/// </summary>
-	public interface IThread : Zongsoft.Data.IModel
+	public abstract class Thread
 	{
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置主题编号，主键。
 		/// </summary>
-		ulong ThreadId
+		public abstract ulong ThreadId
 		{
 			get; set;
 		}
@@ -41,7 +49,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题所属的站点编号。
 		/// </summary>
-		uint SiteId
+		public abstract uint SiteId
 		{
 			get; set;
 		}
@@ -49,7 +57,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题所属的论坛编号。
 		/// </summary>
-		ushort ForumId
+		public abstract ushort ForumId
 		{
 			get; set;
 		}
@@ -57,7 +65,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题所属的论坛对象。
 		/// </summary>
-		IForum Forum
+		public abstract Forum Forum
 		{
 			get; set;
 		}
@@ -65,7 +73,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的标题。
 		/// </summary>
-		string Subject
+		public abstract string Title
 		{
 			get; set;
 		}
@@ -73,7 +81,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的内容摘要。
 		/// </summary>
-		string Summary
+		public abstract string Summary
 		{
 			get; set;
 		}
@@ -81,7 +89,8 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的标签集。
 		/// </summary>
-		string Tags
+		[TypeConverter(typeof(TagsConverter))]
+		public abstract string[] Tags
 		{
 			get; set;
 		}
@@ -89,7 +98,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的内容帖子编号。
 		/// </summary>
-		ulong PostId
+		public abstract ulong PostId
 		{
 			get; set;
 		}
@@ -97,7 +106,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的内容帖子对象。
 		/// </summary>
-		IPost Post
+		public abstract Post Post
 		{
 			get; set;
 		}
@@ -105,7 +114,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的封面图片路径。
 		/// </summary>
-		string CoverPicturePath
+		public abstract string CoverPicturePath
 		{
 			get; set;
 		}
@@ -113,40 +122,15 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取主体的封面图片的访问地址。
 		/// </summary>
-		[Model.Property(Model.PropertyImplementationMode.Extension, typeof(ThreadExtension))]
-		string CoverPictureUrl
+		public string CoverPictureUrl
 		{
-			get;
+			get => Zongsoft.IO.FileSystem.GetUrl(this.CoverPicturePath);
 		}
 
 		/// <summary>
 		/// 获取或设置主题的链接地址。
 		/// </summary>
-		string LinkUrl
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置主题的状态。
-		/// </summary>
-		ThreadStatus Status
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置主题的状态变更时间。
-		/// </summary>
-		DateTime? StatusTimestamp
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置主题的状态描述文本。
-		/// </summary>
-		string StatusDescription
+		public abstract string ArticleUrl
 		{
 			get; set;
 		}
@@ -154,7 +138,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题是否被禁用，如果禁用则不显示。
 		/// </summary>
-		bool Disabled
+		public abstract bool Disabled
 		{
 			get; set;
 		}
@@ -162,7 +146,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题是否可见。
 		/// </summary>
-		bool Visible
+		public abstract bool Visible
 		{
 			get; set;
 		}
@@ -170,7 +154,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题是否已经审核通过。
 		/// </summary>
-		bool IsApproved
+		public abstract bool IsApproved
 		{
 			get; set;
 		}
@@ -178,7 +162,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题是否被锁定，如果锁定则不允许回复。
 		/// </summary>
-		bool IsLocked
+		public abstract bool IsLocked
 		{
 			get; set;
 		}
@@ -186,7 +170,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题是否置顶。
 		/// </summary>
-		bool IsPinned
+		public abstract bool IsPinned
 		{
 			get; set;
 		}
@@ -194,7 +178,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题是否为精华帖。
 		/// </summary>
-		bool IsValued
+		public abstract bool IsValued
 		{
 			get; set;
 		}
@@ -202,7 +186,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题是否为全局贴。
 		/// </summary>
-		bool IsGlobal
+		public abstract bool IsGlobal
 		{
 			get; set;
 		}
@@ -210,7 +194,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的累计浏览总数。
 		/// </summary>
-		uint TotalViews
+		public abstract uint TotalViews
 		{
 			get; set;
 		}
@@ -218,7 +202,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的回帖总数。
 		/// </summary>
-		uint TotalReplies
+		public abstract uint TotalReplies
 		{
 			get; set;
 		}
@@ -226,7 +210,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的置顶时间。
 		/// </summary>
-		DateTime? PinnedTime
+		public abstract DateTime? PinnedTime
 		{
 			get; set;
 		}
@@ -234,7 +218,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的全局发布的时间。
 		/// </summary>
-		DateTime? GlobalTime
+		public abstract DateTime? GlobalTime
 		{
 			get; set;
 		}
@@ -242,7 +226,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置最后被阅读的时间。
 		/// </summary>
-		DateTime? ViewedTime
+		public abstract DateTime? ViewedTime
 		{
 			get; set;
 		}
@@ -250,7 +234,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的最后回帖编号。
 		/// </summary>
-		ulong? MostRecentPostId
+		public abstract ulong? MostRecentPostId
 		{
 			get; set;
 		}
@@ -258,7 +242,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的最后回帖作者编号。
 		/// </summary>
-		uint? MostRecentPostAuthorId
+		public abstract uint? MostRecentPostAuthorId
 		{
 			get; set;
 		}
@@ -266,7 +250,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的最后回帖作者名称。
 		/// </summary>
-		string MostRecentPostAuthorName
+		public abstract string MostRecentPostAuthorName
 		{
 			get; set;
 		}
@@ -274,7 +258,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的最后回帖作者头像。
 		/// </summary>
-		string MostRecentPostAuthorAvatar
+		public abstract string MostRecentPostAuthorAvatar
 		{
 			get; set;
 		}
@@ -282,7 +266,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的最后回帖时间。
 		/// </summary>
-		DateTime? MostRecentPostTime
+		public abstract DateTime? MostRecentPostTime
 		{
 			get; set;
 		}
@@ -290,7 +274,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的作者编号。
 		/// </summary>
-		uint CreatorId
+		public abstract uint CreatorId
 		{
 			get; set;
 		}
@@ -298,7 +282,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的作者。
 		/// </summary>
-		UserProfile Creator
+		public abstract UserProfile Creator
 		{
 			get; set;
 		}
@@ -306,83 +290,69 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的创建时间。
 		/// </summary>
-		DateTime CreatedTime
+		public abstract DateTime CreatedTime
 		{
 			get; set;
 		}
 		#endregion
 	}
 
-	public interface IThreadConditional : IModel
+	/// <summary>
+	/// 表示主题查询条件的实体类。
+	/// </summary>
+	public abstract class ThreadConditional : ConditionalBase
 	{
 		#region 公共属性
-		string Subject
+		[Conditional(ConditionOperator.Like)]
+		public abstract string Title
 		{
 			get; set;
 		}
 
-		ThreadStatus? Status
+		public abstract bool? Disabled
 		{
 			get; set;
 		}
 
-		Range<DateTime> StatusTimestamp
+		public abstract bool? Visible
 		{
 			get; set;
 		}
 
-		bool? Disabled
+		public abstract bool? IsApproved
 		{
 			get; set;
 		}
 
-		bool? Visible
+		public abstract bool? IsLocked
 		{
 			get; set;
 		}
 
-		bool? IsApproved
+		public abstract bool? IsPinned
 		{
 			get; set;
 		}
 
-		bool? IsLocked
+		public abstract bool? IsValued
 		{
 			get; set;
 		}
 
-		bool? IsPinned
+		public abstract bool? IsGlobal
 		{
 			get; set;
 		}
 
-		bool? IsValued
+		public abstract uint? CreatorId
 		{
 			get; set;
 		}
 
-		bool? IsGlobal
-		{
-			get; set;
-		}
-
-		uint? CreatorId
-		{
-			get; set;
-		}
-
-		Range<DateTime> CreatedTime
+		public abstract Range<DateTime>? CreatedTime
 		{
 			get; set;
 		}
 		#endregion
-	}
-
-	internal static class ThreadExtension
-	{
-		public static string GetCoverPictureUrl(IThread thread)
-		{
-			return Zongsoft.IO.FileSystem.GetUrl(thread.CoverPicturePath);
-		}
 	}
 }

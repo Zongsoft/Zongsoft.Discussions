@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -29,12 +36,18 @@ namespace Zongsoft.Community.Data
 	public class FolderFilter : DataAccessFilterBase
 	{
 		#region 构造函数
-		public FolderFilter() : base(nameof(IFolder))
+		public FolderFilter() : base(nameof(Folder))
 		{
 		}
 		#endregion
 
 		#region 重写方法
+		protected override void OnSelecting(DataSelectContextBase context)
+		{
+			//调用基类同名方法
+			base.OnSelecting(context);
+		}
+
 		protected override void OnSelected(DataSelectContextBase context)
 		{
 			//调用基类同名方法
@@ -43,22 +56,22 @@ namespace Zongsoft.Community.Data
 			//设置查询结果的过滤器
 			context.ResultFilter = (ctx, item) =>
 			{
-				var folder = item as IFolder;
+				var folder = item as Folder;
 
 				if(folder == null)
 					return false;
 
-				if(folder.Visiblity == Visiblity.Specifics)
-				{
-					var credential = ctx.Principal?.Identity?.Credential;
+				//if(folder.Visiblity == Visibility.Scoped)
+				//{
+				//	var credential = ctx.Principal?.Identity?.Credential;
 
-					if(credential == null || credential.IsEmpty)
-						return false;
+				//	if(credential == null || credential.IsEmpty)
+				//		return false;
 
-					return context.DataAccess.Exists<FolderUser>(
-						Condition.Equal("FolderId", folder.FolderId) &
-						Condition.Equal("UserId", credential.User.UserId));
-				}
+				//	return context.DataAccess.Exists<FolderUser>(
+				//		Condition.Equal("FolderId", folder.FolderId) &
+				//		Condition.Equal("UserId", credential.User.UserId));
+				//}
 
 				return true;
 			};

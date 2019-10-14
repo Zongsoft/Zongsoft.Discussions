@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -26,7 +33,7 @@ using Zongsoft.Community.Models;
 namespace Zongsoft.Community.Services
 {
 	[DataSearcher("Name")]
-	public class FileService : DataService<IFile>
+	public class FileService : DataService<File>
 	{
 		#region 构造函数
 		public FileService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -45,7 +52,7 @@ namespace Zongsoft.Community.Services
         #endregion
 
         #region 重写方法
-		protected override int OnInsert(IDataDictionary<IFile> data, ISchema schema, IDictionary<string, object> states)
+		protected override int OnInsert(IDataDictionary<File> data, ISchema schema, IDictionary<string, object> states)
 		{
 			var filePath = data.GetValue(p => p.Path);
 

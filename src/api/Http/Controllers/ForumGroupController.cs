@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <9555843@qq.com>
  * 
@@ -29,7 +36,7 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class ForumGroupController : Zongsoft.Web.Http.HttpControllerBase<IForumGroup, IForumGroupConditional, ForumGroupService>
+	public class ForumGroupController : Zongsoft.Web.Http.HttpControllerBase<ForumGroup, ForumGroupConditional, ForumGroupService>
 	{
 		#region 构造函数
 		public ForumGroupController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -39,7 +46,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Forums")]
-		public IEnumerable<IForum> GetForums([FromRoute("id")]uint siteId, [FromRoute("id")]ushort groupId)
+		public IEnumerable<Forum> GetForums([FromRoute("id")]uint siteId, [FromRoute("id")]ushort groupId)
 		{
 			return this.DataService.GetForums(siteId, groupId);
 		}

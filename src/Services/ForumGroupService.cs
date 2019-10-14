@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -27,7 +34,7 @@ using Zongsoft.Community.Models;
 namespace Zongsoft.Community.Services
 {
 	[DataSearcher("Name")]
-	public class ForumGroupService : DataService<IForumGroup>
+	public class ForumGroupService : DataService<ForumGroup>
 	{
 		#region 构造函数
 		public ForumGroupService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -36,9 +43,9 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<IForum> GetForums(uint siteId, ushort groupId)
+		public IEnumerable<Forum> GetForums(uint siteId, ushort groupId)
 		{
-			return this.DataAccess.Select<IForum>(
+			return this.DataAccess.Select<Forum>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("GroupId", groupId),
 				Paging.Disable);
 		}
@@ -68,7 +75,7 @@ namespace Zongsoft.Community.Services
 
 			//如果凭证为空或匿名用户则只能获取公共数据
 			if(credential == null || credential.IsEmpty)
-				requires = Condition.Equal("Visiblity", (byte)Visiblity.Public) ;
+				requires = Condition.Equal("Visiblity", (byte)Visibility.Public) ;
 			//else if(!credential.InAdministrators) //如果不是管理员则只能获取内部或公共数据
 			//	requires = Condition.In("Visiblity", (byte)Visiblity.Internal, (byte)Visiblity.Public);
 

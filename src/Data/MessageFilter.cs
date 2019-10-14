@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -23,16 +30,16 @@ using System.Collections;
 
 namespace Zongsoft.Community.Data
 {
-	public class MessageFilter : ContentFilterBase<Models.IMessage>
+	public class MessageFilter : ContentFilterBase<Models.Message>
 	{
 		#region 构造函数
-		public MessageFilter() : base(nameof(Models.IMessage), "MessageId, Content, ContentType")
+		public MessageFilter() : base(nameof(Models.Message), "MessageId, Content, ContentType")
 		{
 		}
 		#endregion
 
 		#region 重写方法
-		protected override void DeleteContentFile(Models.IMessage entity)
+		protected override void DeleteContentFile(Models.Message entity)
 		{
 			if(!Utility.IsContentEmbedded(entity.ContentType))
 				Utility.DeleteFile(entity.Content);

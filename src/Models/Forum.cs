@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -27,13 +34,13 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示论坛的业务实体类。
 	/// </summary>
-	public interface IForum : Zongsoft.Data.IModel
+	public abstract class Forum
 	{
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置站点编号，主键。
 		/// </summary>
-		uint SiteId
+		public abstract uint SiteId
 		{
 			get; set;
 		}
@@ -41,7 +48,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛编号，主键。
 		/// </summary>
-		ushort ForumId
+		public abstract ushort ForumId
 		{
 			get; set;
 		}
@@ -49,15 +56,15 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛所属的组号。
 		/// </summary>
-		ushort GroupId
+		public abstract ushort GroupId
 		{
 			get; set;
 		}
 
 		/// <summary>
-		/// 获取或设置论坛所属的 <see cref="IForumGroup"/> 分组对象。
+		/// 获取或设置论坛所属的 <see cref="ForumGroup"/> 分组对象。
 		/// </summary>
-		IForumGroup Group
+		public abstract ForumGroup Group
 		{
 			get; set;
 		}
@@ -65,7 +72,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛所在分组中的排列序号。
 		/// </summary>
-		ushort SortOrder
+		public abstract ushort SortOrder
 		{
 			get; set;
 		}
@@ -73,7 +80,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛的名称(标题)。
 		/// </summary>
-		string Name
+		public abstract string Name
 		{
 			get; set;
 		}
@@ -81,7 +88,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛的描述文本。
 		/// </summary>
-		string Description
+		public abstract string Description
 		{
 			get; set;
 		}
@@ -89,7 +96,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛的封面图片路径。
 		/// </summary>
-		string CoverPicturePath
+		public abstract string CoverPicturePath
 		{
 			get; set;
 		}
@@ -97,16 +104,15 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取论坛封面图片的外部访问地址。
 		/// </summary>
-		[Zongsoft.Data.Model.Property(Zongsoft.Data.Model.PropertyImplementationMode.Extension, typeof(ForumExtension))]
-		string CoverPictureUrl
+		public string CoverPictureUrl
 		{
-			get;
+			get => Zongsoft.IO.FileSystem.GetUrl(this.CoverPicturePath);
 		}
 
 		/// <summary>
 		/// 获取或设置一个值，表示论坛是否为热门版块。
 		/// </summary>
-		bool IsPopular
+		public abstract bool IsPopular
 		{
 			get; set;
 		}
@@ -114,7 +120,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置一个值，表示发帖是否需要审核。
 		/// </summary>
-		bool ApproveEnabled
+		public abstract bool Approvable
 		{
 			get; set;
 		}
@@ -122,7 +128,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛的可见性。
 		/// </summary>
-		Visiblity Visiblity
+		public abstract Visibility Visibility
 		{
 			get; set;
 		}
@@ -130,7 +136,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛的可访问性。
 		/// </summary>
-		Accessibility Accessibility
+		public abstract Accessibility Accessibility
 		{
 			get; set;
 		}
@@ -138,7 +144,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中的累计帖子总数。
 		/// </summary>
-		uint TotalPosts
+		public abstract uint TotalPosts
 		{
 			get; set;
 		}
@@ -146,7 +152,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中的累积主题总数。
 		/// </summary>
-		uint TotalThreads
+		public abstract uint TotalThreads
 		{
 			get; set;
 		}
@@ -154,7 +160,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最新主题的编号。
 		/// </summary>
-		ulong? MostRecentThreadId
+		public abstract ulong? MostRecentThreadId
 		{
 			get; set;
 		}
@@ -162,7 +168,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最新主题的标题。
 		/// </summary>
-		string MostRecentThreadSubject
+		public abstract string MostRecentThreadSubject
 		{
 			get; set;
 		}
@@ -170,7 +176,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最新主题的作者编号。
 		/// </summary>
-		uint? MostRecentThreadAuthorId
+		public abstract uint? MostRecentThreadAuthorId
 		{
 			get; set;
 		}
@@ -178,7 +184,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最新主题的作者名称。
 		/// </summary>
-		string MostRecentThreadAuthorName
+		public abstract string MostRecentThreadAuthorName
 		{
 			get; set;
 		}
@@ -186,7 +192,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最新主题的作者头像。
 		/// </summary>
-		string MostRecentThreadAuthorAvatar
+		public abstract string MostRecentThreadAuthorAvatar
 		{
 			get; set;
 		}
@@ -194,7 +200,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最新主题的发布时间。
 		/// </summary>
-		DateTime? MostRecentThreadTime
+		public abstract DateTime? MostRecentThreadTime
 		{
 			get; set;
 		}
@@ -202,7 +208,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题的最后回帖编号。
 		/// </summary>
-		ulong? MostRecentPostId
+		public abstract ulong? MostRecentPostId
 		{
 			get; set;
 		}
@@ -210,7 +216,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最后回帖的作者编号。
 		/// </summary>
-		uint? MostRecentPostAuthorId
+		public abstract uint? MostRecentPostAuthorId
 		{
 			get; set;
 		}
@@ -218,7 +224,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最后回帖的作者名称。
 		/// </summary>
-		string MostRecentPostAuthorName
+		public abstract string MostRecentPostAuthorName
 		{
 			get; set;
 		}
@@ -226,7 +232,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最后回帖的作者头像。
 		/// </summary>
-		string MostRecentPostAuthorAvatar
+		public abstract string MostRecentPostAuthorAvatar
 		{
 			get; set;
 		}
@@ -234,7 +240,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最后回帖的时间。
 		/// </summary>
-		DateTime? MostRecentPostTime
+		public abstract DateTime? MostRecentPostTime
 		{
 			get; set;
 		}
@@ -242,7 +248,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛创建人编号。
 		/// </summary>
-		uint CreatorId
+		public abstract uint CreatorId
 		{
 			get; set;
 		}
@@ -250,104 +256,111 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛的创建时间。
 		/// </summary>
-		DateTime CreatedTime
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置论坛的版主集。
-		/// </summary>
-		IEnumerable<UserProfile> Moderators
+		public abstract DateTime CreatedTime
 		{
 			get; set;
 		}
 		#endregion
-	}
 
-	public interface IForumConditional : IModel
-	{
-		#region 公共属性
-		string Name
+		#region 集合属性
+		/// <summary>
+		/// 获取或设置论坛的版主集。
+		/// </summary>
+		public abstract IEnumerable<UserProfile> Moderators
 		{
 			get; set;
 		}
+		#endregion
 
-		Visiblity? Visiblity
+		#region 嵌套结构
+		/// <summary>
+		/// 表示论坛用户的业务实体结构。
+		/// </summary>
+		public struct ForumUser : IEquatable<ForumUser>
 		{
-			get; set;
-		}
+			#region 公共字段
+			/// <summary>站点编号</summary>
+			public uint SiteId;
+			/// <summary>论坛编号</summary>
+			public ushort ForumId;
+			/// <summary>用户编号</summary>
+			public uint UserId;
+			/// <summary>权限定义</summary>
+			public Permission Permission;
+			/// <summary>是否为版主</summary>
+			public bool IsModerator;
 
-		Accessibility? Accessibility
-		{
-			get; set;
-		}
+			/// <summary>论坛对象</summary>
+			public Forum Forum;
+			/// <summary>用户对象</summary>
+			public UserProfile User;
+			#endregion
 
-		bool? IsPopular
-		{
-			get; set;
-		}
+			#region 重写方法
+			public bool Equals(ForumUser other)
+			{
+				return this.SiteId == other.SiteId &&
+					this.ForumId == other.ForumId &&
+					this.UserId == other.UserId;
+			}
 
-		Range<DateTime> CreatedTime
-		{
-			get; set;
+			public override bool Equals(object obj)
+			{
+				if(obj == null || obj.GetType() != typeof(ForumUser))
+					return false;
+
+				return this.Equals((ForumUser)obj);
+			}
+
+			public override int GetHashCode()
+			{
+				return (int)(this.SiteId ^ this.ForumId ^ this.UserId);
+			}
+
+			public override string ToString()
+			{
+				return this.SiteId.ToString() + "." +
+					this.ForumId.ToString() + "-" +
+					this.UserId.ToString() + ":" +
+					(
+						this.IsModerator ? "Moderator" : this.Permission.ToString()
+					);
+			}
+			#endregion
 		}
 		#endregion
 	}
 
 	/// <summary>
-	/// 表示论坛用户的业务实体类。
+	/// 表示论坛查询条件的实体类。
 	/// </summary>
-	public class ForumUser
+	public abstract class ForumConditional : ConditionalBase
 	{
 		#region 公共属性
-		/// <summary>
-		/// 获取或设置站点编号。
-		/// </summary>
-		public uint SiteId
+		public abstract string Name
 		{
 			get; set;
 		}
 
-		/// <summary>
-		/// 获取或设置论坛编号。
-		/// </summary>
-		public ushort ForumId
+		public abstract Visibility? Visiblity
 		{
 			get; set;
 		}
 
-		/// <summary>
-		/// 获取或设置用户编号。
-		/// </summary>
-		public uint UserId
+		public abstract Accessibility? Accessibility
 		{
 			get; set;
 		}
 
-		/// <summary>
-		/// 获取或设置用户信息。
-		/// </summary>
-		public UserProfile User
+		public abstract bool? IsPopular
 		{
 			get; set;
 		}
 
-		/// <summary>
-		/// 获取或设置当前论坛用户的所属种类。
-		/// </summary>
-		public UserKind UserKind
+		public abstract Range<DateTime> CreatedTime
 		{
 			get; set;
 		}
 		#endregion
-	}
-
-	internal static class ForumExtension
-	{
-		public static string GetCoverPictureUrl(IForum forum)
-		{
-			return Zongsoft.IO.FileSystem.GetUrl(forum.CoverPicturePath);
-		}
 	}
 }

@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -25,18 +32,18 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示可见性的枚举。
 	/// </summary>
-	public enum Visiblity : byte
+	public enum Visibility : byte
 	{
-		/// <summary>隐藏，仅限所有人可见</summary>
+		/// <summary>隐藏的，仅限所有人可见</summary>
 		Hidden,
 
-		/// <summary>内部访问，仅限站内用户浏览</summary>
+		/// <summary>特定用户</summary>
+		Scoped,
+
+		/// <summary>内部的，站内用户</summary>
 		Internal,
 
-		/// <summary>公共，所有用户均可浏览</summary>
+		/// <summary>公共的，所有人(包括匿名访客)</summary>
 		Public,
-
-		/// <summary>指定的用户</summary>
-		Specifics,
 	}
 }

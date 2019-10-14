@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -29,7 +36,7 @@ namespace Zongsoft.Community.Data
 	public class ForumFilter : DataAccessFilterBase
 	{
 		#region 构造函数
-		public ForumFilter() : base(nameof(IForum))
+		public ForumFilter() : base(nameof(Forum))
 		{
 		}
 		#endregion
@@ -43,19 +50,19 @@ namespace Zongsoft.Community.Data
 			//设置查询结果的过滤器
 			context.ResultFilter = (ctx, item) =>
 			{
-				var forum = item as IForum;
+				var forum = item as Forum;
 
 				if(forum == null)
 					return false;
 
-				if(forum.Visiblity == Visiblity.Specifics)
+				if(forum.Visibility == Visibility.Scoped)
 				{
 					var credential = ctx.Principal?.Identity?.Credential;
 
 					if(credential == null || credential.IsEmpty)
 						return false;
 
-					return context.DataAccess.Exists<ForumUser>(
+					return context.DataAccess.Exists<Forum.ForumUser>(
 						Condition.Equal("SiteId", forum.SiteId) &
 						Condition.Equal("ForumId", forum.ForumId) &
 						Condition.Equal("UserId", credential.User.UserId));

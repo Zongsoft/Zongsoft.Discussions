@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <9555843@qq.com>
  * 
@@ -31,7 +38,7 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization(AuthorizationMode.Identity)]
-	public class FolderController : Zongsoft.Web.Http.HttpControllerBase<IFolder, IFolderConditional, FolderService>
+	public class FolderController : Zongsoft.Web.Http.HttpControllerBase<Folder, FolderConditional, FolderService>
 	{
 		#region 构造函数
 		public FolderController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -56,7 +63,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpPatch]
 		[ActionName("Visiblity")]
-		public void SetVisiblity(uint id, [FromRoute("args")]Visiblity visiblity)
+		public void SetVisiblity(uint id, [FromRoute("args")]Visibility visiblity)
 		{
 			if(!this.DataService.SetVisiblity(id, visiblity))
 				throw new HttpResponseException(HttpStatusCode.NotFound);

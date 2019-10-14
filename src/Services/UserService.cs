@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -88,7 +95,7 @@ namespace Zongsoft.Community.Services
 			if(userId == 0)
 				userId = this.Credential.User.UserId;
 
-			return this.DataAccess.Count<MessageUser>(Condition.Equal("UserId", userId));
+			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId));
 		}
 
 		public int GetMessageUnreadCount(uint userId = 0)
@@ -96,10 +103,10 @@ namespace Zongsoft.Community.Services
 			if(userId == 0)
 				userId = this.Credential.User.UserId;
 
-			return this.DataAccess.Count<MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
+			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
 		}
 
-		public IEnumerable<IMessage> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
+		public IEnumerable<Message> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
 		{
 			if(userId == 0)
 				userId = this.Credential.User.UserId;
@@ -109,7 +116,7 @@ namespace Zongsoft.Community.Services
 			if(isRead.HasValue)
 				conditions.Add(Condition.Equal("IsRead", isRead.Value));
 
-			return this.DataAccess.Select<MessageUser>(conditions, "Message", paging).Select(p => p.Message);
+			return this.DataAccess.Select<Message.MessageUser>(conditions, "Message", paging).Select(p => p.Message);
 		}
 
 		public bool SetStatus(uint userId, UserStatus status)

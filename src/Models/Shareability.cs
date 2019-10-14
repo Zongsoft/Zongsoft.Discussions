@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -23,23 +30,20 @@ using System.ComponentModel;
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示数据作用域的枚举。
+	/// 表示分享性的枚举。
 	/// </summary>
-	public enum Scoping : byte
+	public enum Shareability : byte
 	{
-		/// <summary>无限制。</summary>
-		None,
+		/// <summary>私有，仅限所有者</summary>
+		Private,
 
-		/// <summary>隐藏，仅限资源所有者。</summary>
-		Hidden,
-
-		/// <summary>内部，仅限站内成员。</summary>
+		/// <summary>内部，站内用户</summary>
 		Internal,
 
-		/// <summary>外部，站内外用户（即非匿名用户）。</summary>
-		External,
+		/// <summary>好友，特定用户</summary>
+		Friend,
 
-		/// <summary>指定的用户</summary>
-		Specific,
+		/// <summary>公共，所有人(包括匿名用户)</summary>
+		Public,
 	}
 }

@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -84,14 +91,14 @@ namespace Zongsoft.Community.Services.Commands
 			//根据内容类型解析得到真实内容
 			content = GetContent(content, ref contentType);
 
-			var message = Zongsoft.Data.Model.Build<Models.IMessage>(entity =>
+			var message = Zongsoft.Data.Model.Build<Models.Message>(entity =>
 			{
 				entity.Content = content;
 				entity.ContentType = contentType;
 				entity.Source = context.Expression.Options.GetValue<string>(SOURCE_OPTION);
 				entity.Subject = context.Expression.Options.GetValue<string>(SUBJECT_OPTION);
 				entity.MessageType = context.Expression.Options.GetValue<string>(MESSAGETYPE_OPTION);
-				entity.Users = GetUsers(context.Expression.Arguments).Select(uid => new Models.MessageUser(uid));
+				entity.Users = GetUsers(context.Expression.Arguments).Select(uid => new Models.Message.MessageUser(0, uid));
 			});
 
 			if(this.Service.Insert(message) > 0)

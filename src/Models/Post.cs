@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -28,13 +35,13 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示帖子的业务实体类。
 	/// </summary>
-	public interface IPost : Zongsoft.Data.IModel
+	public abstract class Post
 	{
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置帖子编号，主键。
 		/// </summary>
-		ulong PostId
+		public abstract ulong PostId
 		{
 			get; set;
 		}
@@ -42,7 +49,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子所属的站点编号。
 		/// </summary>
-		uint SiteId
+		public abstract uint SiteId
 		{
 			get; set;
 		}
@@ -50,7 +57,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子所属的主题编号。
 		/// </summary>
-		ulong ThreadId
+		public abstract ulong ThreadId
 		{
 			get; set;
 		}
@@ -58,7 +65,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子所属的主题对象。
 		/// </summary>
-		IThread Thread
+		public abstract Thread Thread
 		{
 			get; set;
 		}
@@ -66,7 +73,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的内容。
 		/// </summary>
-		string Content
+		public abstract string Content
 		{
 			get; set;
 		}
@@ -74,7 +81,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的内容类型。
 		/// </summary>
-		string ContentType
+		public abstract string ContentType
 		{
 			get; set;
 		}
@@ -82,7 +89,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置一个值，表示是否禁用。
 		/// </summary>
-		bool Disabled
+		public abstract bool Disabled
 		{
 			get; set;
 		}
@@ -90,7 +97,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置一个值，表示帖子是否被审核通过。
 		/// </summary>
-		bool IsApproved
+		public abstract bool IsApproved
 		{
 			get; set;
 		}
@@ -98,7 +105,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置一个值，表示帖子是否被锁定，如果锁定则不允许回复。
 		/// </summary>
-		bool IsLocked
+		public abstract bool IsLocked
 		{
 			get; set;
 		}
@@ -106,7 +113,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置一个值，表示帖子是否为精华帖。
 		/// </summary>
-		bool IsValued
+		public abstract bool IsValued
 		{
 			get; set;
 		}
@@ -114,7 +121,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的累计点赞总数。
 		/// </summary>
-		uint TotalUpvotes
+		public abstract uint TotalUpvotes
 		{
 			get; set;
 		}
@@ -122,7 +129,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的累计被踩总数。
 		/// </summary>
-		uint TotalDownvotes
+		public abstract uint TotalDownvotes
 		{
 			get; set;
 		}
@@ -130,7 +137,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置访问者的位置信息。
 		/// </summary>
-		string VisitorAddress
+		public abstract string VisitorAddress
 		{
 			get; set;
 		}
@@ -138,7 +145,15 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置访问者的描述信息。
 		/// </summary>
-		string VisitorDescription
+		public abstract string VisitorDescription
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置附件标记。
+		/// </summary>
+		public abstract string AttachmentMark
 		{
 			get; set;
 		}
@@ -146,7 +161,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子作者编号。
 		/// </summary>
-		uint CreatorId
+		public abstract uint CreatorId
 		{
 			get; set;
 		}
@@ -154,7 +169,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的创建时间。
 		/// </summary>
-		DateTime CreatedTime
+		public abstract DateTime CreatedTime
 		{
 			get; set;
 		}
@@ -162,7 +177,17 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子作者对应的用户对象。
 		/// </summary>
-		UserProfile Creator
+		public abstract UserProfile Creator
+		{
+			get; set;
+		}
+		#endregion
+
+		#region 集合属性
+		/// <summary>
+		/// 获取或设置帖子的附件集。
+		/// </summary>
+		public abstract ICollection<File> Attachments
 		{
 			get; set;
 		}
@@ -170,15 +195,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的回复集。
 		/// </summary>
-		IEnumerable<PostComment> Comments
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置帖子的附件集。
-		/// </summary>
-		IEnumerable<PostAttachment> Attachments
+		public abstract IEnumerable<PostComment> Comments
 		{
 			get; set;
 		}
@@ -186,7 +203,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的投票（点赞和被踩）记录集。
 		/// </summary>
-		IEnumerable<PostVoting> Votes
+		public abstract IEnumerable<PostVoting> Votes
 		{
 			get; set;
 		}
@@ -194,463 +211,229 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取帖子的点赞记录集。
 		/// </summary>
-		[Model.Property(Model.PropertyImplementationMode.Extension, typeof(PostExtension))]
 		[Runtime.Serialization.SerializationMember(Runtime.Serialization.SerializationMemberBehavior.Ignored)]
-		IEnumerable<PostVoting> Upvotes
+		public IEnumerable<PostVoting> Upvotes
 		{
-			get;
+			get => this.Votes.Where(vote => vote.Value > 0);
 		}
 
 		/// <summary>
 		/// 获取帖子的被踩记录集。
 		/// </summary>
-		[Model.Property(Model.PropertyImplementationMode.Extension, typeof(PostExtension))]
 		[Runtime.Serialization.SerializationMember(Runtime.Serialization.SerializationMemberBehavior.Ignored)]
-		IEnumerable<PostVoting> Downvotes
+		public IEnumerable<PostVoting> Downvotes
 		{
-			get;
-		}
-		#endregion
-	}
-
-	public interface IPostConditional : IModel
-	{
-		#region 公共属性
-		string Content
-		{
-			get; set;
-		}
-
-		ulong? ParentId
-		{
-			get; set;
-		}
-
-		bool? Disabled
-		{
-			get; set;
-		}
-
-		bool? IsApproved
-		{
-			get; set;
-		}
-
-		bool? IsLocked
-		{
-			get; set;
-		}
-
-		bool? IsValued
-		{
-			get; set;
-		}
-
-		uint? CreatorId
-		{
-			get; set;
-		}
-
-		Range<DateTime> CreatedTime
-		{
-			get; set;
-		}
-		#endregion
-	}
-
-	/// <summary>
-	/// 表示帖子回复的业务实体类。
-	/// </summary>
-	public class PostComment
-	{
-		#region 成员字段
-		private ulong _postId;
-		private ushort _serialId;
-		private ushort _sourceId;
-		private string _content;
-		private string _contentType;
-		private string _visitorAddress;
-		private string _visitorDescription;
-		private uint _creatorId;
-		private UserProfile _creator;
-		private DateTime _createdTime;
-		#endregion
-
-		#region 构造函数
-		public PostComment()
-		{
+			get => this.Votes.Where(vote => vote.Value < 0);
 		}
 		#endregion
 
-		#region 公共属性
+		#region 嵌套子类
 		/// <summary>
-		/// 获取或设置帖子编号。
+		/// 表示帖子回复的业务实体类。
 		/// </summary>
-		public ulong PostId
+		public abstract class PostComment
 		{
-			get
+			#region 构造函数
+			protected PostComment()
 			{
-				return _postId;
 			}
-			set
+			#endregion
+
+			#region 公共属性
+			/// <summary>
+			/// 获取或设置帖子编号。
+			/// </summary>
+			public abstract ulong PostId
 			{
-				_postId = value;
+				get; set;
 			}
+
+			/// <summary>
+			/// 获取或设置回复序号。
+			/// </summary>
+			public abstract ushort SerialId
+			{
+				get; set;
+			}
+
+			/// <summary>
+			/// 获取或设置回复关联的源回复序号。
+			/// </summary>
+			public abstract ushort SourceId
+			{
+				get; set;
+			}
+
+			/// <summary>
+			/// 获取或设置回复的内容。
+			/// </summary>
+			public abstract string Content
+			{
+				get; set;
+			}
+
+			/// <summary>
+			/// 获取或设置回复的内容类型。
+			/// </summary>
+			public abstract string ContentType
+			{
+				get; set;
+			}
+
+			/// <summary>
+			/// 获取或设置访问者地址。
+			/// </summary>
+			public abstract string VisitorAddress
+			{
+				get; set;
+			}
+
+			/// <summary>
+			/// 获取或设置访问者描述信息。
+			/// </summary>
+			public abstract string VisitorDescription
+			{
+				get; set;
+			}
+
+			/// <summary>
+			/// 获取或设置回复人编号。
+			/// </summary>
+			public abstract uint CreatorId
+			{
+				get; set;
+			}
+
+			/// <summary>
+			/// 获取或设置回复人对象。
+			/// </summary>
+			public abstract UserProfile Creator
+			{
+				get; set;
+			}
+
+			/// <summary>
+			/// 获取或设置回复时间。
+			/// </summary>
+			public abstract DateTime CreatedTime
+			{
+				get; set;
+			}
+			#endregion
 		}
 
 		/// <summary>
-		/// 获取或设置回复序号。
+		/// 表示帖子投票的业务实体类。
 		/// </summary>
-		public ushort SerialId
+		public abstract class PostVoting
 		{
-			get
+			#region 构造函数
+			protected PostVoting()
 			{
-				return _serialId;
 			}
-			set
-			{
-				_serialId = value;
-			}
-		}
+			#endregion
 
-		/// <summary>
-		/// 获取或设置回复关联的源回复序号。
-		/// </summary>
-		public ushort SourceId
-		{
-			get
+			#region 公共属性
+			/// <summary>
+			/// 获取或设置投票关联的帖子编号。
+			/// </summary>
+			public abstract ulong PostId
 			{
-				return _sourceId;
+				get; set;
 			}
-			set
-			{
-				_sourceId = value;
-			}
-		}
 
-		/// <summary>
-		/// 获取或设置回复的内容。
-		/// </summary>
-		public string Content
-		{
-			get
+			/// <summary>
+			/// 获取或设置投票的用户编号。
+			/// </summary>
+			public abstract uint UserId
 			{
-				return _content;
+				get; set;
 			}
-			set
-			{
-				_content = value;
-			}
-		}
 
-		/// <summary>
-		/// 获取或设置回复的内容类型。
-		/// </summary>
-		public string ContentType
-		{
-			get
+			/// <summary>
+			/// 获取或设置投票的用户对象。
+			/// </summary>
+			public abstract UserProfile User
 			{
-				return _contentType;
+				get; set;
 			}
-			set
-			{
-				_contentType = value;
-			}
-		}
 
-		/// <summary>
-		/// 获取或设置访问者地址。
-		/// </summary>
-		public string VisitorAddress
-		{
-			get
+			/// <summary>
+			/// 获取或设置投票的用户名称。
+			/// </summary>
+			public abstract string UserName
 			{
-				return _visitorAddress;
+				get; set;
 			}
-			set
-			{
-				_visitorAddress = value;
-			}
-		}
 
-		/// <summary>
-		/// 获取或设置访问者描述信息。
-		/// </summary>
-		public string VisitorDescription
-		{
-			get
+			/// <summary>
+			/// 获取或设置投票的用户头像。
+			/// </summary>
+			public abstract string UserAvatar
 			{
-				return _visitorDescription;
+				get; set;
 			}
-			set
-			{
-				_visitorDescription = value;
-			}
-		}
 
-		/// <summary>
-		/// 获取或设置回复人编号。
-		/// </summary>
-		public uint CreatorId
-		{
-			get
+			/// <summary>
+			/// 获取或设置投票值（正数为赞，负数为踩）。
+			/// </summary>
+			public abstract sbyte Value
 			{
-				return _creatorId;
+				get; set;
 			}
-			set
-			{
-				_creatorId = value;
-			}
-		}
 
-		/// <summary>
-		/// 获取或设置回复人对象。
-		/// </summary>
-		public UserProfile Creator
-		{
-			get
+			/// <summary>
+			/// 获取或设置投票的时间。
+			/// </summary>
+			public abstract DateTime Timestamp
 			{
-				return _creator;
+				get; set;
 			}
-			set
-			{
-				_creator = value;
-			}
-		}
-
-		/// <summary>
-		/// 获取或设置回复时间。
-		/// </summary>
-		public DateTime CreatedTime
-		{
-			get
-			{
-				return _createdTime;
-			}
-			set
-			{
-				_createdTime = value;
-			}
+			#endregion
 		}
 		#endregion
 	}
 
 	/// <summary>
-	/// 表示帖子投票的业务实体类。
+	/// 表示帖子查询条件的实体。
 	/// </summary>
-	public class PostVoting
+	public abstract class PostConditional : ConditionalBase
 	{
-		#region 成员字段
-		private ulong _postId;
-		private uint _userId;
-		private UserProfile _user;
-		private string _userName;
-		private string _userAvatar;
-		private sbyte _value;
-		private DateTime _timestamp;
-		#endregion
-
-		#region 构造函数
-		public PostVoting()
-		{
-			_timestamp = DateTime.Now;
-		}
-
-		public PostVoting(ulong postId, uint userId, sbyte value)
-		{
-			_postId = postId;
-			_userId = userId;
-			_value = value;
-			_timestamp = DateTime.Now;
-		}
-		#endregion
-
 		#region 公共属性
-		/// <summary>
-		/// 获取或设置投票关联的帖子编号。
-		/// </summary>
-		public ulong PostId
+		public abstract ulong? ThreadId
 		{
-			get
-			{
-				return _postId;
-			}
-			set
-			{
-				_postId = value;
-			}
+			get; set;
 		}
 
-		/// <summary>
-		/// 获取或设置投票的用户编号。
-		/// </summary>
-		public uint UserId
+		public abstract bool? Disabled
 		{
-			get
-			{
-				return _userId;
-			}
-			set
-			{
-				_userId = value;
-			}
+			get; set;
 		}
 
-		/// <summary>
-		/// 获取或设置投票的用户对象。
-		/// </summary>
-		public UserProfile User
+		public abstract bool? IsApproved
 		{
-			get
-			{
-				return _user;
-			}
-			set
-			{
-				_user = value;
-			}
+			get; set;
 		}
 
-		/// <summary>
-		/// 获取或设置投票的用户名称。
-		/// </summary>
-		public string UserName
+		public abstract bool? IsLocked
 		{
-			get
-			{
-				return _userName;
-			}
-			set
-			{
-				_userName = value;
-			}
+			get; set;
 		}
 
-		/// <summary>
-		/// 获取或设置投票的用户头像。
-		/// </summary>
-		public string UserAvatar
+		public abstract bool? IsValued
 		{
-			get
-			{
-				return _userAvatar;
-			}
-			set
-			{
-				_userAvatar = value;
-			}
+			get; set;
 		}
 
-		/// <summary>
-		/// 获取或设置投票值（正数为赞，负数为踩）。
-		/// </summary>
-		public sbyte Value
+		public abstract uint? CreatorId
 		{
-			get
-			{
-				return _value;
-			}
-			set
-			{
-				_value = value;
-			}
+			get; set;
 		}
 
-		/// <summary>
-		/// 获取或设置投票的时间。
-		/// </summary>
-		public DateTime Timestamp
+		public abstract Range<DateTime>? CreatedTime
 		{
-			get
-			{
-				return _timestamp;
-			}
-			set
-			{
-				_timestamp = value;
-			}
+			get; set;
 		}
 		#endregion
-	}
-
-	/// <summary>
-	/// 表示帖子附件的业务实体类。
-	/// </summary>
-	public struct PostAttachment
-	{
-		#region 成员字段
-		private ulong _postId;
-		private ulong _fileId;
-		private IFile _file;
-		#endregion
-
-		#region 构造函数
-		public PostAttachment(ulong postId, ulong fileId)
-		{
-			_postId = postId;
-			_fileId = fileId;
-			_file = null;
-		}
-		#endregion
-
-		#region 公共属性
-		/// <summary>
-		/// 获取或设置帖子编号。
-		/// </summary>
-		public ulong PostId
-		{
-			get
-			{
-				return _postId;
-			}
-			set
-			{
-				_postId = value;
-			}
-		}
-
-		/// <summary>
-		/// 获取或设置帖子的文件编号。
-		/// </summary>
-		public ulong FileId
-		{
-			get
-			{
-				return _fileId;
-			}
-			set
-			{
-				_fileId = value;
-			}
-		}
-
-		/// <summary>
-		/// 获取或设置帖子的文件对象。
-		/// </summary>
-		public IFile File
-		{
-			get
-			{
-				return _file;
-			}
-			set
-			{
-				_file = value;
-			}
-		}
-		#endregion
-	}
-
-	public static class PostExtension
-	{
-		public static IEnumerable<PostVoting> GetUpvotes(IPost post)
-		{
-			return post.Votes.Where(vote => vote.Value > 0);
-		}
-
-		public static IEnumerable<PostVoting> GetDownvotes(IPost post)
-		{
-			return post.Votes.Where(vote => vote.Value < 0);
-		}
 	}
 }

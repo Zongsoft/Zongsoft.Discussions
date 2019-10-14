@@ -8,17 +8,15 @@
 			</key>
 
 			<property name="MessageId" type="ulong" nullable="false" sequence="#" />
-			<property name="SiteId" type="uint" nullable="false" />
+			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="Subject" type="string" length="100" nullable="false" />
 			<property name="Content" type="string" length="500" nullable="false" />
 			<property name="ContentType" type="string" length="50" nullable="true" />
 			<property name="MessageType" type="string" length="50" nullable="true" />
 			<property name="Source" type="string" length="50" nullable="true" />
-			<property name="Status" type="byte" nullable="false" />
-			<property name="StatusTimestamp" type="datetime" nullable="true" />
-			<property name="StatusDescription" type="string" length="100" nullable="true" />
-			<property name="CreatorId" type="uint" nullable="false" />
-			<property name="CreatedTime" type="datetime" nullable="false" default="now()" />
+			<property name="Tags" type="nvarchar" length="100" nullable="true" />
+			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
+			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
 			<complexProperty name="Creator" role="UserProfile">
 				<link name="CreatorId" role="UserId" />
@@ -50,14 +48,14 @@
 			</key>
 
 			<property name="FeedbackId" type="ulong" nullable="false" sequence="#" />
-			<property name="SiteId" type="uint" nullable="false" />
+			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="Kind" type="byte" nullable="false" />
 			<property name="Subject" type="string" length="100" nullable="false" />
 			<property name="Content" type="string" length="500" nullable="false" />
 			<property name="ContentType" type="string" length="50" nullable="true" />
 			<property name="ContactName" type="string" length="50" nullable="true" />
 			<property name="ContactText" type="string" length="50" nullable="true" />
-			<property name="CreatedTime" type="datetime" nullable="false" default="now()" />
+			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 		</entity>
 
 		<entity name="File" table="Community_File">
@@ -66,14 +64,15 @@
 			</key>
 
 			<property name="FileId" type="ulong" nullable="false" sequence="#" />
-			<property name="SiteId" type="uint" nullable="true" />
+			<property name="SiteId" type="uint" nullable="true" immutable="true" />
 			<property name="FolderId" type="uint" nullable="false" />
 			<property name="Name" type="string" length="100" nullable="false" />
 			<property name="Path" type="string" length="200" nullable="false" />
 			<property name="Type" type="string" length="50" nullable="false" />
 			<property name="Size" type="uint" nullable="false" />
-			<property name="CreatorId" type="uint" nullable="true" />
-			<property name="CreatedTime" type="datetime" nullable="false" default="now()" />
+			<property name="Tags" type="nvarchar" length="100" nullable="true" />
+			<property name="CreatorId" type="uint" nullable="true" immutable="true" />
+			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 			<property name="Description" type="string" length="100" nullable="true" />
 
 			<complexProperty name="Folder" role="Folder">
@@ -91,26 +90,25 @@
 			</key>
 
 			<property name="FolderId" type="uint" nullable="false" sequence="#" />
-			<property name="SiteId" type="uint" nullable="false" />
+			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="Name" type="string" length="100" nullable="false" />
 			<property name="PinYin" type="string" length="200" nullable="true" />
 			<property name="Icon" type="string" length="50" nullable="true" />
-			<property name="Visiblity" type="byte" nullable="false" />
-			<property name="Accessibility" type="byte" nullable="false" />
-			<property name="CreatorId" type="uint" nullable="false" />
-			<property name="CreatedTime" type="datetime" nullable="false" default="now()" />
+			<property name="Shareability" type="byte" nullable="false" />
+			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
+			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 			<property name="Description" type="string" length="500" nullable="true" />
+
+			<complexProperty name="Creator" role="UserProfile">
+				<link name="CreatorId" role="UserId" />
+			</complexProperty>
 
 			<complexProperty name="Files" role="File" multiplicity="*">
 				<link name="FolderId" role="FolderId" />
 			</complexProperty>
 
-			<complexProperty name="Users" role="FolderUser:User" multiplicity="*">
+			<complexProperty name="Users" role="FolderUser" multiplicity="*">
 				<link name="FolderId" role="FolderId" />
-			</complexProperty>
-
-			<complexProperty name="Creator" role="UserProfile">
-				<link name="CreatorId" role="UserId" />
 			</complexProperty>
 		</entity>
 
@@ -122,7 +120,8 @@
 
 			<property name="FolderId" type="uint" nullable="false" />
 			<property name="UserId" type="uint" nullable="false" />
-			<property name="UserKind" type="byte" nullable="false" />
+			<property name="Permission" type="byte" nullable="false" />
+			<property name="Expiration" type="datetime" nullable="true" />
 
 			<complexProperty name="User" role="UserProfile">
 				<link name="UserId" role="UserId" />
@@ -139,7 +138,6 @@
 			<property name="GroupId" type="ushort" nullable="false" sequence="#SiteId" />
 			<property name="Name" type="string" length="50" nullable="false" />
 			<property name="Icon" type="string" length="100" nullable="true" />
-			<property name="Visiblity" type="byte" nullable="false" />
 			<property name="SortOrder" type="short" nullable="false" />
 			<property name="Description" type="string" length="500" nullable="true" />
 
@@ -163,9 +161,9 @@
 			<property name="CoverPicturePath" type="string" length="200" nullable="true" />
 			<property name="SortOrder" type="short" nullable="false" />
 			<property name="IsPopular" type="bool" nullable="false" />
-			<property name="ApproveEnabled" type="bool" nullable="false" />
-			<property name="Visiblity" type="byte" nullable="false" />
-			<property name="Accessibility" type="byte" nullable="false" />
+			<property name="Approvable" type="bool" nullable="false" />
+			<property name="Visibility" type="byte" nullable="false" default="2" />
+			<property name="Accessibility" type="byte" nullable="false" default="2" />
 			<property name="TotalPosts" type="int" nullable="false" />
 			<property name="TotalThreads" type="int" nullable="false" />
 			<property name="MostRecentThreadId" type="ulong" nullable="true" />
@@ -179,17 +177,21 @@
 			<property name="MostRecentPostAuthorName" type="string" length="50" nullable="true" />
 			<property name="MostRecentPostAuthorAvatar" type="string" length="150" nullable="true" />
 			<property name="MostRecentPostTime" type="datetime" nullable="true" />
-			<property name="CreatorId" type="int" nullable="false" />
-			<property name="CreatedTime" type="datetime" nullable="false" default="now()" />
-
-			<complexProperty name="Moderators" role="ForumUser:User" multiplicity="*">
-				<link name="SiteId" role="SiteId" />
-				<link name="ForumId" role="ForumId" />
-			</complexProperty>
+			<property name="CreatorId" type="int" nullable="false" immutable="true" />
+			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
 			<complexProperty name="Group" role="ForumGroup">
 				<link name="SiteId" role="SiteId" />
 				<link name="GroupId" role="GroupId" />
+			</complexProperty>
+
+			<complexProperty name="Moderators" role="ForumUser:User" multiplicity="*">
+				<link name="SiteId" role="SiteId" />
+				<link name="ForumId" role="ForumId" />
+
+				<constraints>
+					<constraint actor="Foreign" name="IsModerator" value="true" />
+				</constraints>
 			</complexProperty>
 		</entity>
 
@@ -203,7 +205,8 @@
 			<property name="SiteId" type="uint" nullable="false" />
 			<property name="ForumId" type="ushort" nullable="false" />
 			<property name="UserId" type="uint" nullable="false" />
-			<property name="UserKind" type="byte" nullable="false" />
+			<property name="Permission" type="byte" nullable="false" />
+			<property name="IsModerator" type="bool" nullable="false" />
 
 			<complexProperty name="User" role="UserProfile">
 				<link name="UserId" role="UserId" />
@@ -218,15 +221,12 @@
 			<property name="ThreadId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="ForumId" type="ushort" nullable="false" />
-			<property name="Subject" type="string" length="100" nullable="false" />
+			<property name="Title" type="string" length="100" nullable="false" />
 			<property name="Summary" type="string" length="500" nullable="true" />
 			<property name="Tags" type="string" length="100" nullable="true" />
 			<property name="PostId" type="ulong" nullable="false" />
 			<property name="CoverPicturePath" type="string" length="200" nullable="true" />
-			<property name="LinkUrl" type="string" length="200" nullable="true" />
-			<property name="Status" type="byte" nullable="false" />
-			<property name="StatusTimestamp" type="datetime" nullable="false" />
-			<property name="StatusDescription" type="string" length="100" nullable="true" />
+			<property name="ArticleUrl" type="string" length="200" nullable="true" />
 			<property name="Disabled" type="bool" nullable="false" />
 			<property name="Visible" type="bool" nullable="false" />
 			<property name="IsApproved" type="bool" nullable="false" />
@@ -244,12 +244,8 @@
 			<property name="MostRecentPostAuthorName" type="string" length="50" nullable="true" />
 			<property name="MostRecentPostAuthorAvatar" type="string" length="150" nullable="true" />
 			<property name="MostRecentPostTime" type="datetime" nullable="true" />
-			<property name="CreatorId" type="uint" nullable="false" />
-			<property name="CreatedTime" type="datetime" nullable="false" default="now()" />
-
-			<complexProperty name="Posts" role="Post" multiplicity="*">
-				<link name="ThreadId" role="ThreadId" />
-			</complexProperty>
+			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
+			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
 			<complexProperty name="Forum" role="Forum">
 				<link name="SiteId" role="SiteId" />
@@ -263,6 +259,10 @@
 			<complexProperty name="Creator" role="UserProfile">
 				<link name="CreatorId" role="UserId" />
 			</complexProperty>
+
+			<complexProperty name="Posts" role="Post" multiplicity="*">
+				<link name="ThreadId" role="ThreadId" />
+			</complexProperty>
 		</entity>
 
 		<entity name="Post" table="Community_Post">
@@ -271,7 +271,7 @@
 			</key>
 
 			<property name="PostId" type="ulong" nullable="false" sequence="#" />
-			<property name="SiteId" type="uint" nullable="false" />
+			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="ThreadId" type="ulong" nullable="false" />
 			<property name="Content" type="string" length="500" nullable="false" />
 			<property name="ContentType" type="string" length="50" nullable="true" />
@@ -283,11 +283,16 @@
 			<property name="TotalDownvotes" type="uint" nullable="false" />
 			<property name="VisitorAddress" type="string" length="100" nullable="true" />
 			<property name="VisitorDescription" type="string" length="500" nullable="true" />
-			<property name="CreatorId" type="uint" nullable="false" />
-			<property name="CreatedTime" type="datetime" nullable="false" default="now()" />
+			<property name="AttachmentMark" type="varchar" length="100" nullable="true" />
+			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
+			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
-			<complexProperty name="Attachments" role="PostAttachment" multiplicity="*">
-				<link name="PostId" role="PostId" />
+			<complexProperty name="Thread" role="Thread">
+				<link name="ThreadId" role="ThreadId" />
+			</complexProperty>
+
+			<complexProperty name="Creator" role="UserProfile">
+				<link name="CreatorId" role="UserId" />
 			</complexProperty>
 
 			<complexProperty name="Comments" role="PostComment" multiplicity="*">
@@ -296,14 +301,6 @@
 
 			<complexProperty name="Votes" role="PostVoting" multiplicity="*">
 				<link name="PostId" role="PostId" />
-			</complexProperty>
-
-			<complexProperty name="Thread" role="Thread">
-				<link name="ThreadId" role="ThreadId" />
-			</complexProperty>
-
-			<complexProperty name="Creator" role="UserProfile">
-				<link name="CreatorId" role="UserId" />
 			</complexProperty>
 		</entity>
 
@@ -314,14 +311,14 @@
 			</key>
 
 			<property name="PostId" type="ulong" nullable="false" />
-			<property name="SerialId" type="ushort" nullable="false" />
+			<property name="SerialId" type="ushort" nullable="false" sequence="#PostId" />
 			<property name="SourceId" type="ushort" nullable="true" />
 			<property name="Content" type="string" length="500" nullable="false" />
 			<property name="ContentType" type="string" length="50" nullable="true" />
 			<property name="VisitorAddress" type="string" length="100" nullable="true" />
 			<property name="VisitorDescription" type="string" length="500" nullable="true" />
-			<property name="CreatorId" type="uint" nullable="false" />
-			<property name="CreatedTime" type="datetime" nullable="false" default="now()" />
+			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
+			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
 			<complexProperty name="Creator" role="UserProfile">
 				<link name="CreatorId" role="UserId" />
@@ -338,25 +335,11 @@
 			<property name="UserId" type="uint" nullable="false" />
 			<property name="UserName" type="string" length="50" nullable="true" />
 			<property name="UserAvatar" type="string" length="150" nullable="true" />
-			<property name="Value" type="byte" nullable="false" />
-			<property name="Tiemstamp" type="datetime" nullable="false" default="now()" />
+			<property name="Value" type="sbyte" nullable="false" />
+			<property name="Tiemstamp" type="datetime" nullable="false" default="now()" immutable="true" />
 
 			<complexProperty name="User" role="UserProfile">
 				<link name="UserId" role="UserId" />
-			</complexProperty>
-		</entity>
-
-		<entity name="PostAttachment" table="Community_PostAttachment">
-			<key>
-				<member name="PostId" />
-				<member name="FileId" />
-			</key>
-
-			<property name="PostId" type="ulong" nullable="false" />
-			<property name="FileId" type="ulong" nullable="false" />
-
-			<complexProperty name="File" role="File">
-				<link name="FileId" role="FileId" />
 			</complexProperty>
 		</entity>
 
@@ -369,7 +352,7 @@
 			<property name="UserId" type="uint" nullable="false" />
 			<property name="ThreadId" type="ulong" nullable="false" />
 			<property name="Count" type="uint" nullable="false" />
-			<property name="FirstViewedTime" type="datetime" nullable="false" />
+			<property name="FirstViewedTime" type="datetime" nullable="false" immutable="true" />
 			<property name="MostRecentViewedTime" type="datetime" nullable="false" />
 
 			<complexProperty name="User" role="UserProfile">
@@ -394,6 +377,7 @@
 			<property name="Phone" type="string" length="50" nullable="true" />
 			<property name="Avatar" type="string" length="200" nullable="true" />
 			<property name="Gender" type="byte" nullable="false" />
+			<property name="Grade" type="byte" nullable="false" />
 			<property name="TotalPosts" type="uint" nullable="false" />
 			<property name="TotalThreads" type="uint" nullable="false" />
 			<property name="MostRecentPostId" type="ulong" nullable="true" />
@@ -401,7 +385,7 @@
 			<property name="MostRecentThreadId" type="ulong" nullable="true" />
 			<property name="MostRecentThreadSubject" type="string" length="100" nullable="true" />
 			<property name="MostRecentThreadTime" type="datetime" nullable="true" />
-			<property name="Creation" type="datetime" nullable="false" default="now()" />
+			<property name="Creation" type="datetime" nullable="false" default="now()" immutable="true" />
 			<property name="Modification" type="datetime" nullable="true" />
 			<property name="Description" type="string" length="500" nullable="true" />
 		</entity>

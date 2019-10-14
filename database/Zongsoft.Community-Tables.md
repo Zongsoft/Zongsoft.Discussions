@@ -13,9 +13,7 @@ Content | nvarchar | 500 | False | 消息内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 MessageType | varchar | 50 | True | 消息类型
 Source | varchar | 50 | True | 消息来源
-Status | byte | 1 | False | 状态
-StatusTimestamp | datetime | - | True | 状态更新时间
-StatusDescription | nvarchar | 100 | True | 状态描述
+Tags | nvarchar | 100 | True | 标签集(以逗号分隔)
 CreatorId | int | 4 | False | 发送人编号(零表示系统消息)
 CreatedTime | datetime | - | False | 创建时间
 
@@ -53,8 +51,7 @@ SiteId | int | 4 | False | 所属站点编号
 Name | nvarchar | 100 | False | 相册名称
 PinYin | varchar | 200 | True | 名称拼音
 Icon | varchar | 50 | True | 图标名
-Visiblity | byte | 1 | False | 可见范围(0:禁用,即不可见; 1:站内用户可见; 2:所有人可见; 3:指定用户)
-Accessibility | byte | 1 | False | 可访问性(0:无限制; 1:注册用户; 2:仅限管理员; 3:指定用户)
+Shareability | byte | 1 | False | 共享性(0:私有, 1:内部, 2:好友, 3:公共)
 CreatorId | int | 4 | False | 创建人编号
 CreatedTime | datetime | - | False | 创建时间
 Description | varchar | 500 | True | 备注描述
@@ -66,7 +63,8 @@ Description | varchar | 500 | True | 备注描述
 --------|:------:|:--:|:--:|----:
 FolderId | int | 4 | False | 主键，文件夹编号
 UserId | int | 4 | False | 主键，用户编号
-UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Writer, 3:Reader)
+Permission | byte | 1 | False | 权限定义(0:None, 1:Read, 2:Write)
+Expiration | datetime | - | True | 过期时间
 
 
 ### 文件表 `Community.File`
@@ -74,12 +72,13 @@ UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Writer, 3:
 字段名称|数据类型|长度|可空|备注
 --------|:------:|:--:|:--:|----:
 FileId | bigint | 8 | False | 主键，附件编号
-SiteId | int | 4 | True | 所属站点编号
-FolderId | int | 4 | Flase | 所属文件夹编号
+SiteId | int | 4 | False | 所属站点编号
+FolderId | int | 4 | Flase | 所属文件夹编号(默认为零)
 Name | nvarchar | 100 | False | 文件名称
 Path | varchar | 200 | False | 文件路径
 Type | varchar | 50 | False | 文件类型(MIME类型)
 Size | int unsigned | 4 | False | 文件大小(单位：字节)
+Tags | nvarchar | 100 | True | 标签集(以逗号分隔)
 CreatorId | int | 4 | True | 创建人编号
 CreatedTime | datetime | - | False | 创建时间(上传时间)
 Description | nvarchar | 100 | True | 描述说明
@@ -93,7 +92,6 @@ SiteId | int | 4 | False | 主键，站点编号(所属企业)
 GroupId | smallint | 2 | False | 主键，论坛分组编号
 Name | nvarchar | 50 | False | 论坛组名
 Icon | varchar | 100 | True | 显示图标
-Visiblity | byte | 1 | False | 可见范围(0:禁用,即不可见; 1:站内用户可见; 2:所有人可见)
 SortOrder | smallint | 2 | False | 排列顺序
 Description | nvarchar | 500 | True | 描述信息
 
@@ -110,9 +108,9 @@ Description | nvarchar | 500 | True | 描述文本
 CoverPicturePath | varchar | 200 | True | 封面图片路径
 SortOrder | smallint | 2 | False | 排列顺序
 IsPopular | bool | - | False | 是否热门版块
-ApproveEnabled | bool | - | False | 发帖是否需要审核
-Visiblity | byte | 1 | False | 可见范围(0:禁用,即不可见; 1:站内用户可见; 2:所有人可见; 3:指定用户)
-Accessibility | byte | 1 | False | 可访问性(0:无限制; 1:注册用户; 2:仅限版主; 3:指定用户)
+Approvable | bool | - | False | 发帖是否需要审核
+Visibility | byte | 1 | False | 可见范围(0:禁用,即不可见, 1:特定用户, 2:站内用户, 3:任何人)
+Accessibility | byte | 1 | False | 可访问性(0:仅限版主, 1:特定用户, 2:站内用户)
 TotalPosts | int | 4 | False | 累计帖子总数
 TotalThreads | int | 4 | False | 累计主题总数
 MostRecentThreadId | bigint | 8 | True | 最新主题的编号
@@ -137,7 +135,8 @@ CreatedTime | datetime | - | False | 创建时间
 SiteId | int | 4 | False | 主键，站点编号
 ForumId | smallint | 2 | False | 主键，论坛编号
 UserId | int | 4 | False | 主键，用户编号
-UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Writer, 3:Reader)
+Permission | byte | 1 | False | 权限定义(0:None, 1:Read, 2:Write)
+IsModerator | bool | - | False | 是否版主
 
 
 ### 主题表 `Community.Thread`
@@ -147,15 +146,12 @@ UserKind | byte | 1 | False | 用户种类(0:None, 1:Administrator, 2:Writer, 3:
 ThreadId | bigint | 8 | False | 主键，主题编号
 SiteId | int | 4 | False | 所属站点编号
 ForumId | smallint | 2 | False | 所属论坛编号
-Subject | nvarchar | 100 | False | 文章标题
+Title | nvarchar | 100 | False | 文章标题
 Summary | nvarchar | 500 | True | 文章摘要
-Tags | nvarchar | 100 | True | 标签集
+Tags | nvarchar | 100 | True | 标签集(以逗号分隔)
 PostId | bigint | 8 | False | 内容帖子编号
 CoverPicturePath | varchar | 200 | True | 封面图片路径
-LinkUrl | varchar | 200 | True | 文章跳转链接
-Status | byte | 1 | False | 状态(0:未发送, 1:发送中, 2:已发送, 3:已取消)
-StatusTimestamp | datetime | - | False | 状态更新时间
-StatusDescription | nvarchar | 100 | True | 状态描述
+ArticleUrl | varchar | 200 | True | 文章链接
 Disabled | bool | - | False | 已被禁用(False)
 Visible | bool | - | False | 是否可见(True)
 IsApproved | bool | - | False | 是否审核通过
@@ -193,7 +189,8 @@ IsValued | bool | - | False | 是否精华帖
 TotalUpvotes | int | 4 | False | 累计点赞数
 TotalDownvotes | int | 4 | False | 累计被踩数
 VisitorAddress | nvarchar | 100 | True | 访客地址(IP和位置信息)(192.168.0.1 湖北省武汉市)
-VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息)
+VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息等)
+AttachmentMark | varchar | 100 | True | 附件标记(以逗号分隔)
 CreatorId | int | 4 | False | 发帖人编号
 CreatedTime | datetime | - | False | 发帖时间
 
@@ -208,7 +205,7 @@ SourceId | smallint | 2 | True | 关联的回复序号
 Content | varchar | 500 | False | 回复内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 VisitorAddress | nvarchar | 100 | True | 访客地址(IP和位置信息)(192.168.0.1 湖北省武汉市)
-VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息)
+VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息等)
 CreatorId | int | 4 | False | 回复人编号
 CreatedTime | datetime | - | False | 回复时间
 
@@ -256,6 +253,7 @@ Email | varchar | 50 | True | 用户绑定的邮箱地址
 Phone | varchar | 50 | True | 用户绑定的手机号码
 Avatar | varchar | 200 | True | 用户头像
 Gender | byte | 1 | False | 用户性别(0:Female, 1:Male)
+Grade | byte | 1 | False | 用户等级(默认为零)
 PhotoPath | varchar | 200 | True | 照片文件路径
 TotalPosts | int | 4 | False | 累计回复总数
 TotalThreads | int | 4 | False | 累计主题总数

@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <9555843@qq.com>
  * 
@@ -23,13 +30,12 @@ using System.Web.Http;
 
 using Zongsoft.Data;
 using Zongsoft.Web.Http;
-using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class PostController : Zongsoft.Web.Http.HttpControllerBase<IPost, IPostConditional, PostService>
+	public class PostController : Zongsoft.Web.Http.HttpControllerBase<Post, PostConditional, PostService>
 	{
 		#region 构造函数
 		public PostController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -53,19 +59,19 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[ActionName("Upvotes")]
-		public IEnumerable<PostVoting> GetUpvotes(ulong id, [FromUri]Paging paging = null)
+		public IEnumerable<Post.PostVoting> GetUpvotes(ulong id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetUpvotes(id, paging);
 		}
 
 		[ActionName("Downvotes")]
-		public IEnumerable<PostVoting> GetDownvotes(ulong id, [FromUri]Paging paging = null)
+		public IEnumerable<Post.PostVoting> GetDownvotes(ulong id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetDownvotes(id, paging);
 		}
 
 		[ActionName("Comments")]
-		public IEnumerable<PostComment> GetComments(ulong id, [FromUri]Paging paging = null)
+		public IEnumerable<Post.PostComment> GetComments(ulong id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetComments(id, paging);
 		}

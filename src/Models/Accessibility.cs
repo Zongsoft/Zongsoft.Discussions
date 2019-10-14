@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -27,16 +34,13 @@ namespace Zongsoft.Community.Models
 	/// </summary>
 	public enum Accessibility : byte
 	{
-		/// <summary>无限制，所有用户均可访问</summary>
-		None,
+		/// <summary>版主</summary>
+		Moderator,
 
-		/// <summary>登录用户均可访问</summary>
-		Users,
+		/// <summary>特定用户</summary>
+		Scoped,
 
-		/// <summary>仅限管理员</summary>
-		Administrators,
-
-		/// <summary>指定的用户</summary>
-		Specifics,
+		/// <summary>内部的，站内用户</summary>
+		Internal,
 	}
 }

@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -27,7 +34,7 @@ using Zongsoft.Community.Models;
 namespace Zongsoft.Community.Services
 {
 	[DataSearcher("Subject")]
-	public class ThreadService : DataService<IThread>
+	public class ThreadService : DataService<Thread>
 	{
 		#region 成员字段
 		private PostService _posting;
@@ -53,18 +60,18 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<IPost> GetPosts(ulong threadId, Paging paging = null)
+		public IEnumerable<Post> GetPosts(ulong threadId, Paging paging = null)
 		{
-			var thread = this.DataAccess.Select<IThread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
+			var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
 
 			if(thread == null)
-				return Enumerable.Empty<IPost>();
+				return Enumerable.Empty<Post>();
 
 			var conditions = ConditionCollection.And(
 				Condition.Equal("ThreadId", threadId),
 				Condition.NotEqual("PostId", thread.PostId));
 
-			var posts = this.DataAccess.Select<IPost>(conditions, paging, Sorting.Descending("PostId"));
+			var posts = this.DataAccess.Select<Post>(conditions, paging, Sorting.Descending("PostId"));
 
 			foreach(var post in posts)
 			{
@@ -83,7 +90,7 @@ namespace Zongsoft.Community.Services
 				}
 
 				//设置帖子的附件集
-				post.Attachments = this.DataAccess.Select<PostAttachment>(Condition.Equal("PostId", post.PostId), "File");
+				//post.Attachments = this.DataAccess.Select<PostAttachment>(Condition.Equal("PostId", post.PostId), "File");
 			}
 
 			return posts;
@@ -91,7 +98,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override IThread OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
+		protected override Thread OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
 		{
 			//调用基类同名方法
 			var thread = base.OnGet(condition, schema, states, out paginator);
@@ -134,7 +141,7 @@ namespace Zongsoft.Community.Services
 			return thread;
 		}
 
-		protected override int OnInsert(IDataDictionary<IThread> data, ISchema schema, IDictionary<string, object> states)
+		protected override int OnInsert(IDataDictionary<Thread> data, ISchema schema, IDictionary<string, object> states)
 		{
 			var post = data.GetValue(p => p.Post, null);
 
@@ -185,7 +192,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<IThread> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
+		protected override int OnUpdate(IDataDictionary<Thread> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
 		{
 			//调用基类同名方法
 			var count = base.OnUpdate(data, condition, schema, states);
@@ -205,7 +212,7 @@ namespace Zongsoft.Community.Services
 					else
 					{
 						//获取修改主题对应的主题对象
-						var thread = this.DataAccess.Select<IThread>(Condition.Equal("ThreadId", data.GetValue(p => p.ThreadId)), "!, ThreadId, PostId").FirstOrDefault();
+						var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", data.GetValue(p => p.ThreadId)), "!, ThreadId, PostId").FirstOrDefault();
 
 						if(thread == null)
 							return count;
@@ -223,7 +230,7 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 私有方法
-		private bool SetMostRecentThread(IDataDictionary<IThread> data)
+		private bool SetMostRecentThread(IDataDictionary<Thread> data)
 		{
 			if(data == null)
 				return false;
@@ -233,12 +240,12 @@ namespace Zongsoft.Community.Services
 			var count = 0;
 
 			//更新当前主题所属论坛的最后发帖信息
-			count += this.DataAccess.Update(this.DataAccess.Naming.Get<IForum>(), new
+			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Forum>(), new
 			{
 				SiteId = data.GetValue(p => p.SiteId),
 				ForumId = data.GetValue(p => p.ForumId),
 				MostRecentThreadId = data.GetValue(p => p.ThreadId),
-				MostRecentThreadSubject = data.GetValue(p => p.Subject),
+				MostRecentThreadSubject = data.GetValue(p => p.Title),
 				MostRecentThreadTime = data.GetValue(p => p.CreatedTime),
 				MostRecentThreadAuthorId = userId,
 				MostRecentThreadAuthorName = user?.FullName,
@@ -252,7 +259,7 @@ namespace Zongsoft.Community.Services
 				{
 					UserId = data.GetValue(p => p.CreatorId),
 					MostRecentThreadId = data.GetValue(p => p.ThreadId),
-					MostRecentThreadSubject = data.GetValue(p => p.Subject),
+					MostRecentThreadSubject = data.GetValue(p => p.Title),
 					MostRecentThreadTime = data.GetValue(p => p.CreatedTime),
 				});
 			}

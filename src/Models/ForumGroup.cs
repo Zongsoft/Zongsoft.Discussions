@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -27,13 +34,13 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示论坛分组的业务实体类。
 	/// </summary>
-	public interface IForumGroup : Zongsoft.Data.IModel
+	public abstract class ForumGroup
 	{
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置论坛组所属的站点编号，复合主键。
 		/// </summary>
-		uint SiteId
+		public abstract uint SiteId
 		{
 			get; set;
 		}
@@ -41,7 +48,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛组的编号，复合主键。
 		/// </summary>
-		ushort GroupId
+		public abstract ushort GroupId
 		{
 			get; set;
 		}
@@ -49,7 +56,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛组所在站点中的排列序号。
 		/// </summary>
-		ushort SortOrder
+		public abstract ushort SortOrder
 		{
 			get; set;
 		}
@@ -57,7 +64,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛组的名称。
 		/// </summary>
-		string Name
+		public abstract string Name
 		{
 			get; set;
 		}
@@ -65,15 +72,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛组的图标。
 		/// </summary>
-		string Icon
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置论坛组的可见性。
-		/// </summary>
-		Visiblity Visiblity
+		public abstract string Icon
 		{
 			get; set;
 		}
@@ -81,36 +80,30 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛组的描述文本。
 		/// </summary>
-		string Description
+		public abstract string Description
 		{
 			get; set;
 		}
+		#endregion
 
+		#region 集合属性
 		/// <summary>
 		/// 获取或设置论坛组中的论坛集。
 		/// </summary>
-		IEnumerable<IForum> Forums
+		public abstract IEnumerable<Forum> Forums
 		{
 			get; set;
 		}
 		#endregion
 	}
 
-	public interface IForumGroupConditional : IModel
+	/// <summary>
+	/// 表示论坛分组查询的实体类。
+	/// </summary>
+	public abstract class ForumGroupConditional : ConditionalBase
 	{
 		#region 公共属性
-		[Conditional("Name")]
-		string Key
-		{
-			get; set;
-		}
-
-		string Name
-		{
-			get; set;
-		}
-
-		Visiblity? Visiblity
+		public abstract string Name
 		{
 			get; set;
 		}

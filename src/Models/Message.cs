@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -18,6 +25,7 @@
  */
 
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
@@ -27,178 +35,155 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示消息的业务实体类。
 	/// </summary>
-	public interface IMessage : Zongsoft.Data.IModel
+	public abstract class Message
 	{
 		#region 公共属性
-		ulong MessageId
+		public abstract ulong MessageId
 		{
 			get; set;
 		}
 
-		uint SiteId
+		public abstract uint SiteId
 		{
 			get; set;
 		}
 
-		string Subject
+		public abstract string Subject
 		{
 			get; set;
 		}
 
-		string Content
+		public abstract string Content
 		{
 			get; set;
 		}
 
-		string ContentType
+		public abstract string ContentType
 		{
 			get; set;
 		}
 
-		string MessageType
+		public abstract string MessageType
 		{
 			get; set;
 		}
 
-		string Source
+		public abstract string Source
 		{
 			get; set;
 		}
 
-		MessageStatus Status
+		[TypeConverter(typeof(TagsConverter))]
+		public abstract string[] Tags
 		{
 			get; set;
 		}
 
-		DateTime? StatusTimestamp
+		public abstract uint? CreatorId
 		{
 			get; set;
 		}
 
-		string StatusDescription
+		public abstract UserProfile Creator
 		{
 			get; set;
 		}
 
-		uint? CreatorId
-		{
-			get; set;
-		}
-
-		UserProfile Creator
-		{
-			get; set;
-		}
-
-		DateTime CreatedTime
+		public abstract DateTime CreatedTime
 		{
 			get; set;
 		}
 		#endregion
 
 		#region 关联属性
-		IEnumerable<MessageUser> Users
+		public abstract IEnumerable<MessageUser> Users
 		{
 			get; set;
 		}
 		#endregion
-	}
 
-	public interface IMessageConditional : IModel
-	{
-		#region 公共属性
-		string Subject
+		#region 嵌套结构
+		/// <summary>
+		/// 表示消息接受人的业务实体类。
+		/// </summary>
+		public struct MessageUser
 		{
-			get; set;
-		}
+			#region 构造函数
+			public MessageUser(ulong messageId, uint userId, bool isRead = false)
+			{
+				this.MessageId = messageId;
+				this.UserId = userId;
+				this.IsRead = isRead;
 
-		string MessageType
-		{
-			get; set;
-		}
+				this.User = null;
+				this.Message = null;
+			}
+			#endregion
 
-		string Source
-		{
-			get; set;
-		}
+			public ulong MessageId
+			{
+				get;
+				set;
+			}
 
-		MessageStatus? Status
-		{
-			get; set;
-		}
+			public Message Message
+			{
+				get;
+				set;
+			}
 
-		Range<DateTime> StatusTimestamp
-		{
-			get; set;
-		}
+			public uint UserId
+			{
+				get;
+				set;
+			}
 
-		uint? CreatorId
-		{
-			get; set;
-		}
+			public UserProfile User
+			{
+				get;
+				set;
+			}
 
-		Range<DateTime> CreatedTime
-		{
-			get; set;
+			public bool IsRead
+			{
+				get;
+				set;
+			}
 		}
 		#endregion
 	}
 
 	/// <summary>
-	/// 表示消息接受人的业务实体类。
+	/// 表示消息查询条件的实体类。
 	/// </summary>
-	public struct MessageUser
+	public abstract class MessageConditional : ConditionalBase
 	{
-		#region 构造函数
-		public MessageUser(ulong messageId, uint userId, bool isRead = false)
+		#region 公共属性
+		[Conditional(ConditionOperator.Like)]
+		public abstract string Subject
 		{
-			this.MessageId = messageId;
-			this.UserId = userId;
-			this.IsRead = isRead;
-
-			this.User = null;
-			this.Message = null;
+			get; set;
 		}
 
-		public MessageUser(uint userId)
+		public abstract string MessageType
 		{
-			this.MessageId = 0;
-			this.UserId = userId;
-			this.IsRead = false;
+			get; set;
+		}
 
-			this.User = null;
-			this.Message = null;
+		public abstract string Source
+		{
+			get; set;
+		}
+
+		public abstract uint? CreatorId
+		{
+			get; set;
+		}
+
+		public abstract Range<DateTime>? CreatedTime
+		{
+			get; set;
 		}
 		#endregion
-
-		public ulong MessageId
-		{
-			get;
-			set;
-		}
-
-		public IMessage Message
-		{
-			get;
-			set;
-		}
-
-		public uint UserId
-		{
-			get;
-			set;
-		}
-
-		public UserProfile User
-		{
-			get;
-			set;
-		}
-
-		public bool IsRead
-		{
-			get;
-			set;
-		}
 	}
 }

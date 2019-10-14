@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -18,6 +25,7 @@
  */
 
 using System;
+using System.ComponentModel;
 
 using Zongsoft.Data;
 
@@ -26,13 +34,13 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示文件的实体类。
 	/// </summary>
-	public interface IFile : Zongsoft.Data.IModel
+	public abstract class File
 	{
 		#region 公共属性
 		/// <summary>
 		/// 获取或设置文件编号。
 		/// </summary>
-		ulong FileId
+		public abstract ulong FileId
 		{
 			get; set;
 		}
@@ -40,7 +48,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置所属的站点编号。
 		/// </summary>
-		uint? SiteId
+		public abstract uint SiteId
 		{
 			get; set;
 		}
@@ -48,7 +56,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户所属文件夹编号。
 		/// </summary>
-		uint? FolderId
+		public abstract uint FolderId
 		{
 			get; set;
 		}
@@ -56,7 +64,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户所属的文件夹对象。
 		/// </summary>
-		IFolder Folder
+		public abstract Folder Folder
 		{
 			get; set;
 		}
@@ -64,7 +72,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置附件的原始文件名。
 		/// </summary>
-		string Name
+		public abstract string Name
 		{
 			get; set;
 		}
@@ -72,7 +80,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置附件文件的路径。
 		/// </summary>
-		string Path
+		public abstract string Path
 		{
 			get; set;
 		}
@@ -80,16 +88,15 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取附件文件的访问URL。
 		/// </summary>
-		[Zongsoft.Data.Model.Property(Zongsoft.Data.Model.PropertyImplementationMode.Extension, typeof(FileExtension))]
-		string Url
+		public string Url
 		{
-			get;
+			get => Zongsoft.IO.FileSystem.GetUrl(this.Path);
 		}
 
 		/// <summary>
 		/// 获取或设置附件的文件类型(MIME类型)。
 		/// </summary>
-		string Type
+		public abstract string Type
 		{
 			get; set;
 		}
@@ -97,7 +104,16 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置附件文件的大小(单位：Byte)。
 		/// </summary>
-		uint Size
+		public abstract uint Size
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置标签集。
+		/// </summary>
+		[TypeConverter(typeof(TagsConverter))]
+		public abstract string[] Tags
 		{
 			get; set;
 		}
@@ -105,7 +121,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置附件的上传用户编号。
 		/// </summary>
-		uint? CreatorId
+		public abstract uint? CreatorId
 		{
 			get; set;
 		}
@@ -113,7 +129,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置创建人的<see cref="Models.UserProfile"/>用户信息。
 		/// </summary>
-		UserProfile Creator
+		public abstract UserProfile Creator
 		{
 			get; set;
 		}
@@ -121,7 +137,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置附件的上传时间。
 		/// </summary>
-		DateTime CreatedTime
+		public abstract DateTime CreatedTime
 		{
 			get; set;
 		}
@@ -129,65 +145,54 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置描述信息。
 		/// </summary>
-		string Description
+		public abstract string Description
 		{
 			get; set;
 		}
 		#endregion
 	}
 
-	public interface IFileConditional : IModel
+	/// <summary>
+	/// 标识文件查询条件的实体类。
+	/// </summary>
+	public abstract class FileConditional : ConditionalBase
 	{
 		#region 公共属性
-		[Conditional("Name", "Description")]
-		string Key
+		public abstract ulong? FileId
 		{
 			get; set;
 		}
 
-		ulong? FileId
+		[Conditional(ConditionOperator.Like)]
+		public abstract string Name
 		{
 			get; set;
 		}
 
-		[Conditional("Name")]
-		string Name
+		public abstract string Type
 		{
 			get; set;
 		}
 
-		string Type
+		public abstract Range<uint>? Size
 		{
 			get; set;
 		}
 
-		Range<uint> Size
+		public abstract uint? FolderId
 		{
 			get; set;
 		}
 
-		uint? FolderId
+		public abstract uint? CreatorId
 		{
 			get; set;
 		}
 
-		uint? CreatorId
-		{
-			get; set;
-		}
-
-		Range<DateTime> CreatedTime
+		public abstract Range<DateTime>? CreatedTime
 		{
 			get; set;
 		}
 		#endregion
-	}
-
-	internal static class FileExtension
-	{
-		public static string GetUrl(IFile file)
-		{
-			return Zongsoft.IO.FileSystem.GetUrl(file.Path);
-		}
 	}
 }

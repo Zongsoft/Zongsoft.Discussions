@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -23,16 +30,16 @@ using System.Collections;
 
 namespace Zongsoft.Community.Data
 {
-	public class PostFilter : ContentFilterBase<Models.IPost>
+	public class PostFilter : ContentFilterBase<Models.Post>
 	{
 		#region 构造函数
-		public PostFilter() : base(nameof(Models.IPost), "PostId, Content, ContentType")
+		public PostFilter() : base(nameof(Models.Post), "PostId, Content, ContentType")
 		{
 		}
 		#endregion
 
 		#region 重写方法
-		protected override void DeleteContentFile(Models.IPost entity)
+		protected override void DeleteContentFile(Models.Post entity)
 		{
 			if(!Utility.IsContentEmbedded(entity.ContentType))
 				Utility.DeleteFile(entity.Content);

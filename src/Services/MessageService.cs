@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -27,7 +34,7 @@ using Zongsoft.Community.Models;
 namespace Zongsoft.Community.Services
 {
 	[DataSearcher("Stauts:Status", "Creator,CreatorId:CreatorId", "Subject")]
-	public class MessageService : DataService<IMessage>
+	public class MessageService : DataService<Message>
 	{
 		#region 构造函数
 		public MessageService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -36,19 +43,19 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<MessageUser> GetUsers(ulong messageId, bool? isRead = null, Paging paging = null)
+		public IEnumerable<Message.MessageUser> GetUsers(ulong messageId, bool? isRead = null, Paging paging = null)
 		{
 			var conditions = ConditionCollection.And(Condition.Equal("MessageId", messageId));
 
 			if(isRead.HasValue)
 				conditions.Add(Condition.Equal("IsRead", isRead.Value));
 
-			return this.DataAccess.Select<MessageUser>(conditions, "User, User.User", paging);
+			return this.DataAccess.Select<Message.MessageUser>(conditions, "User, User.User", paging);
 		}
 		#endregion
 
 		#region 重写方法
-		protected override IMessage OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
+		protected override Message OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
 		{
 			//调用基类同名方法
 			var message = base.OnGet(condition, schema, states, out paginator);
@@ -66,7 +73,7 @@ namespace Zongsoft.Community.Services
 			if(credential != null && credential.CredentialId != null && credential.CredentialId.Length > 0)
 			{
 				//更新当前用户对该消息的读取状态
-				this.DataAccess.Update(this.DataAccess.Naming.Get<MessageUser>(), new
+				this.DataAccess.Update(this.DataAccess.Naming.Get<Message.MessageUser>(), new
 				{
 					IsRead = true,
 				}, Condition.Equal("MessageId", message.MessageId) & Condition.Equal("UserId", credential.User.UserId));
@@ -75,7 +82,7 @@ namespace Zongsoft.Community.Services
 			return message;
 		}
 
-		protected override int OnInsert(IDataDictionary<IMessage> data, ISchema schema, IDictionary<string, object> states)
+		protected override int OnInsert(IDataDictionary<Message> data, ISchema schema, IDictionary<string, object> states)
 		{
 			string filePath = null;
 
@@ -121,10 +128,10 @@ namespace Zongsoft.Community.Services
 					if(users == null)
 						return;
 
-					IEnumerable<MessageUser> GetMembers(ulong messageId, IEnumerable<MessageUser> members)
+					IEnumerable<Message.MessageUser> GetMembers(ulong messageId, IEnumerable<Message.MessageUser> members)
 					{
 						foreach(var member in members)
-							yield return new MessageUser(messageId, member.UserId);
+							yield return new Message.MessageUser(messageId, member.UserId);
 					}
 
 					this.DataAccess.InsertMany(GetMembers(data.GetValue(p => p.MessageId), users));
@@ -137,7 +144,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<IMessage> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
+		protected override int OnUpdate(IDataDictionary<Message> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
 		{
 			//更新内容到文本文件中
 			data.TryGetValue(p => p.Content, (key, value) =>

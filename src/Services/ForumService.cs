@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -28,7 +35,7 @@ using Zongsoft.Community.Models;
 namespace Zongsoft.Community.Services
 {
 	[DataSearcher("Name")]
-	public class ForumService : DataService<IForum>
+	public class ForumService : DataService<Forum>
 	{
 		#region 成员字段
 		private ICache _cache;
@@ -64,19 +71,19 @@ namespace Zongsoft.Community.Services
 			if(userId == null)
 				userId = this.Credential?.User.UserId;
 
-			return this.DataAccess.Exists<ForumUser>(
+			return this.DataAccess.Exists<Forum.ForumUser>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) &
 				Condition.Equal("UserId", userId) & Condition.Equal("UserKind", UserKind.Administrator));
 		}
 
 		public IEnumerable<UserProfile> GetModerators(uint siteId, ushort forumId)
 		{
-			return this.DataAccess.Select<ForumUser>(
+			return this.DataAccess.Select<Forum.ForumUser>(
 				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("UserKind", UserKind.Administrator),
 				"User, User.User", Paging.Disable).Select(p => p.User);
 		}
 
-		public IThread[] GetGlobalThreads(uint siteId, Paging paging = null)
+		public Thread[] GetGlobalThreads(uint siteId, Paging paging = null)
 		{
 			var cache = this.Cache;
 
@@ -87,7 +94,7 @@ namespace Zongsoft.Community.Services
 
 			if(globals == null)
 			{
-				var threads = this.DataAccess.Select<IThread>(
+				var threads = this.DataAccess.Select<Thread>(
 					Condition.Equal("SiteId", siteId) & Condition.Equal("IsGlobal", true) & Condition.Equal("Visible", true),
 					paging, Sorting.Descending("ThreadId")).ToArray();
 
@@ -97,10 +104,10 @@ namespace Zongsoft.Community.Services
 				return threads;
 			}
 
-			return this.DataAccess.Select<IThread>(Condition.In("ThreadId", globals)).ToArray();
+			return this.DataAccess.Select<Thread>(Condition.In("ThreadId", globals)).ToArray();
 		}
 
-		public IThread[] GetPinnedThreads(uint siteId, ushort forumId, Paging paging = null)
+		public Thread[] GetPinnedThreads(uint siteId, ushort forumId, Paging paging = null)
 		{
 			var cache = this.Cache;
 
@@ -111,7 +118,7 @@ namespace Zongsoft.Community.Services
 
 			if(pinneds == null)
 			{
-				var threads = this.DataAccess.Select<IThread>(
+				var threads = this.DataAccess.Select<Thread>(
 					Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("IsPinned", true) & Condition.Equal("Visible", true),
 					paging, Sorting.Descending("ThreadId"));
 
@@ -121,10 +128,10 @@ namespace Zongsoft.Community.Services
 				return threads.ToArray();
 			}
 
-			return this.DataAccess.Select<IThread>(Condition.In("ThreadId", pinneds)).ToArray();
+			return this.DataAccess.Select<Thread>(Condition.In("ThreadId", pinneds)).ToArray();
 		}
 
-		public IThread[] GetTopmosts(uint siteId, ushort forumId, int count = 10)
+		public Thread[] GetTopmosts(uint siteId, ushort forumId, int count = 10)
 		{
 			if(count < 1 || count > 50)
 				count = 10;
@@ -135,16 +142,16 @@ namespace Zongsoft.Community.Services
 			return globals.Union(pinneds).ToArray();
 		}
 
-		public IEnumerable<IThread> GetThreads(uint siteId, ushort forumId, Paging paging = null)
+		public IEnumerable<Thread> GetThreads(uint siteId, ushort forumId, Paging paging = null)
 		{
 			//获取指定论坛中最顶部的主题集（全局贴+本论坛的置顶贴）
 			var topmosts = this.GetTopmosts(siteId, forumId);
 
 			//查询指定论坛中的并且排除顶部集中的主题集
 			if(topmosts == null || topmosts.Length == 0)
-				return this.DataAccess.Select<IThread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("Visible", true), paging);
+				return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("Visible", true), paging);
 			else
-				return this.DataAccess.Select<IThread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("Visible", true) & Condition.NotIn("ThreadId", topmosts.Select(p => p.ThreadId)), paging);
+				return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("Visible", true) & Condition.NotIn("ThreadId", topmosts.Select(p => p.ThreadId)), paging);
 		}
 		#endregion
 
@@ -172,7 +179,7 @@ namespace Zongsoft.Community.Services
 
 			//如果凭证为空或匿名用户则只能获取公共数据
 			if(credential == null || credential.IsEmpty)
-				requires = Condition.Equal("Visiblity", (byte)Visiblity.Public);
+				requires = Condition.Equal("Visiblity", (byte)Visibility.Public);
 			//else if(!credential.InAdministrators) //如果不是管理员则只能获取内部或公共数据
 			//	requires = Condition.In("Visiblity", (byte)Visiblity.Internal, (byte)Visiblity.Public);
 

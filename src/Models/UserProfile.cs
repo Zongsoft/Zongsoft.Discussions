@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
@@ -93,6 +100,14 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
+		/// 获取或设置用户等级，数字越大等级越高。
+		/// </summary>
+		public abstract byte Grade
+		{
+			get; set;
+		}
+
+		/// <summary>
 		/// 获取或设置用户的照片文件路径。
 		/// </summary>
 		public abstract string PhotoPath
@@ -174,7 +189,7 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public abstract class UserProfileConditional : IModel
+	public abstract class UserProfileConditional : ConditionalBase
 	{
 		#region 公共属性
 		public abstract uint? SiteId
@@ -182,7 +197,7 @@ namespace Zongsoft.Community.Models
 			get; set;
 		}
 
-		[Conditional("Name", "PhoneNumber", "Email")]
+		[Conditional("Name", "Phone", "Email")]
 		public abstract string Identity
 		{
 			get; set;
@@ -192,16 +207,11 @@ namespace Zongsoft.Community.Models
 		{
 			get; set;
 		}
-		#endregion
 
-		#region 模型方法
-		public abstract int Count();
-		public abstract IDictionary<string, object> GetChanges();
-		public abstract bool HasChanges(params string[] names);
-		public abstract bool Reset(string name, out object value);
-		public abstract void Reset(params string[] names);
-		public abstract bool TryGetValue(string name, out object value);
-		public abstract bool TrySetValue(string name, object value);
+		public abstract Range<byte>? Grade
+		{
+			get; set;
+		}
 		#endregion
 	}
 }

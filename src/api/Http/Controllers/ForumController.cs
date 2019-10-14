@@ -1,4 +1,11 @@
 ﻿/*
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
+ *
  * Authors:
  *   钟峰(Popeye Zhong) <9555843@qq.com>
  * 
@@ -29,7 +36,7 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class ForumController : Zongsoft.Web.Http.HttpControllerBase<IForum, IForumConditional, ForumService>
+	public class ForumController : Zongsoft.Web.Http.HttpControllerBase<Forum, ForumConditional, ForumService>
 	{
 		#region 构造函数
 		public ForumController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
@@ -45,19 +52,19 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[ActionName("Globals")]
-		public IEnumerable<IThread> GetGlobalThreads(uint id, [FromUri]Paging paging = null)
+		public IEnumerable<Thread> GetGlobalThreads(uint id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetGlobalThreads(id, paging);
 		}
 
 		[ActionName("Pinneds")]
-		public IEnumerable<IThread> GetPinnedThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
+		public IEnumerable<Thread> GetPinnedThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetPinnedThreads(siteId, forumId, paging);
 		}
 
 		[ActionName("Topmosts")]
-		public IEnumerable<IThread> GetTopmosts([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromRoute("args")]int count = 0)
+		public IEnumerable<Thread> GetTopmosts([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromRoute("args")]int count = 0)
 		{
 			return this.DataService.GetTopmosts(siteId, forumId, count);
 		}
