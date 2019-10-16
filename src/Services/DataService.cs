@@ -9,7 +9,7 @@
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
- * Copyright (C) 2015-2017 Zongsoft Corporation. All rights reserved.
+ * Copyright (C) 2015-2019 Zongsoft Corporation. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,45 +77,6 @@ namespace Zongsoft.Community.Services
 		}
 		#endregion
 
-		#region 验证方法
-		protected override ICondition OnValidate(Method method, ICondition condition)
-		{
-			var user = this.User ?? throw new Zongsoft.Security.Membership.AuthorizationException();
-			var requires = ConditionCollection.And(Condition.Equal("SiteId", user.SiteId));
-
-			if(condition != null)
-				requires.Add(condition);
-
-			return requires;
-		}
-
-		protected override void OnValidate(Method method, IDataDictionary<TEntity> data)
-		{
-			var user = this.User ?? throw new Zongsoft.Security.Membership.AuthorizationException();
-
-			switch(method.Kind)
-			{
-				case DataAccessMethod.Insert:
-					//尝试设置所属站点编号
-					data.TrySetValue("SiteId", user.SiteId);
-
-					//尝试设置创建人编号
-					data.TrySetValue("CreatorId", user.UserId, value => value == 0);
-
-					//尝试设置创建时间
-					data.TrySetValue("CreatedTime", DateTime.Now, value => value.Year <= 1900);
-					break;
-				case DataAccessMethod.Update:
-					//尝试设置修改人编号
-					data.TrySetValue("ModifierId", user.UserId, value => value == 0);
-
-					//尝试设置修改时间
-					data.TrySetValue("ModifiedTime", DateTime.Now, value => value.Year <= 1900);
-					break;
-			}
-		}
-		#endregion
-
 		#region 重写方法
 		protected override IEnumerable<TEntity> OnSelect(ICondition condition, ISchema schema, Paging paging, Sorting[] sortings, IDictionary<string, object> states)
 		{
@@ -136,28 +97,6 @@ namespace Zongsoft.Community.Services
 
 			//调用基类同名方法
 			return base.OnSelect(condition, schema, paging, sortings, states);
-		}
-
-		protected override int OnUpdate(IDataDictionary<TEntity> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
-		{
-			//排除不能变更的字段
-			schema.Exclude("SiteId")
-			      .Exclude("CreatorId")
-			      .Exclude("CreatedTime");
-
-			//调用基类同名方法
-			return base.OnUpdate(data, condition, schema, states);
-		}
-
-		protected override int OnUpdateMany(IEnumerable<IDataDictionary<TEntity>> items, ISchema schema, IDictionary<string, object> states)
-		{
-			//排除不能变更的字段
-			schema.Exclude("SiteId")
-				  .Exclude("CreatorId")
-				  .Exclude("CreatedTime");
-
-			//调用基类同名方法
-			return base.OnUpdateMany(items, schema, states);
 		}
 		#endregion
 	}

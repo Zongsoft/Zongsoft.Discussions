@@ -4,7 +4,7 @@
         title="Zongsoft.Community Plugin"
         author="Popeye Zhong(zongsoft@qq.com)"
         version="1.0"
-        copyright="Copyright(C) Zongsoft Corporation. 2015-2017. All rights reserved."
+        copyright="Copyright(C) Zongsoft Corporation. 2015-2019. All rights reserved."
         description="Created by Popeye Zhong in 2017-05">
 
 	<manifest>
@@ -23,8 +23,14 @@
 	</extension>
 
 	<extension path="/Workbench/Data/Accessors">
-		<object name="Community">
-			<object name="Filters" value="{path:../@Filters}" />
+		<object name="Community" sequence="{srv:Redis}">
+			<fenest.valueProvider>
+				<object type="Zongsoft.Community.Data.DataValueProvider, Zongsoft.Community" />
+			</fenest.valueProvider>
+
+			<fenest.error>
+				<object type="Zongsoft.Community.Data.DataErrorHandler, Zongsoft.Community" />
+			</fenest.error>
 		</object>
 	</extension>
 
@@ -61,12 +67,12 @@
 
 		<object name="FileService" type="Zongsoft.Community.Services.FileService, Zongsoft.Community" />
 		<object name="FolderService" type="Zongsoft.Community.Services.FolderService, Zongsoft.Community" />
+		<object name="MessageService" type="Zongsoft.Community.Services.MessageService, Zongsoft.Community" />
 		<object name="FeedbackService" type="Zongsoft.Community.Services.FeedbackService, Zongsoft.Community" />
 		<object name="ForumService" type="Zongsoft.Community.Services.ForumService, Zongsoft.Community" />
 		<object name="ForumGroupService" type="Zongsoft.Community.Services.ForumGroupService, Zongsoft.Community" />
-		<object name="MessageService" type="Zongsoft.Community.Services.MessageService, Zongsoft.Community" />
-		<object name="PostService" type="Zongsoft.Community.Services.PostService, Zongsoft.Community" />
 		<object name="ThreadService" type="Zongsoft.Community.Services.ThreadService, Zongsoft.Community" />
+		<object name="PostService" type="Zongsoft.Community.Services.PostService, Zongsoft.Community" />
 		<object name="UserService" type="Zongsoft.Community.Services.UserService, Zongsoft.Community" basePath="{opt:/Community/General.BasePath}" />
 	</extension>
 </plugin>

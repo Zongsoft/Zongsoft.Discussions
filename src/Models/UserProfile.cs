@@ -34,7 +34,7 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示社区子系统中的用户设置信息。
 	/// </summary>
-	public abstract class UserProfile : Zongsoft.Security.Membership.IUserIdentity
+	public abstract class UserProfile
 	{
 		#region 构造函数
 		protected UserProfile()
@@ -68,9 +68,9 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置用户全称（昵称）。
+		/// 获取或设置用昵称。
 		/// </summary>
-		public abstract string FullName
+		public abstract string Nickname
 		{
 			get; set;
 		}
@@ -166,7 +166,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置用户最新发布的主题标题。
 		/// </summary>
-		public abstract string MostRecentThreadSubject
+		public abstract string MostRecentThreadTitle
 		{
 			get; set;
 		}
@@ -192,11 +192,6 @@ namespace Zongsoft.Community.Models
 	public abstract class UserProfileConditional : ConditionalBase
 	{
 		#region 公共属性
-		public abstract uint? SiteId
-		{
-			get; set;
-		}
-
 		[Conditional("Name", "Phone", "Email")]
 		public abstract string Identity
 		{

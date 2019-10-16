@@ -30,6 +30,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.IO;
+using Zongsoft.Data;
 using Zongsoft.Services;
 using Zongsoft.Security;
 using Zongsoft.Security.Membership;
@@ -38,36 +39,86 @@ namespace Zongsoft.Community
 {
 	internal static class Utility
 	{
-		private const string EMBEDDED_TYPE_SUFFIX = "+embedded";
+		private const string CONTENT_TYPE_EMBEDDED_SUFFIX = "+embedded";
 
-		public static bool IsContentEmbedded(string type)
+		public static bool IsContentEmbedded(string contentType)
 		{
-			if(string.IsNullOrWhiteSpace(type))
+			if(string.IsNullOrEmpty(contentType))
 				return true;
 
-			return type.TrimEnd().EndsWith(EMBEDDED_TYPE_SUFFIX, StringComparison.OrdinalIgnoreCase);
+			return contentType.TrimEnd().EndsWith(CONTENT_TYPE_EMBEDDED_SUFFIX, StringComparison.OrdinalIgnoreCase);
 		}
 
-		public static string GetContentType(string rawType, bool embedded)
+		public static bool IsContentFile(string contentType)
 		{
-			if(string.IsNullOrWhiteSpace(rawType))
-				rawType = "text/plain";
+			if(string.IsNullOrEmpty(contentType))
+				return false;
+
+			return !contentType.TrimEnd().EndsWith(CONTENT_TYPE_EMBEDDED_SUFFIX, StringComparison.OrdinalIgnoreCase);
+		}
+
+		public static string GetContentType(string contentType, bool embedded)
+		{
+			if(string.IsNullOrWhiteSpace(contentType))
+				contentType = "text/plain";
 			else
-				rawType = rawType.Trim();
+				contentType = contentType.Trim();
 
 			if(embedded)
 			{
-				if(rawType.EndsWith(EMBEDDED_TYPE_SUFFIX))
-					return rawType;
+				if(contentType.EndsWith(CONTENT_TYPE_EMBEDDED_SUFFIX))
+					return contentType;
 				else
-					return rawType + EMBEDDED_TYPE_SUFFIX;
+					return contentType + CONTENT_TYPE_EMBEDDED_SUFFIX;
 			}
 			else
 			{
-				if(rawType.EndsWith(EMBEDDED_TYPE_SUFFIX))
-					return rawType.Substring(0, rawType.Length - EMBEDDED_TYPE_SUFFIX.Length);
+				if(contentType.EndsWith(CONTENT_TYPE_EMBEDDED_SUFFIX))
+					return contentType.Substring(0, contentType.Length - CONTENT_TYPE_EMBEDDED_SUFFIX.Length);
 				else
-					return rawType;
+					return contentType;
+			}
+		}
+
+		public static string SetContent(IDataDictionary data, Func<string> getFilePath)
+		{
+			var filePath = string.Empty;
+
+			data.TryGetValue<string>("Content", content =>
+			{
+				var rawType = data.GetValue<string>("ContentType", null);
+
+				if(string.IsNullOrEmpty(content) || content.Length < 500)
+				{
+					//调整内容类型为嵌入格式
+					data.TrySetValue("ContentType", Utility.GetContentType(rawType, true));
+
+					return;
+				}
+
+				//设置内容文件的存储路径
+				filePath = getFilePath();
+
+				//将内容文本写入到文件中
+				Utility.WriteTextFile(filePath, content);
+
+				//更新内容文件的存储路径
+				data.SetValue("Content", filePath);
+
+				//更新内容类型为非嵌入格式（即外部文件）
+				data.SetValue("ContentType", Utility.GetContentType(rawType, false));
+			});
+
+			return filePath;
+		}
+
+		public static void DeleteContentFile(IDataDictionary data)
+		{
+			if(data.TryGetValue<string>("ContentType", out var contentType) &&
+			   Utility.IsContentFile(contentType) &&
+			   data.TryGetValue<string>("Content", out var content))
+			{
+				Utility.DeleteFile(content);
 			}
 		}
 

@@ -193,7 +193,7 @@ namespace Zongsoft.Community.Services
 
 				if(isModerator)
 				{
-					data.SetValue(p => p.IsApproved, true);
+					data.SetValue(p => p.Approved, true);
 				}
 				else
 				{
@@ -204,7 +204,7 @@ namespace Zongsoft.Community.Services
 					if(forum == null)
 						throw new InvalidOperationException("The specified forum is not existed about the new thread.");
 
-					data.SetValue(p => p.IsApproved, forum.Approvable ? false : true);
+					data.SetValue(p => p.Approved, forum.Approvable ? false : true);
 				}
 			}
 
@@ -334,7 +334,7 @@ namespace Zongsoft.Community.Services
 				MostRecentPostId = data.GetValue(p => p.PostId),
 				MostRecentPostTime = data.GetValue(p => p.CreatedTime),
 				MostRecentPostAuthorId = userId,
-				MostRecentPostAuthorName = user?.FullName,
+				MostRecentPostAuthorName = user?.Nickname,
 				MostRecentPostAuthorAvatar = user?.Avatar,
 			});
 
@@ -346,7 +346,7 @@ namespace Zongsoft.Community.Services
 				MostRecentPostId = data.GetValue(p => p.PostId),
 				MostRecentPostTime = data.GetValue(p => p.CreatedTime),
 				MostRecentPostAuthorId = userId,
-				MostRecentPostAuthorName = user?.FullName,
+				MostRecentPostAuthorName = user?.Nickname,
 				MostRecentPostAuthorAvatar = user?.Avatar,
 			});
 

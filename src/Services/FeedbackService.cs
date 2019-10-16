@@ -58,33 +58,21 @@ namespace Zongsoft.Community.Services
 			return feedback;
 		}
 
+		protected override void OnValidate(Method method, IDataDictionary<Feedback> data)
+		{
+			if(method.IsWriting)
+			{
+				//更新内容及内容类型
+				var contentFile = Utility.SetContent(data, () => this.GetContentFilePath(data.GetValue(p => p.FeedbackId)));
+			}
+
+			base.OnValidate(method, data);
+		}
+
 		protected override int OnInsert(IDataDictionary<Feedback> data, ISchema schema, IDictionary<string, object> states)
 		{
-			string filePath = null;
-
-			//获取原始的内容类型
-			var rawType = data.GetValue(p => p.ContentType, null);
-
-			//调整内容类型为嵌入格式
-			data.SetValue(p => p.ContentType, Utility.GetContentType(rawType, true));
-
-			data.TryGetValue(p => p.Content, (key, value) =>
-			{
-				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
-					return;
-
-				//设置内容文件的存储路径
-				filePath = this.GetContentFilePath(data.GetValue(p => p.FeedbackId), data.GetValue(p => p.ContentType));
-
-				//将内容文本写入到文件中
-				Utility.WriteTextFile(filePath, value);
-
-				//更新内容文件的存储路径
-				data.SetValue(p => p.Content, filePath);
-
-				//更新内容类型为非嵌入格式（即外部文件）
-				data.SetValue(p => p.ContentType, Utility.GetContentType(data.GetValue(p => p.ContentType), false));
-			});
+			//更新内容及内容类型
+			var contentFile = Utility.SetContent(data, () => this.GetContentFilePath(data.GetValue(p => p.FeedbackId)));
 
 			try
 			{
@@ -93,18 +81,18 @@ namespace Zongsoft.Community.Services
 
 				if(count < 1)
 				{
-					//如果新增记录失败则删除刚创建的文件
-					if(filePath != null && filePath.Length > 0)
-						Utility.DeleteFile(filePath);
+					//如果新增记录失败则删除刚创建的内容文件
+					if(contentFile != null && contentFile.Length > 0)
+						Utility.DeleteFile(contentFile);
 				}
 
 				return count;
 			}
 			catch
 			{
-				//删除新建的文件
-				if(filePath != null && filePath.Length > 0)
-					Utility.DeleteFile(filePath);
+				//删除新建的内容文件
+				if(contentFile != null && contentFile.Length > 0)
+					Utility.DeleteFile(contentFile);
 
 				throw;
 			}
@@ -112,39 +100,47 @@ namespace Zongsoft.Community.Services
 
 		protected override int OnUpdate(IDataDictionary<Feedback> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
 		{
-			//更新内容到文本文件中
-			data.TryGetValue(p => p.Content, (key, value) =>
-			{
-				if(string.IsNullOrWhiteSpace(value) || value.Length < 500)
-					return;
-
-				//根据当前反馈编号，获得其对应的内容文件存储路径
-				var filePath = this.GetContentFilePath(data.GetValue(p => p.FeedbackId), data.GetValue(p => p.ContentType));
-
-				//将反馈内容写入到对应的存储文件中
-				Utility.WriteTextFile(filePath, value);
-
-				//更新当前反馈的内容文件存储路径属性
-				data.SetValue(p => p.Content, filePath);
-
-				//更新内容类型为非嵌入格式（即外部文件）
-				data.SetValue(p => p.ContentType, Utility.GetContentType(data.GetValue(p => p.ContentType), false));
-			});
+			//更新内容及内容类型
+			Utility.SetContent(data, () => this.GetContentFilePath(data.GetValue(p => p.FeedbackId)));
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, schema, states);
+			return base.OnUpdate(data, condition, schema, states);
+		}
 
-			if(count < 1)
+		protected override int OnUpsert(IDataDictionary<Feedback> data, ISchema schema, IDictionary<string, object> states)
+		{
+			//更新内容及内容类型
+			var contentFile = Utility.SetContent(data, () => this.GetContentFilePath(data.GetValue(p => p.FeedbackId)));
+
+			try
+			{
+				//调用基类同名方法
+				var count = base.OnUpsert(data, schema, states);
+
+				if(count < 1)
+				{
+					//如果更新记录失败则删除刚创建的内容文件
+					if(contentFile != null && contentFile.Length > 0)
+						Utility.DeleteFile(contentFile);
+				}
+
 				return count;
+			}
+			catch
+			{
+				//删除新建的内容文件
+				if(contentFile != null && contentFile.Length > 0)
+					Utility.DeleteFile(contentFile);
 
-			return count;
+				throw;
+			}
 		}
 		#endregion
 
 		#region 虚拟方法
-		protected virtual string GetContentFilePath(ulong feedbackId, string contentType)
+		protected virtual string GetContentFilePath(ulong feedbackId)
 		{
-			return Utility.GetFilePath(string.Format("feedbacks/feedback-{0}.txt", feedbackId.ToString()));
+			return Utility.GetFilePath($"feedbacks/feedback-{feedbackId.ToString()}.txt");
 		}
 		#endregion
 	}

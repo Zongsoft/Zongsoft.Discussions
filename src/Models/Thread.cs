@@ -154,7 +154,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置主题是否已经审核通过。
 		/// </summary>
-		public abstract bool IsApproved
+		public abstract bool Approved
 		{
 			get; set;
 		}
@@ -319,7 +319,7 @@ namespace Zongsoft.Community.Models
 			get; set;
 		}
 
-		public abstract bool? IsApproved
+		public abstract bool? Approved
 		{
 			get; set;
 		}

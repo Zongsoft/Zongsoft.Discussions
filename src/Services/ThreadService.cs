@@ -78,7 +78,7 @@ namespace Zongsoft.Community.Services
 				if(post == null)
 					continue;
 
-				if(post.IsApproved)
+				if(post.Approved)
 				{
 					//如果内容类型是外部文件（即非嵌入格式），则读取文件内容
 					if(!Utility.IsContentEmbedded(post.ContentType))
@@ -107,7 +107,7 @@ namespace Zongsoft.Community.Services
 				return null;
 
 			//如果当前主题是禁用或者未审核的，则需要进行权限判断
-			if(thread.Disabled || (!thread.IsApproved))
+			if(thread.Disabled || (!thread.Approved))
 			{
 				//判断当前用户是否为该论坛的版主
 				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(thread.SiteId, thread.ForumId);
@@ -119,7 +119,7 @@ namespace Zongsoft.Community.Services
 						return null;
 
 					//当前用户不是版主，并且该主题未审核则抛出授权异常
-					if(!thread.IsApproved)
+					if(!thread.Approved)
 						throw new Zongsoft.Security.Membership.AuthorizationException();
 				}
 			}
@@ -245,10 +245,10 @@ namespace Zongsoft.Community.Services
 				SiteId = data.GetValue(p => p.SiteId),
 				ForumId = data.GetValue(p => p.ForumId),
 				MostRecentThreadId = data.GetValue(p => p.ThreadId),
-				MostRecentThreadSubject = data.GetValue(p => p.Title),
+				MostRecentThreadTitle = data.GetValue(p => p.Title),
 				MostRecentThreadTime = data.GetValue(p => p.CreatedTime),
 				MostRecentThreadAuthorId = userId,
-				MostRecentThreadAuthorName = user?.FullName,
+				MostRecentThreadAuthorName = user?.Nickname,
 				MostRecentThreadAuthorAvatar = user?.Avatar,
 			});
 
@@ -259,7 +259,7 @@ namespace Zongsoft.Community.Services
 				{
 					UserId = data.GetValue(p => p.CreatorId),
 					MostRecentThreadId = data.GetValue(p => p.ThreadId),
-					MostRecentThreadSubject = data.GetValue(p => p.Title),
+					MostRecentThreadTitle = data.GetValue(p => p.Title),
 					MostRecentThreadTime = data.GetValue(p => p.CreatedTime),
 				});
 			}

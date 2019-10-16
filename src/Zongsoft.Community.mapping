@@ -21,6 +21,10 @@
 			<complexProperty name="Creator" role="UserProfile">
 				<link name="CreatorId" role="UserId" />
 			</complexProperty>
+
+			<complexProperty name="Users" role="MessageUser" multiplicity="*" immutable="false">
+				<link name="MessageId" role="MessageId" />
+			</complexProperty>
 		</entity>
 
 		<entity name="MessageUser" table="Community_MessageUser">
@@ -107,7 +111,7 @@
 				<link name="FolderId" role="FolderId" />
 			</complexProperty>
 
-			<complexProperty name="Users" role="FolderUser" multiplicity="*">
+			<complexProperty name="Users" role="FolderUser" multiplicity="*" immutable="false">
 				<link name="FolderId" role="FolderId" />
 			</complexProperty>
 		</entity>
@@ -167,7 +171,7 @@
 			<property name="TotalPosts" type="int" nullable="false" />
 			<property name="TotalThreads" type="int" nullable="false" />
 			<property name="MostRecentThreadId" type="ulong" nullable="true" />
-			<property name="MostRecentThreadSubject" type="string" length="100" nullable="true" />
+			<property name="MostRecentThreadTitle" type="string" length="100" nullable="true" />
 			<property name="MostRecentThreadAuthorId" type="int" nullable="true" />
 			<property name="MostRecentThreadAuthorName" type="string" length="50" nullable="true" />
 			<property name="MostRecentThreadAuthorAvatar" type="string" length="150" nullable="true" />
@@ -208,6 +212,11 @@
 			<property name="Permission" type="byte" nullable="false" />
 			<property name="IsModerator" type="bool" nullable="false" />
 
+			<complexProperty name="Forum" role="Forum">
+				<link name="SiteId" role="SiteId" />
+				<link name="ForumId" role="ForumId" />
+			</complexProperty>
+
 			<complexProperty name="User" role="UserProfile">
 				<link name="UserId" role="UserId" />
 			</complexProperty>
@@ -229,7 +238,7 @@
 			<property name="ArticleUrl" type="string" length="200" nullable="true" />
 			<property name="Disabled" type="bool" nullable="false" />
 			<property name="Visible" type="bool" nullable="false" />
-			<property name="IsApproved" type="bool" nullable="false" />
+			<property name="Approved" type="bool" nullable="false" default="true" />
 			<property name="IsLocked" type="bool" nullable="false" />
 			<property name="IsPinned" type="bool" nullable="false" />
 			<property name="IsValued" type="bool" nullable="false" />
@@ -276,7 +285,7 @@
 			<property name="Content" type="string" length="500" nullable="false" />
 			<property name="ContentType" type="string" length="50" nullable="true" />
 			<property name="Disabled" type="bool" nullable="false" />
-			<property name="IsApproved" type="bool" nullable="false" />
+			<property name="Approved" type="bool" nullable="false" default="true" />
 			<property name="IsLocked" type="bool" nullable="false" />
 			<property name="IsValued" type="bool" nullable="false" />
 			<property name="TotalUpvotes" type="uint" nullable="false" />
@@ -320,6 +329,10 @@
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
+			<complexProperty name="Post" role="Post">
+				<link name="PostId" role="PostId" />
+			</complexProperty>
+
 			<complexProperty name="Creator" role="UserProfile">
 				<link name="CreatorId" role="UserId" />
 			</complexProperty>
@@ -337,6 +350,10 @@
 			<property name="UserAvatar" type="string" length="150" nullable="true" />
 			<property name="Value" type="sbyte" nullable="false" />
 			<property name="Tiemstamp" type="datetime" nullable="false" default="now()" immutable="true" />
+
+			<complexProperty name="Post" role="Post">
+				<link name="PostId" role="PostId" />
+			</complexProperty>
 
 			<complexProperty name="User" role="UserProfile">
 				<link name="UserId" role="UserId" />
@@ -383,7 +400,7 @@
 			<property name="MostRecentPostId" type="ulong" nullable="true" />
 			<property name="MostRecentPostTime" type="datetime" nullable="true" />
 			<property name="MostRecentThreadId" type="ulong" nullable="true" />
-			<property name="MostRecentThreadSubject" type="string" length="100" nullable="true" />
+			<property name="MostRecentThreadTitle" type="string" length="100" nullable="true" />
 			<property name="MostRecentThreadTime" type="datetime" nullable="true" />
 			<property name="Creation" type="datetime" nullable="false" default="now()" immutable="true" />
 			<property name="Modification" type="datetime" nullable="true" />

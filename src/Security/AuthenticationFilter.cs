@@ -28,12 +28,12 @@ using System;
 using System.Linq;
 
 using Zongsoft.Data;
+using Zongsoft.Common;
 using Zongsoft.Services;
 using Zongsoft.Security.Membership;
 
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
-using Zongsoft.Common;
 
 namespace Zongsoft.Community.Security
 {
@@ -75,7 +75,7 @@ namespace Zongsoft.Community.Security
 				return;
 
 			//获取当前登录用户所对应的用户配置对象
-			var profile = this.GetUserProfile(context.User.UserId);
+			var profile = this.GetUserProfile(context.User);
 
 			//设置当前用户的扩展属性
 			if(profile != null)
@@ -84,13 +84,6 @@ namespace Zongsoft.Community.Security
 
 		public void OnFiltering(AuthenticationContext context)
 		{
-		}
-		#endregion
-
-		#region 私有方法
-		private UserProfile GetUserProfile(uint userId)
-		{
-			return this.DataAccess.Select<UserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
 		}
 
 		void IExecutionFilter.OnFiltered(object context)
@@ -103,6 +96,39 @@ namespace Zongsoft.Community.Security
 		{
 			if(context is AuthenticationContext ctx)
 				this.OnFiltering(ctx);
+		}
+		#endregion
+
+		#region 私有方法
+		private UserProfile GetUserProfile(IUserIdentity user)
+		{
+			var profile = this.DataAccess.Select<UserProfile>(Condition.Equal(nameof(UserProfile.UserId), user.UserId)).FirstOrDefault();
+
+			if(profile != null)
+				return profile;
+
+			var siteId = 0U;
+
+			if(!string.IsNullOrEmpty(user.Namespace))
+			{
+				var namespaces = Authentication.Instance.Namespaces ??
+					throw new Zongsoft.Security.SecurityException($"The required namespace provider for the user is missing.");
+
+				if(!namespaces.TryGetKey(user.Namespace, out siteId))
+					throw new Zongsoft.Security.SecurityException($"Unable to confirm the '{user.Namespace}' namespace of the logged in user.");
+			}
+
+			profile = Model.Build<UserProfile>();
+			profile.SiteId = siteId;
+			profile.UserId = user.UserId;
+			profile.Name = user.Name;
+			profile.Nickname = user.FullName;
+			profile.Description = user.Description;
+
+			if(this.DataAccess.Upsert(profile) > 0)
+				return profile;
+			else
+				return profile = null;
 		}
 		#endregion
 	}

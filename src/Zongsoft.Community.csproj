@@ -41,6 +41,9 @@
   <ItemGroup>
     <Compile Include="Configuration\GeneratlConfiguration.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="Data\DataErrorHandler.cs" />
+    <Compile Include="Data\DataValidationFilter.cs" />
+    <Compile Include="Data\DataValueProvider.cs" />
     <Compile Include="Data\FolderFilter.cs" />
     <Compile Include="Data\ForumFilter.cs" />
     <Compile Include="Data\MessageFilter.cs" />

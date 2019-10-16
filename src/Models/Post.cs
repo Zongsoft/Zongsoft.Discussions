@@ -97,7 +97,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置一个值，表示帖子是否被审核通过。
 		/// </summary>
-		public abstract bool IsApproved
+		public abstract bool Approved
 		{
 			get; set;
 		}
@@ -410,7 +410,7 @@ namespace Zongsoft.Community.Models
 			get; set;
 		}
 
-		public abstract bool? IsApproved
+		public abstract bool? Approved
 		{
 			get; set;
 		}

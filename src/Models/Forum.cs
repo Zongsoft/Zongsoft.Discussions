@@ -168,7 +168,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛中最新主题的标题。
 		/// </summary>
-		public abstract string MostRecentThreadSubject
+		public abstract string MostRecentThreadTitle
 		{
 			get; set;
 		}
