@@ -156,17 +156,6 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override ICondition GetKey(object[] values, out bool singleton)
-		{
-			if(values.Length == 1)
-			{
-				singleton = false;
-				return Condition.Equal("SiteId", values[0]);
-			}
-
-			return base.GetKey(values, out singleton);
-		}
-
 		protected override ICondition OnValidate(Method method, ICondition condition)
 		{
 			//调用基类同名方法

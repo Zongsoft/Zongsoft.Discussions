@@ -27,12 +27,14 @@
 using System;
 using System.Collections.Generic;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
 	/// 表示用户浏览记录的实体类。
 	/// </summary>
-	public interface IHistory : Zongsoft.Data.IModel
+	public interface IHistory
 	{
 		#region 公共属性
 		/// <summary>
@@ -81,6 +83,45 @@ namespace Zongsoft.Community.Models
 		DateTime MostRecentViewedTime
 		{
 			get; set;
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// 表示浏览记录查询条件的实体类。
+	/// </summary>
+	public abstract class HistoryConditional : ConditionalBase
+	{
+		public abstract ulong? ThreadId
+		{
+			get; set;
+		}
+
+		[Conditional("Count")]
+		public abstract Range<uint>? Times
+		{
+			get; set;
+		}
+
+		[Conditional(typeof(TimestampConverter))]
+		public abstract Range<DateTime>? Timestamp
+		{
+			get; set;
+		}
+
+		#region 嵌套子类
+		private class TimestampConverter : ConditionalConverter
+		{
+			public override ICondition Convert(ConditionalConverterContext context)
+			{
+				var timestamp = (Range<DateTime>)context.Value;
+
+				if(timestamp.IsEmpty)
+					return null;
+
+				return Condition.Between(nameof(IHistory.FirstViewedTime), timestamp) |
+				       Condition.Between(nameof(IHistory.MostRecentViewedTime), timestamp);
+			}
 		}
 		#endregion
 	}

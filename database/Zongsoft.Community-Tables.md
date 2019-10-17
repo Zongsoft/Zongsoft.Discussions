@@ -51,7 +51,7 @@ SiteId | int | 4 | False | 所属站点编号
 Name | nvarchar | 100 | False | 相册名称
 PinYin | varchar | 200 | True | 名称拼音
 Icon | varchar | 50 | True | 图标名
-Shareability | byte | 1 | False | 共享性(0:私有, 1:内部, 2:好友, 3:公共)
+Shareability | byte | 1 | False | 共享性
 CreatorId | int | 4 | False | 创建人编号
 CreatedTime | datetime | - | False | 创建时间
 Description | varchar | 500 | True | 备注描述
@@ -109,8 +109,8 @@ CoverPicturePath | varchar | 200 | True | 封面图片路径
 SortOrder | smallint | 2 | False | 排列顺序
 IsPopular | bool | - | False | 是否热门版块
 Approvable | bool | - | False | 发帖是否需要审核
-Visibility | byte | 1 | False | 可见范围(0:禁用,即不可见, 1:特定用户, 2:站内用户, 3:任何人)
-Accessibility | byte | 1 | False | 可访问性(0:仅限版主, 1:特定用户, 2:站内用户)
+Visibility | byte | 1 | False | 可见范围
+Accessibility | byte | 1 | False | 可访问性
 TotalPosts | int | 4 | False | 累计帖子总数
 TotalThreads | int | 4 | False | 累计主题总数
 MostRecentThreadId | bigint | 8 | True | 最新主题的编号
@@ -152,7 +152,7 @@ Tags | nvarchar | 100 | True | 标签集(以逗号分隔)
 PostId | bigint | 8 | False | 内容帖子编号
 CoverPicturePath | varchar | 200 | True | 封面图片路径
 ArticleUrl | varchar | 200 | True | 文章链接
-Disabled | bool | - | False | 已被禁用(False)
+Disabled | bool | - | False | 已被禁用
 Visible | bool | - | False | 是否可见(True)
 Approved | bool | - | False | 是否审核通过
 IsLocked | bool | - | False | 已被锁定（锁定则不允许回复）
@@ -182,13 +182,13 @@ SiteId | int | 4 | False | 所属站点编号
 ThreadId | bigint | 8 | False | 所属主题编号
 Content | varchar | 500 | False | 帖子内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
-Disabled | bool | - | False | 已被禁用(False)
+Disabled | bool | - | False | 已被禁用
 Approved | bool | - | False | 是否审核通过
 IsLocked | bool | - | False | 是否已锁定(锁定则不允许回复)
 IsValued | bool | - | False | 是否精华帖
 TotalUpvotes | int | 4 | False | 累计点赞数
 TotalDownvotes | int | 4 | False | 累计被踩数
-VisitorAddress | nvarchar | 100 | True | 访客地址(IP和位置信息)(192.168.0.1 湖北省武汉市)
+VisitorAddress | nvarchar | 100 | True | 访客地址
 VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息等)
 AttachmentMark | varchar | 100 | True | 附件标记(以逗号分隔)
 CreatorId | int | 4 | False | 发帖人编号
@@ -204,7 +204,7 @@ SerialId | smallint | 2 | False | 主键，回复序号
 SourceId | smallint | 2 | True | 关联的回复序号
 Content | varchar | 500 | False | 回复内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
-VisitorAddress | nvarchar | 100 | True | 访客地址(IP和位置信息)(192.168.0.1 湖北省武汉市)
+VisitorAddress | nvarchar | 100 | True | 访客地址
 VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息等)
 CreatorId | int | 4 | False | 回复人编号
 CreatedTime | datetime | - | False | 回复时间

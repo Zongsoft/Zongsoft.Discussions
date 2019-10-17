@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `Community_FolderUser`
 (
   `FolderId` int UNSIGNED NOT NULL COMMENT '主键，文件夹编号',
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
-  `Permission` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '权限定义(0:None, 1:Read, 2:Write)',
+  `Permission` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '权限定义',
   `Expiration` datetime NULL COMMENT '过期时间',
   PRIMARY KEY (`FolderId`, `UserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件夹用户表';
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `Community_ForumUser`
   `SiteId` int UNSIGNED NOT NULL COMMENT '主键，站点编号',
   `ForumId` smallint UNSIGNED NOT NULL COMMENT '主键，论坛编号',
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
-  `Permission` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '权限定义(0:None, 1:Read, 2:Write)',
+  `Permission` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '权限定义',
   `IsModerator` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否版主',
   PRIMARY KEY (`SiteId`, `ForumId`, `UserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='论坛用户表';
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   `IsValued` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否精华帖',
   `TotalUpvotes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计点赞数',
   `TotalDownvotes` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '累计被踩数',
-  `VisitorAddress` varchar(100) NULL COMMENT '访客地址(IP和地址信息)',
+  `VisitorAddress` varchar(100) NULL COMMENT '访客地址',
   `VisitorDescription` varchar(500) NULL COMMENT '访客描述(浏览器代理信息等)',
   `AttachmentMark` varchar(100) NULL COMMENT '附件标记(以逗号分隔)',
   `CreatorId` int UNSIGNED NOT NULL COMMENT '发帖人编号',
@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `Community_PostComment`
   `SourceId` smallint UNSIGNED NULL COMMENT '关联的回复序号',
   `Content` varchar(500) NOT NULL COMMENT '帖子内容',
   `ContentType` varchar(50) NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',
-  `VisitorAddress` varchar(100) NULL COMMENT '访客地址(IP和地址信息)',
+  `VisitorAddress` varchar(100) NULL COMMENT '访客地址',
   `VisitorDescription` varchar(500) NULL COMMENT '访客描述(浏览器代理信息等)',
   `CreatorId` int UNSIGNED NOT NULL COMMENT '回复人编号',
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '回复时间',

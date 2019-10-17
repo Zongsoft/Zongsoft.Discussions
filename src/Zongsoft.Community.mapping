@@ -189,6 +189,19 @@
 				<link name="GroupId" role="GroupId" />
 			</complexProperty>
 
+			<complexProperty name="MostRecentThread" role="Thread">
+				<link name="MostRecentThreadId" role="ThreadId" />
+			</complexProperty>
+
+			<complexProperty name="MostRecentPost" role="Post">
+				<link name="MostRecentPostId" role="PostId" />
+			</complexProperty>
+
+			<complexProperty name="Users" role="ForumUser" multiplicity="*" immutable="false">
+				<link name="SiteId" role="SiteId" />
+				<link name="ForumId" role="ForumId" />
+			</complexProperty>
+
 			<complexProperty name="Moderators" role="ForumUser:User" multiplicity="*">
 				<link name="SiteId" role="SiteId" />
 				<link name="ForumId" role="ForumId" />
@@ -261,8 +274,12 @@
 				<link name="ForumId" role="ForumId" />
 			</complexProperty>
 
-			<complexProperty name="Post" role="Post">
+			<complexProperty name="Post" role="Post" multiplicity="!">
 				<link name="PostId" role="PostId" />
+			</complexProperty>
+
+			<complexProperty name="MostRecentPost" role="Post">
+				<link name="MostRecentPostId" role="PostId" />
 			</complexProperty>
 
 			<complexProperty name="Creator" role="UserProfile">

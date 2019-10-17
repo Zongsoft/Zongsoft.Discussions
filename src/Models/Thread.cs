@@ -240,6 +240,14 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
+		/// 获取或设置主题的最后回帖对象。
+		/// </summary>
+		public abstract Post MostRecentPost
+		{
+			get; set;
+		}
+
+		/// <summary>
 		/// 获取或设置主题的最后回帖作者编号。
 		/// </summary>
 		public abstract uint? MostRecentPostAuthorId

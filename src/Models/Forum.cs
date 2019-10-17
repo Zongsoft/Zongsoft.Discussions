@@ -166,6 +166,14 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
+		/// 获取或设置论坛中最新发布的主题对象。
+		/// </summary>
+		public abstract Thread MostRecentThread
+		{
+			get; set;
+		}
+
+		/// <summary>
 		/// 获取或设置论坛中最新主题的标题。
 		/// </summary>
 		public abstract string MostRecentThreadTitle
@@ -206,7 +214,7 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置主题的最后回帖编号。
+		/// 获取或设置论坛中最近回帖编号。
 		/// </summary>
 		public abstract ulong? MostRecentPostId
 		{
@@ -214,7 +222,15 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置论坛中最后回帖的作者编号。
+		/// 获取或设置论坛中最近的回帖对象。
+		/// </summary>
+		public abstract Post MostRecentPost
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置论坛中最近回帖的作者编号。
 		/// </summary>
 		public abstract uint? MostRecentPostAuthorId
 		{
@@ -222,7 +238,7 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置论坛中最后回帖的作者名称。
+		/// 获取或设置论坛中最近回帖的作者名称。
 		/// </summary>
 		public abstract string MostRecentPostAuthorName
 		{
@@ -230,7 +246,7 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置论坛中最后回帖的作者头像。
+		/// 获取或设置论坛中最近回帖的作者头像。
 		/// </summary>
 		public abstract string MostRecentPostAuthorAvatar
 		{
@@ -238,7 +254,7 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置论坛中最后回帖的时间。
+		/// 获取或设置论坛中最近回帖的时间。
 		/// </summary>
 		public abstract DateTime? MostRecentPostTime
 		{
@@ -263,6 +279,14 @@ namespace Zongsoft.Community.Models
 		#endregion
 
 		#region 集合属性
+		/// <summary>
+		/// 获取或设置论坛成员集。
+		/// </summary>
+		public abstract IEnumerable<ForumUser> Users
+		{
+			get; set;
+		}
+
 		/// <summary>
 		/// 获取或设置论坛的版主集。
 		/// </summary>
