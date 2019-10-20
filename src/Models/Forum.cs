@@ -320,6 +320,76 @@ namespace Zongsoft.Community.Models
 			public UserProfile User;
 			#endregion
 
+			#region 构造函数
+			private ForumUser(uint userId)
+			{
+				this.SiteId = 0;
+				this.ForumId = 0;
+				this.UserId = userId;
+				this.Permission = Permission.None;
+				this.IsModerator = true;
+				this.Forum = null;
+				this.User = null;
+			}
+
+			private ForumUser(uint siteId, ushort forumId, uint userId)
+			{
+				this.SiteId = siteId;
+				this.ForumId = forumId;
+				this.UserId = userId;
+				this.Permission = Permission.None;
+				this.IsModerator = true;
+				this.Forum = null;
+				this.User = null;
+			}
+
+			public ForumUser(uint userId, Permission permission)
+			{
+				this.SiteId = 0;
+				this.ForumId = 0;
+				this.UserId = userId;
+				this.Permission = permission;
+				this.IsModerator = false;
+				this.Forum = null;
+				this.User = null;
+			}
+
+			public ForumUser(uint siteId, ushort forumId, uint userId, Permission permission)
+			{
+				this.SiteId = siteId;
+				this.ForumId = forumId;
+				this.UserId = userId;
+				this.Permission = permission;
+				this.IsModerator = false;
+				this.Forum = null;
+				this.User = null;
+			}
+			#endregion
+
+			#region 静态方法
+			/// <summary>
+			/// 构建一个指定用户编号的版主。
+			/// </summary>
+			/// <param name="userId">指定的版主的用户编号。</param>
+			/// <returns>返回构建成功的论坛用户成员。</returns>
+			public static ForumUser Moderator(uint userId)
+			{
+				return new ForumUser(userId);
+			}
+
+			/// <summary>
+			/// 构建一个指定论坛的版主。
+			/// </summary>
+			/// <param name="siteId">指定的站点编号。</param>
+			/// <param name="forumId">指定的论坛编号。</param>
+			/// <param name="userId">指定的版主的用户编号。</param>
+			/// <returns>返回构建成功的论坛用户成员。</returns>
+			public static ForumUser Moderator(uint siteId, ushort forumId, uint userId)
+			{
+				return new ForumUser(siteId, forumId, userId);
+			}
+			#endregion
+
 			#region 重写方法
 			public bool Equals(ForumUser other)
 			{
