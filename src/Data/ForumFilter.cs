@@ -55,7 +55,7 @@ namespace Zongsoft.Community.Data
 				if(forum == null)
 					return false;
 
-				if(forum.Visibility == Visibility.Scoped)
+				if(forum.Visibility == Visibility.Specified)
 				{
 					var credential = ctx.Principal?.Identity?.Credential;
 

@@ -43,16 +43,6 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<Folder.FolderUser> GetUsers(uint folderId, UserKind? userKind = null, Paging paging = null)
-		{
-			ICondition conditions = Condition.Equal("FolderId", folderId);
-
-			if(userKind.HasValue)
-				conditions = ConditionCollection.And(conditions, Condition.Equal("UserKind", userKind.Value));
-
-			return this.DataAccess.Select<Folder.FolderUser>(conditions, "User, User.User", paging);
-		}
-
 		public bool SetIcon(uint folderId, string icon)
 		{
 			if(string.IsNullOrWhiteSpace(icon))

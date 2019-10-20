@@ -72,15 +72,17 @@ namespace Zongsoft.Community.Services
 				userId = this.Credential?.User.UserId;
 
 			return this.DataAccess.Exists<Forum.ForumUser>(
-				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) &
-				Condition.Equal("UserId", userId) & Condition.Equal("UserKind", UserKind.Administrator));
+				Condition.Equal(nameof(Forum.ForumUser.SiteId), siteId) & Condition.Equal(nameof(Forum.ForumUser.ForumId), forumId) &
+				Condition.Equal(nameof(Forum.ForumUser.UserId), userId) & Condition.Equal(nameof(Forum.ForumUser.IsModerator), true));
 		}
 
 		public IEnumerable<UserProfile> GetModerators(uint siteId, ushort forumId)
 		{
-			return this.DataAccess.Select<Forum.ForumUser>(
-				Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("UserKind", UserKind.Administrator),
-				"User, User.User", Paging.Disable).Select(p => p.User);
+			return this.DataAccess.Select<UserProfile>(nameof(Forum.ForumUser),
+				Condition.Equal(nameof(Forum.ForumUser.SiteId), siteId) &
+				Condition.Equal(nameof(Forum.ForumUser.ForumId), forumId) &
+				Condition.Equal(nameof(Forum.ForumUser.IsModerator), true),
+				"User{*}");
 		}
 
 		public Thread[] GetGlobalThreads(uint siteId, Paging paging = null)

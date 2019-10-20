@@ -58,7 +58,6 @@
     <Compile Include="Models\Accessibility.cs" />
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\TagsConverter.cs" />
-    <Compile Include="Models\UserKind.cs" />
     <Compile Include="Models\ForumGroup.cs" />
     <Compile Include="Models\Visibility.cs" />
     <Compile Include="Models\Gender.cs" />

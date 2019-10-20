@@ -47,12 +47,6 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#endregion
 
 		#region 公共方法
-		[ActionName("Users")]
-		public object GetUsers(uint id, [FromRoute("args")]UserKind? kind = null, [FromUri]Paging paging = null)
-		{
-			return this.GetResult(this.DataService.GetUsers(id, kind, paging));
-		}
-
 		[HttpPatch]
 		[ActionName("Icon")]
 		public void SetIcon(uint id, [FromRoute("args")]string icon = null)
