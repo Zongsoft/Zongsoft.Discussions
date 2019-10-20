@@ -38,7 +38,7 @@ namespace Zongsoft.Community.Models
 		Moderator,
 
 		/// <summary>特定用户</summary>
-		Scoped,
+		Specified,
 
 		/// <summary>内部的，站内用户</summary>
 		Internal,
