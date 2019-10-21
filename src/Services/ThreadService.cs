@@ -269,33 +269,14 @@ namespace Zongsoft.Community.Services
 
 		private void SetHistory(ulong threadId)
 		{
-			var credential = this.Credential;
-
-			if(credential == null || credential.IsEmpty)
-				return;
-
-			var conditions = Condition.Equal("UserId", credential.User.UserId) & Condition.Equal("ThreadId", threadId);
-
-			using(var transaction = new Zongsoft.Transactions.Transaction())
+			//新增或更新当前用户对指定主题的浏览记录（自动递增浏览次数）
+			this.DataAccess.Upsert<IHistory>(new
 			{
-				//递增当前用户对当前主题的累计浏览量
-				if(this.DataAccess.Increment<IHistory>("Count", conditions) > 0)
-				{
-					//更新当前用户对当前主题的最后浏览时间
-					this.DataAccess.Update<IHistory>(new
-					{
-						MostRecentViewedTime = DateTime.Now,
-					}, conditions);
-				}
-				else
-				{
-					//尝试新增一条用户的浏览记录
-					this.DataAccess.Insert(Model.Build<IHistory>(history => {
-						history.UserId = credential.User.UserId;
-						history.ThreadId = threadId;
-					}));
-				}
-			}
+				UserId = this.User.UserId,
+				ThreadId = threadId,
+				Count = Interval.Increment, //注意：此处应该使用Interval类型值，以便数据引擎自动进行递增处理
+				MostRecentViewedTime = DateTime.Now,
+			});
 		}
 		#endregion
 	}
