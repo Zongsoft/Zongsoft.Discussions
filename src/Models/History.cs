@@ -97,8 +97,7 @@ namespace Zongsoft.Community.Models
 			get; set;
 		}
 
-		[Conditional("Count")]
-		public abstract Range<uint>? Times
+		public abstract Range<uint>? Count
 		{
 			get; set;
 		}
