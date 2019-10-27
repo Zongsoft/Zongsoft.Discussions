@@ -29,7 +29,6 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
-using Zongsoft.Runtime.Caching;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
@@ -37,31 +36,9 @@ namespace Zongsoft.Community.Services
 	[DataSearcher("Name")]
 	public class ForumService : DataService<Forum>
 	{
-		#region 成员字段
-		private ICache _cache;
-		#endregion
-
 		#region 构造函数
 		public ForumService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
 		{
-			_cache = new MemoryCache("Community");
-		}
-		#endregion
-
-		#region 公共属性
-		public ICache Cache
-		{
-			get
-			{
-				return _cache;
-			}
-			set
-			{
-				if(value == null)
-					throw new ArgumentNullException();
-
-				_cache = value;
-			}
 		}
 		#endregion
 
@@ -69,7 +46,7 @@ namespace Zongsoft.Community.Services
 		public bool IsModerator(uint siteId, ushort forumId, uint? userId = null)
 		{
 			if(userId == null)
-				userId = this.Credential?.User.UserId;
+				userId = this.User.UserId;
 
 			return this.DataAccess.Exists<Forum.ForumUser>(
 				Condition.Equal(nameof(Forum.ForumUser.SiteId), siteId) & Condition.Equal(nameof(Forum.ForumUser.ForumId), forumId) &
@@ -85,75 +62,55 @@ namespace Zongsoft.Community.Services
 				"User{*}");
 		}
 
-		public Thread[] GetGlobalThreads(uint siteId, Paging paging = null)
+		public IEnumerable<Thread> GetGlobalThreads(uint siteId, Paging paging = null)
 		{
-			var cache = this.Cache;
-
-			if(cache == null)
-				throw new InvalidOperationException("Missing cache for the operation.");
-
-			var globals = cache.GetValue<ulong[]>(this.GetGlobalCacheKey(siteId));
-
-			if(globals == null)
-			{
-				var threads = this.DataAccess.Select<Thread>(
-					Condition.Equal("SiteId", siteId) & Condition.Equal("IsGlobal", true) & Condition.Equal("Visible", true),
-					paging, Sorting.Descending("ThreadId")).ToArray();
-
-				//将全局可见贴的主题编号缓存起来
-				cache.SetValue(this.GetGlobalCacheKey(siteId), threads.Select(p => p.ThreadId));
-
-				return threads;
-			}
-
-			return this.DataAccess.Select<Thread>(Condition.In("ThreadId", globals)).ToArray();
+			return this.DataAccess.Select<Thread>(
+				Condition.Equal(nameof(Thread.SiteId), siteId) &
+				Condition.Equal(nameof(Thread.IsGlobal), true) &
+				Condition.Equal(nameof(Thread.Visible), true) &
+				Condition.Equal(nameof(Thread.Disabled), false),
+				paging, Sorting.Descending(nameof(Thread.ThreadId)));
 		}
 
-		public Thread[] GetPinnedThreads(uint siteId, ushort forumId, Paging paging = null)
+		public IEnumerable<Thread> GetPinnedThreads(uint siteId, ushort forumId, Paging paging = null)
 		{
-			var cache = this.Cache;
-
-			if(cache == null)
-				throw new InvalidOperationException("Missing cache for the operation.");
-
-			var pinneds = cache.GetValue<ulong[]>(this.GetPinnedCacheKey(siteId, forumId));
-
-			if(pinneds == null)
-			{
-				var threads = this.DataAccess.Select<Thread>(
-					Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("IsPinned", true) & Condition.Equal("Visible", true),
-					paging, Sorting.Descending("ThreadId"));
-
-				//将置顶可见贴的主题编号缓存起来
-				cache.SetValue(this.GetPinnedCacheKey(siteId, forumId), threads.Select(p => p.ThreadId).ToArray());
-
-				return threads.ToArray();
-			}
-
-			return this.DataAccess.Select<Thread>(Condition.In("ThreadId", pinneds)).ToArray();
+			return this.DataAccess.Select<Thread>(
+				Condition.Equal(nameof(Thread.SiteId), siteId) &
+				Condition.Equal(nameof(Thread.ForumId), forumId) &
+				Condition.Equal(nameof(Thread.IsPinned), true) &
+				Condition.Equal(nameof(Thread.Visible), true) &
+				Condition.Equal(nameof(Thread.Disabled), false),
+				paging, Sorting.Descending(nameof(Thread.ThreadId)));
 		}
 
 		public Thread[] GetTopmosts(uint siteId, ushort forumId, int count = 10)
 		{
-			if(count < 1 || count > 50)
-				count = 10;
+			count = Math.Max(5, Math.Min(50, count));
 
 			var globals = this.GetGlobalThreads(siteId, Paging.Page(1, count));
 			var pinneds = this.GetPinnedThreads(siteId, forumId, Paging.Page(1, count));
 
-			return globals.Union(pinneds).ToArray();
+			return globals.Union(pinneds).OrderByDescending(t => t.ThreadId).Take(count).ToArray();
 		}
 
 		public IEnumerable<Thread> GetThreads(uint siteId, ushort forumId, Paging paging = null)
 		{
-			//获取指定论坛中最顶部的主题集（全局贴+本论坛的置顶贴）
-			var topmosts = this.GetTopmosts(siteId, forumId);
+			var criteria = Condition.Equal(nameof(Thread.SiteId), siteId) &
+				Condition.Equal(nameof(Thread.ForumId), forumId) &
+				Condition.Equal(nameof(Thread.Visible), true) &
+				Condition.Equal(nameof(Thread.Disabled), false);
 
-			//查询指定论坛中的并且排除顶部集中的主题集
-			if(topmosts == null || topmosts.Length == 0)
-				return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("Visible", true), paging);
-			else
-				return this.DataAccess.Select<Thread>(Condition.Equal("SiteId", siteId) & Condition.Equal("ForumId", forumId) & Condition.Equal("Visible", true) & Condition.NotIn("ThreadId", topmosts.Select(p => p.ThreadId)), paging);
+			//只有第一页或者不分页才需要加载最顶部主题集
+			if(paging == null || paging.PageIndex == 1)
+			{
+				//获取指定论坛中最顶部的主题集（全局贴+本论坛的置顶贴）
+				var topmosts = this.GetTopmosts(siteId, forumId);
+
+				if(topmosts != null && topmosts.Length > 0)
+					criteria.Add(Condition.NotIn(nameof(Thread.ThreadId), topmosts.Select(p => p.ThreadId)));
+			}
+
+			return this.DataAccess.Select<Thread>(criteria, paging);
 		}
 		#endregion
 
@@ -163,36 +120,28 @@ namespace Zongsoft.Community.Services
 			//调用基类同名方法
 			condition = base.OnValidate(method, condition);
 
-			//获取当前用户凭证
-			var credential = this.Credential;
+			ICondition requires;
 
-			ICondition requires = null;
-
-			//如果凭证为空或匿名用户则只能获取公共数据
-			if(credential == null || credential.IsEmpty)
-				requires = Condition.Equal("Visiblity", (byte)Visibility.Public);
-			//else if(!credential.InAdministrators) //如果不是管理员则只能获取内部或公共数据
-			//	requires = Condition.In("Visiblity", (byte)Visiblity.Internal, (byte)Visiblity.Public);
-
-			if(requires == null)
-				return condition;
+			//匿名用户只能获取公共数据
+			if(!this.Principal.Identity.IsAuthenticated)
+				requires = Condition.Equal(nameof(Forum.Visibility), Visibility.Public);
+			else
+				requires = Condition.In(nameof(Forum.Visibility), (byte)Visibility.Internal, (byte)Visibility.Public) |
+					(
+						Condition.Equal(nameof(Forum.Visibility), Visibility.Specified) &
+						Condition.Exists(nameof(Forum.Users),
+							Condition.Equal(nameof(Forum.ForumUser.UserId), this.User.UserId) &
+							(
+								Condition.Equal(nameof(Forum.ForumUser.IsModerator), true) |
+								Condition.In(nameof(Forum.ForumUser.Permission), (byte)Permission.Read, (byte)Permission.Write)
+							)
+						)
+					);
 
 			if(condition == null)
 				return requires;
 			else
 				return ConditionCollection.And(condition, requires);
-		}
-		#endregion
-
-		#region 私有方法
-		private string GetGlobalCacheKey(uint siteId)
-		{
-			return "Community:Global-" + siteId.ToString();
-		}
-
-		private string GetPinnedCacheKey(uint siteId, ushort forumId)
-		{
-			return "Community:Pinned-" + siteId.ToString() + "-" + forumId.ToString();
 		}
 		#endregion
 	}

@@ -29,7 +29,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 
 using Zongsoft.Data;
-using Zongsoft.Web.Http;
+using Zongsoft.Security;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
@@ -45,6 +45,174 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#endregion
 
 		#region 公共方法
+		[HttpPatch]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Approve(ulong id)
+		{
+			return this.DataService.Approve(id) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPatch]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Enable(ulong id)
+		{
+			return this.DataService.Disable(id, false) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPatch]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Disable(ulong id)
+		{
+			return this.DataService.Disable(id, true) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPatch]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Hidden(ulong id)
+		{
+			return this.DataService.Visible(id, false) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPatch]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Visible(ulong id)
+		{
+			return this.DataService.Visible(id, true) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPost, HttpPut]
+		[ActionName("Locked")]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Lock(ulong id)
+		{
+			return this.DataService.SetLocked(id, true) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpDelete]
+		[ActionName("Locked")]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Unlock(ulong id)
+		{
+			return this.DataService.SetLocked(id, false) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPost, HttpPut]
+		[ActionName("Pinned")]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Pin(ulong id)
+		{
+			return this.DataService.SetPinned(id, true) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpDelete]
+		[ActionName("Pinned")]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Unpin(ulong id)
+		{
+			return this.DataService.SetPinned(id, false) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPost, HttpPut]
+		[ActionName("Valued")]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Valued(ulong id)
+		{
+			return this.DataService.SetValued(id, true) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpDelete]
+		[ActionName("Valued")]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Unvalued(ulong id)
+		{
+			return this.DataService.SetValued(id, false) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPost, HttpPut]
+		[ActionName("Global")]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Global(ulong id)
+		{
+			return this.DataService.SetGlobal(id, true) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpDelete]
+		[ActionName("Global")]
+		[Authorization(AuthorizationMode.Identity)]
+		public object Unglobal(ulong id)
+		{
+			return this.DataService.SetGlobal(id, false) ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPatch, HttpPut]
+		[ActionName("Title")]
+		public object SetTitle(ulong id, [FromBody]string value)
+		{
+			return this.DataService.Update(new
+			{
+				ThreadId = id,
+				Title = value,
+			}) > 0 ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPatch, HttpPut]
+		[ActionName("Summary")]
+		public object SetSummary(ulong id, [FromBody]string value)
+		{
+			return this.DataService.Update(new
+			{
+				ThreadId = id,
+				Summary = value,
+			}) > 0 ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
+		[HttpPatch, HttpPut]
+		[ActionName("Content")]
+		public object SetContent(ulong id, [FromBody]string content)
+		{
+			return this.DataService.Update(new
+			{
+				ThreadId = id,
+				Post = new
+				{
+					Content = content,
+					ContentType = this.Request.Content.Headers.ContentType.MediaType,
+				}
+			}) > 0 ?
+				this.NoContent() :
+				this.NotFound();
+		}
+
 		[ActionName("Posts")]
 		public object GetPosts(ulong id, [FromUri]Paging paging = null)
 		{

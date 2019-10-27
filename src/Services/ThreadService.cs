@@ -33,7 +33,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearcher("Subject")]
+	[DataSearcher("Title")]
 	public class ThreadService : DataService<Thread>
 	{
 		#region 成员字段
@@ -60,40 +60,114 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
+		/// <summary>
+		/// 审核批准指定的主题，注：只有版主调用该方法的权限。
+		/// </summary>
+		/// <param name="threadId">指定要审核批准的主题编号。</param>
+		/// <returns>如果审核批准成功则返回真(True)，否则返回假(False)。</returns>
+		public bool Approve(ulong threadId)
+		{
+			return this.DataAccess.Update<Thread>(new
+			{
+				Approved = true,
+				ApprovedTime = DateTime.Now,
+			}, Condition.Equal(nameof(Thread.ThreadId), threadId) & Condition.Equal(nameof(Thread.Approved), false) & GetIsModeratorCriteria()) > 0;
+		}
+
+		/// <summary>
+		/// 设置指定主题是否可用还是禁用，注：只有版主调用该方法的权限。
+		/// </summary>
+		/// <param name="threadId">指定要设置的主题编号。</param>
+		/// <param name="value">指定一个值，指示是否为禁用还是启用。</param>
+		/// <returns>如果设置成功则返回真(True)，否则返回假(False)。</returns>
+		public bool Disable(ulong threadId, bool value)
+		{
+			return this.DataAccess.Update<Thread>(new
+			{
+				Disabled = true,
+			}, Condition.Equal(nameof(Thread.ThreadId), threadId) & GetIsModeratorCriteria()) > 0;
+		}
+
+		/// <summary>
+		/// 设置指定主题可见，注：只有版主调用该方法的权限。
+		/// </summary>
+		/// <param name="threadId">指定要设置的主题编号。</param>
+		/// <param name="value">指定一个值，指示是否可见。</param>
+		/// <returns>如果设置成功则返回真(True)，否则返回假(False)。</returns>
+		public bool Visible(ulong threadId, bool value)
+		{
+			return this.DataAccess.Update<Thread>(new
+			{
+				Visible = value,
+			}, Condition.Equal(nameof(Thread.ThreadId), threadId) & GetIsModeratorCriteria()) > 0;
+		}
+
+		/// <summary>
+		/// 设置指定主题是否锁定，注：只有版主调用该方法的权限。
+		/// </summary>
+		/// <param name="threadId">指定要设置的主题编号。</param>
+		/// <param name="value">指定一个值，指示是否锁定。</param>
+		/// <returns>如果设置成功则返回真(True)，否则返回假(False)。</returns>
+		public bool SetLocked(ulong threadId, bool value)
+		{
+			return this.DataAccess.Update<Thread>(new
+			{
+				IsLocked = value,
+			}, Condition.Equal(nameof(Thread.ThreadId), threadId) & GetIsModeratorCriteria()) > 0;
+		}
+
+		/// <summary>
+		/// 设置指定主题是否置顶，注：只有版主调用该方法的权限。
+		/// </summary>
+		/// <param name="threadId">指定要设置的主题编号。</param>
+		/// <param name="value">指定一个值，指示是否置顶。</param>
+		/// <returns>如果设置成功则返回真(True)，否则返回假(False)。</returns>
+		public bool SetPinned(ulong threadId, bool value)
+		{
+			return this.DataAccess.Update<Thread>(new
+			{
+				IsPinned = value,
+			}, Condition.Equal(nameof(Thread.ThreadId), threadId) & GetIsModeratorCriteria()) > 0;
+		}
+
+		/// <summary>
+		/// 设置指定主题是否为精华帖，注：只有版主调用该方法的权限。
+		/// </summary>
+		/// <param name="threadId">指定要设置的主题编号。</param>
+		/// <param name="value">指定一个值，指示是否为精华帖。</param>
+		/// <returns>如果设置成功则返回真(True)，否则返回假(False)。</returns>
+		public bool SetValued(ulong threadId, bool value)
+		{
+			return this.DataAccess.Update<Thread>(new
+			{
+				IsValued = value,
+			}, Condition.Equal(nameof(Thread.ThreadId), threadId) & GetIsModeratorCriteria()) > 0;
+		}
+
+		/// <summary>
+		/// 设置指定主题是否为全局帖，注：只有超级管理员才能调用该方法。
+		/// </summary>
+		/// <param name="threadId">指定要设置的主题编号。</param>
+		/// <param name="value">指定一个值，指示是否为全局帖。</param>
+		/// <returns>如果设置成功则返回真(True)，否则返回假(False)。</returns>
+		public bool SetGlobal(ulong threadId, bool value)
+		{
+			if(!this.Principal.IsAdministrator)
+				return false;
+
+			return this.DataAccess.Update<Thread>(new
+			{
+				IsGlobal = value,
+			}, Condition.Equal(nameof(Thread.ThreadId), threadId)) > 0;
+		}
+
 		public IEnumerable<Post> GetPosts(ulong threadId, Paging paging = null)
 		{
-			var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
-
-			if(thread == null)
-				return Enumerable.Empty<Post>();
-
-			var conditions = ConditionCollection.And(
-				Condition.Equal("ThreadId", threadId),
-				Condition.NotEqual("PostId", thread.PostId));
-
-			var posts = this.DataAccess.Select<Post>(conditions, paging, Sorting.Descending("PostId"));
-
-			foreach(var post in posts)
-			{
-				if(post == null)
-					continue;
-
-				if(post.Approved)
-				{
-					//如果内容类型是外部文件（即非嵌入格式），则读取文件内容
-					if(!Utility.IsContentEmbedded(post.ContentType))
-						post.Content = Utility.ReadTextFile(post.Content);
-				}
-				else
-				{
-					post.Content = null;
-				}
-
-				//设置帖子的附件集
-				//post.Attachments = this.DataAccess.Select<PostAttachment>(Condition.Equal("PostId", post.PostId), "File");
-			}
-
-			return posts;
+			return this.DataAccess.Select<Post>(
+				Condition.Equal(nameof(Post.ThreadId), threadId) &
+				Condition.GreaterThan(nameof(Post.RefererId), 0) &
+				Condition.Equal(nameof(Post.Disabled), false),
+				paging, Sorting.Descending(nameof(Post.PostId)));
 		}
 		#endregion
 
@@ -125,122 +199,70 @@ namespace Zongsoft.Community.Services
 			}
 
 			//递增当前主题的累计阅读量
-			this.Increment("TotalViews", Condition.Equal("ThreadId", thread.ThreadId));
+			this.Increment(nameof(Thread.TotalViews), Condition.Equal(nameof(Thread.ThreadId), thread.ThreadId));
+
+			//设置当前主题的最后查看时间
+			this.DataAccess.Update<Thread>(new
+			{
+				ViewedTime = DateTime.Now,
+			}, Condition.Equal(nameof(Thread.ThreadId), thread.ThreadId) & Condition.LessThan(nameof(Thread.ViewedTime), DateTime.Now));
 
 			//更新当前用户的浏览记录
 			this.SetHistory(thread.ThreadId);
-
-			//更新主题帖子的相关信息
-			if(thread.Post != null)
-			{
-				//设置主题对应的帖子内容（如果内容类型是外部文件(即非嵌入格式)，则读取文件内容）
-				if(!Utility.IsContentEmbedded(thread.Post.ContentType))
-					thread.Post.Content = Utility.ReadTextFile(thread.Post.Content);
-			}
 
 			return thread;
 		}
 
 		protected override int OnInsert(IDataDictionary<Thread> data, ISchema schema, IDictionary<string, object> states)
 		{
-			var post = data.GetValue(p => p.Post, null);
-
-			if(post == null || string.IsNullOrEmpty(post.Content))
+			if(!data.TryGetValue(p => p.Post, out var post) || string.IsNullOrEmpty(post.Content))
 				throw new InvalidOperationException("Missing content of the thread.");
+
+			//确保主题内容贴位于模式中
+			schema.Include(nameof(Thread.Post));
+
+			//更新主题内容贴的相关属性
+			post.ThreadId = data.GetValue(p => p.ThreadId);
+			post.SiteId = data.GetValue(p => p.SiteId);
+			post.CreatorId = data.GetValue(p => p.CreatorId);
+			post.CreatedTime = data.GetValue(p => p.CreatedTime);
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				//设置主题内容贴编号为零
-				data.SetValue(p => p.PostId, (ulong)0);
-
 				//调用基类同名方法，插入主题数据
 				var count = base.OnInsert(data, schema, states);
 
 				if(count < 1)
 					return count;
 
-				//更新主题内容贴的相关属性
-				post.ThreadId = data.GetValue(p => p.ThreadId);
-				post.SiteId = data.GetValue(p => p.SiteId);
-				post.CreatorId = data.GetValue(p => p.CreatorId);
-				post.CreatedTime = data.GetValue(p => p.CreatedTime);
+				//更新发帖人关联的主题统计信息
+				this.SetMostRecentThread(data);
 
-				//通过帖子服务来新增主题的内容贴
-				count = this.Posting.Insert(post, data);
-
-				//如果主题内容贴新增成功则提交事务
-				if(count > 0)
-				{
-					//更新新增主题的内容帖子编号
-					this.DataAccess.Update(this.Name, new
-					{
-						ThreadId = data.GetValue(p => p.ThreadId),
-						PostId = post.PostId,
-					});
-
-					//更新主题数据字典中的内容帖子编号
-					data.SetValue(p => p.PostId, post.PostId);
-
-					//更新发帖人关联的主题统计信息
-					this.SetMostRecentThread(data);
-
-					//提交事务
-					transaction.Commit();
-				}
+				//提交事务
+				transaction.Commit();
 
 				return count;
 			}
 		}
-
-		protected override int OnUpdate(IDataDictionary<Thread> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
-		{
-			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, schema, states);
-
-			//获取要更新的主题内容贴
-			var post = data.GetValue(p => p.Post, null);
-
-			if(post != null)
-			{
-				if(post.PostId == 0)
-				{
-					//优先从主题实体中获取对应的内容贴编号
-					if(data.TryGetValue(p => p.PostId, out var postId) && postId != 0)
-					{
-						post.PostId = postId;
-					}
-					else
-					{
-						//获取修改主题对应的主题对象
-						var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", data.GetValue(p => p.ThreadId)), "!, ThreadId, PostId").FirstOrDefault();
-
-						if(thread == null)
-							return count;
-
-						//更新主题内容贴的编号
-						post.PostId = thread.PostId;
-					}
-				}
-
-				return this.Posting.Update(post);
-			}
-
-			return count;
-		}
 		#endregion
 
 		#region 私有方法
+		private Zongsoft.Data.Condition GetIsModeratorCriteria()
+		{
+			return Condition.Exists("Forum.Users",
+					   Condition.Equal(nameof(Forum.ForumUser.UserId), this.User.UserId) &
+					   Condition.Equal(nameof(Forum.ForumUser.IsModerator), true));
+		}
+
 		private bool SetMostRecentThread(IDataDictionary<Thread> data)
 		{
-			if(data == null)
-				return false;
-
-			var userId = data.GetValue(p => p.CreatorId);
-			var user = this.DataAccess.Select<UserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
 			var count = 0;
+			var userId = data.GetValue(p => p.CreatorId, this.User.UserId);
+			var user = userId == this.User.UserId ? this.User :
+				this.DataAccess.Select<UserProfile>(Condition.Equal(nameof(UserProfile.UserId), userId)).FirstOrDefault();
 
 			//更新当前主题所属论坛的最后发帖信息
-			count += this.DataAccess.Update(this.DataAccess.Naming.Get<Forum>(), new
+			count += this.DataAccess.Update<Forum>(new
 			{
 				SiteId = data.GetValue(p => p.SiteId),
 				ForumId = data.GetValue(p => p.ForumId),
@@ -252,17 +274,15 @@ namespace Zongsoft.Community.Services
 				MostRecentThreadAuthorAvatar = user?.Avatar,
 			});
 
-			//递增当前发帖人的累计主题数，并且更新发帖人的最后发表的主题信息
-			if(this.DataAccess.Increment<UserProfile>("TotalThreads", Condition.Equal("UserId", data.GetValue(p => p.CreatorId))) > 0)
+			//递增当前发帖人的累计主题数及最后发表的主题信息
+			count += this.DataAccess.Update<UserProfile>(new
 			{
-				count += this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
-				{
-					UserId = data.GetValue(p => p.CreatorId),
-					MostRecentThreadId = data.GetValue(p => p.ThreadId),
-					MostRecentThreadTitle = data.GetValue(p => p.Title),
-					MostRecentThreadTime = data.GetValue(p => p.CreatedTime),
-				});
-			}
+				UserId = userId,
+				TotalThreads = Interval.Increment,
+				MostRecentThreadId = data.GetValue(p => p.ThreadId),
+				MostRecentThreadTitle = data.GetValue(p => p.Title),
+				MostRecentThreadTime = data.GetValue(p => p.CreatedTime),
+			});
 
 			return count > 0;
 		}

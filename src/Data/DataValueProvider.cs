@@ -95,7 +95,7 @@ namespace Zongsoft.Community.Data
 		private static Models.UserProfile GetUser()
 		{
 			if(Zongsoft.Services.ApplicationContext.Current?.Principal is Zongsoft.Security.CredentialPrincipal principal)
-				return principal?.Identity?.Credential?.User as Models.UserProfile;
+				return principal.Identity?.Credential?.User as Models.UserProfile;
 
 			return null;
 		}

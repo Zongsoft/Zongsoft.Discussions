@@ -55,7 +55,8 @@ namespace Zongsoft.Community.Data
 		{
 			get
 			{
-				return this.Principal.Identity?.Credential?.User as Models.UserProfile;
+				return this.Principal.Identity?.Credential?.User as Models.UserProfile ??
+					throw new Zongsoft.Security.Membership.AuthorizationException();
 			}
 		}
 		#endregion
@@ -101,6 +102,9 @@ namespace Zongsoft.Community.Data
 		#region 私有方法
 		private ICondition GetCondition(ICondition condition)
 		{
+			if(condition.Matches("SiteId", matched => matched.Value = this.User.UserId) > 0)
+				return condition;
+
 			if(condition is ConditionCollection conditions && conditions.Combination == ConditionCombination.And)
 			{
 				conditions.Add(Condition.Equal("SiteId", this.User.SiteId));

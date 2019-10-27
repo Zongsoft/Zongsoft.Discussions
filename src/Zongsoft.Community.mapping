@@ -258,8 +258,7 @@
 			<property name="IsGlobal" type="bool" nullable="false" />
 			<property name="TotalViews" type="uint" nullable="false" />
 			<property name="TotalReplies" type="uint" nullable="false" />
-			<property name="PinnedTime" type="datetime" nullable="true" />
-			<property name="GlobalTime" type="datetime" nullable="true" />
+			<property name="ApprovedTime" type="datetime" nullable="true" />
 			<property name="ViewedTime" type="datetime" nullable="true" />
 			<property name="MostRecentPostId" type="ulong" nullable="true" />
 			<property name="MostRecentPostAuthorId" type="uint" nullable="true" />

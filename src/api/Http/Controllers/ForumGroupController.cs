@@ -30,7 +30,6 @@ using System.Web.Http;
 
 using Zongsoft.Data;
 using Zongsoft.Web.Http;
-using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 

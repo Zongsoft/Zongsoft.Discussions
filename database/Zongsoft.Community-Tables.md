@@ -161,8 +161,7 @@ IsValued | bool | - | False | 是否精华帖
 IsGlobal | bool | - | False | 是否全局贴
 TotalViews | int | 4 | False | 累计阅读数
 TotalReplies | int | 4 | False | 累计回帖数
-PinnedTime | datetime | - | True | 置顶时间
-GlobalTime | datetime | - | True | 全局时间
+ApprovedTime | datetime | - | True | 审核通过时间
 ViewedTime | datetime | - | True | 最后被阅读时间
 MostRecentPostId | bigint | 8 | True | 最后回帖的帖子编号
 MostRecentPostAuthorId | int | 4 | True | 最后回帖的作者编号

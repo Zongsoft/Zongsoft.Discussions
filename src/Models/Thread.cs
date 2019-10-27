@@ -208,17 +208,9 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置主题的置顶时间。
+		/// 获取或设置主题的审核通过的时间。
 		/// </summary>
-		public abstract DateTime? PinnedTime
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// 获取或设置主题的全局发布的时间。
-		/// </summary>
-		public abstract DateTime? GlobalTime
+		public abstract DateTime? ApprovedTime
 		{
 			get; set;
 		}
