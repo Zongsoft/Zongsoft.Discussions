@@ -136,14 +136,6 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置主题是否被禁用，如果禁用则不显示。
-		/// </summary>
-		public abstract bool Disabled
-		{
-			get; set;
-		}
-
-		/// <summary>
 		/// 获取或设置主题是否可见。
 		/// </summary>
 		public abstract bool Visible
@@ -305,11 +297,6 @@ namespace Zongsoft.Community.Models
 		#region 公共属性
 		[Conditional(ConditionOperator.Like)]
 		public abstract string Title
-		{
-			get; set;
-		}
-
-		public abstract bool? Disabled
 		{
 			get; set;
 		}

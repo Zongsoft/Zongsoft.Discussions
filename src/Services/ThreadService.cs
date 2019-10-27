@@ -75,20 +75,6 @@ namespace Zongsoft.Community.Services
 		}
 
 		/// <summary>
-		/// 设置指定主题是否可用还是禁用，注：只有版主才具备调用该方法的权限。
-		/// </summary>
-		/// <param name="threadId">指定要设置的主题编号。</param>
-		/// <param name="value">指定一个值，指示是否为禁用还是启用。</param>
-		/// <returns>如果设置成功则返回真(True)，否则返回假(False)。</returns>
-		public bool Disable(ulong threadId, bool value)
-		{
-			return this.DataAccess.Update<Thread>(new
-			{
-				Disabled = true,
-			}, Condition.Equal(nameof(Thread.ThreadId), threadId) & GetIsModeratorCriteria()) > 0;
-		}
-
-		/// <summary>
 		/// 设置指定主题可见，注：只有版主才具备调用该方法的权限。
 		/// </summary>
 		/// <param name="threadId">指定要设置的主题编号。</param>
@@ -180,22 +166,15 @@ namespace Zongsoft.Community.Services
 			if(thread == null)
 				return null;
 
-			//如果当前主题是禁用或者未审核的，则需要进行权限判断
-			if(thread.Disabled || (!thread.Approved))
+			//如果当前主题尚未审核通过，则需要进行权限判断
+			if(!thread.Approved)
 			{
 				//判断当前用户是否为该论坛的版主
 				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(thread.SiteId, thread.ForumId);
 
-				if(!isModerator)
-				{
-					//当前用户不是版主，并且该主题已被禁用则返回空（相当于主题不存在）
-					if(thread.Disabled)
-						return null;
-
-					//当前用户不是版主，并且该主题未审核则抛出授权异常
-					if(!thread.Approved)
-						throw new Zongsoft.Security.Membership.AuthorizationException();
-				}
+				//当前用户不是版主，并且该主题未审核通过则抛出授权异常
+				if(!isModerator && !thread.Approved)
+					throw new Zongsoft.Security.Membership.AuthorizationException();
 			}
 
 			//递增当前主题的累计阅读量

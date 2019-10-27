@@ -152,7 +152,6 @@ Tags | nvarchar | 100 | True | 标签集(以逗号分隔)
 PostId | bigint | 8 | False | 内容帖子编号
 CoverPicturePath | varchar | 200 | True | 封面图片路径
 ArticleUrl | varchar | 200 | True | 文章链接
-Disabled | bool | - | False | 已被禁用
 Visible | bool | - | False | 是否可见(True)
 Approved | bool | - | False | 是否审核通过
 IsLocked | bool | - | False | 已被锁定（锁定则不允许回复）

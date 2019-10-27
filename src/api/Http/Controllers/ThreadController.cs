@@ -56,24 +56,6 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpPatch]
 		[Authorization(AuthorizationMode.Identity)]
-		public object Enable(ulong id)
-		{
-			return this.DataService.Disable(id, false) ?
-				this.NoContent() :
-				this.NotFound();
-		}
-
-		[HttpPatch]
-		[Authorization(AuthorizationMode.Identity)]
-		public object Disable(ulong id)
-		{
-			return this.DataService.Disable(id, true) ?
-				this.NoContent() :
-				this.NotFound();
-		}
-
-		[HttpPatch]
-		[Authorization(AuthorizationMode.Identity)]
 		public object Hidden(ulong id)
 		{
 			return this.DataService.Visible(id, false) ?

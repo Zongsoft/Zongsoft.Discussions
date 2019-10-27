@@ -249,8 +249,7 @@
 			<property name="PostId" type="ulong" nullable="false" />
 			<property name="CoverPicturePath" type="string" length="200" nullable="true" />
 			<property name="ArticleUrl" type="string" length="200" nullable="true" />
-			<property name="Disabled" type="bool" nullable="false" />
-			<property name="Visible" type="bool" nullable="false" />
+			<property name="Visible" type="bool" nullable="false" default="true" />
 			<property name="Approved" type="bool" nullable="false" default="true" />
 			<property name="IsLocked" type="bool" nullable="false" />
 			<property name="IsPinned" type="bool" nullable="false" />

@@ -183,7 +183,6 @@ CREATE TABLE IF NOT EXISTS `Community_Thread`
   `PostId` bigint UNSIGNED NOT NULL COMMENT '内容帖子编号',
   `CoverPicturePath` varchar(200) NULL COMMENT '封面图片文件路径',
   `ArticleUrl` varchar(200) NULL COMMENT '文章链接',
-  `Disabled` tinyint(1) NOT NULL DEFAULT 0 COMMENT '已被禁用',
   `Visible` tinyint(1) NOT NULL DEFAULT 1 COMMENT '已被可见',
   `Approved` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否审核通过',
   `IsLocked` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否锁定(锁定则不允许回复)',

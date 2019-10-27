@@ -67,8 +67,7 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Select<Thread>(
 				Condition.Equal(nameof(Thread.SiteId), siteId) &
 				Condition.Equal(nameof(Thread.IsGlobal), true) &
-				Condition.Equal(nameof(Thread.Visible), true) &
-				Condition.Equal(nameof(Thread.Disabled), false),
+				Condition.Equal(nameof(Thread.Visible), true),
 				paging, Sorting.Descending(nameof(Thread.ThreadId)));
 		}
 
@@ -78,8 +77,7 @@ namespace Zongsoft.Community.Services
 				Condition.Equal(nameof(Thread.SiteId), siteId) &
 				Condition.Equal(nameof(Thread.ForumId), forumId) &
 				Condition.Equal(nameof(Thread.IsPinned), true) &
-				Condition.Equal(nameof(Thread.Visible), true) &
-				Condition.Equal(nameof(Thread.Disabled), false),
+				Condition.Equal(nameof(Thread.Visible), true),
 				paging, Sorting.Descending(nameof(Thread.ThreadId)));
 		}
 
@@ -97,8 +95,7 @@ namespace Zongsoft.Community.Services
 		{
 			var criteria = Condition.Equal(nameof(Thread.SiteId), siteId) &
 				Condition.Equal(nameof(Thread.ForumId), forumId) &
-				Condition.Equal(nameof(Thread.Visible), true) &
-				Condition.Equal(nameof(Thread.Disabled), false);
+				Condition.Equal(nameof(Thread.Visible), true);
 
 			//只有第一页或者不分页才需要加载最顶部主题集
 			if(paging == null || paging.PageIndex == 1)
