@@ -180,6 +180,7 @@ CreatedTime | datetime | - | False | 创建时间
 PostId | bigint | 8 | False | 主键，帖子编号
 SiteId | int | 4 | False | 所属站点编号
 ThreadId | bigint | 8 | False | 所属主题编号
+RefererId | bigint | 8 | False | 回帖引用编号
 Content | varchar | 500 | False | 帖子内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 Disabled | bool | - | False | 已被禁用
@@ -193,21 +194,6 @@ VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息�
 AttachmentMark | varchar | 100 | True | 附件标记(以逗号分隔)
 CreatorId | int | 4 | False | 发帖人编号
 CreatedTime | datetime | - | False | 发帖时间
-
-
-### 帖子回复表 `Community.PostComment`
-
-字段名称|数据类型|长度|可空|备注
---------|:------:|:--:|:--:|----:
-PostId | bigint | 8 | False | 主键，帖子编号
-SerialId | smallint | 2 | False | 主键，回复序号
-SourceId | smallint | 2 | True | 关联的回复序号
-Content | varchar | 500 | False | 回复内容
-ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
-VisitorAddress | nvarchar | 100 | True | 访客地址
-VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息等)
-CreatorId | int | 4 | False | 回复人编号
-CreatedTime | datetime | - | False | 回复时间
 
 
 ### 帖子投票表 `Community.PostVoting`

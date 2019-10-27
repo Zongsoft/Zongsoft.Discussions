@@ -299,6 +299,7 @@
 			<property name="PostId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="ThreadId" type="ulong" nullable="false" />
+			<property name="RefererId" type="ulong" nullable="false" />
 			<property name="Content" type="string" length="500" nullable="false" />
 			<property name="ContentType" type="string" length="50" nullable="true" />
 			<property name="Disabled" type="bool" nullable="false" />
@@ -321,8 +322,12 @@
 				<link name="CreatorId" role="UserId" />
 			</complexProperty>
 
-			<complexProperty name="Comments" role="PostComment" multiplicity="*">
-				<link name="PostId" role="PostId" />
+			<complexProperty name="Referer" role="Post">
+				<link name="RefererId" role="PostId" />
+			</complexProperty>
+
+			<complexProperty name="Comments" role="Post" multiplicity="*">
+				<link name="RefererId" role="PostId" />
 			</complexProperty>
 
 			<complexProperty name="Votes" role="PostVoting" multiplicity="*">

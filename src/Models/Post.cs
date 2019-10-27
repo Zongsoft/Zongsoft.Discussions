@@ -71,6 +71,22 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
+		/// 获取或设置回帖引用来源的帖子编号。
+		/// </summary>
+		public abstract ulong RefererId
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 获取或设置回帖引用来源的帖子对象。
+		/// </summary>
+		public abstract Post Referer
+		{
+			get; set;
+		}
+
+		/// <summary>
 		/// 获取或设置帖子的内容。
 		/// </summary>
 		public abstract string Content
@@ -195,7 +211,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的回复集。
 		/// </summary>
-		public abstract IEnumerable<PostComment> Comments
+		public abstract IEnumerable<Post> Comments
 		{
 			get; set;
 		}
@@ -228,100 +244,6 @@ namespace Zongsoft.Community.Models
 		#endregion
 
 		#region 嵌套子类
-		/// <summary>
-		/// 表示帖子回复的业务实体类。
-		/// </summary>
-		public abstract class PostComment
-		{
-			#region 构造函数
-			protected PostComment()
-			{
-			}
-			#endregion
-
-			#region 公共属性
-			/// <summary>
-			/// 获取或设置帖子编号。
-			/// </summary>
-			public abstract ulong PostId
-			{
-				get; set;
-			}
-
-			/// <summary>
-			/// 获取或设置回复序号。
-			/// </summary>
-			public abstract ushort SerialId
-			{
-				get; set;
-			}
-
-			/// <summary>
-			/// 获取或设置回复关联的源回复序号。
-			/// </summary>
-			public abstract ushort SourceId
-			{
-				get; set;
-			}
-
-			/// <summary>
-			/// 获取或设置回复的内容。
-			/// </summary>
-			public abstract string Content
-			{
-				get; set;
-			}
-
-			/// <summary>
-			/// 获取或设置回复的内容类型。
-			/// </summary>
-			public abstract string ContentType
-			{
-				get; set;
-			}
-
-			/// <summary>
-			/// 获取或设置访问者地址。
-			/// </summary>
-			public abstract string VisitorAddress
-			{
-				get; set;
-			}
-
-			/// <summary>
-			/// 获取或设置访问者描述信息。
-			/// </summary>
-			public abstract string VisitorDescription
-			{
-				get; set;
-			}
-
-			/// <summary>
-			/// 获取或设置回复人编号。
-			/// </summary>
-			public abstract uint CreatorId
-			{
-				get; set;
-			}
-
-			/// <summary>
-			/// 获取或设置回复人对象。
-			/// </summary>
-			public abstract UserProfile Creator
-			{
-				get; set;
-			}
-
-			/// <summary>
-			/// 获取或设置回复时间。
-			/// </summary>
-			public abstract DateTime CreatedTime
-			{
-				get; set;
-			}
-			#endregion
-		}
-
 		/// <summary>
 		/// 表示帖子投票的业务实体类。
 		/// </summary>

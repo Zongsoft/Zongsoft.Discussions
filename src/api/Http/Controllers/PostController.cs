@@ -71,7 +71,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[ActionName("Comments")]
-		public IEnumerable<Post.PostComment> GetComments(ulong id, [FromUri]Paging paging = null)
+		public IEnumerable<Post> GetComments(ulong id, [FromUri]Paging paging = null)
 		{
 			return this.DataService.GetComments(id, paging);
 		}

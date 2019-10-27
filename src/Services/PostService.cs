@@ -117,9 +117,9 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Select<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.LessThan("Value", 0), paging);
 		}
 
-		public IEnumerable<Post.PostComment> GetComments(ulong postId, Paging paging = null)
+		public IEnumerable<Post> GetComments(ulong postId, Paging paging = null)
 		{
-			return this.DataAccess.Select<Post.PostComment>(Condition.Equal("PostId", postId), paging, Sorting.Descending("SerialId"));
+			return this.DataAccess.Select<Post>(Condition.Equal("RefererId", postId), paging, Sorting.Descending("PostId"));
 		}
 		#endregion
 

@@ -134,6 +134,7 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   `PostId` bigint UNSIGNED NOT NULL COMMENT '主键，帖子编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '所属站点编号',
   `ThreadId` bigint UNSIGNED NOT NULL COMMENT '所属主题编号',
+  `RefererId` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '回帖引用编号',
   `Content` varchar(500) NOT NULL COMMENT '帖子内容',
   `ContentType` varchar(50) NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',
   `Disabled` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已禁用',
@@ -149,20 +150,6 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发帖时间',
   PRIMARY KEY (`PostId` DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子/回帖表';
-
-CREATE TABLE IF NOT EXISTS `Community_PostComment`
-(
-  `PostId` bigint UNSIGNED NOT NULL COMMENT '主键，帖子编号',
-  `SerialId` smallint UNSIGNED NOT NULL COMMENT '主键，回复序号',
-  `SourceId` smallint UNSIGNED NULL COMMENT '关联的回复序号',
-  `Content` varchar(500) NOT NULL COMMENT '帖子内容',
-  `ContentType` varchar(50) NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',
-  `VisitorAddress` varchar(100) NULL COMMENT '访客地址',
-  `VisitorDescription` varchar(500) NULL COMMENT '访客描述(浏览器代理信息等)',
-  `CreatorId` int UNSIGNED NOT NULL COMMENT '回复人编号',
-  `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '回复时间',
-  PRIMARY KEY (`PostId`, `SerialId` DESC)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帖子回复表';
 
 CREATE TABLE IF NOT EXISTS `Community_PostVoting`
 (
