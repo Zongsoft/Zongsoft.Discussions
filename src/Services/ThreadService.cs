@@ -61,7 +61,7 @@ namespace Zongsoft.Community.Services
 
 		#region 公共方法
 		/// <summary>
-		/// 审核批准指定的主题，注：只有版主调用该方法的权限。
+		/// 审核批准指定的主题，注：只有版主才具备调用该方法的权限。
 		/// </summary>
 		/// <param name="threadId">指定要审核批准的主题编号。</param>
 		/// <returns>如果审核批准成功则返回真(True)，否则返回假(False)。</returns>
@@ -75,7 +75,7 @@ namespace Zongsoft.Community.Services
 		}
 
 		/// <summary>
-		/// 设置指定主题是否可用还是禁用，注：只有版主调用该方法的权限。
+		/// 设置指定主题是否可用还是禁用，注：只有版主才具备调用该方法的权限。
 		/// </summary>
 		/// <param name="threadId">指定要设置的主题编号。</param>
 		/// <param name="value">指定一个值，指示是否为禁用还是启用。</param>
@@ -89,7 +89,7 @@ namespace Zongsoft.Community.Services
 		}
 
 		/// <summary>
-		/// 设置指定主题可见，注：只有版主调用该方法的权限。
+		/// 设置指定主题可见，注：只有版主才具备调用该方法的权限。
 		/// </summary>
 		/// <param name="threadId">指定要设置的主题编号。</param>
 		/// <param name="value">指定一个值，指示是否可见。</param>
@@ -103,7 +103,7 @@ namespace Zongsoft.Community.Services
 		}
 
 		/// <summary>
-		/// 设置指定主题是否锁定，注：只有版主调用该方法的权限。
+		/// 设置指定主题是否锁定，注：只有版主才具备调用该方法的权限。
 		/// </summary>
 		/// <param name="threadId">指定要设置的主题编号。</param>
 		/// <param name="value">指定一个值，指示是否锁定。</param>
@@ -117,7 +117,7 @@ namespace Zongsoft.Community.Services
 		}
 
 		/// <summary>
-		/// 设置指定主题是否置顶，注：只有版主调用该方法的权限。
+		/// 设置指定主题是否置顶，注：只有版主才具备调用该方法的权限。
 		/// </summary>
 		/// <param name="threadId">指定要设置的主题编号。</param>
 		/// <param name="value">指定一个值，指示是否置顶。</param>
@@ -131,7 +131,7 @@ namespace Zongsoft.Community.Services
 		}
 
 		/// <summary>
-		/// 设置指定主题是否为精华帖，注：只有版主调用该方法的权限。
+		/// 设置指定主题是否为精华帖，注：只有版主才具备调用该方法的权限。
 		/// </summary>
 		/// <param name="threadId">指定要设置的主题编号。</param>
 		/// <param name="value">指定一个值，指示是否为精华帖。</param>
@@ -222,10 +222,10 @@ namespace Zongsoft.Community.Services
 			schema.Include(nameof(Thread.Post));
 
 			//更新主题内容贴的相关属性
-			post.ThreadId = data.GetValue(p => p.ThreadId);
-			post.SiteId = data.GetValue(p => p.SiteId);
-			post.CreatorId = data.GetValue(p => p.CreatorId);
-			post.CreatedTime = data.GetValue(p => p.CreatedTime);
+			post.Disabled = true;
+			post.SiteId = data.GetValue(p => p.SiteId, this.User.SiteId);
+			post.CreatorId = data.GetValue(p => p.CreatorId, this.User.UserId);
+			post.CreatedTime = data.GetValue(p => p.CreatedTime, DateTime.Now);
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
@@ -247,11 +247,12 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 私有方法
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 		private Zongsoft.Data.Condition GetIsModeratorCriteria()
 		{
 			return Condition.Exists("Forum.Users",
-					   Condition.Equal(nameof(Forum.ForumUser.UserId), this.User.UserId) &
-					   Condition.Equal(nameof(Forum.ForumUser.IsModerator), true));
+			         Condition.Equal(nameof(Forum.ForumUser.UserId), this.User.UserId) &
+			         Condition.Equal(nameof(Forum.ForumUser.IsModerator), true));
 		}
 
 		private bool SetMostRecentThread(IDataDictionary<Thread> data)
