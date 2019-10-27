@@ -152,7 +152,7 @@ Tags | nvarchar | 100 | True | 标签集(以逗号分隔)
 PostId | bigint | 8 | False | 内容帖子编号
 CoverPicturePath | varchar | 200 | True | 封面图片路径
 ArticleUrl | varchar | 200 | True | 文章链接
-Visible | bool | - | False | 是否可见(True)
+Visible | bool | - | False | 是否可见(默认为真)
 Approved | bool | - | False | 是否审核通过
 IsLocked | bool | - | False | 已被锁定（锁定则不允许回复）
 IsPinned | bool | - | False | 是否置顶
@@ -181,7 +181,7 @@ ThreadId | bigint | 8 | False | 所属主题编号
 RefererId | bigint | 8 | False | 回帖引用编号
 Content | varchar | 500 | False | 帖子内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
-Disabled | bool | - | False | 已被禁用
+Visible | bool | - | False | 是否可见(默认为真)
 Approved | bool | - | False | 是否审核通过
 IsLocked | bool | - | False | 是否已锁定(锁定则不允许回复)
 IsValued | bool | - | False | 是否精华帖

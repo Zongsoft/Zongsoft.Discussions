@@ -152,7 +152,7 @@ namespace Zongsoft.Community.Services
 			return this.DataAccess.Select<Post>(
 				Condition.Equal(nameof(Post.ThreadId), threadId) &
 				Condition.GreaterThan(nameof(Post.RefererId), 0) &
-				Condition.Equal(nameof(Post.Disabled), false),
+				Condition.Equal(nameof(Post.Visible), true),
 				paging, Sorting.Descending(nameof(Post.PostId)));
 		}
 		#endregion
@@ -201,7 +201,7 @@ namespace Zongsoft.Community.Services
 			schema.Include(nameof(Thread.Post));
 
 			//更新主题内容贴的相关属性
-			post.Disabled = true;
+			post.Visible = false;
 			post.SiteId = data.GetValue(p => p.SiteId, this.User.SiteId);
 			post.CreatorId = data.GetValue(p => p.CreatorId, this.User.UserId);
 			post.CreatedTime = data.GetValue(p => p.CreatedTime, DateTime.Now);

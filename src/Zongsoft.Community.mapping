@@ -300,7 +300,7 @@
 			<property name="RefererId" type="ulong" nullable="false" />
 			<property name="Content" type="string" length="500" nullable="false" />
 			<property name="ContentType" type="string" length="50" nullable="true" />
-			<property name="Disabled" type="bool" nullable="false" />
+			<property name="Visible" type="bool" nullable="false" default="true" />
 			<property name="Approved" type="bool" nullable="false" default="true" />
 			<property name="IsLocked" type="bool" nullable="false" />
 			<property name="IsValued" type="bool" nullable="false" />
@@ -330,31 +330,6 @@
 
 			<complexProperty name="Votes" role="PostVoting" multiplicity="*">
 				<link name="PostId" role="PostId" />
-			</complexProperty>
-		</entity>
-
-		<entity name="PostComment" table="Community_PostComment">
-			<key>
-				<member name="PostId" />
-				<member name="SerialId" />
-			</key>
-
-			<property name="PostId" type="ulong" nullable="false" />
-			<property name="SerialId" type="ushort" nullable="false" sequence="#PostId" />
-			<property name="SourceId" type="ushort" nullable="true" />
-			<property name="Content" type="string" length="500" nullable="false" />
-			<property name="ContentType" type="string" length="50" nullable="true" />
-			<property name="VisitorAddress" type="string" length="100" nullable="true" />
-			<property name="VisitorDescription" type="string" length="500" nullable="true" />
-			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
-			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
-
-			<complexProperty name="Post" role="Post">
-				<link name="PostId" role="PostId" />
-			</complexProperty>
-
-			<complexProperty name="Creator" role="UserProfile">
-				<link name="CreatorId" role="UserId" />
 			</complexProperty>
 		</entity>
 

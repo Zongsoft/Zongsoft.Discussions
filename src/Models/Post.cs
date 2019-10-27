@@ -104,9 +104,9 @@ namespace Zongsoft.Community.Models
 		}
 
 		/// <summary>
-		/// 获取或设置一个值，表示是否禁用。
+		/// 获取或设置一个值，表示是否帖子是否可见。
 		/// </summary>
-		public abstract bool Disabled
+		public abstract bool Visible
 		{
 			get; set;
 		}
@@ -341,7 +341,7 @@ namespace Zongsoft.Community.Models
 			get; set;
 		}
 
-		public abstract bool? Disabled
+		public abstract bool? Visible
 		{
 			get; set;
 		}
