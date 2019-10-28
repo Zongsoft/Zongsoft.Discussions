@@ -7,11 +7,11 @@ CREATE TABLE IF NOT EXISTS `Community_Feedback`
   `FeedbackId` bigint UNSIGNED NOT NULL COMMENT '主键，反馈编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '站点编号',
   `Kind` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '反馈种类(0:None)',
-  `Subject` varchar(100) NOT NULL COMMENT '反馈标题',
-  `Content` varchar(500) NOT NULL COMMENT '反馈内容文件',
+  `Subject` nvarchar(100) NOT NULL COMMENT '反馈标题',
+  `Content` nvarchar(500) NOT NULL COMMENT '反馈内容文件',
   `ContentType` varchar(50) NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',
-  `ContactName` varchar(50) NOT NULL COMMENT '联系人名称',
-  `ContactText` varchar(50) NOT NULL COMMENT '联系人方式',
+  `ContactName` nvarchar(50) NOT NULL COMMENT '联系人名称',
+  `ContactText` nvarchar(50) NOT NULL COMMENT '联系人方式',
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`FeedbackId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='意见反馈表';
@@ -20,11 +20,11 @@ CREATE TABLE IF NOT EXISTS `Community_Message`
 (
   `MessageId` bigint UNSIGNED NOT NULL COMMENT '主键，消息编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '站点编号',
-  `Subject` varchar(100) NOT NULL COMMENT '消息标题',
-  `Content` varchar(500) NOT NULL COMMENT '消息内容',
+  `Subject` nvarchar(100) NOT NULL COMMENT '消息标题',
+  `Content` nvarchar(500) NOT NULL COMMENT '消息内容',
   `ContentType` varchar(50) NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',
   `MessageType` varchar(50) NULL COMMENT '消息类型',
-  `Source` varchar(50) NULL COMMENT '消息来源',
+  `Referer` varchar(50) NULL COMMENT '消息来源',
   `Tags` nvarchar(100) NULL COMMENT '标签集(以逗号分隔)',
   `CreatorId` int UNSIGNED NOT NULL COMMENT '创建人编号(零表示系统消息)',
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -44,12 +44,12 @@ CREATE TABLE IF NOT EXISTS `Community_Folder`
   `FolderId` int UNSIGNED NOT NULL COMMENT '主键，文件夹编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '站点编号',
   `Name` nvarchar(100) NOT NULL COMMENT '文件夹名称',
-  `PinYin` nvarchar(200) NOT NULL COMMENT '名称拼音',
+  `PinYin` narchar(200) NOT NULL COMMENT '名称拼音',
   `Icon` varchar(50) NULL COMMENT '显示图标',
   `Shareability` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '共享性',
   `CreatorId` int UNSIGNED NOT NULL COMMENT '创建人编号',
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `Description` varchar(500) NULL COMMENT '描述文本',
+  `Description` nvarchar(500) NULL COMMENT '描述文本',
   PRIMARY KEY (`FolderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件夹表';
 
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `Community_File`
   `Tags` nvarchar(100) NULL COMMENT '标签集(以逗号分隔)',
   `CreatorId` int UNSIGNED NOT NULL COMMENT '创建人编号',
   `CreatedTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `Description` varchar(500) NULL COMMENT '描述文本',
+  `Description` nvarchar(500) NULL COMMENT '描述文本',
   PRIMARY KEY (`FileId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件（附件）表';
 
@@ -82,10 +82,10 @@ CREATE TABLE IF NOT EXISTS `Community_ForumGroup`
 (
   `SiteId` int UNSIGNED NOT NULL COMMENT '主键，站点编号',
   `GroupId` smallint NOT NULL COMMENT '主键，分组编号',
-  `Name` varchar(50) NOT NULL COMMENT '论坛组名称',
+  `Name` nvarchar(50) NOT NULL COMMENT '论坛组名称',
   `Icon` varchar(100) NULL COMMENT '显示图标',
   `SortOrder` smallint NOT NULL DEFAULT 0 COMMENT '排列顺序',
-  `Description` varchar(500) NULL COMMENT '描述文本',
+  `Description` nvarchar(500) NULL COMMENT '描述文本',
   PRIMARY KEY (`SiteId`, `GroupId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='论坛分组表';
 
@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS `Community_Forum`
   `SiteId` int UNSIGNED NOT NULL COMMENT '主键，站点编号',
   `ForumId` smallint UNSIGNED NOT NULL COMMENT '主键，论坛编号',
   `GroupId` smallint NOT NULL COMMENT '论坛组编号',
-  `Name` varchar(50) NOT NULL COMMENT '论坛名称',
-  `Description` varchar(500) NULL COMMENT '描述文本',
+  `Name` nvarchar(50) NOT NULL COMMENT '论坛名称',
+  `Description` nvarchar(500) NULL COMMENT '描述文本',
   `CoverPicturePath` varchar(200) NULL COMMENT '封面图片文件路径',
   `SortOrder` smallint NOT NULL DEFAULT 0 COMMENT '排列顺序',
   `IsPopular` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否热门版块',
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
   `SiteId` int UNSIGNED NOT NULL COMMENT '所属站点编号',
   `ThreadId` bigint UNSIGNED NOT NULL COMMENT '所属主题编号',
   `RefererId` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '回帖引用编号',
-  `Content` varchar(500) NOT NULL COMMENT '帖子内容',
+  `Content` nvarchar(500) NOT NULL COMMENT '帖子内容',
   `ContentType` varchar(50) NULL COMMENT '内容类型(text/plain+embedded, text/html, application/json)',
   `Visible` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否可见',
   `Approved` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否已审核通过',
@@ -207,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
 (
   `UserId` int UNSIGNED NOT NULL COMMENT '主键，用户编号',
   `SiteId` int UNSIGNED NOT NULL COMMENT '用户所属的站点编号',
-  `Name` varchar(50) NOT NULL COMMENT '用户名称',
+  `Name` nvarchar(50) NOT NULL COMMENT '用户名称',
   `Nickname` nvarchar(50) NULL COMMENT '用户昵称',
   `Email` varchar(50) NULL COMMENT '用户绑定的邮箱地址',
   `Phone` varchar(50) NULL COMMENT '用户绑定的手机号码',

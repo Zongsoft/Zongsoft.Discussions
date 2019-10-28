@@ -13,7 +13,7 @@
 			<property name="Content" type="string" length="500" nullable="false" />
 			<property name="ContentType" type="string" length="50" nullable="true" />
 			<property name="MessageType" type="string" length="50" nullable="true" />
-			<property name="Source" type="string" length="50" nullable="true" />
+			<property name="Referer" type="string" length="50" nullable="true" />
 			<property name="Tags" type="nvarchar" length="100" nullable="true" />
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />

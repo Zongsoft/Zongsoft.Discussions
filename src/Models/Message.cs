@@ -68,7 +68,7 @@ namespace Zongsoft.Community.Models
 			get; set;
 		}
 
-		public abstract string Source
+		public abstract string Referer
 		{
 			get; set;
 		}
@@ -170,7 +170,7 @@ namespace Zongsoft.Community.Models
 			get; set;
 		}
 
-		public abstract string Source
+		public abstract string Referer
 		{
 			get; set;
 		}

@@ -1,6 +1,4 @@
-
 ## Zongsoft.Community 社区系统
-
 
 ### 消息表 `Community.Message`
 
@@ -12,7 +10,7 @@ Subject | nvarchar | 100 | False | 消息主题
 Content | nvarchar | 500 | False | 消息内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 MessageType | varchar | 50 | True | 消息类型
-Source | varchar | 50 | True | 消息来源
+Referer | varchar | 50 | True | 消息来源
 Tags | nvarchar | 100 | True | 标签集(以逗号分隔)
 CreatorId | int | 4 | False | 发送人编号(零表示系统消息)
 CreatedTime | datetime | - | False | 创建时间
@@ -37,8 +35,8 @@ Kind | byte | 1 | False | 反馈种类(0:None)
 Subject | nvarchar | 100 | False | 反馈标题
 Content | nvarchar | 500 | False | 反馈内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
-ContactName | varchar | 50 | True | 联系人名
-ContactText | varchar | 50 | True | 联系方式
+ContactName | nvarchar | 50 | True | 联系人名
+ContactText | nvarchar | 50 | True | 联系方式
 CreatedTime | datetime | - | False | 反馈时间
 
 

@@ -95,7 +95,7 @@ namespace Zongsoft.Community.Services.Commands
 			{
 				entity.Content = content;
 				entity.ContentType = contentType;
-				entity.Source = context.Expression.Options.GetValue<string>(SOURCE_OPTION);
+				entity.Referer = context.Expression.Options.GetValue<string>(SOURCE_OPTION);
 				entity.Subject = context.Expression.Options.GetValue<string>(SUBJECT_OPTION);
 				entity.MessageType = context.Expression.Options.GetValue<string>(MESSAGETYPE_OPTION);
 				entity.Users = GetUsers(context.Expression.Arguments).Select(uid => new Models.Message.MessageUser(0, uid));
