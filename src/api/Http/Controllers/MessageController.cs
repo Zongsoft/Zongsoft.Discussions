@@ -36,7 +36,7 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	[Authorization(AuthorizationMode.Requires)]
+	[Authorization]
 	public class MessageController : Zongsoft.Web.Http.HttpControllerBase<Message, MessageConditional, MessageService>
 	{
 		#region 构造函数

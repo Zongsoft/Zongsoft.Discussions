@@ -40,7 +40,7 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	[Authorization(AuthorizationMode.Identity)]
+	[Authorization]
 	public class FileController : Zongsoft.Web.Http.HttpControllerBase<File, FileConditional, FileService>
 	{
 		#region 常量定义

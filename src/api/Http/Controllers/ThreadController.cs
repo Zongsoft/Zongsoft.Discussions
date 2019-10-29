@@ -46,7 +46,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[HttpPatch]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Approve(ulong id)
 		{
 			return this.DataService.Approve(id) ?
@@ -55,7 +55,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[HttpPatch]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Hidden(ulong id)
 		{
 			return this.DataService.Visible(id, false) ?
@@ -64,7 +64,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[HttpPatch]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Visible(ulong id)
 		{
 			return this.DataService.Visible(id, true) ?
@@ -74,7 +74,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpPost, HttpPut]
 		[ActionName("Locked")]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Lock(ulong id)
 		{
 			return this.DataService.SetLocked(id, true) ?
@@ -84,7 +84,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpDelete]
 		[ActionName("Locked")]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Unlock(ulong id)
 		{
 			return this.DataService.SetLocked(id, false) ?
@@ -94,7 +94,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpPost, HttpPut]
 		[ActionName("Pinned")]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Pin(ulong id)
 		{
 			return this.DataService.SetPinned(id, true) ?
@@ -104,7 +104,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpDelete]
 		[ActionName("Pinned")]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Unpin(ulong id)
 		{
 			return this.DataService.SetPinned(id, false) ?
@@ -114,7 +114,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpPost, HttpPut]
 		[ActionName("Valued")]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Valued(ulong id)
 		{
 			return this.DataService.SetValued(id, true) ?
@@ -124,7 +124,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpDelete]
 		[ActionName("Valued")]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Unvalued(ulong id)
 		{
 			return this.DataService.SetValued(id, false) ?
@@ -134,7 +134,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpPost, HttpPut]
 		[ActionName("Global")]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Global(ulong id)
 		{
 			return this.DataService.SetGlobal(id, true) ?
@@ -144,7 +144,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpDelete]
 		[ActionName("Global")]
-		[Authorization(AuthorizationMode.Identity)]
+		[Authorization]
 		public object Unglobal(ulong id)
 		{
 			return this.DataService.SetGlobal(id, false) ?
