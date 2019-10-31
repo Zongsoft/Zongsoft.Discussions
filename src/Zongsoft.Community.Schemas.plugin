@@ -24,7 +24,9 @@
 	</extension>
 
 	<extension path="/Workbench/Modules/Community">
-		<object name="FeedbackService" title="{res:Text.FeedbackService.Title}" description="{res:Text.FeedbackService.Description}" />
+		<object name="Feedback" title="{res:Text.Feedback.Title}" description="{res:Text.Feedback.Description}" />
+		<object name="File" title="{res:Text.File.Title}" description="{res:Text.File.Description}" />
+		<object name="Folder" title="{res:Text.Folder.Title}" description="{res:Text.Folder.Description}" />
 		<object name="Forum" title="{res:Text.Forum.Title}" description="{res:Text.Forum.Description}" />
 		<object name="ForumGroup" title="{res:Text.ForumGroup.Title}" description="{res:Text.ForumGroup.Description}" />
 		<object name="Message" title="{res:Text.Message.Title}" description="{res:Text.Message.Description}" />
