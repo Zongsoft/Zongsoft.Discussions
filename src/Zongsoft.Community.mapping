@@ -9,7 +9,7 @@
 
 			<property name="MessageId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
-			<property name="Subject" type="string" length="100" nullable="false" />
+			<property name="Subject" type="string" length="50" nullable="false" />
 			<property name="Content" type="string" length="500" nullable="false" />
 			<property name="ContentType" type="string" length="50" nullable="true" />
 			<property name="MessageType" type="string" length="50" nullable="true" />
@@ -54,7 +54,7 @@
 			<property name="FeedbackId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="Kind" type="byte" nullable="false" />
-			<property name="Subject" type="string" length="100" nullable="false" />
+			<property name="Subject" type="string" length="50" nullable="false" />
 			<property name="Content" type="string" length="500" nullable="false" />
 			<property name="ContentType" type="string" length="50" nullable="true" />
 			<property name="ContactName" type="string" length="50" nullable="true" />
@@ -70,7 +70,8 @@
 			<property name="FileId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="true" immutable="true" />
 			<property name="FolderId" type="uint" nullable="false" />
-			<property name="Name" type="string" length="100" nullable="false" />
+			<property name="Name" type="string" length="50" nullable="false" />
+			<property name="PinYin" type="string" length="200" nullable="true" />
 			<property name="Path" type="string" length="200" nullable="false" />
 			<property name="Type" type="string" length="50" nullable="false" />
 			<property name="Size" type="uint" nullable="false" />
@@ -95,7 +96,7 @@
 
 			<property name="FolderId" type="uint" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
-			<property name="Name" type="string" length="100" nullable="false" />
+			<property name="Name" type="string" length="50" nullable="false" />
 			<property name="PinYin" type="string" length="200" nullable="true" />
 			<property name="Icon" type="string" length="50" nullable="true" />
 			<property name="Shareability" type="byte" nullable="false" />
@@ -174,12 +175,12 @@
 			<property name="MostRecentThreadTitle" type="string" length="100" nullable="true" />
 			<property name="MostRecentThreadAuthorId" type="int" nullable="true" />
 			<property name="MostRecentThreadAuthorName" type="string" length="50" nullable="true" />
-			<property name="MostRecentThreadAuthorAvatar" type="string" length="150" nullable="true" />
+			<property name="MostRecentThreadAuthorAvatar" type="string" length="100" nullable="true" />
 			<property name="MostRecentThreadTime" type="datetime" nullable="true" />
 			<property name="MostRecentPostId" type="ulong" nullable="true" />
 			<property name="MostRecentPostAuthorId" type="int" nullable="true" />
 			<property name="MostRecentPostAuthorName" type="string" length="50" nullable="true" />
-			<property name="MostRecentPostAuthorAvatar" type="string" length="150" nullable="true" />
+			<property name="MostRecentPostAuthorAvatar" type="string" length="100" nullable="true" />
 			<property name="MostRecentPostTime" type="datetime" nullable="true" />
 			<property name="CreatorId" type="int" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
@@ -243,7 +244,8 @@
 			<property name="ThreadId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="ForumId" type="ushort" nullable="false" />
-			<property name="Title" type="string" length="100" nullable="false" />
+			<property name="Title" type="string" length="50" nullable="false" />
+			<property name="PinYin" type="string" length="200" nullable="true" />
 			<property name="Summary" type="string" length="500" nullable="true" />
 			<property name="Tags" type="string" length="100" nullable="true" />
 			<property name="PostId" type="ulong" nullable="false" />
@@ -262,7 +264,7 @@
 			<property name="MostRecentPostId" type="ulong" nullable="true" />
 			<property name="MostRecentPostAuthorId" type="uint" nullable="true" />
 			<property name="MostRecentPostAuthorName" type="string" length="50" nullable="true" />
-			<property name="MostRecentPostAuthorAvatar" type="string" length="150" nullable="true" />
+			<property name="MostRecentPostAuthorAvatar" type="string" length="100" nullable="true" />
 			<property name="MostRecentPostTime" type="datetime" nullable="true" />
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
@@ -342,7 +344,7 @@
 			<property name="PostId" type="ulong" nullable="false" />
 			<property name="UserId" type="uint" nullable="false" />
 			<property name="UserName" type="string" length="50" nullable="true" />
-			<property name="UserAvatar" type="string" length="150" nullable="true" />
+			<property name="UserAvatar" type="string" length="100" nullable="true" />
 			<property name="Value" type="sbyte" nullable="false" />
 			<property name="Tiemstamp" type="datetime" nullable="false" default="now()" immutable="true" />
 
@@ -387,7 +389,7 @@
 			<property name="Nickname" type="string" length="50" nullable="false" />
 			<property name="Email" type="string" length="50" nullable="true" />
 			<property name="Phone" type="string" length="50" nullable="true" />
-			<property name="Avatar" type="string" length="200" nullable="true" />
+			<property name="Avatar" type="string" length="100" nullable="true" />
 			<property name="Gender" type="byte" nullable="false" />
 			<property name="Grade" type="byte" nullable="false" />
 			<property name="TotalPosts" type="uint" nullable="false" />

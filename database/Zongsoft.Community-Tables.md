@@ -6,7 +6,7 @@
 --------|:------:|:--:|:--:|----:
 MessageId | bigint | 8 | False | 主键，消息编号
 SiteId | int | 4 | False | 站点编号
-Subject | nvarchar | 100 | False | 消息主题
+Subject | nvarchar | 50 | False | 消息主题
 Content | nvarchar | 500 | False | 消息内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 MessageType | varchar | 50 | True | 消息类型
@@ -32,7 +32,7 @@ IsRead | bool | - | False | 是否已读
 FeedbackId | bigint | 8 | False | 主键，反馈编号
 SiteId | int | 4 | False | 站点编号
 Kind | byte | 1 | False | 反馈种类(0:None)
-Subject | nvarchar | 100 | False | 反馈标题
+Subject | nvarchar | 50 | False | 反馈标题
 Content | nvarchar | 500 | False | 反馈内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 ContactName | nvarchar | 50 | True | 联系人名
@@ -46,7 +46,7 @@ CreatedTime | datetime | - | False | 反馈时间
 --------|:------:|:--:|:--:|----:
 FolderId | int | 4 | False | 主键，文件夹编号
 SiteId | int | 4 | False | 所属站点编号
-Name | nvarchar | 100 | False | 相册名称
+Name | nvarchar | 50 | False | 目录名称
 PinYin | varchar | 200 | True | 名称拼音
 Icon | varchar | 50 | True | 图标名
 Shareability | byte | 1 | False | 共享性
@@ -72,7 +72,8 @@ Expiration | datetime | - | True | 过期时间
 FileId | bigint | 8 | False | 主键，附件编号
 SiteId | int | 4 | False | 所属站点编号
 FolderId | int | 4 | Flase | 所属文件夹编号(默认为零)
-Name | nvarchar | 100 | False | 文件名称
+Name | nvarchar | 50 | False | 文件名称
+PinYin | varchar | 200 | True | 名称拼音
 Path | varchar | 200 | False | 文件路径
 Type | varchar | 50 | False | 文件类型(MIME类型)
 Size | int unsigned | 4 | False | 文件大小(单位：字节)
@@ -115,12 +116,12 @@ MostRecentThreadId | bigint | 8 | True | 最新主题的编号
 MostRecentThreadTitle | nvarchar | 100 | True | 最新主题的标题
 MostRecentThreadAuthorId | int | 4 | True | 最新主题的作者编号
 MostRecentThreadAuthorName | nvarchar | 50 | True | 最新主题的作者名
-MostRecentThreadAuthorAvatar | varchar | 150 | True | 最新主题的作者头像
+MostRecentThreadAuthorAvatar | varchar | 100 | True | 最新主题的作者头像
 MostRecentThreadTime | datetime | - | True | 最新主题的发布时间
 MostRecentPostId | bigint | 8 | True | 最后回帖的帖子编号
-MostRecentPostAuthorId | int | 4 | True | 最后回帖的作者编号
-MostRecentPostAuthorName | nvarchar | 50 | True | 最后回帖的作者名
-MostRecentPostAuthorAvatar | varchar | 150 | True | 最后回帖的作者头像
+MostRecentPostAuthorId | int | 4 | True | 最后回帖的用户编号
+MostRecentPostAuthorName | nvarchar | 50 | True | 最后回帖的用户名
+MostRecentPostAuthorAvatar | varchar | 100 | True | 最后回帖的用户头像
 MostRecentPostTime | datetime | - | True | 最后回帖的时间
 CreatorId | int | 4 | False | 创建人编号
 CreatedTime | datetime | - | False | 创建时间
@@ -144,7 +145,8 @@ IsModerator | bool | - | False | 是否版主
 ThreadId | bigint | 8 | False | 主键，主题编号
 SiteId | int | 4 | False | 所属站点编号
 ForumId | smallint | 2 | False | 所属论坛编号
-Title | nvarchar | 100 | False | 文章标题
+Title | nvarchar | 50 | False | 文章标题
+PinYin | varchar | 200 | True | 标题拼音
 Summary | nvarchar | 500 | True | 文章摘要
 Tags | nvarchar | 100 | True | 标签集(以逗号分隔)
 PostId | bigint | 8 | False | 内容帖子编号
@@ -161,9 +163,9 @@ TotalReplies | int | 4 | False | 累计回帖数
 ApprovedTime | datetime | - | True | 审核通过时间
 ViewedTime | datetime | - | True | 最后被阅读时间
 MostRecentPostId | bigint | 8 | True | 最后回帖的帖子编号
-MostRecentPostAuthorId | int | 4 | True | 最后回帖的作者编号
-MostRecentPostAuthorName | nvarchar | 50 | True | 最后回帖的作者名称
-MostRecentPostAuthorAvatar | nvarchar | 150 | True | 最后回帖的作者头像
+MostRecentPostAuthorId | int | 4 | True | 最后回帖的用户编号
+MostRecentPostAuthorName | nvarchar | 50 | True | 最后回帖的用户名称
+MostRecentPostAuthorAvatar | varchar | 100 | True | 最后回帖的用户头像
 MostRecentPostTime | datetime | - | True | 最后回帖的时间
 CreatorId | int | 4 | False | 创建人编号
 CreatedTime | datetime | - | False | 创建时间
@@ -176,7 +178,7 @@ CreatedTime | datetime | - | False | 创建时间
 PostId | bigint | 8 | False | 主键，帖子编号
 SiteId | int | 4 | False | 所属站点编号
 ThreadId | bigint | 8 | False | 所属主题编号
-RefererId | bigint | 8 | False | 回帖引用编号
+RefererId | bigint | 8 | False | 回帖引用帖子编号
 Content | varchar | 500 | False | 帖子内容
 ContentType | varchar | 50 | True | 内容类型(text/plain+embedded, text/html, application/json)
 Visible | bool | - | False | 是否可见(默认为真)
@@ -186,7 +188,7 @@ IsValued | bool | - | False | 是否精华帖
 TotalUpvotes | int | 4 | False | 累计点赞数
 TotalDownvotes | int | 4 | False | 累计被踩数
 VisitorAddress | nvarchar | 100 | True | 访客地址
-VisitorDescription | varchar | 500 | True | 访客描述(浏览器代理信息等)
+VisitorDescription | nvarchar | 500 | True | 访客描述(浏览器代理信息等)
 AttachmentMark | varchar | 100 | True | 附件标记(以逗号分隔)
 CreatorId | int | 4 | False | 发帖人编号
 CreatedTime | datetime | - | False | 发帖时间
@@ -199,7 +201,7 @@ CreatedTime | datetime | - | False | 发帖时间
 PostId | bigint | 8 | False | 主键，帖子编号
 UserId | int | 4 | False | 主键，用户编号
 UserName | nvarchar | 50 | True | 用户名称
-UserAvatar | nvarchar | 150 | True | 用户头像
+UserAvatar | varchar | 100 | True | 用户头像
 Value | byte | 1 | False | 投票数(正数为Upvote，负数为Downvote)
 Tiemstamp | datetime | - | False | 投票时间
 
@@ -225,7 +227,7 @@ Name | varchar | 50 | False | 用户名称
 Nickname | nvarchar | 50 | True | 用户昵称
 Email | varchar | 50 | True | 用户绑定的邮箱地址
 Phone | varchar | 50 | True | 用户绑定的手机号码
-Avatar | varchar | 200 | True | 用户头像
+Avatar | varchar | 100 | True | 用户头像
 Gender | byte | 1 | False | 用户性别(0:Female, 1:Male)
 Grade | byte | 1 | False | 用户等级(默认为零)
 PhotoPath | varchar | 200 | True | 照片文件路径
@@ -233,9 +235,9 @@ TotalPosts | int | 4 | False | 累计回复总数
 TotalThreads | int | 4 | False | 累计主题总数
 MostRecentPostId | bigint | 8 | True | 最后回帖的帖子编号
 MostRecentPostTime | datetime | - | True | 最后回帖的时间
-MostRecentThreadId | bigint | 8 | True | 最新主题的编号
-MostRecentThreadTitle | nvarchar | 100 | True | 最新主题的标题
+MostRecentThreadId | bigint | 8 | True | 最新发布的主题编号
+MostRecentThreadTitle | nvarchar | 100 | True | 最新发布的主题标题
 MostRecentThreadTime | datetime | - | True | 最新主题的发布时间
 Creation | datetime | - | False | 创建时间
 Modification | datetime | - | True | 最后修改时间
-Description | nvarchar | 50 | True | 描述信息
+Description | nvarchar | 500 | True | 描述信息
