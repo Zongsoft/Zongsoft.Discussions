@@ -24,13 +24,13 @@
 
 	<extension path="/Workbench/Data/Accessors">
 		<object name="Community" sequence="{srv:Redis}">
-			<fenest.valueProvider>
+			<community.valueProvider>
 				<object type="Zongsoft.Community.Data.DataValueProvider, Zongsoft.Community" />
-			</fenest.valueProvider>
+			</community.valueProvider>
 
-			<fenest.error>
+			<community.error>
 				<object type="Zongsoft.Community.Data.DataErrorHandler, Zongsoft.Community" />
-			</fenest.error>
+			</community.error>
 		</object>
 	</extension>
 
