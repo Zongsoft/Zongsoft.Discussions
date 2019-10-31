@@ -24,26 +24,26 @@
 	<!-- 挂载Web.Api路由 -->
 	<extension path="/Workbench/Web/Routes">
 		<route name="Community-Api" kind="api"
-		       url="api/Community/{controller}/{action}/{id}/{*args}"
+		       url="Community/{controller}/{action}/{id}/{*args}"
 		       constraints="action=^[A-Za-z]+\w*$"
 		       defaults="action=, id="
 		       position="Api" />
 
 		<route name="Community-ApiReversed" kind="api"
-		       url="api/Community/{controller}/{id}/{action}/{*args}"
+		       url="Community/{controller}/{id}/{action}/{*args}"
 		       defaults="action=, id="
 		       position="Api" />
 	</extension>
 
-	<extension path="/Workspace/Web/Controllers/Api/Community">
-		<object name="File" type="Zongsoft.Community.Web.Http.Controllers.FileController, Zongsoft.Community.Web" />
-		<object name="Folder" type="Zongsoft.Community.Web.Http.Controllers.FolderController, Zongsoft.Community.Web" />
-		<object name="Feedback" type="Zongsoft.Community.Web.Http.Controllers.FeedbackController, Zongsoft.Community.Web" />
-		<object name="Forum" type="Zongsoft.Community.Web.Http.Controllers.ForumController, Zongsoft.Community.Web" />
-		<object name="ForumGroup" type="Zongsoft.Community.Web.Http.Controllers.ForumGroupController, Zongsoft.Community.Web" />
-		<object name="Message" type="Zongsoft.Community.Web.Http.Controllers.MessageController, Zongsoft.Community.Web" />
-		<object name="Post" type="Zongsoft.Community.Web.Http.Controllers.PostController, Zongsoft.Community.Web" />
-		<object name="Thread" type="Zongsoft.Community.Web.Http.Controllers.ThreadController, Zongsoft.Community.Web" />
-		<object name="User" type="Zongsoft.Community.Web.Http.Controllers.UserController, Zongsoft.Community.Web" />
+	<extension path="/Workspace/Web/Controllers/Community">
+		<object name="Files" type="Zongsoft.Community.Web.Http.Controllers.FileController, Zongsoft.Community.Web" />
+		<object name="Folders" type="Zongsoft.Community.Web.Http.Controllers.FolderController, Zongsoft.Community.Web" />
+		<object name="Feedbacks" type="Zongsoft.Community.Web.Http.Controllers.FeedbackController, Zongsoft.Community.Web" />
+		<object name="Forums" type="Zongsoft.Community.Web.Http.Controllers.ForumController, Zongsoft.Community.Web" />
+		<object name="ForumGroups" type="Zongsoft.Community.Web.Http.Controllers.ForumGroupController, Zongsoft.Community.Web" />
+		<object name="Messages" type="Zongsoft.Community.Web.Http.Controllers.MessageController, Zongsoft.Community.Web" />
+		<object name="Posts" type="Zongsoft.Community.Web.Http.Controllers.PostController, Zongsoft.Community.Web" />
+		<object name="Threads" type="Zongsoft.Community.Web.Http.Controllers.ThreadController, Zongsoft.Community.Web" />
+		<object name="Users" type="Zongsoft.Community.Web.Http.Controllers.UserController, Zongsoft.Community.Web" />
 	</extension>
 </plugin>
