@@ -4,8 +4,8 @@
 	<option path="/Data">
 		<connectionStrings>
 			<connectionString name="Community"
-			                  provider="MySql"
-			                  value="server=127.0.0.1;user id=root;Password=******;database=community;persist security info=False;Charset=utf8mb4;Convert zero Datetime=true;Allow zero Datetime=True;SslMode=None;" />
+			                  provider="MsSql"
+			                  value="Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=D:\Zongsoft\Zongsoft.Community\database\Zongsoft.Community.mdf;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" />
 		</connectionStrings>
 	</option>
 
