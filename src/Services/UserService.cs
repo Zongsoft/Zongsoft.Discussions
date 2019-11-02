@@ -39,7 +39,6 @@ namespace Zongsoft.Community.Services
 	{
 		#region 成员字段
 		private string _basePath;
-		private IUserProvider _userProvider;
 		#endregion
 
 		#region 构造函数
@@ -64,20 +63,10 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		[ServiceDependency]
+		[ServiceDependency(IsRequired = true)]
 		public IUserProvider UserProvider
 		{
-			get
-			{
-				return _userProvider;
-			}
-			set
-			{
-				if(value == null)
-					throw new ArgumentNullException();
-
-				_userProvider = value;
-			}
+			get; set;
 		}
 		#endregion
 
