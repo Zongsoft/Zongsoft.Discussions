@@ -384,7 +384,7 @@
 			</key>
 
 			<property name="UserId" type="uint" nullable="false" />
-			<property name="SiteId" type="uint" nullable="false" />
+			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="Name" type="string" length="50" nullable="false" />
 			<property name="Nickname" type="string" length="50" nullable="false" />
 			<property name="Email" type="string" length="50" nullable="true" />
