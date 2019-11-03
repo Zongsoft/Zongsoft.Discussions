@@ -34,28 +34,32 @@ namespace Zongsoft.Community.Data
 {
 	public class DataValueProvider : IDataValueProvider
 	{
+		#region 委托定义
+		private delegate bool TryGetDelegate(IDataMutateContextBase context, out object value);
+		#endregion
+
 		#region 静态字段
-		private static readonly IDictionary<string, Func<IDataMutateContextBase, object>> _inserts;
-		private static readonly IDictionary<string, Func<IDataMutateContextBase, object>> _updates;
+		private static readonly IDictionary<string, TryGetDelegate> _inserts;
+		private static readonly IDictionary<string, TryGetDelegate> _updates;
 		#endregion
 
 		#region 静态构造
 		static DataValueProvider()
 		{
-			_inserts = new Dictionary<string, Func<IDataMutateContextBase, object>>(StringComparer.OrdinalIgnoreCase)
+			_inserts = new Dictionary<string, TryGetDelegate>(StringComparer.OrdinalIgnoreCase)
 			{
-				{ "SiteId", GetSiteId },
+				{ "SiteId", TryGetSiteId },
 
-				{ "CreatorId",  GetUserId },
-				{ "CreatedTime", GetTimestamp },
-				{ "Creation", GetTimestamp },
+				{ "CreatorId",  TryGetUserId },
+				{ "CreatedTime", TryGetTimestamp },
+				{ "Creation", TryGetTimestamp },
 			};
 
-			_updates = new Dictionary<string, Func<IDataMutateContextBase, object>>(StringComparer.OrdinalIgnoreCase)
+			_updates = new Dictionary<string, TryGetDelegate>(StringComparer.OrdinalIgnoreCase)
 			{
-				{ "ModifierId",  GetUserId },
-				{ "ModifiedTime", GetTimestamp },
-				{ "Modification", GetTimestamp },
+				{ "ModifierId",  TryGetUserId },
+				{ "ModifiedTime", TryGetTimestamp },
+				{ "Modification", TryGetTimestamp },
 			};
 		}
 		#endregion
@@ -63,7 +67,7 @@ namespace Zongsoft.Community.Data
 		#region 公共方法
 		public bool TryGetValue(IDataMutateContextBase context, DataAccessMethod method, IDataEntityProperty property, out object value)
 		{
-			IDictionary<string, Func<IDataMutateContextBase, object>> provider = null;
+			IDictionary<string, TryGetDelegate> provider = null;
 
 			switch(method)
 			{
@@ -76,10 +80,7 @@ namespace Zongsoft.Community.Data
 			}
 
 			if(provider != null && provider.TryGetValue(property.Name, out var factory))
-			{
-				value = factory(context);
-				return true;
-			}
+				return factory.Invoke(context, out value);
 
 			value = null;
 			return false;
@@ -87,11 +88,6 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 私有方法
-		private static object GetSiteId(IDataMutateContextBase context)
-		{
-			return GetUser()?.SiteId;
-		}
-
 		private static Models.UserProfile GetUser()
 		{
 			if(Zongsoft.Services.ApplicationContext.Current?.Principal is Zongsoft.Security.CredentialPrincipal principal)
@@ -100,14 +96,22 @@ namespace Zongsoft.Community.Data
 			return null;
 		}
 
-		private static object GetUserId(IDataMutateContextBase context)
+		private static bool TryGetUserId(IDataMutateContextBase context, out object value)
 		{
-			return GetUser()?.UserId;
+			value = GetUser()?.UserId;
+			return value != null;
 		}
 
-		private static object GetTimestamp(IDataMutateContextBase context)
+		private static bool TryGetSiteId(IDataMutateContextBase context, out object value)
 		{
-			return DateTime.Now;
+			value = GetUser()?.SiteId;
+			return value != null;
+		}
+
+		private static bool TryGetTimestamp(IDataMutateContextBase context, out object value)
+		{
+			value = DateTime.Now;
+			return true;
 		}
 		#endregion
 	}
