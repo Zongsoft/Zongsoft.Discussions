@@ -71,7 +71,11 @@ namespace Zongsoft.Community.Services
 			{
 				Approved = true,
 				ApprovedTime = DateTime.Now,
-			}, Condition.Equal(nameof(Thread.ThreadId), threadId) & Condition.Equal(nameof(Thread.Approved), false) & GetIsModeratorCriteria()) > 0;
+				Post = new
+				{
+					Approved = true,
+				}
+			}, Condition.Equal(nameof(Thread.ThreadId), threadId) & Condition.Equal(nameof(Thread.Approved), false) & GetIsModeratorCriteria(), "*,Post{Approved}") > 0;
 		}
 
 		/// <summary>
@@ -147,44 +151,46 @@ namespace Zongsoft.Community.Services
 			}, Condition.Equal(nameof(Thread.ThreadId), threadId)) > 0;
 		}
 
-		public IEnumerable<Post> GetPosts(ulong threadId, Paging paging = null)
+		public IEnumerable<Post> GetPosts(ulong threadId, string schema, Paging paging = null)
 		{
 			return this.DataAccess.Select<Post>(
 				Condition.Equal(nameof(Post.ThreadId), threadId) &
 				Condition.GreaterThan(nameof(Post.RefererId), 0) &
 				Condition.Equal(nameof(Post.Visible), true),
-				paging, Sorting.Descending(nameof(Post.PostId)));
+				schema, paging, Sorting.Descending(nameof(Post.PostId)));
 		}
 		#endregion
 
 		#region 重写方法
-		protected override Thread OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
+		protected override Thread OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPageable pageable)
 		{
 			//调用基类同名方法
-			var thread = base.OnGet(condition, schema, states, out paginator);
+			var thread = base.OnGet(condition, schema, states, out pageable);
 
 			if(thread == null)
 				return null;
 
-			//如果当前主题尚未审核通过，则需要进行权限判断
-			if(!thread.Approved)
+			//如果指定主题尚未审核通过并且创建人不是当前用户，则需要进行权限判断
+			if(!thread.Approved && (this.User == null || this.User.UserId != thread.CreatorId))
 			{
 				//判断当前用户是否为该论坛的版主
-				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(thread.SiteId, thread.ForumId);
+				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(thread.ForumId);
 
 				//当前用户不是版主，并且该主题未审核通过则抛出授权异常
 				if(!isModerator && !thread.Approved)
-					throw new Zongsoft.Security.Membership.AuthorizationException();
+					throw new Zongsoft.Security.Membership.AuthorizationException("The specified thread has not been approved, so it cannot be viewed.");
 			}
 
-			//递增当前主题的累计阅读量
-			this.Increment(nameof(Thread.TotalViews), Condition.Equal(nameof(Thread.ThreadId), thread.ThreadId));
-
-			//设置当前主题的最后查看时间
+			//递增当前主题的累计阅读量并更新最后查看时间
 			this.DataAccess.Update<Thread>(new
 			{
+				TotalViews = Interval.One,
 				ViewedTime = DateTime.Now,
-			}, Condition.Equal(nameof(Thread.ThreadId), thread.ThreadId) & Condition.LessThan(nameof(Thread.ViewedTime), DateTime.Now));
+			}, Condition.Equal(nameof(Thread.ThreadId), thread.ThreadId));
+
+			//更新查询到的实体属性
+			thread.TotalViews += 1;
+			thread.ViewedTime = DateTime.Now;
 
 			//更新当前用户的浏览记录
 			this.SetHistory(thread.ThreadId);
@@ -197,14 +203,11 @@ namespace Zongsoft.Community.Services
 			if(!data.TryGetValue(p => p.Post, out var post) || string.IsNullOrEmpty(post.Content))
 				throw new InvalidOperationException("Missing content of the thread.");
 
-			//确保主题内容贴位于模式中
-			schema.Include(nameof(Thread.Post));
+			//确保数据模式含有“主题内容贴”复合属性
+			schema.Include("Post{*}");
 
 			//更新主题内容贴的相关属性
 			post.Visible = false;
-			post.SiteId = data.GetValue(p => p.SiteId, this.User.SiteId);
-			post.CreatorId = data.GetValue(p => p.CreatorId, this.User.UserId);
-			post.CreatedTime = data.GetValue(p => p.CreatedTime, DateTime.Now);
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
@@ -258,7 +261,7 @@ namespace Zongsoft.Community.Services
 			count += this.DataAccess.Update<UserProfile>(new
 			{
 				UserId = userId,
-				TotalThreads = Interval.Increment,
+				TotalThreads = Interval.One,
 				MostRecentThreadId = data.GetValue(p => p.ThreadId),
 				MostRecentThreadTitle = data.GetValue(p => p.Title),
 				MostRecentThreadTime = data.GetValue(p => p.CreatedTime),
@@ -274,7 +277,7 @@ namespace Zongsoft.Community.Services
 			{
 				UserId = this.User.UserId,
 				ThreadId = threadId,
-				Count = Interval.Increment, //注意：此处应该使用Interval类型值，以便数据引擎自动进行递增处理
+				Count = Interval.One, //注意：此处应该使用Interval类型值，以便数据引擎自动进行递增处理
 				MostRecentViewedTime = DateTime.Now,
 			});
 		}

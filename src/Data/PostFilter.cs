@@ -28,21 +28,64 @@ using System;
 using System.Linq;
 using System.Collections;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Data
 {
-	public class PostFilter : ContentFilterBase<Models.Post>
+	public class PostFilter : DataAccessFilterBase
 	{
 		#region 构造函数
-		public PostFilter() : base(nameof(Models.Post), "PostId, Content, ContentType")
+		public PostFilter() : base(nameof(Models.Post), DataAccessMethod.Select)
 		{
 		}
 		#endregion
 
-		#region 重写方法
-		protected override void DeleteContentFile(Models.Post entity)
+		#region 公共属性
+		/// <summary>
+		/// 获取当前安全主体对应的用户。
+		/// </summary>
+		public Models.UserProfile User
 		{
-			if(!Utility.IsContentEmbedded(entity.ContentType))
-				Utility.DeleteFile(entity.Content);
+			get
+			{
+				if(Zongsoft.Services.ApplicationContext.Current?.Principal is Zongsoft.Security.CredentialPrincipal principal &&
+				  principal.Identity.IsAuthenticated &&
+				  principal.Identity.Credential.HasParameters &&
+				  principal.Identity.Credential.Parameters.TryGetValue("Zongsoft.Community.UserProfile", out var parameter))
+					return parameter as Models.UserProfile;
+
+				return null;
+			}
+		}
+		#endregion
+
+		#region 重写方法
+		protected override void OnSelecting(DataSelectContextBase context)
+		{
+			base.OnSelecting(context);
+
+			//设置结果过滤器
+			context.ResultFilter = this.OnResultFilter;
+		}
+		#endregion
+
+		#region 结果过滤
+		private bool OnResultFilter(DataSelectContextBase context, ref object data)
+		{
+			var dictionary = DataDictionary.GetDictionary<Models.Post>(data);
+
+			if(dictionary.TryGetValue(p => p.Approved, out var approved) && !approved &&
+			  (!context.Principal.Identity.IsAuthenticated || context.Principal.Identity.Credential.User.UserId != dictionary.GetValue(p => p.CreatorId, 0U)))
+			{
+				dictionary.TrySetValue(p => p.Content, string.Empty);
+			}
+			else if(dictionary.TryGetValue(p => p.Content, out var content) && dictionary.TryGetValue(p => p.ContentType, out var contentType))
+			{
+				if(!Utility.IsContentEmbedded(contentType))
+					dictionary.SetValue(p => p.Content, Utility.ReadTextFile(content));
+			}
+
+			return true;
 		}
 		#endregion
 	}

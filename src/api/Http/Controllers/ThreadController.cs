@@ -25,7 +25,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Web.Http;
 
 using Zongsoft.Data;
@@ -198,7 +197,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		[ActionName("Posts")]
 		public object GetPosts(ulong id, [FromUri]Paging paging = null)
 		{
-			return this.GetResult(this.DataService.GetPosts(id, paging));
+			return this.GetResult(this.DataService.GetPosts(id, this.GetSchema(), paging));
 		}
 		#endregion
 	}

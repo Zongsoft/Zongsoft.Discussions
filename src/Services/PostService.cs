@@ -124,10 +124,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Post OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
+		protected override Post OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPageable pageable)
 		{
 			//调用基类同名方法
-			var post = base.OnGet(condition, schema, states, out paginator);
+			var post = base.OnGet(condition, schema, states, out pageable);
 
 			if(post == null)
 				return null;
@@ -189,7 +189,7 @@ namespace Zongsoft.Community.Services
 
 				//判断当前用户是否是新增主题所在论坛的版主
 				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>()
-				                      .IsModerator(siteId, forumId);
+				                      .IsModerator(forumId);
 
 				if(isModerator)
 				{

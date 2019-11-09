@@ -43,57 +43,61 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public bool IsModerator(uint siteId, ushort forumId, uint? userId = null)
+		public bool IsModerator(ushort forumId, uint? userId = null)
 		{
-			if(userId == null)
+			if(userId == null || userId.Value == 0)
 				userId = this.User.UserId;
 
 			return this.DataAccess.Exists<Forum.ForumUser>(
-				Condition.Equal(nameof(Forum.ForumUser.SiteId), siteId) & Condition.Equal(nameof(Forum.ForumUser.ForumId), forumId) &
+				Condition.Equal(nameof(Forum.ForumUser.ForumId), forumId) &
 				Condition.Equal(nameof(Forum.ForumUser.UserId), userId) & Condition.Equal(nameof(Forum.ForumUser.IsModerator), true));
 		}
 
-		public IEnumerable<UserProfile> GetModerators(uint siteId, ushort forumId)
+		public IEnumerable<UserProfile> GetModerators(ushort forumId, string schema)
 		{
 			return this.DataAccess.Select<UserProfile>(nameof(Forum.ForumUser),
-				Condition.Equal(nameof(Forum.ForumUser.SiteId), siteId) &
 				Condition.Equal(nameof(Forum.ForumUser.ForumId), forumId) &
 				Condition.Equal(nameof(Forum.ForumUser.IsModerator), true),
-				"User{*}");
+				schema);
 		}
 
-		public IEnumerable<Thread> GetGlobalThreads(uint siteId, Paging paging = null)
+		public IEnumerable<Thread> GetGlobalThreads(ushort forumId, string schema, Paging paging = null)
 		{
-			return this.DataAccess.Select<Thread>(
-				Condition.Equal(nameof(Thread.SiteId), siteId) &
-				Condition.Equal(nameof(Thread.IsGlobal), true) &
-				Condition.Equal(nameof(Thread.Visible), true),
-				paging, Sorting.Descending(nameof(Thread.ThreadId)));
+			if(forumId == 0)
+				return this.DataAccess.Select<Thread>(
+					Condition.Equal(nameof(Thread.IsGlobal), true) &
+					Condition.Equal(nameof(Thread.Visible), true),
+					schema, paging, Sorting.Descending(nameof(Thread.ThreadId)));
+			else
+				return this.DataAccess.Select<Thread>(
+					Condition.Equal(nameof(Thread.ForumId), forumId) &
+					Condition.Equal(nameof(Thread.IsGlobal), true) &
+					Condition.Equal(nameof(Thread.Visible), true),
+					schema, paging, Sorting.Descending(nameof(Thread.ThreadId)));
 		}
 
-		public IEnumerable<Thread> GetPinnedThreads(uint siteId, ushort forumId, Paging paging = null)
+		public IEnumerable<Thread> GetPinnedThreads(ushort forumId, string schema, Paging paging = null)
 		{
 			return this.DataAccess.Select<Thread>(
-				Condition.Equal(nameof(Thread.SiteId), siteId) &
 				Condition.Equal(nameof(Thread.ForumId), forumId) &
 				Condition.Equal(nameof(Thread.IsPinned), true) &
 				Condition.Equal(nameof(Thread.Visible), true),
-				paging, Sorting.Descending(nameof(Thread.ThreadId)));
+				schema, paging, Sorting.Descending(nameof(Thread.ThreadId)));
 		}
 
-		public Thread[] GetTopmosts(uint siteId, ushort forumId, int count = 10)
+		public Thread[] GetTopmosts(ushort forumId, string schema, int count = 10)
 		{
 			count = Math.Max(5, Math.Min(50, count));
 
-			var globals = this.GetGlobalThreads(siteId, Paging.Page(1, count));
-			var pinneds = this.GetPinnedThreads(siteId, forumId, Paging.Page(1, count));
+			var globals = this.GetGlobalThreads(0, schema, Paging.Page(1, count));
+			var pinneds = this.GetPinnedThreads(forumId, schema, Paging.Page(1, count));
 
 			return globals.Union(pinneds).OrderByDescending(t => t.ThreadId).Take(count).ToArray();
 		}
 
-		public IEnumerable<Thread> GetThreads(uint siteId, ushort forumId, Paging paging = null)
+		public IEnumerable<Thread> GetThreads(ushort forumId, string schema, Paging paging = null)
 		{
-			var criteria = Condition.Equal(nameof(Thread.SiteId), siteId) &
+			var criteria =
 				Condition.Equal(nameof(Thread.ForumId), forumId) &
 				Condition.Equal(nameof(Thread.Visible), true);
 
@@ -101,13 +105,13 @@ namespace Zongsoft.Community.Services
 			if(paging == null || paging.PageIndex == 1)
 			{
 				//获取指定论坛中最顶部的主题集（全局贴+本论坛的置顶贴）
-				var topmosts = this.GetTopmosts(siteId, forumId);
+				var topmosts = this.GetTopmosts(forumId, schema);
 
 				if(topmosts != null && topmosts.Length > 0)
 					criteria.Add(Condition.NotIn(nameof(Thread.ThreadId), topmosts.Select(p => p.ThreadId)));
 			}
 
-			return this.DataAccess.Select<Thread>(criteria, paging);
+			return this.DataAccess.Select<Thread>(criteria, schema, paging);
 		}
 		#endregion
 

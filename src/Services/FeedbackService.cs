@@ -43,10 +43,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Feedback OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
+		protected override Feedback OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPageable pageable)
 		{
 			//调用基类同名方法
-			var feedback = base.OnGet(condition, schema, states, out paginator);
+			var feedback = base.OnGet(condition, schema, states, out pageable);
 
 			if(feedback == null)
 				return null;

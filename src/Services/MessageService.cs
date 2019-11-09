@@ -55,10 +55,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Message OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPaginator paginator)
+		protected override Message OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPageable pageable)
 		{
 			//调用基类同名方法
-			var message = base.OnGet(condition, schema, states, out paginator);
+			var message = base.OnGet(condition, schema, states, out pageable);
 
 			if(message == null)
 				return null;

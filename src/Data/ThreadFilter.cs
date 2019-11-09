@@ -28,21 +28,48 @@ using System;
 using System.Linq;
 using System.Collections;
 
+using Zongsoft.Data;
+
 namespace Zongsoft.Community.Data
 {
-	public class MessageFilter : ContentFilterBase<Models.Message>
+	public class ThreadFilter : DataAccessFilterBase
 	{
 		#region 构造函数
-		public MessageFilter() : base(nameof(Models.Message), "MessageId, Content, ContentType")
+		public ThreadFilter() : base(nameof(Models.Thread), DataAccessMethod.Select)
 		{
 		}
 		#endregion
 
 		#region 重写方法
-		protected override void DeleteContentFile(Models.Message entity)
+		protected override void OnSelecting(DataSelectContextBase context)
 		{
-			if(!Utility.IsContentEmbedded(entity.ContentType))
-				Utility.DeleteFile(entity.Content);
+			base.OnSelecting(context);
+
+			//设置结果过滤器
+			context.ResultFilter = this.OnResultFilter;
+		}
+		#endregion
+
+		#region 结果过滤
+		private bool OnResultFilter(DataSelectContextBase context, ref object data)
+		{
+			var dictionary = DataDictionary.GetDictionary<Models.Thread>(data);
+
+			if(!dictionary.TryGetValue(p => p.Post, out var post) || post == null)
+				return true;
+
+			if(dictionary.TryGetValue(p => p.Approved, out var approved) && !approved &&
+			  (!context.Principal.Identity.IsAuthenticated || context.Principal.Identity.Credential.User.UserId != dictionary.GetValue(p => p.CreatorId, 0U)))
+			{
+				post.Content = string.Empty;
+			}
+			else if(!string.IsNullOrEmpty(post.Content) && !string.IsNullOrEmpty(post.ContentType))
+			{
+				if(!Utility.IsContentEmbedded(post.ContentType))
+					post.Content = Utility.ReadTextFile(post.Content);
+			}
+
+			return true;
 		}
 		#endregion
 	}

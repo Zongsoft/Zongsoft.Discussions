@@ -89,7 +89,6 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置帖子的内容。
 		/// </summary>
-		[Model.Property(Model.PropertyImplementationMode.Extension, typeof(PostExtension))]
 		public abstract string Content
 		{
 			get; set;
@@ -231,7 +230,11 @@ namespace Zongsoft.Community.Models
 		[Runtime.Serialization.SerializationMember(Runtime.Serialization.SerializationMemberBehavior.Ignored)]
 		public IEnumerable<PostVoting> Upvotes
 		{
-			get => this.Votes.Where(vote => vote.Value > 0);
+			get
+			{
+				var votes = this.Votes;
+				return votes == null ? Enumerable.Empty<PostVoting>() : votes.Where(vote => vote.Value > 0);
+			}
 		}
 
 		/// <summary>
@@ -240,7 +243,11 @@ namespace Zongsoft.Community.Models
 		[Runtime.Serialization.SerializationMember(Runtime.Serialization.SerializationMemberBehavior.Ignored)]
 		public IEnumerable<PostVoting> Downvotes
 		{
-			get => this.Votes.Where(vote => vote.Value < 0);
+			get
+			{
+				var votes = this.Votes;
+				return votes == null ? Enumerable.Empty<PostVoting>() : votes.Where(vote => vote.Value < 0);
+			}
 		}
 		#endregion
 
@@ -313,19 +320,6 @@ namespace Zongsoft.Community.Models
 				get; set;
 			}
 			#endregion
-		}
-
-		internal static class PostExtension
-		{
-			public static string GetContent(Post post, string content)
-			{
-				if(!post.Approved)
-					return "***** This post has not been approved. *****";
-
-				//如果内容类型是外部文件（即非嵌入格式），则读取文件内容
-				return Utility.IsContentEmbedded(post.ContentType) ? content :
-				       Utility.ReadTextFile(post.Content);
-			}
 		}
 		#endregion
 	}

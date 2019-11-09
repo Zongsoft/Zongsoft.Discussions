@@ -24,23 +24,19 @@
 
 	<extension path="/Workbench/Data/Accessors">
 		<object name="Community" sequence="{srv:Redis}">
-			<community.valueProvider>
-				<object type="Zongsoft.Community.Data.DataValueProvider, Zongsoft.Community" />
-			</community.valueProvider>
-
 			<community.error>
 				<object type="Zongsoft.Community.Data.DataErrorHandler, Zongsoft.Community" />
 			</community.error>
+
+			<community.validator>
+				<object type="Zongsoft.Community.Data.DataValidator, Zongsoft.Community" />
+			</community.validator>
 		</object>
 	</extension>
 
 	<extension path="/Workbench/Data/Accessors/Community/Filters">
-		<object name="UserFilter" type="Zongsoft.Community.Data.UserFilter, Zongsoft.Community" />
 		<object name="PostFilter" type="Zongsoft.Community.Data.PostFilter, Zongsoft.Community" />
-		<object name="ForumFilter" type="Zongsoft.Community.Data.ForumFilter, Zongsoft.Community" />
-		<object name="FolderFilter" type="Zongsoft.Community.Data.FolderFilter, Zongsoft.Community" />
-		<object name="MessageFilter" type="Zongsoft.Community.Data.MessageFilter, Zongsoft.Community" />
-		<object name="FeedbackFilter" type="Zongsoft.Community.Data.FeedbackFilter, Zongsoft.Community" />
+		<object name="ThreadFilter" type="Zongsoft.Community.Data.ThreadFilter, Zongsoft.Community" />
 	</extension>
 
 	<extension path="/Workbench/Executor/Commands">

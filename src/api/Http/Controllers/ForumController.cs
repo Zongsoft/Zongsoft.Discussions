@@ -30,7 +30,6 @@ using System.Web.Http;
 
 using Zongsoft.Data;
 using Zongsoft.Web.Http;
-using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
@@ -46,33 +45,33 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[ActionName("Moderators")]
-		public IEnumerable<UserProfile> GetModerators([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId)
+		public IEnumerable<UserProfile> GetModerators(ushort id)
 		{
-			return this.DataService.GetModerators(siteId, forumId);
+			return this.DataService.GetModerators(id, this.GetSchema());
 		}
 
 		[ActionName("Globals")]
-		public IEnumerable<Thread> GetGlobalThreads(uint id, [FromUri]Paging paging = null)
+		public IEnumerable<Thread> GetGlobalThreads(ushort id, [FromUri]Paging paging = null)
 		{
-			return this.DataService.GetGlobalThreads(id, paging);
+			return this.DataService.GetGlobalThreads(id, this.GetSchema(), paging);
 		}
 
 		[ActionName("Pinneds")]
-		public IEnumerable<Thread> GetPinnedThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
+		public IEnumerable<Thread> GetPinnedThreads(ushort id, [FromUri]Paging paging = null)
 		{
-			return this.DataService.GetPinnedThreads(siteId, forumId, paging);
+			return this.DataService.GetPinnedThreads(id, this.GetSchema(), paging);
 		}
 
 		[ActionName("Topmosts")]
-		public IEnumerable<Thread> GetTopmosts([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromRoute("args")]int count = 0)
+		public IEnumerable<Thread> GetTopmosts(ushort id, [FromRoute("args")]int count = 0)
 		{
-			return this.DataService.GetTopmosts(siteId, forumId, count);
+			return this.DataService.GetTopmosts(id, this.GetSchema(), count);
 		}
 
 		[ActionName("Threads")]
-		public object GetThreads([FromRoute("id")]uint siteId, [FromRoute("id")]ushort forumId, [FromUri]Paging paging = null)
+		public object GetThreads(ushort id, [FromUri]Paging paging = null)
 		{
-			return this.GetResult(this.DataService.GetThreads(siteId, forumId, paging));
+			return this.GetResult(this.DataService.GetThreads(id, this.GetSchema(), paging));
 		}
 		#endregion
 	}
