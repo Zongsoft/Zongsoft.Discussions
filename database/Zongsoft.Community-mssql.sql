@@ -241,7 +241,7 @@ CREATE TABLE [dbo].[Community_Post] (
     [SiteId]             INT            NOT NULL,
     [ThreadId]           BIGINT         NOT NULL,
     [RefererId]          BIGINT         DEFAULT (0) NOT NULL,
-    [Content]            VARCHAR(500)   NOT NULL,
+    [Content]            NVARCHAR(500)   NOT NULL,
     [ContentType]        VARCHAR(50)    NULL,
     [Visible]            BIT            DEFAULT (1) NOT NULL,
     [Approved]           BIT            NOT NULL,
