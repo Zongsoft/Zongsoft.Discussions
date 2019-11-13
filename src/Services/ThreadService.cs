@@ -67,6 +67,10 @@ namespace Zongsoft.Community.Services
 		/// <returns>如果审核批准成功则返回真(True)，否则返回假(False)。</returns>
 		public bool Approve(ulong threadId)
 		{
+			var criteria = Condition.Equal(nameof(Thread.ThreadId), threadId) &
+			               Condition.Equal(nameof(Thread.Approved), false) &
+			               GetIsModeratorCriteria();
+
 			return this.DataAccess.Update<Thread>(new
 			{
 				Approved = true,
@@ -75,7 +79,7 @@ namespace Zongsoft.Community.Services
 				{
 					Approved = true,
 				}
-			}, Condition.Equal(nameof(Thread.ThreadId), threadId) & Condition.Equal(nameof(Thread.Approved), false) & GetIsModeratorCriteria(), "*,Post{Approved}") > 0;
+			}, criteria, "*,Post{Approved}") > 0;
 		}
 
 		/// <summary>
