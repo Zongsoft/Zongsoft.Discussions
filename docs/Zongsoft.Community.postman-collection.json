@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "7A3FD16E-D681-4072-85FE-4A5CF352B920",
+		"_postman_id": "36112e8c-1daf-47c0-88a7-645bd8e6d7f8",
 		"name": "Zongsoft.Community",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -20,8 +20,8 @@
 					"formdata": [
 						{
 							"key": "File1",
-							"value": null,
-							"type": "file"
+							"type": "file",
+							"src": []
 						}
 					]
 				},
@@ -79,7 +79,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{url}}/Community/Feedbacks",
+					"raw": "http://{{url}}/Community/Feedbacks?pageIndex=1",
 					"protocol": "http",
 					"host": [
 						"{{url}}"
@@ -87,6 +87,12 @@
 					"path": [
 						"Community",
 						"Feedbacks"
+					],
+					"query": [
+						{
+							"key": "pageIndex",
+							"value": "1"
+						}
 					]
 				},
 				"description": "获取意见反馈信息"
@@ -109,7 +115,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"Subject\": \"我的反馈很重要\",\n  \"Content\": \"我的意见很大，你们看着办！\",\n  \"ContactName\": \"钟少\",\n  \"ContactText\": \"9555843@qq.com\"\n}"
+					"raw": "{\n  \"Subject\": \"我的反馈很重要\",\n  \"Content\": \"我的意见很大，你们看着办！\",\n  \"ContactName\": \"钟少\",\n  \"ContactText\": \"zongsoft@qq.com\"\n}"
 				},
 				"url": {
 					"raw": "http://{{url}}/Community/Feedbacks",
@@ -123,6 +129,39 @@
 					]
 				},
 				"description": "新增意见反馈信息"
+			},
+			"response": []
+		},
+		{
+			"name": "Feedbacks.Put",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Credential  {{credentialId}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"FeedbackId\": 100,\n\t\"Subject\": \"我的反馈很重要\"\n}"
+				},
+				"url": {
+					"raw": "http://{{url}}/Community/Feedbacks",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Community",
+						"Feedbacks"
+					]
+				},
+				"description": "修改意见反馈信息"
 			},
 			"response": []
 		},
@@ -252,7 +291,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"SiteId\":1,\r\n\t\"Name\":\"论坛组\",\r\n\t\"Visiblity\":2,\r\n\t\"Description\":\"论坛组的描述信息。\"\r\n}"
+					"raw": "{\r\n\t\"Name\":\"小米手机\",\r\n\t\"Visiblity\":0,\r\n\t\"Description\":\"小米手机论坛组。\"\r\n}"
 				},
 				"url": {
 					"raw": "http://{{url}}/Community/ForumGroups",
@@ -310,7 +349,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"SiteId\":1,\r\n\t\"GroupId\":101,\r\n\t\"Name\":\"灌水乐园\",\r\n\t\"Visiblity\":2,\r\n\t\"CoverPicturePath\":null,\r\n\t\"Description\":\"古今中外，怼天怼地。\"\r\n}"
+					"raw": "{\r\n\t\"GroupId\":0,\r\n\t\"Name\":\"灌水乐园\",\r\n\t\"Visiblity\":0,\r\n\t\"CoverPicturePath\":null,\r\n\t\"Description\":\"古今中外，怼天怼地。\"\r\n}"
 				},
 				"url": {
 					"raw": "http://{{url}}/Community/Forums",
@@ -328,6 +367,38 @@
 			"response": []
 		},
 		{
+			"name": "Forums.Threads",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Credential  {{credentialId}}"
+					},
+					{
+						"key": "x-data-schema",
+						"value": "*,Post{*},Creator{*}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{url}}/Community/Forums/1000/Threads",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Community",
+						"Forums",
+						"1000",
+						"Threads"
+					]
+				},
+				"description": "获取指定论坛中的主题集"
+			},
+			"response": []
+		},
+		{
 			"name": "Threads.Get",
 			"request": {
 				"method": "GET",
@@ -335,6 +406,11 @@
 					{
 						"key": "Authorization",
 						"value": "Credential  {{credentialId}}"
+					},
+					{
+						"key": "x-data-schema",
+						"value": "*, Post{*}, Creator{*}",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -368,7 +444,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"SiteId\":1,\r\n\t\"ForumId\":101,\r\n\t\"Subject\":\"主题的标题文本(必选)\",\r\n\t\"Summary\":\"主题的概要说明(可选)\",\r\n\t\"CoverPicturePath\":\"主题封面图片的路径(可选)\",\r\n\t\"LinkUrl\":\"文章的外部链接地址(可选)\",\r\n\t\"Post\":{\r\n\t\t\"Content\":\"主题的内容\",\r\n\t\t\"ContentType\":\"text/html\"\r\n\t}\r\n}"
+					"raw": "{\r\n\t\"ForumId\":1000,\r\n\t\"Title\":\"主题的标题(必选)\",\r\n\t\"Summary\":\"主题的概要说明(可选)\",\r\n\t\"ArticleUrl\":\"http://zongsoft.com/blog\",\r\n\t\"Post\":{\r\n\t\t\"Content\":\"主题的内容\",\r\n\t\t\"ContentType\":\"text/html\"\r\n\t}\r\n}"
 				},
 				"url": {
 					"raw": "http://{{url}}/Community/Threads",
@@ -382,6 +458,65 @@
 					]
 				},
 				"description": "新增主题"
+			},
+			"response": []
+		},
+		{
+			"name": "Threads.Posts",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Credential  {{credentialId}}"
+					},
+					{
+						"key": "x-data-schema",
+						"type": "text",
+						"value": "*, Creator{*}"
+					}
+				],
+				"url": {
+					"raw": "http://{{url}}/Community/Threads/100013/Posts",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Community",
+						"Threads",
+						"100013",
+						"Posts"
+					]
+				},
+				"description": "获取指定主题下的帖子集"
+			},
+			"response": []
+		},
+		{
+			"name": "Threads.Approve",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Credential  {{credentialId}}"
+					}
+				],
+				"url": {
+					"raw": "http://{{url}}/Community/Threads/100013/Approve",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Community",
+						"Threads",
+						"100013",
+						"Approve"
+					]
+				},
+				"description": "审核通过指定的主题"
 			},
 			"response": []
 		},
@@ -605,5 +740,6 @@
 			},
 			"response": []
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
