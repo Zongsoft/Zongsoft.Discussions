@@ -1,154 +1,44 @@
-# Zongsoft.Community
+# Zongsoft.Community 社区论坛系统
 
-这是基于 Zongsoft.Plugins 插件化架构的社区（论坛）系统。
+![license](https://img.shields.io/github/license/Zongsoft/Zongsoft.Community) ![download](https://img.shields.io/nuget/dt/Zongsoft.Community) ![version](https://img.shields.io/github/v/release/Zongsoft/Zongsoft.Community?include_prereleases) ![github stars](https://img.shields.io/github/stars/Zongsoft/Zongsoft.Community?style=social)
 
-## Web接口说明
+README: [English](https://github.com/Zongsoft/Zongsoft.Community/blob/master/README.md) | [简体中文](https://github.com/Zongsoft/Zongsoft.Community/blob/master/README-zh_CN.md)
 
-### 文件处理
+-----
 
-- [POST] `api/Community/File/{folderId}/Upload`
-> 上传一个或多个文件到指定的文件夹中，其中`{folderId}`参数不指定或为零则表示不对应到特定的文件夹。
-
-
-### 消息处理
-
-- [GET] `api/Community/Message/{messageId}/Users?IsRead=[true|false]`
-> 获取指定消息编号的接收用户集，其中`IsRead`参数可选。
+[**Zongsoft.Community**](https://github.com/Zongsoft/Zongsoft.Community) 是一个社区论坛的后端系统，这个项目旨在展示 **Zongsoft** 插件式应用开发以及对 [**Zongsoft.Data**](https://github.com/Zongsoft/Zongsoft.Data) 数据引擎的使用技巧。
 
 
-### 用户信息
-
-- [GET] `api/Community/User/{userId}/Count/message-unread`
-> 获取指定用户编号的未读消息数。
-
-- [GET] `api/Community/User/{userId}/Count/message-total`
-> 获取指定用户编号的消息总数。
-
-- [GET] `api/Community/User/{userId}/Messages?IsRead=[true|false]`
-> 获取指定用户编号的消息记录，其中`IsRead`参数可选。
-
-- [GET] `api/Community/User/{userId}/Histories`
-> 获取指定用户编号的浏览历史记录。
+**_文档正在撰写中，请关注我们的微信公号和知识星球以获得最新进展和通知！_**
 
 
-### 论坛组与论坛
+<a name="contribution"></a>
+## 贡献
 
-- [GET] `api/Community/ForumGroup`
-> 获取当前登录用户所属站点中的论坛组列表；如果当前登录用户为管理员，则可选`{siteId}`参数来指定要获取的论坛组所属的站点编号。
+请不要在项目的 **I**ssues 中提交询问(**Q**uestion)以及咨询讨论，**I**ssue 是用来报告问题(**B**ug)和功能特性(**F**eature)。如果你希望参与贡献，欢迎提交 代码合并请求(_[**P**ull**R**equest](https://github.com/Zongsoft/Zongsoft.Community/pulls)_) 或问题反馈(_[**I**ssue](https://github.com/Zongsoft/Zongsoft.Community/issues)_)。
 
-- [GET] `api/Community/ForumGroup/{siteId}-{groupId}`
-> 获取指定站点中特定论坛组的详细信息。
+对于新功能，请务必创建一个功能反馈(_[**I**ssue](https://github.com/Zongsoft/Zongsoft.Community/issues)_)来详细描述你的建议，以便我们进行充分讨论，这也将使我们更好的协调工作防止重复开发，并帮助你调整建议或需求，使之成功地被接受到项目中。
 
-- [GET] `api/Community/ForumGroup/{siteId}-{groupId}/Forums`
-> 获取指定站点中特定论坛组的论坛列表。
+欢迎你为我们的开源项目撰写文章进行推广，如果需要我们在官网(_[http://zongsoft.com/blog](http://zongsoft.com/blog)_) 中转发你的文章、博客、视频等可通过 [**电子邮件**](mailto:zongsoft@qq.com) 联系我们。
 
-------------
+> 强烈推荐阅读 [《提问的智慧》](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md)、[《如何向开源社区提问题》](https://github.com/seajs/seajs/issues/545) 和 [《如何有效地报告 Bug》](http://www.chiark.greenend.org.uk/~sgtatham/bugs-cn.html)、[《如何向开源项目提交无法解答的问题》](https://zhuanlan.zhihu.com/p/25795393)，更好的问题更容易获得帮助。
 
-- [GET] `api/Community/Forum`
-> 获取当前登录用户所属站点中的论坛组列表；如果当前登录用户为管理员，则可选`{siteId}`参数来指定要获取的论坛所属的站点编号。
 
-- [GET] `api/Community/Forum/{siteId}-{forumId}`
-> 获取指定站点中特定论坛的详细信息。
+<a name="sponsor"></a>
+## 支持赞助
 
-- [GET] `api/Community/Forum/{siteId}-{forumId}/Moderators`
-> 获取指定站点中特定论坛的版主列表。
+非常期待您的支持与赞助，可以通过下面几种方式为我们提供必要的资金支持：
 
-- [GET] `api/Community/Forum/{siteId}/Globals`
-> 获取指定站点中可见的全局主题列表。
+1. 关注 **Zongsoft 微信公众号**，对我们的文章进行打赏；
+2. 加入 [**Zongsoft 知识星球号**](https://t.zsxq.com/2nyjqrr)，可以获得在线问答和技术支持；
+3. 如果您的企业需要现场技术支持与辅导，又或者需要特定新功能、即刻的错误修复等请[发邮件](mailto:zongsoft@qq.com)给我。
 
-- [GET] `api/Community/Forum/{siteId}-{forumId}/Pinneds`
-> 获取指定论坛中被置顶的主题列表。
+[![微信公号](https://raw.githubusercontent.com/Zongsoft/Guidelines/master/zongsoft-qrcode%28wechat%29.png)](http://weixin.qq.com/r/zy-g_GnEWTQmrS2b93rd)
 
-- [GET] `api/Community/Forum/{siteId}-{forumId}/Topmosts/{count}`
-> 获取指定论坛中顶部显示的主题列表，`{count}`参数为全局或置顶主题的最大记录数，默认为10。
-> 顶部显示列表即为“全局主题(Globals)”和“置顶主题(Pinneds)”，即顶部显示主题数量最多为`{count}`的两倍。
+[![知识星球](https://raw.githubusercontent.com/Zongsoft/Guidelines/master/zongsoft-qrcode%28zsxq%29.png)](https://t.zsxq.com/2nyjqrr)
 
-- [GET] `api/Community/Forum/{siteId}-{forumId}/Threads`
-> 获取指定论坛中主题列表，注意：该列表不包含全局主题和置顶主题。
 
-### 主题与帖子
+<a name="license"></a>
+## 授权协议
 
-- [GET] `api/Community/Thread/{threadId}`
-> 获取指定编号的主题详细信息。
-
-- [GET] `api/Community/Thread/{threadId}/Posts`
-> 获取指定主题编号的顶级回帖列表。
-
-- [POST] `api/Community/Thread`
-> 发布一个新的主题，新增主题属性定义如下：。
-
-```json
-{
-	"SiteId":1,
-	"ForumId":101,
-	"Subject":"主题的标题文本(必选)",
-	"Summary":"主题的概要说明(可选)",
-	"CoverPicturePath":"主题封面图片的路径(可选)",
-	"LinkUrl":"文章的外部链接地址(可选)",
-	"Post":{
-		"Content":"主题的内容",
-		"ContentType":"主题的内容类型（参考MIME标准，譬如：text/html）"
-	}
-}
-```
-
-- [PUT] `api/Community/Thread`
-> 修改一个指定编号的主题内容，修改主题定义如下：
-
-```json
-{
-	"ThreadId":100001,
-	"Subject":"新的主题标题文本(可选)",
-	"Summary":"新的主题概要说明(可选)",
-	"CoverPicturePath":"新的主题封面图片的路径(可选)",
-	"LinkUrl":"新的文章的外部链接地址(可选)",
-	"Post":{
-		"Content":"新的主题的内容(可选)",
-		"ContentType":"新的主题的内容类型(可选)"
-	}
-}
-```
-
-- [DELETE] `api/Community/Thread/{threadId}`
-> 删除指定编号的主题及其相关的所有回帖。
-
--------------
-
-- [GET] `api/Community/Post/{postId}`
-> 获取指定编号的帖子详细信息。
-
-- [GET] `api/Community/Post/{postId}/Comments`
-> 获取指定编号的帖子的回复列表。
-
-- [POST] `api/Community/Post/{postId}/Upvote/{value}`
-> 为指定编号的帖子点赞，其中`{value}`参数可选，默认为1。
-
-- [POST] `api/Community/Post/{postId}/Downvote/{value}`
-> 为指定编号的帖子点踩，其中`{value}`参数可选，默认为1。
-
-- [POST] `api/Community/Post`
-> 发布一个新的帖子，新增帖子属性定义如下：。
-
-```json
-{
-	"SiteId":1,
-	"ThreadId":100001,
-	"ParentId":"父帖子编号(可选)",
-	"Content":"帖子的内容",
-	"ContentType":"帖子的内容类型（参考MIME标准，譬如：text/html）"
-}
-```
-
-- [PUT] `api/Community/Post`
-> 修改一个指定编号的帖子内容，修改帖子定义如下：
-
-```json
-{
-	"PostId":100001,
-	"Content":"新的帖子的内容(可选)",
-	"ContentType":"新的帖子的内容类型(可选)"
-}
-```
-
-- [DELETE] `api/Community/Post/{postId}`
-> 删除指定编号的帖子及其相关的所有回复。
+本项目采用 [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) 授权协议。
