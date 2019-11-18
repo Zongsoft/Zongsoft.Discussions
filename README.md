@@ -9,7 +9,7 @@ README: [English](https://github.com/Zongsoft/Zongsoft.Community/blob/master/REA
 [**Zongsoft.Community**](https://github.com/Zongsoft/Zongsoft.Community) 是一个社区论坛的后端系统，这个项目旨在展示 **Zongsoft** 插件式应用开发以及对 [**Zongsoft.Data**](https://github.com/Zongsoft/Zongsoft.Data) 数据引擎的使用技巧。
 
 
-**_文档正在撰写中，请关注我们的微信公号和知识星球以获得最新进展和通知！_**
+**_文档正在撰写中，代码也还在持续完善中。请关注我们的微信公号和知识星球以获得最新进展及通知！_**
 
 
 <a name="contribution"></a>
