@@ -29,13 +29,14 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
-using Zongsoft.Security;
 using Zongsoft.Services;
+using Zongsoft.Security;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
+	[Service(nameof(UserService))]
 	[DataService(typeof(UserProfileCriteria))]
 	public class UserService : DataServiceBase<UserProfile>
 	{

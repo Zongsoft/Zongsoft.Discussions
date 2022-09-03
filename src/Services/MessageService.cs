@@ -30,11 +30,12 @@ using System.Collections.Generic;
 
 using Zongsoft.Data;
 using Zongsoft.Security;
+using Zongsoft.Services;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearcher("Stauts:Status", "Creator,CreatorId:CreatorId", "Subject")]
+	[Service(nameof(MessageService))]
 	[DataService(typeof(MessageCriteria))]
 	public class MessageService : DataServiceBase<Message>
 	{

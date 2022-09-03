@@ -82,7 +82,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 			}
 		}
 
-		[HttpGet("{id}/Count/{args*}")]
+		[HttpGet("{id}/Count/{args}")]
 		public IActionResult GetCount(uint id, string args)
 		{
 			if(string.IsNullOrEmpty(args))

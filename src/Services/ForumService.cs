@@ -30,10 +30,12 @@ using System.Collections.Generic;
 
 using Zongsoft.Data;
 using Zongsoft.Security;
+using Zongsoft.Services;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
+	[Service(nameof(ForumService))]
 	[DataService(typeof(ForumCriteria))]
 	public class ForumService : DataServiceBase<Forum>
 	{

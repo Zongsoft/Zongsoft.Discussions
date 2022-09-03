@@ -19,11 +19,7 @@
 	</manifest>
 
 	<extension path="/Workbench/Data/Accessors">
-		<object name="Community" sequence="{srv:Redis}">
-			<community.error>
-				<object type="Zongsoft.Community.Data.DataErrorHandler, Zongsoft.Community" />
-			</community.error>
-
+		<object name="Community">
 			<community.validator>
 				<object type="Zongsoft.Community.Data.DataValidator, Zongsoft.Community" />
 			</community.validator>
@@ -33,14 +29,6 @@
 	<extension path="/Workbench/Data/Accessors/Community/Filters">
 		<object name="PostFilter" type="Zongsoft.Community.Data.PostFilter, Zongsoft.Community" />
 		<object name="ThreadFilter" type="Zongsoft.Community.Data.ThreadFilter, Zongsoft.Community" />
-	</extension>
-
-	<extension path="/Workbench/Executor/Commands">
-		<object name="Community">
-			<object name="Message">
-				<object name="Send" type="Zongsoft.Community.Services.Commands.MessageSendCommand, Zongsoft.Community" />
-			</object>
-		</object>
 	</extension>
 
 	<!-- 挂载“Community”服务提供程序 -->
@@ -56,15 +44,5 @@
 	<extension path="/Workspace/Services/Community">
 		<object name="Data" value="{path:/Workbench/Data/Accessors/Community}" />
 		<object name="Configuration" value="{opt:/Community/General}" />
-
-		<object name="FileService" type="Zongsoft.Community.Services.FileService, Zongsoft.Community" />
-		<object name="FolderService" type="Zongsoft.Community.Services.FolderService, Zongsoft.Community" />
-		<object name="MessageService" type="Zongsoft.Community.Services.MessageService, Zongsoft.Community" />
-		<object name="FeedbackService" type="Zongsoft.Community.Services.FeedbackService, Zongsoft.Community" />
-		<object name="ForumService" type="Zongsoft.Community.Services.ForumService, Zongsoft.Community" />
-		<object name="ForumGroupService" type="Zongsoft.Community.Services.ForumGroupService, Zongsoft.Community" />
-		<object name="ThreadService" type="Zongsoft.Community.Services.ThreadService, Zongsoft.Community" />
-		<object name="PostService" type="Zongsoft.Community.Services.PostService, Zongsoft.Community" />
-		<object name="UserService" type="Zongsoft.Community.Services.UserService, Zongsoft.Community" basePath="{opt:/Community/General.BasePath}" />
 	</extension>
 </plugin>

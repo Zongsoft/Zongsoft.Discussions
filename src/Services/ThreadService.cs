@@ -35,6 +35,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
+	[Service(nameof(ThreadService))]
 	[DataService(typeof(ThreadCriteria))]
 	public class ThreadService : DataServiceBase<Thread>
 	{

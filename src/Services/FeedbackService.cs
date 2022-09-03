@@ -29,10 +29,12 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
+using Zongsoft.Services;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
+	[Service(nameof(FeedbackService))]
 	[DataService(typeof(FeedbackCriteria))]
 	public class FeedbackService : DataServiceBase<Feedback>
 	{

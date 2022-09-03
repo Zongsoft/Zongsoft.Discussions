@@ -28,10 +28,12 @@ using System;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
+using Zongsoft.Services;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
+	[Service(nameof(FileService))]
 	[DataService(typeof(FileCriteria))]
 	public class FileService : DataServiceBase<File>
 	{

@@ -29,10 +29,12 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
+using Zongsoft.Services;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
+	[Service(nameof(ForumGroupService))]
 	[DataService(typeof(ForumGroupCriteria))]
 	public class ForumGroupService : DataServiceBase<ForumGroup>
 	{

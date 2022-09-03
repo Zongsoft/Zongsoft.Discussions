@@ -35,6 +35,7 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
+	[Service(nameof(PostService))]
 	[DataService(typeof(PostCriteria))]
 	public class PostService : DataServiceBase<Post>
 	{
