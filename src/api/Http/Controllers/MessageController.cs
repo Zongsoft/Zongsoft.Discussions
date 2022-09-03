@@ -51,7 +51,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#endregion
 
 		#region 公共方法
-		[ActionName("{id}/Users")]
+		[HttpGet("{id}/Users")]
 		public object GetUsers(ulong id, [FromQuery]bool? isRead = null, [FromQuery]Paging page = null)
 		{
 			return this.Paginate(this.DataService.GetUsers(id, isRead, page));
