@@ -90,28 +90,19 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示浏览记录查询条件的实体类。
 	/// </summary>
-	public abstract class HistoryConditional : ConditionalBase
+	public abstract class HistoryCriteria : CriteriaBase
 	{
-		public abstract ulong? ThreadId
-		{
-			get; set;
-		}
+		public abstract ulong? ThreadId { get; set; }
 
-		public abstract Range<uint>? Count
-		{
-			get; set;
-		}
+		public abstract Range<uint>? Count { get; set; }
 
-		[Conditional(typeof(TimestampConverter))]
-		public abstract Range<DateTime>? Timestamp
-		{
-			get; set;
-		}
+		[Condition(typeof(TimestampConverter))]
+		public abstract Range<DateTime>? Timestamp { get; set; }
 
 		#region 嵌套子类
-		private class TimestampConverter : ConditionalConverter
+		private class TimestampConverter : ConditionConverter
 		{
-			public override ICondition Convert(ConditionalConverterContext context)
+			public override ICondition Convert(ConditionConverterContext context)
 			{
 				var timestamp = (Range<DateTime>)context.Value;
 

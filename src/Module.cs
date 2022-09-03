@@ -9,7 +9,7 @@
  * Authors:
  *   钟峰(Popeye Zhong) <zongsoft@qq.com>
  * 
- * Copyright (C) 2015-2019 Zongsoft Corporation. All rights reserved.
+ * Copyright (C) 2015-2017 Zongsoft Corporation. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,28 +24,18 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
+using Zongsoft.Services;
 
-using Zongsoft.Data;
-using Zongsoft.Common;
-
-namespace Zongsoft.Community.Data
+namespace Zongsoft.Community
 {
-	public class DataErrorHandler : IEventHandler<DataAccessErrorEventArgs>
+	public class Module : ApplicationModule
 	{
-		public void Handle(object source, DataAccessErrorEventArgs args)
-		{
-			if(args.Exception is DataConflictException conflict && conflict.Key != null)
-			{
-				conflict.Key = Zongsoft.Resources.ResourceUtility.GetString("Data:" + conflict.Key);
-			}
-		}
+		#region 单例字段
+		public static readonly Module Current = new();
+		#endregion
 
-		void IEventHandler.Handle(object source, object args)
-		{
-			if(args is DataAccessErrorEventArgs error)
-				this.Handle(source, error);
-		}
+		#region 构造函数
+		public Module() : base("Community") { }
+		#endregion
 	}
 }

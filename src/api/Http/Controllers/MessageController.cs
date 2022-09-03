@@ -26,10 +26,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+
+using Zongsoft.Web;
 using Zongsoft.Data;
-using Zongsoft.Web.Http;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
@@ -37,19 +40,21 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization]
-	public class MessageController : Zongsoft.Web.Http.HttpControllerBase<Message, MessageConditional, MessageService>
+	[Area("Community")]
+	[Route("[area]/Messages")]
+	public class MessageController : ApiControllerBase<Message, MessageService>
 	{
 		#region 构造函数
-		public MessageController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public MessageController(IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
 
 		#region 公共方法
-		[ActionName("Users")]
-		public object GetUsers(ulong id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
+		[ActionName("{id}/Users")]
+		public object GetUsers(ulong id, [FromQuery]bool? isRead = null, [FromQuery]Paging page = null)
 		{
-			return this.GetResult(this.DataService.GetUsers(id, isRead, paging));
+			return this.Paginate(this.DataService.GetUsers(id, isRead, page));
 		}
 		#endregion
 	}

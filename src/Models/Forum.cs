@@ -72,7 +72,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛所在分组中的排列序号。
 		/// </summary>
-		public abstract ushort SortOrder
+		public abstract ushort Ordinal
 		{
 			get; set;
 		}
@@ -428,33 +428,18 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示论坛查询条件的实体类。
 	/// </summary>
-	public abstract class ForumConditional : ConditionalBase
+	public abstract class ForumCriteria : CriteriaBase
 	{
 		#region 公共属性
-		public abstract string Name
-		{
-			get; set;
-		}
+		public abstract string Name { get; set; }
 
-		public abstract Visibility? Visiblity
-		{
-			get; set;
-		}
+		public abstract Visibility? Visiblity { get; set; }
 
-		public abstract Accessibility? Accessibility
-		{
-			get; set;
-		}
+		public abstract Accessibility? Accessibility { get; set; }
 
-		public abstract bool? IsPopular
-		{
-			get; set;
-		}
+		public abstract bool? IsPopular { get; set; }
 
-		public abstract Range<DateTime> CreatedTime
-		{
-			get; set;
-		}
+		public abstract Range<DateTime> CreatedTime { get; set; }
 		#endregion
 	}
 }

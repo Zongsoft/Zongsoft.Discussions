@@ -43,170 +43,71 @@ namespace Zongsoft.Community.Models
 		#endregion
 
 		#region 公共属性
-		/// <summary>
-		/// 获取或设置用户所属的站点编号。
-		/// </summary>
-		public abstract uint SiteId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户所属的站点编号。</summary>
+		public abstract uint SiteId { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户编号。
-		/// </summary>
-		public abstract uint UserId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户编号。</summary>
+		public abstract uint UserId { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户名称。
-		/// </summary>
-		public abstract string Name
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户名称。</summary>
+		public abstract string Name { get; set; }
 
-		/// <summary>
-		/// 获取或设置用昵称。
-		/// </summary>
-		public abstract string Nickname
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用昵称。</summary>
+		public abstract string Nickname { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户的所属命名空间。
-		/// </summary>
-		public abstract string Namespace
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户的所属命名空间。</summary>
+		public abstract string Namespace { get; set; }
 
-		/// <summary>
-		/// 获取或设置头像标识。
-		/// </summary>
-		public abstract string Avatar
-		{
-			get; set;
-		}
+		/// <summary>获取或设置头像标识。</summary>
+		public abstract string Avatar { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户性别。
-		/// </summary>
-		public abstract Gender Gender
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户性别。</summary>
+		public abstract Gender Gender { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户等级，数字越大等级越高。
-		/// </summary>
-		public abstract byte Grade
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户等级，数字越大等级越高。</summary>
+		public abstract byte Grade { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户的照片文件路径。
-		/// </summary>
-		public abstract string PhotoPath
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户的照片文件路径。</summary>
+		public abstract string PhotoPath { get; set; }
 
-		/// <summary>
-		/// 获取用户的照片文件访问URL。
-		/// </summary>
-		public string PhotoUrl
-		{
-			get => Zongsoft.IO.FileSystem.GetUrl(this.PhotoPath);
-		}
+		/// <summary>获取用户的照片文件访问URL。</summary>
+		public string PhotoUrl { get => Zongsoft.IO.FileSystem.GetUrl(this.PhotoPath); }
 
-		/// <summary>
-		/// 获取或设置用户累计发布的帖子总数。
-		/// </summary>
-		public abstract uint TotalPosts
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户累计发布的帖子总数。</summary>
+		public abstract uint TotalPosts { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户累积发布的主题总数。
-		/// </summary>
-		public abstract uint TotalThreads
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户累积发布的主题总数。</summary>
+		public abstract uint TotalThreads { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户最后回帖的帖子编号。
-		/// </summary>
-		public abstract ulong? MostRecentPostId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户最后回帖的帖子编号。</summary>
+		public abstract ulong? MostRecentPostId { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户最后回帖的时间。
-		/// </summary>
-		public abstract DateTime? MostRecentPostTime
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户最后回帖的时间。</summary>
+		public abstract DateTime? MostRecentPostTime { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户最新发布的主题编号。
-		/// </summary>
-		public abstract ulong? MostRecentThreadId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户最新发布的主题编号。</summary>
+		public abstract ulong? MostRecentThreadId { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户最新发布的主题标题。
-		/// </summary>
-		public abstract string MostRecentThreadTitle
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户最新发布的主题标题。</summary>
+		public abstract string MostRecentThreadTitle { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户最新主题的发布时间。
-		/// </summary>
-		public abstract DateTime? MostRecentThreadTime
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户最新主题的发布时间。</summary>
+		public abstract DateTime? MostRecentThreadTime { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户的描述信息。
-		/// </summary>
-		public abstract string Description
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户的描述信息。</summary>
+		public abstract string Description { get; set; }
 		#endregion
 	}
 
-	public abstract class UserProfileConditional : ConditionalBase
+	public abstract class UserProfileCriteria : CriteriaBase
 	{
 		#region 公共属性
-		[Conditional("Name", "Phone", "Email")]
-		public abstract string Identity
-		{
-			get; set;
-		}
+		[Condition("Name", "Phone", "Email")]
+		public abstract string Identity { get; set; }
 
-		public abstract Gender? Gender
-		{
-			get; set;
-		}
+		public abstract Gender? Gender { get; set; }
 
-		public abstract Range<byte>? Grade
-		{
-			get; set;
-		}
+		public abstract Range<byte>? Grade { get; set; }
 		#endregion
 	}
 }

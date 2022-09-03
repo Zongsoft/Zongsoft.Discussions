@@ -153,46 +153,25 @@ namespace Zongsoft.Community.Models
 	}
 
 	/// <summary>
-	/// 标识文件查询条件的实体类。
+	/// 表示文件查询条件的实体类。
 	/// </summary>
-	public abstract class FileConditional : ConditionalBase
+	public abstract class FileCriteria : CriteriaBase
 	{
 		#region 公共属性
-		public abstract ulong? FileId
-		{
-			get; set;
-		}
+		public abstract ulong? FileId { get; set; }
 
-		[Conditional(ConditionOperator.Like)]
-		public abstract string Name
-		{
-			get; set;
-		}
+		[Condition(ConditionOperator.Like)]
+		public abstract string Name { get; set; }
 
-		public abstract string Type
-		{
-			get; set;
-		}
+		public abstract string Type { get; set; }
 
-		public abstract Range<uint>? Size
-		{
-			get; set;
-		}
+		public abstract Range<uint>? Size { get; set; }
 
-		public abstract uint? FolderId
-		{
-			get; set;
-		}
+		public abstract uint? FolderId { get; set; }
 
-		public abstract uint? CreatorId
-		{
-			get; set;
-		}
+		public abstract uint? CreatorId { get; set; }
 
-		public abstract Range<DateTime>? CreatedTime
-		{
-			get; set;
-		}
+		public abstract Range<DateTime>? CreatedTime { get; set; }
 		#endregion
 	}
 }

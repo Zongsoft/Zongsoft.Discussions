@@ -181,30 +181,18 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示文件夹的查询条件实体类。
 	/// </summary>
-	public abstract class FolderConditional : ConditionalBase
+	public abstract class FolderCriteria : CriteriaBase
 	{
 		#region 公共属性
-		[Conditional("Name", "PinYin")]
-		public abstract string Name
-		{
-			get; set;
-		}
+		[Condition("Name", "PinYin")]
+		public abstract string Name { get; set; }
 
-		[Conditional(ConditionOperator.In)]
-		public abstract Shareability[] Shareability
-		{
-			get; set;
-		}
+		[Condition(ConditionOperator.In)]
+		public abstract Shareability[] Shareability { get; set; }
 
-		public abstract uint? CreatorId
-		{
-			get; set;
-		}
+		public abstract uint? CreatorId { get; set; }
 
-		public abstract Range<DateTime> CreatedTime
-		{
-			get; set;
-		}
+		public abstract Range<DateTime> CreatedTime { get; set; }
 		#endregion
 	}
 }

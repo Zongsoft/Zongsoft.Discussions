@@ -26,26 +26,31 @@
 
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+
+using Zongsoft.Web;
 using Zongsoft.Data;
-using Zongsoft.Web.Http;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class ForumGroupController : Zongsoft.Web.Http.HttpControllerBase<ForumGroup, ForumGroupConditional, ForumGroupService>
+	[Area("Community")]
+	[Route("[area]/Forums/Groups")]
+	public class ForumGroupController : ApiControllerBase<ForumGroup, ForumGroupService>
 	{
 		#region 构造函数
-		public ForumGroupController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public ForumGroupController(IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
 
 		#region 公共方法
-		[ActionName("Forums")]
-		public IEnumerable<Forum> GetForums([FromRoute("id")]uint siteId, [FromRoute("id")]ushort groupId)
+		[HttpGet("{siteId}-{groupId}/Forums")]
+		public IEnumerable<Forum> GetForums(uint siteId, ushort groupId)
 		{
 			return this.DataService.GetForums(siteId, groupId);
 		}

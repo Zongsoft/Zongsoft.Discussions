@@ -33,13 +33,11 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearcher("Name")]
-	public class FolderService : DataService<Folder>
+	[DataService(typeof(FolderCriteria))]
+	public class FolderService : DataServiceBase<Folder>
 	{
 		#region 构造函数
-		public FolderService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
+		public FolderService(IServiceProvider serviceProvider) : base(serviceProvider) { }
 		#endregion
 
 		#region 公共方法
@@ -75,38 +73,38 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override int OnUpdate(IDataDictionary<Folder> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
-        {
-            using(var transaction = new Transactions.Transaction())
-            {
-                //调用基类同名方法
-                var count = base.OnUpdate(data, condition, schema, states);
+		protected override int OnUpdate(IDataDictionary<Folder> data, ICondition criteria, ISchema schema, DataUpdateOptions options)
+		{
+			using(var transaction = new Transactions.Transaction())
+			{
+				//调用基类同名方法
+				var count = base.OnUpdate(data, criteria, schema, options);
 
-                if(count < 1)
-                    return count;
+				if(count < 1)
+					return count;
 
-                //获取新增的文件夹用户集，并尝试插入该用户集
-                data.TryGetValue(p => p.Users, (key, users) =>
-                {
-                    if(users == null)
-                        return;
+				//获取新增的文件夹用户集，并尝试插入该用户集
+				data.TryGetValue(p => p.Users, (key, users) =>
+				{
+					if(users == null)
+						return;
 
 					var folderId = data.GetValue(p => p.FolderId);
 
-                    //首先清除该文件夹的所有用户集
-                    this.DataAccess.Delete<Folder.FolderUser>(Condition.Equal("FolderId", folderId));
+					//首先清除该文件夹的所有用户集
+					this.DataAccess.Delete<Folder.FolderUser>(Condition.Equal(nameof(Folder.FolderUser.FolderId), folderId));
 
-                    //新增该文件夹的用户集
-                    this.DataAccess.InsertMany(users.Where(p => p.FolderId == folderId));
-                });
+					//新增该文件夹的用户集
+					this.DataAccess.InsertMany(users.Where(p => p.FolderId == folderId));
+				});
 
-                //提交事务
-                transaction.Commit();
+				//提交事务
+				transaction.Commit();
 
-                //返回主表插入的记录数
-                return count;
-            }
-        }
+				//返回主表插入的记录数
+				return count;
+			}
+		}
 		#endregion
 	}
 }

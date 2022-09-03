@@ -26,19 +26,22 @@
 
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
 
-using Zongsoft.Web.Http;
-using Zongsoft.Security.Membership;
+using Microsoft.AspNetCore.Mvc;
+
+using Zongsoft.Web;
+using Zongsoft.Services;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class FeedbackController : Zongsoft.Web.Http.HttpControllerBase<Feedback, IFeedbackConditional, FeedbackService>
+	[Area("Community")]
+	[Route("[area]/Feedbacks")]
+	public class FeedbackController : ApiControllerBase<Feedback, FeedbackService>
 	{
 		#region 构造函数
-		public FeedbackController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public FeedbackController(IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion

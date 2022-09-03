@@ -56,7 +56,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取或设置论坛组所在站点中的排列序号。
 		/// </summary>
-		public abstract ushort SortOrder
+		public abstract ushort Ordinal
 		{
 			get; set;
 		}
@@ -100,13 +100,10 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示论坛分组查询的实体类。
 	/// </summary>
-	public abstract class ForumGroupConditional : ConditionalBase
+	public abstract class ForumGroupCriteria : CriteriaBase
 	{
 		#region 公共属性
-		public abstract string Name
-		{
-			get; set;
-		}
+		public abstract string Name { get; set; }
 		#endregion
 	}
 }

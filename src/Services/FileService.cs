@@ -32,13 +32,11 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearcher("Name")]
-	public class FileService : DataService<File>
+	[DataService(typeof(FileCriteria))]
+	public class FileService : DataServiceBase<File>
 	{
 		#region 构造函数
-		public FileService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
+		public FileService(IServiceProvider serviceProvider) : base(serviceProvider) { }
         #endregion
 
         #region 公共方法
@@ -49,17 +47,17 @@ namespace Zongsoft.Community.Services
             else
                 return Utility.GetFilePath("files/");
         }
-        #endregion
+		#endregion
 
-        #region 重写方法
-		protected override int OnInsert(IDataDictionary<File> data, ISchema schema, IDictionary<string, object> states)
+		#region 重写方法
+		protected override int OnInsert(IDataDictionary<File> data, ISchema schema, DataInsertOptions options)
 		{
 			var filePath = data.GetValue(p => p.Path);
 
 			try
 			{
 				//调用基类同名方法
-				var count = base.OnInsert(data, schema, states);
+				var count = base.OnInsert(data, schema, options);
 
 				if(count < 1)
 				{

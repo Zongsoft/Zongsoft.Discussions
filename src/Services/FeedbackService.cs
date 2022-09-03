@@ -33,20 +33,18 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearcher("Subject,ContactName,ContactText")]
-	public class FeedbackService : DataService<Feedback>
+	[DataService(typeof(FeedbackCriteria))]
+	public class FeedbackService : DataServiceBase<Feedback>
 	{
 		#region 构造函数
-		public FeedbackService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
+		public FeedbackService(IServiceProvider serviceProvider) : base(serviceProvider) { }
 		#endregion
 
 		#region 重写方法
-		protected override Feedback OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPageable pageable)
+		protected override Feedback OnGet(ICondition criteria, ISchema schema, DataSelectOptions options)
 		{
 			//调用基类同名方法
-			var feedback = base.OnGet(condition, schema, states, out pageable);
+			var feedback = base.OnGet(criteria, schema, options);
 
 			if(feedback == null)
 				return null;
@@ -58,7 +56,7 @@ namespace Zongsoft.Community.Services
 			return feedback;
 		}
 
-		protected override void OnValidate(Method method, IDataDictionary<Feedback> data)
+		protected override void OnValidate(DataServiceMethod method, ISchema schema, IDataDictionary<Feedback> data, IDataMutateOptions options)
 		{
 			if(method.IsWriting)
 			{
@@ -66,10 +64,10 @@ namespace Zongsoft.Community.Services
 				var contentFile = Utility.SetContent(data, () => this.GetContentFilePath(data.GetValue(p => p.FeedbackId)));
 			}
 
-			base.OnValidate(method, data);
+			base.OnValidate(method, schema, data, options);
 		}
 
-		protected override int OnInsert(IDataDictionary<Feedback> data, ISchema schema, IDictionary<string, object> states)
+		protected override int OnInsert(IDataDictionary<Feedback> data, ISchema schema, DataInsertOptions options)
 		{
 			//更新内容及内容类型
 			var contentFile = Utility.SetContent(data, () => this.GetContentFilePath(data.GetValue(p => p.FeedbackId)));
@@ -77,7 +75,7 @@ namespace Zongsoft.Community.Services
 			try
 			{
 				//调用基类同名方法
-				var count = base.OnInsert(data, schema, states);
+				var count = base.OnInsert(data, schema, options);
 
 				if(count < 1)
 				{
@@ -98,16 +96,16 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<Feedback> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
+		protected override int OnUpdate(IDataDictionary<Feedback> data, ICondition criteria, ISchema schema, DataUpdateOptions options)
 		{
 			//更新内容及内容类型
 			Utility.SetContent(data, () => this.GetContentFilePath(data.GetValue(p => p.FeedbackId)));
 
 			//调用基类同名方法
-			return base.OnUpdate(data, condition, schema, states);
+			return base.OnUpdate(data, criteria, schema, options);
 		}
 
-		protected override int OnUpsert(IDataDictionary<Feedback> data, ISchema schema, IDictionary<string, object> states)
+		protected override int OnUpsert(IDataDictionary<Feedback> data, ISchema schema, DataUpsertOptions options)
 		{
 			//更新内容及内容类型
 			var contentFile = Utility.SetContent(data, () => this.GetContentFilePath(data.GetValue(p => p.FeedbackId)));
@@ -115,7 +113,7 @@ namespace Zongsoft.Community.Services
 			try
 			{
 				//调用基类同名方法
-				var count = base.OnUpsert(data, schema, states);
+				var count = base.OnUpsert(data, schema, options);
 
 				if(count < 1)
 				{
@@ -140,7 +138,7 @@ namespace Zongsoft.Community.Services
 		#region 虚拟方法
 		protected virtual string GetContentFilePath(ulong feedbackId)
 		{
-			return Utility.GetFilePath($"feedbacks/feedback-{feedbackId.ToString()}.txt");
+			return Utility.GetFilePath($"feedbacks/feedback-{feedbackId}.txt");
 		}
 		#endregion
 	}

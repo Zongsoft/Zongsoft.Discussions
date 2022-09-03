@@ -18,12 +18,12 @@
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
-			<complexProperty name="Creator" role="UserProfile">
-				<link name="CreatorId" role="UserId" />
+			<complexProperty name="Creator" port="UserProfile">
+				<link port="UserId" anchor="CreatorId" />
 			</complexProperty>
 
-			<complexProperty name="Users" role="MessageUser" multiplicity="*" immutable="false">
-				<link name="MessageId" role="MessageId" />
+			<complexProperty name="Users" port="MessageUser" multiplicity="*" immutable="false">
+				<link port="MessageId" />
 			</complexProperty>
 		</entity>
 
@@ -37,12 +37,12 @@
 			<property name="UserId" type="uint" nullable="false" />
 			<property name="IsRead" type="bool" nullable="false" />
 
-			<complexProperty name="Message" role="Message">
-				<link name="MessageId" role="MessageId" />
+			<complexProperty name="Message" port="Message">
+				<link port="MessageId" />
 			</complexProperty>
 
-			<complexProperty name="User" role="UserProfile">
-				<link name="UserId" role="UserId" />
+			<complexProperty name="User" port="UserProfile">
+				<link port="UserId" />
 			</complexProperty>
 		</entity>
 
@@ -80,12 +80,12 @@
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 			<property name="Description" type="string" length="100" nullable="true" />
 
-			<complexProperty name="Folder" role="Folder">
-				<link name="FolderId" role="FolderId" />
+			<complexProperty name="Folder" port="Folder">
+				<link port="FolderId" />
 			</complexProperty>
 
-			<complexProperty name="Creator" role="UserProfile">
-				<link name="CreatorId" role="UserId" />
+			<complexProperty name="Creator" port="UserProfile">
+				<link port="UserId" anchor="CreatorId" />
 			</complexProperty>
 		</entity>
 
@@ -104,16 +104,16 @@
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 			<property name="Description" type="string" length="500" nullable="true" />
 
-			<complexProperty name="Creator" role="UserProfile">
-				<link name="CreatorId" role="UserId" />
+			<complexProperty name="Creator" port="UserProfile">
+				<link port="UserId" anchor="CreatorId" />
 			</complexProperty>
 
-			<complexProperty name="Files" role="File" multiplicity="*">
-				<link name="FolderId" role="FolderId" />
+			<complexProperty name="Files" port="File" multiplicity="*">
+				<link port="FolderId" />
 			</complexProperty>
 
-			<complexProperty name="Users" role="FolderUser" multiplicity="*" immutable="false">
-				<link name="FolderId" role="FolderId" />
+			<complexProperty name="Users" port="FolderUser" multiplicity="*" immutable="false">
+				<link port="FolderId" />
 			</complexProperty>
 		</entity>
 
@@ -128,8 +128,8 @@
 			<property name="Permission" type="byte" nullable="false" />
 			<property name="Expiration" type="datetime" nullable="true" />
 
-			<complexProperty name="User" role="UserProfile">
-				<link name="UserId" role="UserId" />
+			<complexProperty name="User" port="UserProfile">
+				<link port="UserId" />
 			</complexProperty>
 		</entity>
 
@@ -143,12 +143,12 @@
 			<property name="GroupId" type="ushort" nullable="false" sequence="#SiteId" />
 			<property name="Name" type="string" length="50" nullable="false" />
 			<property name="Icon" type="string" length="100" nullable="true" />
-			<property name="SortOrder" type="short" nullable="false" />
+			<property name="Ordinal" type="short" nullable="false" />
 			<property name="Description" type="string" length="500" nullable="true" />
 
-			<complexProperty name="Forums" role="Forum" multiplicity="*">
-				<link name="SiteId" role="SiteId" />
-				<link name="GroupId" role="GroupId" />
+			<complexProperty name="Forums" port="Forum" multiplicity="*">
+				<link port="SiteId" />
+				<link port="GroupId" />
 			</complexProperty>
 		</entity>
 
@@ -164,7 +164,7 @@
 			<property name="Name" type="string" length="50" nullable="false" />
 			<property name="Description" type="string" length="500" nullable="true" />
 			<property name="CoverPicturePath" type="string" length="200" nullable="true" />
-			<property name="SortOrder" type="short" nullable="false" />
+			<property name="Ordinal" type="short" nullable="false" />
 			<property name="IsPopular" type="bool" nullable="false" />
 			<property name="Approvable" type="bool" nullable="false" />
 			<property name="Visibility" type="byte" nullable="false" default="2" />
@@ -185,27 +185,27 @@
 			<property name="CreatorId" type="int" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
-			<complexProperty name="Group" role="ForumGroup">
-				<link name="SiteId" role="SiteId" />
-				<link name="GroupId" role="GroupId" />
+			<complexProperty name="Group" port="ForumGroup">
+				<link port="SiteId" />
+				<link port="GroupId" />
 			</complexProperty>
 
-			<complexProperty name="MostRecentThread" role="Thread">
-				<link name="MostRecentThreadId" role="ThreadId" />
+			<complexProperty name="MostRecentThread" port="Thread">
+				<link port="ThreadId" anchor="MostRecentThreadId" />
 			</complexProperty>
 
-			<complexProperty name="MostRecentPost" role="Post">
-				<link name="MostRecentPostId" role="PostId" />
+			<complexProperty name="MostRecentPost" port="Post">
+				<link port="PostId" anchor="MostRecentPostId" />
 			</complexProperty>
 
-			<complexProperty name="Users" role="ForumUser" multiplicity="*" immutable="false">
-				<link name="SiteId" role="SiteId" />
-				<link name="ForumId" role="ForumId" />
+			<complexProperty name="Users" port="ForumUser" multiplicity="*" immutable="false">
+				<link port="SiteId" />
+				<link port="ForumId" />
 			</complexProperty>
 
-			<complexProperty name="Moderators" role="ForumUser:User" multiplicity="*">
-				<link name="SiteId" role="SiteId" />
-				<link name="ForumId" role="ForumId" />
+			<complexProperty name="Moderators" port="ForumUser:User" multiplicity="*">
+				<link port="SiteId" />
+				<link port="ForumId" />
 
 				<constraints>
 					<constraint actor="Foreign" name="IsModerator" value="true" />
@@ -226,13 +226,13 @@
 			<property name="Permission" type="byte" nullable="false" />
 			<property name="IsModerator" type="bool" nullable="false" />
 
-			<complexProperty name="Forum" role="Forum">
-				<link name="SiteId" role="SiteId" />
-				<link name="ForumId" role="ForumId" />
+			<complexProperty name="Forum" port="Forum">
+				<link port="SiteId" />
+				<link port="ForumId" />
 			</complexProperty>
 
-			<complexProperty name="User" role="UserProfile">
-				<link name="UserId" role="UserId" />
+			<complexProperty name="User" port="UserProfile">
+				<link port="UserId" />
 			</complexProperty>
 		</entity>
 
@@ -269,25 +269,25 @@
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
-			<complexProperty name="Forum" role="Forum">
-				<link name="SiteId" role="SiteId" />
-				<link name="ForumId" role="ForumId" />
+			<complexProperty name="Forum" port="Forum">
+				<link port="SiteId" />
+				<link port="ForumId" />
 			</complexProperty>
 
-			<complexProperty name="Post" role="Post" multiplicity="!">
-				<link name="PostId" role="PostId" />
+			<complexProperty name="Post" port="Post" multiplicity="!">
+				<link port="PostId" />
 			</complexProperty>
 
-			<complexProperty name="MostRecentPost" role="Post">
-				<link name="MostRecentPostId" role="PostId" />
+			<complexProperty name="MostRecentPost" port="Post">
+				<link port="PostId" anchor="MostRecentPostId" />
 			</complexProperty>
 
-			<complexProperty name="Creator" role="UserProfile">
-				<link name="CreatorId" role="UserId" />
+			<complexProperty name="Creator" port="UserProfile">
+				<link port="UserId" anchor="CreatorId" />
 			</complexProperty>
 
-			<complexProperty name="Posts" role="Post" multiplicity="*">
-				<link name="ThreadId" role="ThreadId" />
+			<complexProperty name="Posts" port="Post" multiplicity="*">
+				<link port="ThreadId" />
 			</complexProperty>
 		</entity>
 
@@ -314,24 +314,24 @@
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
-			<complexProperty name="Thread" role="Thread">
-				<link name="ThreadId" role="ThreadId" />
+			<complexProperty name="Thread" port="Thread">
+				<link port="ThreadId" />
 			</complexProperty>
 
-			<complexProperty name="Creator" role="UserProfile">
-				<link name="CreatorId" role="UserId" />
+			<complexProperty name="Creator" port="UserProfile">
+				<link port="UserId" anchor="CreatorId" />
 			</complexProperty>
 
-			<complexProperty name="Referer" role="Post">
-				<link name="RefererId" role="PostId" />
+			<complexProperty name="Referer" port="Post">
+				<link port="PostId" anchor="RefererId" />
 			</complexProperty>
 
-			<complexProperty name="Comments" role="Post" multiplicity="*">
-				<link name="RefererId" role="PostId" />
+			<complexProperty name="Comments" port="Post" multiplicity="*">
+				<link port="PostId" anchor="RefererId" />
 			</complexProperty>
 
-			<complexProperty name="Votes" role="PostVoting" multiplicity="*">
-				<link name="PostId" role="PostId" />
+			<complexProperty name="Votes" port="PostVoting" multiplicity="*">
+				<link port="PostId" />
 			</complexProperty>
 		</entity>
 
@@ -343,17 +343,15 @@
 
 			<property name="PostId" type="ulong" nullable="false" />
 			<property name="UserId" type="uint" nullable="false" />
-			<property name="UserName" type="string" length="50" nullable="true" />
-			<property name="UserAvatar" type="string" length="100" nullable="true" />
 			<property name="Value" type="sbyte" nullable="false" />
 			<property name="Tiemstamp" type="datetime" nullable="false" default="now()" immutable="true" />
 
-			<complexProperty name="Post" role="Post">
-				<link name="PostId" role="PostId" />
+			<complexProperty name="Post" port="Post">
+				<link port="PostId" />
 			</complexProperty>
 
-			<complexProperty name="User" role="UserProfile">
-				<link name="UserId" role="UserId" />
+			<complexProperty name="User" port="UserProfile">
+				<link port="UserId" />
 			</complexProperty>
 		</entity>
 
@@ -369,12 +367,12 @@
 			<property name="FirstViewedTime" type="datetime" nullable="false" immutable="true" />
 			<property name="MostRecentViewedTime" type="datetime" nullable="false" />
 
-			<complexProperty name="User" role="UserProfile">
-				<link name="UserId" role="UserId" />
+			<complexProperty name="User" port="UserProfile">
+				<link port="UserId" />
 			</complexProperty>
 
-			<complexProperty name="Thread" role="Thread">
-				<link name="ThreadId" role="ThreadId" />
+			<complexProperty name="Thread" port="Thread">
+				<link port="ThreadId" />
 			</complexProperty>
 		</entity>
 

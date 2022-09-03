@@ -18,10 +18,6 @@
 		</dependencies>
 	</manifest>
 
-	<extension path="/Workbench/Security/Authentication/Filters">
-		<object name="Community_AuthenticationFilter" type="Zongsoft.Community.Security.AuthenticationFilter, Zongsoft.Community" />
-	</extension>
-
 	<extension path="/Workbench/Data/Accessors">
 		<object name="Community" sequence="{srv:Redis}">
 			<community.error>

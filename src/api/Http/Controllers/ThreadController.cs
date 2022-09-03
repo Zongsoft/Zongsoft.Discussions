@@ -25,9 +25,14 @@
  */
 
 using System;
-using System.Web.Http;
+using System.Web;
 
-using Zongsoft.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+
+using Zongsoft.Web;
+using Zongsoft.Web.Http.Headers;
 using Zongsoft.Security;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
@@ -35,16 +40,18 @@ using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class ThreadController : Zongsoft.Web.Http.HttpControllerBase<Thread, ThreadConditional, ThreadService>
+	[Area("Community")]
+	[Route("[area]/Threads")]
+	public class ThreadController : ApiControllerBase<Thread, ThreadService>
 	{
 		#region 构造函数
-		public ThreadController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public ThreadController(IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
 
 		#region 公共方法
-		[HttpPatch]
+		[HttpPatch("{id}/Approve")]
 		[Authorization]
 		public object Approve(ulong id)
 		{
@@ -53,7 +60,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				this.NotFound();
 		}
 
-		[HttpPatch]
+		[HttpPatch("{id}/Hidden")]
 		[Authorization]
 		public object Hidden(ulong id)
 		{
@@ -62,7 +69,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				this.NotFound();
 		}
 
-		[HttpPatch]
+		[HttpPatch("{id}/Visible")]
 		[Authorization]
 		public object Visible(ulong id)
 		{
@@ -71,8 +78,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				this.NotFound();
 		}
 
-		[HttpPost, HttpPut]
-		[ActionName("Locked")]
+		[HttpPost("{id}/Lock")]
 		[Authorization]
 		public object Lock(ulong id)
 		{
@@ -81,8 +87,8 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				this.NotFound();
 		}
 
-		[HttpDelete]
-		[ActionName("Locked")]
+		[HttpDelete("{id}/Locked")]
+		[HttpPost("{id}/Unlock")]
 		[Authorization]
 		public object Unlock(ulong id)
 		{
@@ -187,17 +193,15 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				Post = new
 				{
 					Content = content,
-					ContentType = this.Request.Content.Headers.ContentType.MediaType,
+					ContentType = this.Request.ContentType,
 				}
-			}) > 0 ?
-				this.NoContent() :
-				this.NotFound();
+			}) > 0 ? this.NoContent() : this.NotFound();
 		}
 
 		[ActionName("Posts")]
-		public object GetPosts(ulong id, [FromUri]Paging paging = null)
+		public object GetPosts(ulong id, [FromQuery]Zongsoft.Data.Paging page = null)
 		{
-			return this.GetResult(this.DataService.GetPosts(id, this.GetSchema(), paging));
+			return this.Paginate(this.DataService.GetPosts(id, this.Request.Headers.GetDataSchema(), page));
 		}
 		#endregion
 	}

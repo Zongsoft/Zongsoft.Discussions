@@ -29,21 +29,21 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
+using Zongsoft.Security;
+using Zongsoft.Services;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearcher("Title")]
-	public class ThreadService : DataService<Thread>
+	[DataService(typeof(ThreadCriteria))]
+	public class ThreadService : DataServiceBase<Thread>
 	{
 		#region 成员字段
 		private PostService _posting;
 		#endregion
 
 		#region 构造函数
-		public ThreadService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
+		public ThreadService(IServiceProvider serviceProvider) : base(serviceProvider) { }
 		#endregion
 
 		#region 公共属性
@@ -146,7 +146,7 @@ namespace Zongsoft.Community.Services
 		/// <returns>如果设置成功则返回真(True)，否则返回假(False)。</returns>
 		public bool SetGlobal(ulong threadId, bool value)
 		{
-			if(!this.Principal.IsAdministrator)
+			if(!this.Principal.IsAdministrator())
 				return false;
 
 			return this.DataAccess.Update<Thread>(new
@@ -166,16 +166,16 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Thread OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPageable pageable)
+		protected override Thread OnGet(ICondition criteria, ISchema schema, DataSelectOptions options)
 		{
 			//调用基类同名方法
-			var thread = base.OnGet(condition, schema, states, out pageable);
+			var thread = base.OnGet(criteria, schema, options);
 
 			if(thread == null)
 				return null;
 
 			//如果指定主题尚未审核通过并且创建人不是当前用户，则需要进行权限判断
-			if(!thread.Approved && (this.User == null || this.User.UserId != thread.CreatorId))
+			if(!thread.Approved && (this.Principal.Identity.GetIdentifier<uint>() != thread.CreatorId))
 			{
 				//判断当前用户是否为该论坛的版主
 				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>().IsModerator(thread.ForumId);
@@ -202,7 +202,7 @@ namespace Zongsoft.Community.Services
 			return thread;
 		}
 
-		protected override int OnInsert(IDataDictionary<Thread> data, ISchema schema, IDictionary<string, object> states)
+		protected override int OnInsert(IDataDictionary<Thread> data, ISchema schema, DataInsertOptions options)
 		{
 			if(!data.TryGetValue(p => p.Post, out var post) || string.IsNullOrEmpty(post.Content))
 				throw new InvalidOperationException("Missing content of the thread.");
@@ -216,7 +216,7 @@ namespace Zongsoft.Community.Services
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
 				//调用基类同名方法，插入主题数据
-				var count = base.OnInsert(data, schema, states);
+				var count = base.OnInsert(data, schema, options);
 
 				if(count < 1)
 					return count;
@@ -237,16 +237,20 @@ namespace Zongsoft.Community.Services
 		private Zongsoft.Data.Condition GetIsModeratorCriteria()
 		{
 			return Condition.Exists("Forum.Users",
-			         Condition.Equal(nameof(Forum.ForumUser.UserId), this.User.UserId) &
+			         Condition.Equal(nameof(Forum.ForumUser.UserId), this.Principal.Identity.GetIdentifier<uint>()) &
 			         Condition.Equal(nameof(Forum.ForumUser.IsModerator), true));
 		}
 
 		private bool SetMostRecentThread(IDataDictionary<Thread> data)
 		{
 			var count = 0;
-			var userId = data.GetValue(p => p.CreatorId, this.User.UserId);
-			var user = userId == this.User.UserId ? this.User :
-				this.DataAccess.Select<UserProfile>(Condition.Equal(nameof(UserProfile.UserId), userId)).FirstOrDefault();
+			var userId = data.GetValue(p => p.CreatorId, this.Principal.Identity.GetIdentifier<uint>());
+			var user = this.DataAccess.Select<UserProfile>(
+				Condition.Equal(nameof(UserProfile.UserId), userId),
+				$"{nameof(UserProfile.UserId)}," +
+				$"{nameof(UserProfile.Name)}," +
+				$"{nameof(UserProfile.Nickname)}," +
+				$"{nameof(UserProfile.Avatar)}").FirstOrDefault();
 
 			//更新当前主题所属论坛的最后发帖信息
 			count += this.DataAccess.Update<Forum>(new
@@ -279,7 +283,7 @@ namespace Zongsoft.Community.Services
 			//新增或更新当前用户对指定主题的浏览记录（自动递增浏览次数）
 			this.DataAccess.Upsert<IHistory>(new
 			{
-				UserId = this.User.UserId,
+				UserId = this.Principal.Identity.GetIdentifier<uint>(),
 				ThreadId = threadId,
 				Count = Interval.One, //注意：此处应该使用Interval类型值，以便数据引擎自动进行递增处理
 				MostRecentViewedTime = DateTime.Now,

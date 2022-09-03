@@ -292,54 +292,27 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示主题查询条件的实体类。
 	/// </summary>
-	public abstract class ThreadConditional : ConditionalBase
+	public abstract class ThreadCriteria : CriteriaBase
 	{
 		#region 公共属性
-		[Conditional(ConditionOperator.Like)]
-		public abstract string Title
-		{
-			get; set;
-		}
+		[Condition(ConditionOperator.Like)]
+		public abstract string Title { get; set; }
 
-		public abstract bool? Visible
-		{
-			get; set;
-		}
+		public abstract bool? Visible { get; set; }
 
-		public abstract bool? Approved
-		{
-			get; set;
-		}
+		public abstract bool? Approved { get; set; }
 
-		public abstract bool? IsLocked
-		{
-			get; set;
-		}
+		public abstract bool? IsLocked { get; set; }
 
-		public abstract bool? IsPinned
-		{
-			get; set;
-		}
+		public abstract bool? IsPinned { get; set; }
 
-		public abstract bool? IsValued
-		{
-			get; set;
-		}
+		public abstract bool? IsValued { get; set; }
 
-		public abstract bool? IsGlobal
-		{
-			get; set;
-		}
+		public abstract bool? IsGlobal { get; set; }
 
-		public abstract uint? CreatorId
-		{
-			get; set;
-		}
+		public abstract uint? CreatorId { get; set; }
 
-		public abstract Range<DateTime>? CreatedTime
-		{
-			get; set;
-		}
+		public abstract Range<DateTime>? CreatedTime { get; set; }
 		#endregion
 	}
 }

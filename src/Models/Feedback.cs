@@ -84,39 +84,24 @@ namespace Zongsoft.Community.Models
 		#endregion
 	}
 
-	public interface IFeedbackConditional : IModel
+	/// <summary>
+	/// 表示意见反馈查询条件的实体类。
+	/// </summary>
+	public abstract class FeedbackCriteria : CriteriaBase
 	{
 		#region 公共属性
-		[Conditional("Subject", "ContactName", "ContactText")]
-		string Key
-		{
-			get; set;
-		}
+		[Condition("Subject", "ContactName", "ContactText")]
+		public abstract string Key { get; set; }
 
-		byte? Kind
-		{
-			get; set;
-		}
+		public abstract byte? Kind { get; set; }
 
-		string Subject
-		{
-			get; set;
-		}
+		public abstract string Subject { get; set; }
 
-		string ContactName
-		{
-			get; set;
-		}
+		public abstract string ContactName { get; set; }
 
-		string ContactText
-		{
-			get; set;
-		}
+		public abstract string ContactText { get; set; }
 
-		Range<DateTime> CreatedTime
-		{
-			get; set;
-		}
+		public abstract Range<DateTime> CreatedTime { get; set; }
 		#endregion
 	}
 }

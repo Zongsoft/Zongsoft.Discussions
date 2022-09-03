@@ -156,34 +156,19 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示消息查询条件的实体类。
 	/// </summary>
-	public abstract class MessageConditional : ConditionalBase
+	public abstract class MessageCriteria : CriteriaBase
 	{
 		#region 公共属性
-		[Conditional(ConditionOperator.Like)]
-		public abstract string Subject
-		{
-			get; set;
-		}
+		[Condition(ConditionOperator.Like)]
+		public abstract string Subject { get; set; }
 
-		public abstract string MessageType
-		{
-			get; set;
-		}
+		public abstract string MessageType { get; set; }
 
-		public abstract string Referer
-		{
-			get; set;
-		}
+		public abstract string Referer { get; set; }
 
-		public abstract uint? CreatorId
-		{
-			get; set;
-		}
+		public abstract uint? CreatorId { get; set; }
 
-		public abstract Range<DateTime>? CreatedTime
-		{
-			get; set;
-		}
+		public abstract Range<DateTime>? CreatedTime { get; set; }
 		#endregion
 	}
 }

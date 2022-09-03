@@ -27,13 +27,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+
 using Zongsoft.Web;
-using Zongsoft.Web.Http;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
@@ -41,7 +42,9 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization]
-	public class FileController : Zongsoft.Web.Http.HttpControllerBase<File, FileConditional, FileService>
+	[Area("Community")]
+	[Route("[area]/Files")]
+	public class FileController : ApiControllerBase<File, FileService>
 	{
 		#region 常量定义
 		private static readonly DateTime EPOCH = new DateTime(2000, 1, 1);
@@ -52,7 +55,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#endregion
 
 		#region 构造函数
-		public FileController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public FileController(IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
@@ -80,31 +83,26 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#endregion
 
 		#region 公共方法
-		[HttpGet]
-		public HttpResponseMessage Download(string id)
+		[HttpGet("{id}")]
+		public IActionResult Download(string id)
 		{
 			var file = base.Get(id) as File;
 
 			if(file == null || string.IsNullOrWhiteSpace(file.Path))
 				return null;
 
-			var response = _accessor.Read(file.Path);
-
-			if(response != null && response.Content != null && !string.IsNullOrWhiteSpace(file.Type))
-				response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.Type);
-
-			return response;
+			return _accessor.Read(file.Path);
 		}
 
-		[HttpPost]
+		[HttpPost("{id?}")]
 		public async Task<IEnumerable<File>> Upload(uint? id = null)
 		{
 			var files = new List<File>();
-			var infos = await _accessor.Write(this.Request,
+			var infos = _accessor.Write(this.Request,
 				                          this.DataService.GetDirectory(id),
 			                              args => args.FileName = (DateTime.Now - EPOCH).Days.ToString() + "-" + Zongsoft.Common.Randomizer.GenerateString());
 
-			foreach(var info in infos)
+			await foreach(var info in infos)
 			{
 				if(info == null || !info.IsFile)
 					continue;

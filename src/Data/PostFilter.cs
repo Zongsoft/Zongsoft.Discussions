@@ -29,44 +29,20 @@ using System.Linq;
 using System.Collections;
 
 using Zongsoft.Data;
+using Zongsoft.Security;
 
 namespace Zongsoft.Community.Data
 {
-	public class PostFilter : DataAccessFilterBase
+	[DataAccessFilter(nameof(Models.Post))]
+	public class PostFilter : IDataAccessFilter<DataSelectContextBase>
 	{
 		#region 构造函数
-		public PostFilter() : base(nameof(Models.Post), DataAccessMethod.Select)
-		{
-		}
+		public PostFilter() { }
 		#endregion
 
-		#region 公共属性
-		/// <summary>
-		/// 获取当前安全主体对应的用户。
-		/// </summary>
-		public Models.UserProfile User
-		{
-			get
-			{
-				if(Zongsoft.Services.ApplicationContext.Current?.Principal is Zongsoft.Security.CredentialPrincipal principal &&
-				  principal.Identity.IsAuthenticated &&
-				  principal.Identity.Credential.HasParameters &&
-				  principal.Identity.Credential.Parameters.TryGetValue("Zongsoft.Community.UserProfile", out var parameter))
-					return parameter as Models.UserProfile;
-
-				return null;
-			}
-		}
-		#endregion
-
-		#region 重写方法
-		protected override void OnSelecting(DataSelectContextBase context)
-		{
-			base.OnSelecting(context);
-
-			//设置结果过滤器
-			context.ResultFilter = this.OnResultFilter;
-		}
+		#region 过滤方法
+		public void OnFiltered(DataSelectContextBase context) { }
+		public void OnFiltering(DataSelectContextBase context) => context.ResultFilter = this.OnResultFilter;
 		#endregion
 
 		#region 结果过滤
@@ -75,7 +51,7 @@ namespace Zongsoft.Community.Data
 			var dictionary = DataDictionary.GetDictionary<Models.Post>(data);
 
 			if(dictionary.TryGetValue(p => p.Approved, out var approved) && !approved &&
-			  (!context.Principal.Identity.IsAuthenticated || context.Principal.Identity.Credential.User.UserId != dictionary.GetValue(p => p.CreatorId, 0U)))
+			  (!context.Principal.Identity.IsAuthenticated || context.Principal.Identity.GetIdentifier<uint>() != dictionary.GetValue(p => p.CreatorId, 0U)))
 			{
 				dictionary.TrySetValue(p => p.Content, string.Empty);
 			}

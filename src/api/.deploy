@@ -1,4 +1,4 @@
 Zongsoft.Community.Web.plugin
 Zongsoft.Community.Web.option
 
-bin/$(Edition)/Zongsoft.Community.Web.*
+bin/$(Edition)/$(Target)/Zongsoft.Community.Web.*

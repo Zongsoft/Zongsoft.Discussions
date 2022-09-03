@@ -17,10 +17,11 @@
 		</dependencies>
 	</manifest>
 
+	<!-- 挂载模块及其子集 -->
 	<extension path="/Workbench/Modules">
-		<object name="Community" type="Zongsoft.Services.ApplicationModule, Zongsoft.CoreLibrary"
-		        title="{res:Text.Community.Title}"
-		        description="{res:Text.Community.Description}" />
+		<object name="Community" value="{static:Zongsoft.Community.Module.Current, Zongsoft.Community}">
+			<expose name="Schemas" value="{path:../@Schemas}" />
+		</object>
 	</extension>
 
 	<extension path="/Workbench/Modules/Community">

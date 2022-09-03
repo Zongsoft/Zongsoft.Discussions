@@ -31,9 +31,12 @@ using System.Collections.Generic;
 
 using Zongsoft.IO;
 using Zongsoft.Data;
+using Zongsoft.Configuration;
+using Zongsoft.Configuration.Options;
 using Zongsoft.Services;
 using Zongsoft.Security;
 using Zongsoft.Security.Membership;
+using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community
 {
@@ -237,7 +240,7 @@ namespace Zongsoft.Community
 		/// </remarks>
 		public static string GetFilePath(uint siteId, uint userId, string relativePath = null)
 		{
-			var basePath = ApplicationContext.Current.Options.GetOptionValue("/Community/General.BasePath") as string;
+			var basePath = ApplicationContext.Current.Configuration.GetOptionValue<string>("/Community/General.BasePath");
 
 			if(string.IsNullOrWhiteSpace(basePath))
 				return string.Empty;
@@ -269,12 +272,12 @@ namespace Zongsoft.Community
 				if(principal != null && principal.Identity.IsAuthenticated)
 				{
 					if(userId == 0)
-						userId = principal.Identity.Credential.User.UserId;
+						userId = principal.Identity.GetIdentifier<uint>();
 
 					if(siteId == 0)
 					{
-						if(principal.Identity.Credential.Parameters.TryGetValue("Zongsoft.Community.UserProfile", out var value) && value is Models.UserProfile profile)
-							siteId = profile.SiteId;
+						if(principal.Identity.TryGetClaim<uint>(nameof(UserProfile.SiteId), out var value))
+							siteId = value;
 					}
 				}
 			}

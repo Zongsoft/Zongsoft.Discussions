@@ -29,25 +29,20 @@ using System.Linq;
 using System.Collections;
 
 using Zongsoft.Data;
+using Zongsoft.Security;
 
 namespace Zongsoft.Community.Data
 {
-	public class ThreadFilter : DataAccessFilterBase
+	[DataAccessFilter(nameof(Models.Thread))]
+	public class ThreadFilter : IDataAccessFilter<DataSelectContextBase>
 	{
 		#region 构造函数
-		public ThreadFilter() : base(nameof(Models.Thread), DataAccessMethod.Select)
-		{
-		}
+		public ThreadFilter() { }
 		#endregion
 
-		#region 重写方法
-		protected override void OnSelecting(DataSelectContextBase context)
-		{
-			base.OnSelecting(context);
-
-			//设置结果过滤器
-			context.ResultFilter = this.OnResultFilter;
-		}
+		#region 过滤方法
+		public void OnFiltered(DataSelectContextBase context) => throw new NotImplementedException();
+		public void OnFiltering(DataSelectContextBase context) => context.ResultFilter = this.OnResultFilter;
 		#endregion
 
 		#region 结果过滤
@@ -59,7 +54,7 @@ namespace Zongsoft.Community.Data
 				return true;
 
 			if(dictionary.TryGetValue(p => p.Approved, out var approved) && !approved &&
-			  (!context.Principal.Identity.IsAuthenticated || context.Principal.Identity.Credential.User.UserId != dictionary.GetValue(p => p.CreatorId, 0U)))
+			  (!context.Principal.Identity.IsAuthenticated || context.Principal.Identity.GetIdentifier<uint>() != dictionary.GetValue(p => p.CreatorId, 0U)))
 			{
 				post.Content = string.Empty;
 			}

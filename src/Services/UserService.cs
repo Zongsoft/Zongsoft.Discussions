@@ -29,22 +29,22 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
+using Zongsoft.Security;
 using Zongsoft.Services;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	public class UserService : DataService<UserProfile>
+	[DataService(typeof(UserProfileCriteria))]
+	public class UserService : DataServiceBase<UserProfile>
 	{
 		#region 成员字段
 		private string _basePath;
 		#endregion
 
 		#region 构造函数
-		public UserService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
+		public UserService(IServiceProvider serviceProvider) : base(serviceProvider) { }
 		#endregion
 
 		#region 公共属性
@@ -64,17 +64,14 @@ namespace Zongsoft.Community.Services
 		}
 
 		[ServiceDependency(IsRequired = true)]
-		public IUserProvider UserProvider
-		{
-			get; set;
-		}
+		public IUserProvider<IUser> UserProvider { get; set; }
 		#endregion
 
 		#region 公共方法
 		public IEnumerable<IHistory> GetHistories(uint userId, Paging paging = null)
 		{
 			if(userId == 0)
-				userId = this.Credential.User.UserId;
+				userId = this.Principal.Identity.GetIdentifier<uint>();
 
 			return this.DataAccess.Select<IHistory>(Condition.Equal("UserId", userId), "Thread", paging);
 		}
@@ -82,7 +79,7 @@ namespace Zongsoft.Community.Services
 		public int GetMessageTotalCount(uint userId = 0)
 		{
 			if(userId == 0)
-				userId = this.Credential.User.UserId;
+				userId = this.Principal.Identity.GetIdentifier<uint>();
 
 			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId));
 		}
@@ -90,7 +87,7 @@ namespace Zongsoft.Community.Services
 		public int GetMessageUnreadCount(uint userId = 0)
 		{
 			if(userId == 0)
-				userId = this.Credential.User.UserId;
+				userId = this.Principal.Identity.GetIdentifier<uint>();
 
 			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
 		}
@@ -98,7 +95,7 @@ namespace Zongsoft.Community.Services
 		public IEnumerable<Message> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
 		{
 			if(userId == 0)
-				userId = this.Credential.User.UserId;
+				userId = this.Principal.Identity.GetIdentifier<uint>();
 
 			var conditions = ConditionCollection.And(Condition.Equal("UserId", userId));
 
@@ -131,21 +128,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override UserProfile OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPageable pageable)
-		{
-			//调用基类同名方法
-			var profile = base.OnGet(condition, schema, states, out pageable);
-
-			if(profile == null)
-				return null;
-
-			return profile;
-		}
-
-		protected override int OnInsert(IDataDictionary<UserProfile> data, ISchema schema, IDictionary<string, object> states)
+		protected override int OnInsert(IDataDictionary<UserProfile> data, ISchema schema, DataInsertOptions options)
 		{
 			//调用基类同名方法（新增用户配置信息）
-			if(base.OnInsert(data, schema, states) > 0)
+			if(base.OnInsert(data, schema, options) > 0)
 			{
 				var user = Model.Build<IUser>(u =>
 				{
@@ -153,13 +139,12 @@ namespace Zongsoft.Community.Services
 					u.Name = data.GetValue(p => p.Name);
 				});
 
-				//默认设置用户状态为可用
 				user.Status = UserStatus.Active;
 
 				//如果未显式指定用户的命名空间，则使用当前用户的命名空间
 				if(string.IsNullOrWhiteSpace(user.Namespace))
 				{
-					user.Namespace = this.Credential.User.Namespace;
+					user.Namespace = this.Principal.Identity.GetNamespace();
 				}
 
 				//创建基础用户账户
@@ -173,14 +158,14 @@ namespace Zongsoft.Community.Services
 			return 1;
 		}
 
-		protected override int OnUpdate(IDataDictionary<UserProfile> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
+		protected override int OnUpdate(IDataDictionary<UserProfile> data, ICondition criteria, ISchema schema, DataUpdateOptions options)
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号
 			if(!data.TryGetValue(p => p.UserId, out var userId) || userId == 0)
-				data.SetValue(p => p.UserId, userId = this.Credential.User.UserId);
+				data.SetValue(p => p.UserId, userId = this.Principal.Identity.GetIdentifier<uint>());
 
 			//调用基类同名方法
-			return base.OnUpdate(data, condition, schema, states);
+			return base.OnUpdate(data, criteria, schema, options);
 		}
 		#endregion
 

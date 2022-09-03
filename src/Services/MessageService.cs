@@ -29,17 +29,17 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
+using Zongsoft.Security;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
 	[DataSearcher("Stauts:Status", "Creator,CreatorId:CreatorId", "Subject")]
-	public class MessageService : DataService<Message>
+	[DataService(typeof(MessageCriteria))]
+	public class MessageService : DataServiceBase<Message>
 	{
 		#region 构造函数
-		public MessageService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
+		public MessageService(IServiceProvider serviceProvider) : base(serviceProvider) { }
 		#endregion
 
 		#region 公共方法
@@ -55,10 +55,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Message OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPageable pageable)
+		protected override Message OnGet(ICondition criteria, ISchema schema, DataSelectOptions options)
 		{
 			//调用基类同名方法
-			var message = base.OnGet(condition, schema, states, out pageable);
+			var message = base.OnGet(criteria, schema, options);
 
 			if(message == null)
 				return null;
@@ -67,22 +67,18 @@ namespace Zongsoft.Community.Services
 			if(!Utility.IsContentEmbedded(message.ContentType))
 				message.Content = Utility.ReadTextFile(message.Content);
 
-			//获取当前用户的凭证
-			var credential = this.Credential;
-
-			if(credential != null && credential.CredentialId != null && credential.CredentialId.Length > 0)
+			//更新当前用户对该消息的读取状态
+			this.DataAccess.Update(this.DataAccess.Naming.Get<Message.MessageUser>(), new
 			{
-				//更新当前用户对该消息的读取状态
-				this.DataAccess.Update(this.DataAccess.Naming.Get<Message.MessageUser>(), new
-				{
-					IsRead = true,
-				}, Condition.Equal("MessageId", message.MessageId) & Condition.Equal("UserId", credential.User.UserId));
-			}
+				IsRead = true,
+			},
+			Condition.Equal(nameof(Message.MessageUser.MessageId), message.MessageId) &
+			Condition.Equal(nameof(Message.MessageUser.UserId), this.Principal.Identity.GetIdentifier<uint>()));
 
 			return message;
 		}
 
-		protected override int OnInsert(IDataDictionary<Message> data, ISchema schema, IDictionary<string, object> states)
+		protected override int OnInsert(IDataDictionary<Message> data, ISchema schema, DataInsertOptions options)
 		{
 			string filePath = null;
 
@@ -112,7 +108,7 @@ namespace Zongsoft.Community.Services
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				var count = base.OnInsert(data, schema, states);
+				var count = base.OnInsert(data, schema, options);
 
 				if(count < 1)
 				{
@@ -144,7 +140,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<Message> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
+		protected override int OnUpdate(IDataDictionary<Message> data, ICondition criteria, ISchema schema, DataUpdateOptions options)
 		{
 			//更新内容到文本文件中
 			data.TryGetValue(p => p.Content, (key, value) =>
@@ -166,7 +162,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, schema, states);
+			var count = base.OnUpdate(data, criteria, schema, options);
 
 			if(count < 1)
 				return count;

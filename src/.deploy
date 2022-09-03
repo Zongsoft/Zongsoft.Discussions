@@ -3,4 +3,4 @@ Zongsoft.Community.option
 Zongsoft.Community.plugin
 Zongsoft.Community.Schemas.plugin
 
-bin/$(Edition)/Zongsoft.Community.*
+bin/$(Edition)/$(Target)/Zongsoft.Community.*

@@ -227,7 +227,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取帖子的点赞记录集。
 		/// </summary>
-		[Runtime.Serialization.SerializationMember(Runtime.Serialization.SerializationMemberBehavior.Ignored)]
+		[Serialization.SerializationMember(Ignored = true)]
 		public IEnumerable<PostVoting> Upvotes
 		{
 			get
@@ -240,7 +240,7 @@ namespace Zongsoft.Community.Models
 		/// <summary>
 		/// 获取帖子的被踩记录集。
 		/// </summary>
-		[Runtime.Serialization.SerializationMember(Runtime.Serialization.SerializationMemberBehavior.Ignored)]
+		[Serialization.SerializationMember(Ignored = true)]
 		public IEnumerable<PostVoting> Downvotes
 		{
 			get
@@ -289,22 +289,6 @@ namespace Zongsoft.Community.Models
 			}
 
 			/// <summary>
-			/// 获取或设置投票的用户名称。
-			/// </summary>
-			public abstract string UserName
-			{
-				get; set;
-			}
-
-			/// <summary>
-			/// 获取或设置投票的用户头像。
-			/// </summary>
-			public abstract string UserAvatar
-			{
-				get; set;
-			}
-
-			/// <summary>
 			/// 获取或设置投票值（正数为赞，负数为踩）。
 			/// </summary>
 			public abstract sbyte Value
@@ -327,43 +311,22 @@ namespace Zongsoft.Community.Models
 	/// <summary>
 	/// 表示帖子查询条件的实体。
 	/// </summary>
-	public abstract class PostConditional : ConditionalBase
+	public abstract class PostCriteria : CriteriaBase
 	{
 		#region 公共属性
-		public abstract ulong? ThreadId
-		{
-			get; set;
-		}
+		public abstract ulong? ThreadId { get; set; }
 
-		public abstract bool? Visible
-		{
-			get; set;
-		}
+		public abstract bool? Visible { get; set; }
 
-		public abstract bool? Approved
-		{
-			get; set;
-		}
+		public abstract bool? Approved { get; set; }
 
-		public abstract bool? IsLocked
-		{
-			get; set;
-		}
+		public abstract bool? IsLocked { get; set; }
 
-		public abstract bool? IsValued
-		{
-			get; set;
-		}
+		public abstract bool? IsValued { get; set; }
 
-		public abstract uint? CreatorId
-		{
-			get; set;
-		}
+		public abstract uint? CreatorId { get; set; }
 
-		public abstract Range<DateTime>? CreatedTime
-		{
-			get; set;
-		}
+		public abstract Range<DateTime>? CreatedTime { get; set; }
 		#endregion
 	}
 }

@@ -26,54 +26,57 @@
 
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+
+using Zongsoft.Web;
 using Zongsoft.Data;
-using Zongsoft.Web.Http;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class PostController : Zongsoft.Web.Http.HttpControllerBase<Post, PostConditional, PostService>
+	[Area("Community")]
+	[Route("[area]/Posts")]
+	public class PostController : ApiControllerBase<Post, PostService>
 	{
 		#region 构造函数
-		public PostController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public PostController(IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
 
 		#region 公共方法
-		[HttpPost]
-		public void Upvote(ulong id, [FromRoute("args")]byte value = 1)
+		[HttpPost("{id}/Upvote/{value?}")]
+		public IActionResult Upvote(ulong id, byte value = 1)
 		{
-			if(!this.DataService.Upvote(id, value))
-				throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+			return this.DataService.Upvote(id, value) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpPost]
-		public void Downvote(ulong id, [FromRoute("args")]byte value = 1)
+		[HttpPost("{id}/Downvote/{value?}")]
+		public IActionResult Downvote(ulong id, byte value = 1)
 		{
-			if(!this.DataService.Downvote(id, value))
-				throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+			return this.DataService.Downvote(id, value) ? this.NoContent() : this.NotFound();
 		}
 
-		[ActionName("Upvotes")]
-		public IEnumerable<Post.PostVoting> GetUpvotes(ulong id, [FromUri]Paging paging = null)
+		[HttpGet("{id}/Upvotes")]
+		public IEnumerable<Post.PostVoting> GetUpvotes(ulong id, [FromQuery]Paging page = null)
 		{
-			return this.DataService.GetUpvotes(id, paging);
+			return this.DataService.GetUpvotes(id, page);
 		}
 
-		[ActionName("Downvotes")]
-		public IEnumerable<Post.PostVoting> GetDownvotes(ulong id, [FromUri]Paging paging = null)
+		[HttpGet("{id}/Downvotes")]
+		public IEnumerable<Post.PostVoting> GetDownvotes(ulong id, [FromQuery] Paging page = null)
 		{
-			return this.DataService.GetDownvotes(id, paging);
+			return this.DataService.GetDownvotes(id, page);
 		}
 
-		[ActionName("Comments")]
-		public IEnumerable<Post> GetComments(ulong id, [FromUri]Paging paging = null)
+		[HttpGet("{id}/Comments")]
+		public IEnumerable<Post> GetComments(ulong id, [FromQuery] Paging page = null)
 		{
-			return this.DataService.GetComments(id, paging);
+			return this.DataService.GetComments(id, page);
 		}
 		#endregion
 	}

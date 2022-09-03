@@ -25,12 +25,13 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Web.Http;
 
-using Zongsoft.Data;
-using Zongsoft.Web.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+
+using Zongsoft.Web;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
@@ -38,37 +39,33 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization]
-	public class FolderController : Zongsoft.Web.Http.HttpControllerBase<Folder, FolderConditional, FolderService>
+	[Area("Community")]
+	[Route("[area]/Folders")]
+	public class FolderController : ApiControllerBase<Folder, FolderService>
 	{
 		#region 构造函数
-		public FolderController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public FolderController(IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
 
 		#region 公共方法
-		[HttpPatch]
-		[ActionName("Icon")]
-		public void SetIcon(uint id, [FromRoute("args")]string icon = null)
+		[HttpPatch("{id}/Icon/{value}")]
+		public IActionResult SetIcon(uint id, string value = null)
 		{
-			if(!this.DataService.SetIcon(id, icon))
-				throw new HttpResponseException(HttpStatusCode.NotFound);
+			return this.DataService.SetIcon(id, value) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpPatch]
-		[ActionName("Visiblity")]
-		public void SetVisiblity(uint id, [FromRoute("args")]Visibility visiblity)
+		[HttpPatch("{id}/Visiblity/{value}")]
+		public IActionResult SetVisiblity(uint id, Visibility value)
 		{
-			if(!this.DataService.SetVisiblity(id, visiblity))
-				throw new HttpResponseException(HttpStatusCode.NotFound);
+			return this.DataService.SetVisiblity(id, value) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpPatch]
-		[ActionName("Accessibility")]
-		public void SetAccessibility(uint id, Accessibility accessibility)
+		[HttpPatch("{id}/Accessibility/{value}")]
+		public IActionResult SetAccessibility(uint id, Accessibility value)
 		{
-			if(!this.DataService.SetAccessibility(id, accessibility))
-				throw new HttpResponseException(HttpStatusCode.NotFound);
+			return this.DataService.SetAccessibility(id, value) ? this.NoContent() : this.NotFound();
 		}
 		#endregion
 	}

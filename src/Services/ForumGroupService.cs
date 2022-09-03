@@ -33,13 +33,11 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearcher("Name")]
-	public class ForumGroupService : DataService<ForumGroup>
+	[DataService(typeof(ForumGroupCriteria))]
+	public class ForumGroupService : DataServiceBase<ForumGroup>
 	{
 		#region 构造函数
-		public ForumGroupService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
+		public ForumGroupService(IServiceProvider serviceProvider) : base(serviceProvider) { }
 		#endregion
 
 		#region 公共方法

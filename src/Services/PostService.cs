@@ -29,17 +29,17 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
+using Zongsoft.Security;
+using Zongsoft.Services;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearcher("Thread,ThreadId:ThreadId")]
-	public class PostService : DataService<Post>
+	[DataService(typeof(PostCriteria))]
+	public class PostService : DataServiceBase<Post>
 	{
 		#region 构造函数
-		public PostService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
+		public PostService(IServiceProvider serviceProvider) : base(serviceProvider) { }
 		#endregion
 
 		#region 公共方法
@@ -48,15 +48,18 @@ namespace Zongsoft.Community.Services
 			if(value == 0)
 				value = 1;
 
+			var userId = this.Principal.Identity.GetIdentifier<uint>();
+
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				this.DataAccess.Delete<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", this.User.UserId));
+				this.DataAccess.Delete<Post.PostVoting>(
+					Condition.Equal("PostId", postId) &
+					Condition.Equal("UserId", userId));
+
 				this.DataAccess.Insert(Model.Build<Post.PostVoting>(voting =>
 				{
 					voting.PostId = postId;
-					voting.UserId = this.User.UserId;
-					voting.UserName = this.User.Name;
-					voting.UserAvatar = this.User.Avatar;
+					voting.UserId = userId;
 					voting.Value = (sbyte)Math.Min(value, (sbyte)100);
 					voting.Timestamp = DateTime.Now;
 				}));
@@ -82,13 +85,16 @@ namespace Zongsoft.Community.Services
 
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
-				this.DataAccess.Delete<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.Equal("UserId", this.User.UserId));
+				var userId = this.Principal.Identity.GetIdentifier<uint>();
+
+				this.DataAccess.Delete<Post.PostVoting>(
+					Condition.Equal("PostId", postId) &
+					Condition.Equal("UserId", userId));
+
 				this.DataAccess.Insert(Model.Build<Post.PostVoting>(voting =>
 				{
 					voting.PostId = postId;
-					voting.UserId = this.User.UserId;
-					voting.UserName = this.User.Name;
-					voting.UserAvatar = this.User.Avatar;
+					voting.UserId = userId;
 					voting.Value = (sbyte)-Math.Min(value, (byte)100);
 					voting.Timestamp = DateTime.Now;
 				}));
@@ -124,10 +130,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override Post OnGet(ICondition condition, ISchema schema, IDictionary<string, object> states, out IPageable pageable)
+		protected override Post OnGet(ICondition criteria, ISchema schema, DataSelectOptions options)
 		{
 			//调用基类同名方法
-			var post = base.OnGet(condition, schema, states, out pageable);
+			var post = base.OnGet(criteria, schema, options);
 
 			if(post == null)
 				return null;
@@ -139,7 +145,7 @@ namespace Zongsoft.Community.Services
 			return post;
 		}
 
-		protected override int OnInsert(IDataDictionary<Post> data, ISchema schema, IDictionary<string, object> states)
+		protected override int OnInsert(IDataDictionary<Post> data, ISchema schema, DataInsertOptions options)
 		{
 			string filePath = null;
 
@@ -168,10 +174,8 @@ namespace Zongsoft.Community.Services
 				data.SetValue(p => p.ContentType, Utility.GetContentType(data.GetValue(p => p.ContentType), false));
 			});
 
-			object threadObject = null;
-
 			//附加数据是否包含了关联的主题对象
-			if(states != null && states.TryGetValue("Thread", out threadObject) && threadObject != null)
+			if(options.Parameters.TryGetValue("Thread", out var threadObject) && threadObject != null)
 			{
 				uint siteId = 0;
 				ushort forumId = 0;
@@ -189,7 +193,7 @@ namespace Zongsoft.Community.Services
 
 				//判断当前用户是否是新增主题所在论坛的版主
 				var isModerator = this.ServiceProvider.ResolveRequired<ForumService>()
-				                      .IsModerator(forumId);
+									  .IsModerator(forumId);
 
 				if(isModerator)
 				{
@@ -204,7 +208,7 @@ namespace Zongsoft.Community.Services
 					if(forum == null)
 						throw new InvalidOperationException("The specified forum is not existed about the new thread.");
 
-					data.SetValue(p => p.Approved, forum.Approvable ? false : true);
+					data.SetValue(p => p.Approved, !forum.Approvable);
 				}
 			}
 
@@ -213,7 +217,7 @@ namespace Zongsoft.Community.Services
 				using(var transaction = new Zongsoft.Transactions.Transaction())
 				{
 					//调用基类同名方法
-					var count = base.OnInsert(data, schema.Include(nameof(Post.Attachments)), states);
+					var count = base.OnInsert(data, schema.Include(nameof(Post.Attachments)), options);
 
 					if(count > 0)
 					{
@@ -245,7 +249,7 @@ namespace Zongsoft.Community.Services
 			}
 		}
 
-		protected override int OnUpdate(IDataDictionary<Post> data, ICondition condition, ISchema schema, IDictionary<string, object> states)
+		protected override int OnUpdate(IDataDictionary<Post> data, ICondition criteria, ISchema schema, DataUpdateOptions options)
 		{
 			//更新内容到文本文件中
 			data.TryGetValue(p => p.Content, (key, value) =>
@@ -267,7 +271,7 @@ namespace Zongsoft.Community.Services
 			});
 
 			//调用基类同名方法
-			var count = base.OnUpdate(data, condition, schema, states);
+			var count = base.OnUpdate(data, criteria, schema, options);
 
 			if(count < 1)
 				return count;

@@ -29,24 +29,23 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Zongsoft.Data;
+using Zongsoft.Security;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
 {
-	[DataSearcher("Name")]
-	public class ForumService : DataService<Forum>
+	[DataService(typeof(ForumCriteria))]
+	public class ForumService : DataServiceBase<Forum>
 	{
 		#region 构造函数
-		public ForumService(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
+		public ForumService(IServiceProvider serviceProvider) : base(serviceProvider) { }
 		#endregion
 
 		#region 公共方法
 		public bool IsModerator(ushort forumId, uint? userId = null)
 		{
 			if(userId == null || userId.Value == 0)
-				userId = this.User.UserId;
+				userId = this.Principal.Identity.GetIdentifier<uint>();
 
 			return this.DataAccess.Exists<Forum.ForumUser>(
 				Condition.Equal(nameof(Forum.ForumUser.ForumId), forumId) &
@@ -116,33 +115,26 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override ICondition OnValidate(Method method, ICondition condition)
+		protected override ICondition OnValidate(DataServiceMethod method, ICondition criteria, string filter, IDataOptions options)
 		{
 			//调用基类同名方法
-			condition = base.OnValidate(method, condition);
-
-			ICondition requires;
+			criteria = base.OnValidate(method, criteria, filter, options);
 
 			//匿名用户只能获取公共数据
 			if(!this.Principal.Identity.IsAuthenticated)
-				requires = Condition.Equal(nameof(Forum.Visibility), Visibility.Public);
+				return criteria.And(Condition.Equal(nameof(Forum.Visibility), Visibility.Public));
 			else
-				requires = Condition.In(nameof(Forum.Visibility), (byte)Visibility.Internal, (byte)Visibility.Public) |
+				return criteria.And(Condition.In(nameof(Forum.Visibility), (byte)Visibility.Internal, (byte)Visibility.Public) |
 					(
 						Condition.Equal(nameof(Forum.Visibility), Visibility.Specified) &
 						Condition.Exists(nameof(Forum.Users),
-							Condition.Equal(nameof(Forum.ForumUser.UserId), this.User.UserId) &
+							Condition.Equal(nameof(Forum.ForumUser.UserId), this.Principal.Identity.GetIdentifier<uint>()) &
 							(
 								Condition.Equal(nameof(Forum.ForumUser.IsModerator), true) |
 								Condition.In(nameof(Forum.ForumUser.Permission), (byte)Permission.Read, (byte)Permission.Write)
 							)
 						)
-					);
-
-			if(condition == null)
-				return requires;
-			else
-				return ConditionCollection.And(condition, requires);
+					));
 		}
 		#endregion
 	}

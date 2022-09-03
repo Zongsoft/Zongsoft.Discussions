@@ -37,19 +37,11 @@ namespace Zongsoft.Community.Configuration
 		/// <summary>
 		/// 获取或设置默认的站点编号。
 		/// </summary>
-		uint SiteId
-		{
-			get;
-			set;
-		}
+		uint SiteId { get; set; }
 
 		/// <summary>
 		/// 获取或设置文件存储的基路径。
 		/// </summary>
-		string BasePath
-		{
-			get;
-			set;
-		}
+		string BasePath { get; set; }
 	}
 }

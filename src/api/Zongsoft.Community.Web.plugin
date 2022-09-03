@@ -16,34 +16,4 @@
 			<assembly name="Zongsoft.Community.Web" />
 		</assemblies>
 	</manifest>
-
-	<extension path="/Workspace/Services/Community">
-		<object name="WebFileAccessor" basePath="{opt:/Community/General.BasePath}" type="Zongsoft.Web.WebFileAccessor, Zongsoft.Web" />
-	</extension>
-
-	<!-- 挂载Web.Api路由 -->
-	<extension path="/Workbench/Web/Routes">
-		<route name="Community-Api" kind="api"
-		       url="Community/{controller}/{action}/{id}/{*args}"
-		       constraints="action=^[A-Za-z]+\w*$"
-		       defaults="action=, id="
-		       position="Api" />
-
-		<route name="Community-ApiReversed" kind="api"
-		       url="Community/{controller}/{id}/{action}/{*args}"
-		       defaults="action=, id="
-		       position="Api" />
-	</extension>
-
-	<extension path="/Workspace/Web/Controllers/Community">
-		<object name="Files" type="Zongsoft.Community.Web.Http.Controllers.FileController, Zongsoft.Community.Web" />
-		<object name="Folders" type="Zongsoft.Community.Web.Http.Controllers.FolderController, Zongsoft.Community.Web" />
-		<object name="Feedbacks" type="Zongsoft.Community.Web.Http.Controllers.FeedbackController, Zongsoft.Community.Web" />
-		<object name="Forums" type="Zongsoft.Community.Web.Http.Controllers.ForumController, Zongsoft.Community.Web" />
-		<object name="ForumGroups" type="Zongsoft.Community.Web.Http.Controllers.ForumGroupController, Zongsoft.Community.Web" />
-		<object name="Messages" type="Zongsoft.Community.Web.Http.Controllers.MessageController, Zongsoft.Community.Web" />
-		<object name="Posts" type="Zongsoft.Community.Web.Http.Controllers.PostController, Zongsoft.Community.Web" />
-		<object name="Threads" type="Zongsoft.Community.Web.Http.Controllers.ThreadController, Zongsoft.Community.Web" />
-		<object name="Users" type="Zongsoft.Community.Web.Http.Controllers.UserController, Zongsoft.Community.Web" />
-	</extension>
 </plugin>

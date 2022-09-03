@@ -26,12 +26,15 @@
 
 using System;
 using System.Linq;
-using System.Collections.Generic;
-using System.Web.Http;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+
+using Zongsoft.Web;
 using Zongsoft.Data;
-using Zongsoft.Web.Http;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
@@ -39,34 +42,35 @@ using Zongsoft.Community.Services;
 namespace Zongsoft.Community.Web.Http.Controllers
 {
 	[Authorization]
-	public class UserController : Zongsoft.Web.Http.HttpControllerBase<UserProfile, UserProfileConditional, UserService>
+	[Area("Community")]
+	[Route("[area]/Users")]
+	public class UserController : ApiControllerBase<UserProfile, UserService>
 	{
 		#region 构造函数
-		public UserController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public UserController(IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
 
 		#region 公共方法
-		[HttpPatch]
-		[ActionName("Status")]
-		public void SetStatus(uint id, [FromRoute("args")]UserStatus status)
+		[HttpPatch("{id}/Status/{status}")]
+		public IActionResult SetStatus(uint id, UserStatus status)
 		{
-			if(!this.DataService.SetStatus(id, status))
-				throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+			return this.DataService.SetStatus(id, status) ?
+				this.NoContent() : this.BadRequest();
 		}
 
-		[ActionName("Histories")]
-		public IEnumerable<IHistory> GetHistories(uint id, [FromRoute("args")]Paging paging = null)
+		[HttpGet("{id}/Histories")]
+		public IEnumerable<IHistory> GetHistories(uint id, [FromQuery]Paging page = null)
 		{
-			return this.DataService.GetHistories(id, paging);
+			return this.DataService.GetHistories(id, page);
 		}
 
-		[ActionName("Statistics")]
-		public object GetStatistics(uint id, [FromRoute("args")]string kind = null)
+		[HttpGet("{id}/Statistics/{kind}")]
+		public object GetStatistics(uint id, string kind = null)
 		{
 			if(string.IsNullOrWhiteSpace(kind))
-				throw HttpResponseExceptionUtility.BadRequest("Missing kind of the statistics.");
+				return this.BadRequest();
 
 			switch(kind.ToLowerInvariant())
 			{
@@ -74,47 +78,45 @@ namespace Zongsoft.Community.Web.Http.Controllers
 					return null;
 					//return this.DataService.GetMessageStatistics(id);
 				default:
-					throw HttpResponseExceptionUtility.BadRequest("Invalid kind of the statistics.");
+					return this.BadRequest("Invalid kind of the statistics.");
 			}
 		}
 
-		[ActionName("Count")]
-		public int GetCount(uint id, string args)
+		[HttpGet("{id}/Count/{args*}")]
+		public IActionResult GetCount(uint id, string args)
 		{
 			if(string.IsNullOrEmpty(args))
-				throw HttpResponseExceptionUtility.BadRequest("Missing arguments of the request.");
+				return this.BadRequest("Missing arguments of the request.");
 
 			switch(args.ToLowerInvariant())
 			{
 				case "unread":
 				case "message-unread":
-					return this.DataService.GetMessageUnreadCount(id);
+					return this.Ok(this.DataService.GetMessageUnreadCount(id));
 				case "message":
 				case "message-total":
-					return this.DataService.GetMessageTotalCount(id);
+					return this.Ok(this.DataService.GetMessageTotalCount(id));
 				default:
-					throw HttpResponseExceptionUtility.BadRequest("Invalid argument value.");
+					return this.BadRequest("Invalid argument value.");
 			}
 		}
 
-		[ActionName("Messages")]
-		public object GetMessages(uint id, [FromUri]bool? isRead = null, [FromUri]Paging paging = null)
+		[HttpGet("{id}/Messages")]
+		public object GetMessages(uint id, [FromQuery] bool? isRead = null, [FromQuery] Paging page = null)
 		{
-			return this.GetResult(this.DataService.GetMessages(id, isRead, paging));
+			return this.Paginate(this.DataService.GetMessages(id, isRead, page));
 		}
 
-		[HttpPatch, HttpPost]
-		[ActionName("Avatar")]
-		public Task<Zongsoft.IO.FileInfo> SetAvatar(uint id, string args)
+		[HttpPost("{id}/Avatar")]
+		public Task<Zongsoft.IO.FileInfo> SetAvatar(uint id)
 		{
-			return this.Upload(this.DataService.GetFilePath(id, "avatar"));
+			return this.SetAvatar(id);
 		}
 
-		[HttpPatch, HttpPost]
-		[ActionName("Photo")]
-		public Task<Zongsoft.IO.FileInfo> SetPhoto(uint id, string args)
+		[HttpPost("{id}/Photo")]
+		public Task<Zongsoft.IO.FileInfo> SetPhoto(uint id)
 		{
-			return this.Upload(this.DataService.GetFilePath(id, "photo"));
+			return this.SetPhoto(id);
 		}
 		#endregion
 	}

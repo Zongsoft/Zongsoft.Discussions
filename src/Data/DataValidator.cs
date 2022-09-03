@@ -27,8 +27,11 @@
 using System;
 using System.Collections.Generic;
 
+using Zongsoft.Community.Models;
 using Zongsoft.Data;
 using Zongsoft.Data.Metadata;
+using Zongsoft.Security;
+using Zongsoft.Services;
 
 namespace Zongsoft.Community.Data
 {
@@ -68,46 +71,25 @@ namespace Zongsoft.Community.Data
 		}
 		#endregion
 
-		#region 公共属性
-		/// <summary>
-		/// 获取当前安全主体对应的用户。
-		/// </summary>
-		public Models.UserProfile User
-		{
-			get
-			{
-				if(Zongsoft.Services.ApplicationContext.Current?.Principal is Zongsoft.Security.CredentialPrincipal principal &&
-				  principal.Identity.IsAuthenticated &&
-				  principal.Identity.Credential.HasParameters &&
-				  principal.Identity.Credential.Parameters.TryGetValue("Zongsoft.Community.UserProfile", out var parameter))
-					return parameter as Models.UserProfile;
-
-				return null;
-			}
-		}
-		#endregion
-
 		#region 公共方法
 		public ICondition Validate(IDataAccessContextBase context, ICondition criteria)
 		{
-			var user = this.User;
-
-			if(user == null)
+			if(!ApplicationContext.Current.Principal.Identity.TryGetClaim(SITE_ID, out var value) || !uint.TryParse(value, out var siteId))
 				return criteria;
 
 			if(criteria == null)
-				return Condition.Equal(SITE_ID, user.SiteId);
+				return Condition.Equal(SITE_ID, siteId);
 
-			if(criteria.Matches(SITE_ID, matched => matched.Value = user.SiteId) > 0)
+			if(criteria.Matches(SITE_ID, matched => matched.Value = siteId) > 0)
 				return criteria;
 
 			if(criteria is ConditionCollection conditions && conditions.Combination == ConditionCombination.And)
 			{
-				conditions.Add(Condition.Equal(SITE_ID, user.SiteId));
+				conditions.Add(Condition.Equal(SITE_ID, siteId));
 				return conditions;
 			}
 
-			return ConditionCollection.And(Condition.Equal(SITE_ID, user.SiteId), criteria);
+			return ConditionCollection.And(Condition.Equal(SITE_ID, siteId), criteria);
 		}
 
 		public bool OnInsert(IDataMutateContextBase context, IDataEntityProperty property, out object value)
@@ -134,21 +116,19 @@ namespace Zongsoft.Community.Data
 		{
 			value = null;
 
-			if(Zongsoft.Services.ApplicationContext.Current?.Principal is Zongsoft.Security.CredentialPrincipal principal && principal.Identity.IsAuthenticated)
-				value = principal.Identity.Credential.User.UserId;
+			if(ApplicationContext.Current?.Principal is CredentialPrincipal principal && principal.Identity.IsAuthenticated)
+				value = principal.Identity.GetIdentifier<uint>();
 
 			return value != null;
 		}
 
 		private static bool TryGetSiteId(IDataMutateContextBase context, out object value)
 		{
-			if(Zongsoft.Services.ApplicationContext.Current?.Principal is Zongsoft.Security.CredentialPrincipal principal &&
+			if(ApplicationContext.Current?.Principal is CredentialPrincipal principal &&
 			   principal.Identity.IsAuthenticated &&
-			   principal.Identity.Credential.HasParameters &&
-			   principal.Identity.Credential.Parameters.TryGetValue("Zongsoft.Community.UserProfile", out var parameter) &&
-			   parameter is Models.UserProfile profile)
+			   principal.Identity.TryGetClaim<uint>(nameof(UserProfile.SiteId), out var siteId))
 			{
-					value = profile.SiteId;
+					value = siteId;
 					return true;
 			}
 

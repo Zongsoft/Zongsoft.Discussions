@@ -26,52 +26,58 @@
 
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+
+using Zongsoft.Web;
+using Zongsoft.Web.Http.Headers;
 using Zongsoft.Data;
-using Zongsoft.Web.Http;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
-	public class ForumController : Zongsoft.Web.Http.HttpControllerBase<Forum, ForumConditional, ForumService>
+	[Area("Community")]
+	[Route("[area]/Forums")]
+	public class ForumController : ApiControllerBase<Forum, ForumService>
 	{
 		#region 构造函数
-		public ForumController(Zongsoft.Services.IServiceProvider serviceProvider) : base(serviceProvider)
+		public ForumController(IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 		#endregion
 
 		#region 公共方法
-		[ActionName("Moderators")]
+		[HttpGet("{id}/Moderators")]
 		public IEnumerable<UserProfile> GetModerators(ushort id)
 		{
-			return this.DataService.GetModerators(id, this.GetSchema());
+			return this.DataService.GetModerators(id, this.Request.Headers.GetDataSchema());
 		}
 
-		[ActionName("Globals")]
-		public IEnumerable<Thread> GetGlobalThreads(ushort id, [FromUri]Paging paging = null)
+		[HttpGet("{id}/Globals")]
+		public IEnumerable<Thread> GetGlobalThreads(ushort id, [FromQuery]Paging page = null)
 		{
-			return this.DataService.GetGlobalThreads(id, this.GetSchema(), paging);
+			return this.DataService.GetGlobalThreads(id, this.Request.Headers.GetDataSchema(), page);
 		}
 
-		[ActionName("Pinneds")]
-		public IEnumerable<Thread> GetPinnedThreads(ushort id, [FromUri]Paging paging = null)
+		[HttpGet("{id}/Pinneds")]
+		public IEnumerable<Thread> GetPinnedThreads(ushort id, [FromQuery] Paging page = null)
 		{
-			return this.DataService.GetPinnedThreads(id, this.GetSchema(), paging);
+			return this.DataService.GetPinnedThreads(id, this.Request.Headers.GetDataSchema(), page);
 		}
 
-		[ActionName("Topmosts")]
-		public IEnumerable<Thread> GetTopmosts(ushort id, [FromRoute("args")]int count = 0)
+		[HttpGet("{id}/Topmosts/{count?}")]
+		public IEnumerable<Thread> GetTopmosts(ushort id, int count = 0)
 		{
-			return this.DataService.GetTopmosts(id, this.GetSchema(), count);
+			return this.DataService.GetTopmosts(id, this.Request.Headers.GetDataSchema(), count);
 		}
 
-		[ActionName("Threads")]
-		public object GetThreads(ushort id, [FromUri]Paging paging = null)
+		[HttpGet("{id}/Threads")]
+		public object GetThreads(ushort id, [FromQuery] Paging page = null)
 		{
-			return this.GetResult(this.DataService.GetThreads(id, this.GetSchema(), paging));
+			return this.Paginate(this.DataService.GetThreads(id, this.Request.Headers.GetDataSchema(), page));
 		}
 		#endregion
 	}
