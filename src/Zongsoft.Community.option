@@ -2,15 +2,13 @@
 
 <options>
 	<option path="/Data">
-		<connectionStrings>
-			<connectionString name="Community"
-			                  provider="MsSql"
-			                  value="Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=D:\Zongsoft\Zongsoft.Community\database\Zongsoft.Community.mdf;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" />
-		</connectionStrings>
+		<connectionSettings>
+			<connectionSetting connectionSetting.name="Community" driver="MsSql"
+			                   value="Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=D:\Zongsoft\Zongsoft.Community\database\Zongsoft.Community.mdf;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" />
+		</connectionSettings>
 	</option>
 
 	<option path="/Community">
-		<general general.type="Zongsoft.Community.Configuration.GeneratlConfiguration, Zongsoft.Community"
-		         siteId="1" basePath="zfs.oss:/zongsoft-community/" />
+		<general siteId="1" basePath="zfs.oss:/zongsoft-community/" />
 	</option>
 </options>
