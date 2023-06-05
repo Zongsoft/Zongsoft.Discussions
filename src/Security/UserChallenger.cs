@@ -12,14 +12,17 @@
  */
 
 using System;
+using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 
 using Zongsoft.Data;
 using Zongsoft.Common;
 using Zongsoft.Services;
 using Zongsoft.Security;
+using Zongsoft.Security.Membership;
+
 using Zongsoft.Community.Models;
-using System.Linq;
 
 namespace Zongsoft.Community.Security
 {
@@ -37,30 +40,23 @@ namespace Zongsoft.Community.Security
 		#endregion
 
 		#region 公共方法
-		public OperationResult Challenge(ClaimsPrincipal principal, string scenario)
+		public object Challenge(ClaimsPrincipal principal, string scenario)
 		{
 			var userId = principal.Identity.GetIdentifier<uint>();
 
 			if(userId == 0)
-				return OperationResult.Fail(SecurityReasons.InvalidIdentity);
+				throw new AuthenticationException(SecurityReasons.InvalidIdentity);
 
 			//获取当前登录用户所对应的用户对象
-			var user = this.GetUser(userId);
+			var user = this.GetUser(userId) ?? throw new AuthenticationException(SecurityReasons.Forbidden);
 
-			//如果对应的用户对象查找失败则返回
-			if(user == null)
-				return OperationResult.Fail(SecurityReasons.Forbidden);
-
-			//如果身份校验失败，则更新返回的验证结果并退出
-			var result = this.OnVerify(user, scenario);
-
-			if(result.Failed)
-				return result.Failure;
+			//执行身份校验
+			this.OnVerify(user, scenario);
 
 			//更新当前用户的声明属性
 			this.SetClaims(principal.Identity as ClaimsIdentity, user);
 
-			return OperationResult.Success();
+			return null;
 		}
 		#endregion
 
@@ -74,7 +70,7 @@ namespace Zongsoft.Community.Security
 		}
 
 		protected virtual void OnClaims(ClaimsIdentity identity, UserProfile user) { }
-		protected virtual OperationResult OnVerify(UserProfile user, string scenario) => OperationResult.Success();
+		protected virtual void OnVerify(UserProfile user, string scenario) { }
 		#endregion
 
 		#region 私有方法
