@@ -35,8 +35,6 @@ README: [English](https://github.com/Zongsoft/Zongsoft.Community/blob/master/REA
 
 [![微信公号](https://raw.githubusercontent.com/Zongsoft/Guidelines/master/zongsoft-qrcode%28wechat%29.png)](http://weixin.qq.com/r/zy-g_GnEWTQmrS2b93rd)
 
-[![知识星球](https://raw.githubusercontent.com/Zongsoft/Guidelines/master/zongsoft-qrcode%28zsxq%29.png)](https://t.zsxq.com/2nyjqrr)
-
 
 <a name="license"></a>
 ## 授权协议

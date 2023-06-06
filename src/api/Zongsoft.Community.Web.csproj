@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
 		<OutputType>Library</OutputType>
+		<Version>2.0.0.0</Version>
+		<Product>Zongsoft Community Web Library</Product>
+		<Description>This is a web class library about community forum.</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -10,10 +12,10 @@
 
 	<ItemGroup>
 		<Reference Include="Zongsoft.Core">
-			<HintPath>..\..\..\Framework\Zongsoft.Core\src\bin\$(Configuration)\net5.0\Zongsoft.Core.dll</HintPath>
+			<HintPath>..\..\..\Framework\Zongsoft.Core\src\bin\$(Configuration)\$(TargetFramework)\Zongsoft.Core.dll</HintPath>
 		</Reference>
 		<Reference Include="Zongsoft.Web">
-			<HintPath>..\..\..\Framework\Zongsoft.Web\src\bin\$(Configuration)\net5.0\Zongsoft.Web.dll</HintPath>
+			<HintPath>..\..\..\Framework\Zongsoft.Web\src\bin\$(Configuration)\$(TargetFramework)\Zongsoft.Web.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 </Project>

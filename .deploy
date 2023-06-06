@@ -1,0 +1,5 @@
+src/Zongsoft.Community.option
+src/Zongsoft.Community.plugin
+src/Zongsoft.Community.mapping
+
+src/bin/$(Edition)/$(Target)/Zongsoft.Community.*
