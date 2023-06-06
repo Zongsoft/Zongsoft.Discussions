@@ -51,10 +51,7 @@ namespace Zongsoft.Community.Services
 		#region 公共属性
 		public string BasePath
 		{
-			get
-			{
-				return _basePath;
-			}
+			get => _basePath;
 			set
 			{
 				if(string.IsNullOrWhiteSpace(value))
@@ -65,7 +62,7 @@ namespace Zongsoft.Community.Services
 		}
 
 		[ServiceDependency(IsRequired = true)]
-		public IUserProvider<IUser> UserProvider { get; set; }
+		public IUserProvider<IUserModel> UserProvider { get; set; }
 		#endregion
 
 		#region 公共方法
@@ -134,7 +131,7 @@ namespace Zongsoft.Community.Services
 			//调用基类同名方法（新增用户配置信息）
 			if(base.OnInsert(data, schema, options) > 0)
 			{
-				var user = Model.Build<IUser>(u =>
+				var user = Model.Build<IUserModel>(u =>
 				{
 					u.UserId = data.GetValue(p => p.UserId);
 					u.Name = data.GetValue(p => p.Name);
