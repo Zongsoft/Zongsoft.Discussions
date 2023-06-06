@@ -91,7 +91,7 @@ SiteId      | int      | 4   | ✗ | 主键，站点编号(所属企业)
 GroupId     | smallint | 2   | ✗ | 主键，论坛分组编号
 Name        | nvarchar | 50  | ✗ | 论坛组名
 Icon        | varchar  | 100 | ✓ | 显示图标
-SortOrder   | smallint | 2   | ✗ | 排列顺序
+Ordinal     | smallint | 2   | ✗ | 排列顺序
 Description | nvarchar | 500 | ✓ | 描述信息
 
 
@@ -105,7 +105,7 @@ GroupId                      | smallint | 2   | ✗ | 论坛组编号
 Name                         | nvarchar | 50  | ✗ | 论坛名称
 Description                  | nvarchar | 500 | ✓ | 描述文本
 CoverPicturePath             | varchar  | 200 | ✓ | 封面图片路径
-SortOrder                    | smallint | 2   | ✗ | 排列顺序
+Ordinal                      | smallint | 2   | ✗ | 排列顺序
 IsPopular                    | bool     | -   | ✗ | 是否热门版块
 Approvable                   | bool     | -   | ✗ | 发帖是否需要审核
 Visibility                   | byte     | 1   | ✗ | 可见范围

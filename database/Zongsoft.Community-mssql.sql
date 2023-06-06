@@ -97,7 +97,7 @@ CREATE TABLE [dbo].[Community_Forum] (
     [Name]                         NVARCHAR(50)  NOT NULL,
     [Description]                  NVARCHAR(500) NULL,
     [CoverPicturePath]             VARCHAR(200)  NULL,
-    [SortOrder]                    SMALLINT       DEFAULT (0) NOT NULL,
+    [Ordinal]                      SMALLINT       DEFAULT (0) NOT NULL,
     [IsPopular]                    BIT            DEFAULT (0) NOT NULL,
     [Approvable]                   BIT            DEFAULT (0) NOT NULL,
     [Visibility]                   TINYINT        DEFAULT (0) NOT NULL,
@@ -126,7 +126,7 @@ EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'所属论�
 EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'论坛名称', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_Forum', @level2type = N'COLUMN', @level2name = N'Name';
 EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'描述信息', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_Forum', @level2type = N'COLUMN', @level2name = N'Description';
 EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'封面图片地址', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_Forum', @level2type = N'COLUMN', @level2name = N'CoverPicturePath';
-EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'排序权重', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_Forum', @level2type = N'COLUMN', @level2name = N'SortOrder';
+EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'排序权重', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_Forum', @level2type = N'COLUMN', @level2name = N'Ordinal';
 EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'是否热门板块', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_Forum', @level2type = N'COLUMN', @level2name = N'IsPopular';
 EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'发帖是否需要审核', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_Forum', @level2type = N'COLUMN', @level2name = N'Approvable';
 EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'可见范围', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_Forum', @level2type = N'COLUMN', @level2name = N'Visibility';
@@ -153,7 +153,7 @@ CREATE TABLE [dbo].[Community_ForumGroup] (
     [GroupId]     SMALLINT       NOT NULL,
     [Name]        NVARCHAR(50)  NOT NULL,
     [Icon]        VARCHAR(100)  NULL,
-    [SortOrder]   SMALLINT       DEFAULT (0) NOT NULL,
+    [Ordinal]     SMALLINT       DEFAULT (0) NOT NULL,
     [Description] NVARCHAR(500) NULL,
     PRIMARY KEY CLUSTERED ([SiteId] ASC, [GroupId] ASC)
 );
@@ -162,7 +162,7 @@ EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'主键，�
 EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'主键，论坛组编号', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_ForumGroup', @level2type = N'COLUMN', @level2name = N'GroupId';
 EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'论坛组名称', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_ForumGroup', @level2type = N'COLUMN', @level2name = N'Name';
 EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'论坛组图标', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_ForumGroup', @level2type = N'COLUMN', @level2name = N'Icon';
-EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'排序权重', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_ForumGroup', @level2type = N'COLUMN', @level2name = N'SortOrder';
+EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'排序权重', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_ForumGroup', @level2type = N'COLUMN', @level2name = N'Ordinal';
 EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'描述信息', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'Community_ForumGroup', @level2type = N'COLUMN', @level2name = N'Description';
 GO
 
