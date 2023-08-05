@@ -2,9 +2,19 @@
 
 <options>
 	<option path="/Data">
-		<connectionSettings>
-			<connectionSetting connectionSetting.name="Community" driver="MsSql"
-			                   value="Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=D:\Zongsoft\Zongsoft.Community\database\Zongsoft.Community.mdf;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" />
+		<connectionSettings default="Community">
+			<connectionSetting connectionSetting.name="Community" driver="MySql"
+			                   value="Server=127.0.0.1;User=program;Password=xxxxxx;Database=Community;Charset=utf8mb4;ConvertZeroDatetime=true;AllowZeroDateTime=true;AllowLoadLocalInfile=true;SslMode=none;" />
+
+			<connectionSetting connectionSetting.name="Community#ClickHouse" driver="ClickHouse"
+			                   value="Host=127.0.0.1;Port=8123;UserName=program;Password=xxxxxx;Database=Community;Compression=True" />
+		</connectionSettings>
+	</option>
+
+	<option path="/Externals/Redis">
+		<connectionSettings default="Community">
+			<connectionSetting connectionSetting.name="Community" driver="redis"
+			                   value="127.0.0.1,password=xxxxxx" />
 		</connectionSettings>
 	</option>
 

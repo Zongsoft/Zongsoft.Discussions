@@ -2,7 +2,7 @@
 
 <schema name="Community" xmlns="http://schemas.zongsoft.com/data">
 	<container>
-		<entity name="Message" table="Community_Message">
+		<entity name="Message" table="Community_Message" driver="ClickHouse">
 			<key>
 				<member name="MessageId" />
 			</key>
