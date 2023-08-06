@@ -282,7 +282,7 @@ namespace Zongsoft.Community.Services
 		private void SetHistory(ulong threadId)
 		{
 			//新增或更新当前用户对指定主题的浏览记录（自动递增浏览次数）
-			this.DataAccess.Upsert<IHistory>(new
+			this.DataAccess.Upsert<History>(new
 			{
 				UserId = this.Principal.Identity.GetIdentifier<uint>(),
 				ThreadId = threadId,

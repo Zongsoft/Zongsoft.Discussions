@@ -2,7 +2,7 @@
 
 <options>
 	<option path="/Data">
-		<connectionSettings default="Community">
+		<connectionSettings>
 			<connectionSetting connectionSetting.name="Community" driver="MySql"
 			                   value="Server=127.0.0.1;User=program;Password=xxxxxx;Database=Community;Charset=utf8mb4;ConvertZeroDatetime=true;AllowZeroDateTime=true;AllowLoadLocalInfile=true;SslMode=none;" />
 
@@ -12,7 +12,7 @@
 	</option>
 
 	<option path="/Externals/Redis">
-		<connectionSettings default="Community">
+		<connectionSettings>
 			<connectionSetting connectionSetting.name="Community" driver="redis"
 			                   value="127.0.0.1,password=xxxxxx" />
 		</connectionSettings>

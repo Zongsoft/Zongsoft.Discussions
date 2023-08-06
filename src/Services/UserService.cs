@@ -66,12 +66,12 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<IHistory> GetHistories(uint userId, Paging paging = null)
+		public IEnumerable<History> GetHistories(uint userId, Paging paging = null)
 		{
 			if(userId == 0)
 				userId = this.Principal.Identity.GetIdentifier<uint>();
 
-			return this.DataAccess.Select<IHistory>(Condition.Equal("UserId", userId), "Thread", paging);
+			return this.DataAccess.Select<History>(Condition.Equal("UserId", userId), "Thread", paging);
 		}
 
 		public int GetMessageTotalCount(uint userId = 0)

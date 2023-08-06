@@ -37,87 +37,37 @@ namespace Zongsoft.Community.Models
 	public abstract class Folder
 	{
 		#region 公共属性
-		/// <summary>
-		/// 获取或设置文件夹编号。
-		/// </summary>
-		public abstract uint FolderId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置文件夹编号。</summary>
+		public abstract uint FolderId { get; set; }
 
-		/// <summary>
-		/// 获取或设置文件夹名称。
-		/// </summary>
-		public abstract string Name
-		{
-			get; set;
-		}
+		/// <summary>获取或设置文件夹名称。</summary>
+		public abstract string Name { get; set; }
 
-		/// <summary>
-		/// 获取或设置名称的拼音。
-		/// </summary>
-		public abstract string PinYin
-		{
-			get; set;
-		}
+		/// <summary>获取或设置名称缩写。</summary>
+		public abstract string Acronym { get; set; }
 
-		/// <summary>
-		/// 获取或设置图标名。
-		/// </summary>
-		public abstract string Icon
-		{
-			get; set;
-		}
+		/// <summary>获取或设置图标名。</summary>
+		public abstract string Icon { get; set; }
 
-		/// <summary>
-		/// 获取或设置所属站点编号。
-		/// </summary>
-		public abstract uint SiteId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置所属站点编号。</summary>
+		public abstract uint SiteId { get; set; }
 
-		/// <summary>
-		/// 获取或设置分享性。
-		/// </summary>
-		public abstract Shareability Shareability
-		{
-			get; set;
-		}
+		/// <summary>获取或设置分享性。</summary>
+		public abstract Shareability Shareability { get; set; }
 
-		/// <summary>
-		/// 获取或设置创建人编号。
-		/// </summary>
-		public abstract uint CreatorId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置创建人编号。</summary>
+		public abstract uint CreatorId { get; set; }
 
-		/// <summary>
-		/// 获取或设置创建人对象。
-		/// </summary>
-		public abstract UserProfile Creator
-		{
-			get; set;
-		}
+		/// <summary>获取或设置创建人对象。</summary>
+		public abstract UserProfile Creator { get; set; }
 
-		/// <summary>
-		/// 获取或设置创建时间。
-		/// </summary>
-		public abstract DateTime CreatedTime
-		{
-			get; set;
-		}
+		/// <summary>获取或设置创建时间。</summary>
+		public abstract DateTime CreatedTime { get; set; }
 		#endregion
 
 		#region 关联属性
-		/// <summary>
-		/// 获取或设置文件夹指定用户集合。
-		/// </summary>
-		public abstract IEnumerable<FolderUser> Users
-		{
-			get; set;
-		}
+		/// <summary>获取或设置文件夹指定用户集合。</summary>
+		public abstract IEnumerable<FolderUser> Users { get; set; }
 		#endregion
 
 		#region 嵌套结构
@@ -135,7 +85,6 @@ namespace Zongsoft.Community.Models
 			public Permission Permission;
 			/// <summary>过期时间，如果为空(null)则表示永不过期。</summary>
 			public DateTime? Expiration;
-
 			/// <summary>文件夹对象。</summary>
 			public Folder Folder;
 			/// <summary>用户对象。</summary>
@@ -184,7 +133,7 @@ namespace Zongsoft.Community.Models
 	public abstract class FolderCriteria : CriteriaBase
 	{
 		#region 公共属性
-		[Condition("Name", "PinYin")]
+		[Condition("Name", "Acronym")]
 		public abstract string Name { get; set; }
 
 		[Condition(ConditionOperator.In)]

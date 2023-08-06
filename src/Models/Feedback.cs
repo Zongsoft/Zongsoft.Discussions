@@ -37,50 +37,24 @@ namespace Zongsoft.Community.Models
 	public abstract class Feedback
 	{
 		#region 公共属性
-		public abstract ulong FeedbackId
-		{
-			get; set;
-		}
-
-		public abstract uint SiteId
-		{
-			get; set;
-		}
-
-		public abstract byte Kind
-		{
-			get; set;
-		}
-
-		public abstract string Subject
-		{
-			get; set;
-		}
-
-		public abstract string Content
-		{
-			get; set;
-		}
-
-		public abstract string ContentType
-		{
-			get; set;
-		}
-
-		public abstract string ContactName
-		{
-			get; set;
-		}
-
-		public abstract string ContactText
-		{
-			get; set;
-		}
-
-		public abstract DateTime CreatedTime
-		{
-			get; set;
-		}
+		/// <summary>获取或设置反馈编号。</summary>
+		public abstract ulong FeedbackId { get; set; }
+		/// <summary>获取或设置站点编号。</summary>
+		public abstract uint SiteId { get; set; }
+		/// <summary>获取或设置反馈种类。</summary>
+		public abstract byte Kind { get; set; }
+		/// <summary>获取或设置反馈标题。</summary>
+		public abstract string Subject { get; set; }
+		/// <summary>获取或设置反馈内容。</summary>
+		public abstract string Content { get; set; }
+		/// <summary>获取或设置内容类型。</summary>
+		public abstract string ContentType { get; set; }
+		/// <summary>获取或设置联系人姓名。</summary>
+		public abstract string ContactName { get; set; }
+		/// <summary>获取或设置联系人方式。</summary>
+		public abstract string ContactText { get; set; }
+		/// <summary>获取或设置创建时间。</summary>
+		public abstract DateTime CreatedTime { get; set; }
 		#endregion
 	}
 
@@ -92,15 +66,10 @@ namespace Zongsoft.Community.Models
 		#region 公共属性
 		[Condition("Subject", "ContactName", "ContactText")]
 		public abstract string Key { get; set; }
-
 		public abstract byte? Kind { get; set; }
-
 		public abstract string Subject { get; set; }
-
 		public abstract string ContactName { get; set; }
-
 		public abstract string ContactText { get; set; }
-
 		public abstract Range<DateTime> CreatedTime { get; set; }
 		#endregion
 	}

@@ -25,14 +25,15 @@
 	</extension>
 
 	<extension path="/Workbench/Modules/Community">
-		<object name="Feedback" title="{res:Text.Feedback.Title}" description="{res:Text.Feedback.Description}" />
-		<object name="File" title="{res:Text.File.Title}" description="{res:Text.File.Description}" />
-		<object name="Folder" title="{res:Text.Folder.Title}" description="{res:Text.Folder.Description}" />
-		<object name="Forum" title="{res:Text.Forum.Title}" description="{res:Text.Forum.Description}" />
-		<object name="ForumGroup" title="{res:Text.ForumGroup.Title}" description="{res:Text.ForumGroup.Description}" />
-		<object name="Message" title="{res:Text.Message.Title}" description="{res:Text.Message.Description}" />
-		<object name="Post" title="{res:Text.Post.Title}" description="{res:Text.Post.Description}" />
-		<object name="Thread" title="{res:Text.Thread.Title}" description="{res:Text.Thread.Description}" />
-		<object name="User" title="{res:Text.User.Title}" description="{res:Text.User.Description}" />
+		<object name="Site" title="{res:Site}" description="{res:Site.Description}" />
+		<object name="File" title="{res:File}" description="{res:File.Description}" />
+		<object name="Folder" title="{res:Folder}" description="{res:Folder.Description}" />
+		<object name="Forum" title="{res:Forum}" description="{res:Forum.Description}" />
+		<object name="ForumGroup" title="{res:ForumGroup}" description="{res:ForumGroup.Description}" />
+		<object name="Message" title="{res:Message}" description="{res:Message.Description}" />
+		<object name="Post" title="{res:Post}" description="{res:Post.Description}" />
+		<object name="Thread" title="{res:Thread}" description="{res:Thread.Description}" />
+		<object name="User" title="{res:User}" description="{res:User.Description}" />
+		<object name="Feedback" title="{res:Feedback}" description="{res:Feedback.Description}" />
 	</extension>
 </plugin>

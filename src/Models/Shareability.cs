@@ -25,7 +25,6 @@
  */
 
 using System;
-using System.ComponentModel;
 
 namespace Zongsoft.Community.Models
 {
@@ -41,9 +40,9 @@ namespace Zongsoft.Community.Models
 		Internal,
 
 		/// <summary>好友，特定用户</summary>
-		Friend,
+		Friendly,
 
 		/// <summary>公共，所有人(包括匿名用户)</summary>
-		Public,
+		All,
 	}
 }

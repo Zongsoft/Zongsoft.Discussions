@@ -31,11 +31,10 @@ using System.Collections.Generic;
 
 using Zongsoft.IO;
 using Zongsoft.Data;
-using Zongsoft.Configuration;
-using Zongsoft.Configuration.Options;
 using Zongsoft.Services;
 using Zongsoft.Security;
-using Zongsoft.Security.Membership;
+using Zongsoft.Configuration;
+
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community
@@ -115,14 +114,15 @@ namespace Zongsoft.Community
 			return filePath;
 		}
 
-		public static void DeleteContentFile(IDataDictionary data)
+		public static bool DeleteContentFile(IDataDictionary data)
 		{
-			if(data.TryGetValue<string>("ContentType", out var contentType) &&
-			   Utility.IsContentFile(contentType) &&
+			if(data.TryGetValue<string>("ContentType", out var contentType) && IsContentFile(contentType) &&
 			   data.TryGetValue<string>("Content", out var content))
 			{
-				Utility.DeleteFile(content);
+				return DeleteFile(content);
 			}
+
+			return false;
 		}
 
 		public static string[] GetTags(string text)
@@ -153,16 +153,20 @@ namespace Zongsoft.Community
 				return Array.Empty<string>();
 		}
 
-		public static void DeleteFile(string path)
+		public static bool DeleteFile(string path)
 		{
 			if(string.IsNullOrWhiteSpace(path))
-				return;
+				return false;
 
 			try
 			{
-				Zongsoft.IO.FileSystem.File.DeleteAsync(path);
+				var task = Zongsoft.IO.FileSystem.File.DeleteAsync(path);
+				return task.IsCompletedSuccessfully ? task.Result : task.GetAwaiter().GetResult();
 			}
-			catch { }
+			catch
+			{
+				return false;
+			}
 		}
 
 		public static string ReadTextFile(string path)
@@ -208,15 +212,8 @@ namespace Zongsoft.Community
 			return true;
 		}
 
-		public static string GetFilePath(string relativePath = null)
-		{
-			return GetFilePath(0, 0, relativePath);
-		}
-
-		public static string GetFilePath(uint siteId, string relativePath = null)
-		{
-			return GetFilePath(siteId, 0, relativePath);
-		}
+		public static string GetFilePath(string relativePath = null) => GetFilePath(0, 0, relativePath);
+		public static string GetFilePath(uint siteId, string relativePath = null) => GetFilePath(siteId, 0, relativePath);
 
 		/// <summary>
 		/// 获取特定规则的文件存储路径。

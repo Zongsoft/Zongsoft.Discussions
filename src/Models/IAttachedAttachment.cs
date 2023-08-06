@@ -29,20 +29,23 @@ using System;
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示可见性的枚举。
+	/// 表示附加附件的实体接口。
 	/// </summary>
-	public enum Visibility : byte
+	public interface IAttachedAttachment
 	{
-		/// <summary>隐藏，仅限所有人可见</summary>
-		Hidden,
+		/// <summary>获取或设置附件编号。</summary>
+		ulong AttachmentId { get; set; }
 
-		/// <summary>限定用户</summary>
-		Specified,
+		/// <summary>获取或设置附件对象。</summary>
+		File Attachment { get; set; }
 
-		/// <summary>内部，站内用户</summary>
-		Internal,
+		/// <summary>获取或设置附件归属的附件目录编号。</summary>
+		uint AttachmentFolderId { get; set; }
 
-		/// <summary>公共，所有人(包括匿名访客)</summary>
-		All,
+		/// <summary>获取或设置附件归属的附件目录对象。</summary>
+		Folder AttachmentFolder { get; set; }
+
+		/// <summary>获取或设置附件的排列顺序。</summary>
+		short Ordinal { get; set; }
 	}
 }

@@ -1,14 +1,27 @@
 /*
- *    ____                                  __
- *   / __ \__  ________   _____  ____  ____/ /
- *  / / / / / / / ___/ | / / _ \/ __ \/ __  / 
- * / /_/ / /_/ / /   | |/ /  __/ / / / /_/ /  
- * \____/\__/\/_/    |___/\___/_/ /_/\__/_/   
- *                                            
- * Authors:
- *   钟峰(Popeye Zhong) <zongsoft@qq.cn>
+ *   _____                                ______
+ *  /_   /  ____  ____  ____  _________  / __/ /_
+ *    / /  / __ \/ __ \/ __ \/ ___/ __ \/ /_/ __/
+ *   / /__/ /_/ / / / / /_/ /\_ \/ /_/ / __/ /_
+ *  /____/\____/_/ /_/\__  /____/\____/_/  \__/
+ *                   /____/
  *
- * Copyright (c) 2020-2021 Hunan Yunshu Technology Co.,Ltd. All rights reserved.
+ * Authors:
+ *   钟峰(Popeye Zhong) <zongsoft@qq.com>
+ * 
+ * Copyright (C) 2015-2023 Zongsoft Corporation. All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using System;
@@ -17,7 +30,6 @@ using System.Security.Claims;
 using System.Security.Principal;
 
 using Zongsoft.Data;
-using Zongsoft.Common;
 using Zongsoft.Services;
 using Zongsoft.Security;
 using Zongsoft.Security.Membership;
@@ -26,47 +38,75 @@ using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Security
 {
-	public abstract class UserChallenger : IChallenger
+	public class UserChallenger : IChallenger
 	{
-		#region 构造函数
-		protected UserChallenger(IServiceProvider services)
-		{
-			this.DataAccess = services.GetDataAccess() ?? throw new InvalidOperationException("Missing the required data access service.");
-		}
-		#endregion
-
-		#region 保护属性
-		protected IDataAccess DataAccess { get; }
+		#region 公共属性
+		[ServiceDependency("@", IsRequired = true)]
+		public IDataAccess DataAccess { get; set; }
 		#endregion
 
 		#region 公共方法
-		public object Challenge(ClaimsPrincipal principal, string scenario)
+		public void Challenge(ClaimsPrincipal principal, string scenario)
 		{
+			if(principal.Identity == null)
+				throw new AuthenticationException(SecurityReasons.InvalidIdentity);
+
 			var userId = principal.Identity.GetIdentifier<uint>();
 
 			if(userId == 0)
 				throw new AuthenticationException(SecurityReasons.InvalidIdentity);
 
-			//获取当前登录用户所对应的用户对象
-			var user = this.GetUser(userId) ?? throw new AuthenticationException(SecurityReasons.Forbidden);
+			//获取当前主身份所对应的用户信息，如果没有对应的用户则创建一条对应的新用户信息a
+			var user = this.GetUser(userId) ?? this.CreateUser(principal.Identity);
+
+			if(user == null)
+				throw new AuthenticationException(SecurityReasons.InvalidIdentity);
+
+			//设置用户的命名空间
+			if(string.IsNullOrEmpty(((IUserIdentity)user).Namespace))
+				((IUserIdentity)user).Namespace = principal.Identity.GetNamespace();
 
 			//执行身份校验
 			this.OnVerify(user, scenario);
 
-			//更新当前用户的声明属性
-			this.SetClaims(principal.Identity as ClaimsIdentity, user);
+			//构建新的用户身份
+			var identity = this.Identity(user);
 
-			return null;
+			//将新的身份加入到主体中
+			principal.AddIdentity(identity);
 		}
 		#endregion
 
-		#region 抽象方法
-		protected virtual UserProfile GetUser(uint userId)
+		#region 虚拟方法
+		protected virtual UserProfile GetUser(uint userId) =>
+			this.DataAccess.Select<UserProfile>(Condition.Equal(nameof(UserProfile.UserId), userId), Paging.Limit(1)).FirstOrDefault();
+
+		protected virtual UserProfile CreateUser(IIdentity identity)
 		{
-			return this.DataAccess.Select<UserProfile>(
-				Condition.Equal(nameof(UserProfile.UserId), userId),
-				Paging.Limit(1)
-			).FirstOrDefault();
+			var user = identity.AsModel<UserProfile>();
+
+			if(user.SiteId == 0)
+			{
+				var @namespace = identity.GetNamespace();
+
+				if(!string.IsNullOrEmpty(@namespace))
+				{
+					if(uint.TryParse(@namespace, out var id))
+						user.SiteId = id;
+					else
+					{
+						var site = this.DataAccess.Select<Site>(
+							Condition.Equal(nameof(Site.SiteNo), @namespace),
+							$"{nameof(Site.SiteId)},{nameof(Site.SiteNo)}",
+							Paging.Limit(1)).FirstOrDefault();
+
+						if(site != null)
+							user.SiteId = site.SiteId;
+					}
+				}
+			}
+
+			return this.DataAccess.Upsert(user) > 0 ? user : null;
 		}
 
 		protected virtual void OnClaims(ClaimsIdentity identity, UserProfile user) { }
@@ -74,17 +114,22 @@ namespace Zongsoft.Community.Security
 		#endregion
 
 		#region 私有方法
-		private void SetClaims(ClaimsIdentity identity, UserProfile user)
+		private ClaimsIdentity Identity(UserProfile user)
 		{
-			if(identity == null || user == null)
-				return;
-
-			//更新授权身份所属的命名空间
-			identity.SetNamespace(user.Namespace);
+			var identity = user.Identity("Zongsoft.Community", "Zongsoft");
 
 			identity.AddClaim(nameof(UserProfile.SiteId), user.SiteId.ToString(), ClaimValueTypes.String);
+			identity.AddClaim(nameof(UserProfile.Gender), user.Gender.ToString(), ClaimValueTypes.String);
+			identity.AddClaim(nameof(UserProfile.Avatar), user.Avatar, ClaimValueTypes.String);
+			identity.AddClaim(nameof(UserProfile.Grade), user.Grade.ToString(), ClaimValueTypes.Integer);
+			identity.AddClaim(nameof(UserProfile.TotalPosts), user.TotalPosts.ToString(), ClaimValueTypes.UInteger32);
+			identity.AddClaim(nameof(UserProfile.TotalThreads), user.TotalThreads.ToString(), ClaimValueTypes.UInteger32);
 
+			//进行其他声明定义
 			this.OnClaims(identity, user);
+
+			//返回新构建的身份
+			return identity;
 		}
 		#endregion
 	}

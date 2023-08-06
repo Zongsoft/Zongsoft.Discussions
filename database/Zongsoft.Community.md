@@ -8,11 +8,11 @@ MessageId   | bigint   | 8   | ✗ | 主键，消息编号
 SiteId      | int      | 4   | ✗ | 站点编号
 Subject     | nvarchar | 50  | ✗ | 消息主题
 Content     | nvarchar | 500 | ✗ | 消息内容
-ContentType | varchar  | 50  | ✓ | 内容类型(text/plain+embedded, text/html, application/json)
+ContentType | varchar  | 100 | ✓ | 内容类型(text/plain+embedded, text/html)
 MessageType | varchar  | 50  | ✓ | 消息类型
 Referer     | varchar  | 50  | ✓ | 消息来源
 Tags        | nvarchar | 100 | ✓ | 标签集(以逗号分隔)
-CreatorId   | int      | 4   | ✗ | 发送人编号(零表示系统消息)
+CreatorId   | int      | 4   | ✗ | 创建人编号(零表示系统消息)
 CreatedTime | datetime | -   | ✗ | 创建时间
 
 
@@ -34,7 +34,7 @@ SiteId      | int      | 4   | ✗ | 站点编号
 Kind        | byte     | 1   | ✗ | 反馈种类(0:None)
 Subject     | nvarchar | 50  | ✗ | 反馈标题
 Content     | nvarchar | 500 | ✗ | 反馈内容
-ContentType | varchar  | 50  | ✓ | 内容类型(text/plain+embedded, text/html, application/json)
+ContentType | varchar  | 100 | ✓ | 内容类型(text/plain+embedded, text/html)
 ContactName | nvarchar | 50  | ✓ | 联系人名
 ContactText | nvarchar | 50  | ✓ | 联系方式
 CreatedTime | datetime | -   | ✗ | 反馈时间
@@ -47,8 +47,8 @@ CreatedTime | datetime | -   | ✗ | 反馈时间
 FolderId     | int      | 4   | ✗ | 主键，文件夹编号
 SiteId       | int      | 4   | ✗ | 所属站点编号
 Name         | nvarchar | 50  | ✗ | 目录名称
-PinYin       | varchar  | 200 | ✓ | 名称拼音
-Icon         | varchar  | 50  | ✓ | 图标名
+Icon         | varchar  | 50  | ✓ | 图标标识
+Acronym      | varchar  | 50  | ✓ | 名称缩写
 Shareability | byte     | 1   | ✗ | 共享性
 CreatorId    | int      | 4   | ✗ | 创建人编号
 CreatedTime  | datetime | -   | ✗ | 创建时间
@@ -69,13 +69,13 @@ Expiration | datetime | - | ✓ | 过期时间
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
-FileId      | bigint   | 8   | ✗ | 主键，附件编号
+FileId      | bigint   | 8   | ✗ | 主键，文件编号
 SiteId      | int      | 4   | ✗ | 所属站点编号
-FolderId    | int      | 4   | ✗ | 所属文件夹编号(默认为零)
+FolderId    | int      | 4   | ✗ | 所属目录编号
 Name        | nvarchar | 50  | ✗ | 文件名称
-PinYin      | varchar  | 200 | ✓ | 名称拼音
 Path        | varchar  | 200 | ✗ | 文件路径
-Type        | varchar  | 50  | ✗ | 文件类型(MIME类型)
+Acronym     | varchar  | 50  | ✓ | 名称缩写
+Type        | varchar  | 100 | ✗ | 文件类型(MIME类型)
 Size        | int      | 4   | ✗ | 文件大小(单位：字节)
 Tags        | nvarchar | 100 | ✓ | 标签集(以逗号分隔)
 CreatorId   | int      | 4   | ✓ | 创建人编号
@@ -83,11 +83,24 @@ CreatedTime | datetime | -   | ✗ | 创建时间(上传时间)
 Description | nvarchar | 100 | ✓ | 描述说明
 
 
+## 站点表 `Community.Site`
+
+字段名称 | 数据类型 | 长度 | 可空 | 备注
+------- |:-------:|:---:|:---:| ----
+SiteId      | int      | 4   | ✗ | 主键，站点编号
+SiteNo      | varchar  | 50  | ✗ | 站点代号
+Name        | nvarchar | 50  | ✗ | 站点名称
+Host        | varchar  | 50  | ✗ | 站点域名
+Icon        | varchar  | 100 | ✓ | 站点图标
+Domain      | varchar  | 50  | ✗ | 所属领域
+Description | nvarchar | 500 | ✓ | 描述信息
+
+
 ## 论坛分组表 `Community.ForumGroup`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
-SiteId      | int      | 4   | ✗ | 主键，站点编号(所属企业)
+SiteId      | int      | 4   | ✗ | 主键，站点编号
 GroupId     | smallint | 2   | ✗ | 主键，论坛分组编号
 Name        | nvarchar | 50  | ✗ | 论坛组名
 Icon        | varchar  | 100 | ✓ | 显示图标
@@ -146,12 +159,12 @@ ThreadId                   | bigint   | 8   | ✗ | 主键，主题编号
 SiteId                     | int      | 4   | ✗ | 所属站点编号
 ForumId                    | smallint | 2   | ✗ | 所属论坛编号
 Title                      | nvarchar | 50  | ✗ | 文章标题
-PinYin                     | varchar  | 200 | ✓ | 标题拼音
+Acronym                    | varchar  | 50  | ✓ | 标题缩写
 Summary                    | nvarchar | 500 | ✓ | 文章摘要
 Tags                       | nvarchar | 100 | ✓ | 标签集(以逗号分隔)
 PostId                     | bigint   | 8   | ✗ | 内容帖子编号
 CoverPicturePath           | varchar  | 200 | ✓ | 封面图片路径
-ArticleUrl                 | varchar  | 200 | ✓ | 文章链接
+LinkUrl                    | varchar  | 200 | ✓ | 主题链接
 Visible                    | bool     | -   | ✗ | 是否可见(默认为真)
 Approved                   | bool     | -   | ✗ | 是否审核通过
 IsLocked                   | bool     | -   | ✗ | 已被锁定（锁定则不允许回复）
@@ -189,9 +202,18 @@ TotalUpvotes       | int      | 4   | ✗ | 累计点赞数
 TotalDownvotes     | int      | 4   | ✗ | 累计被踩数
 VisitorAddress     | nvarchar | 100 | ✓ | 访客地址
 VisitorDescription | nvarchar | 500 | ✓ | 访客描述(浏览器代理信息等)
-AttachmentMark     | varchar  | 100 | ✓ | 附件标记(以逗号分隔)
 CreatorId          | int      | 4   | ✗ | 发帖人编号
 CreatedTime        | datetime | -   | ✗ | 发帖时间
+
+
+## 帖子附件表 `Community.PostAttachment`
+
+字段名称 | 数据类型 | 长度 | 可空 | 备注
+------- |:-------:|:---:|:---:| ----
+PostId             | bigint | 8 | ✗ | 主键，物料编号
+AttachmentId       | bigint | 8 | ✗ | 主键，附件编号
+AttachmentFolderId | int    | 4 | ✗ | 附件目录编号
+Ordinal            | short  | 2 | ✗ | 排列顺序
 
 
 ## 帖子投票表 `Community.PostVoting`
@@ -206,7 +228,7 @@ Value      | byte     | 1   | ✗ | 投票数(正数为Upvote，负数为Downvot
 Tiemstamp  | datetime | -   | ✗ | 投票时间
 
 
-## 用户浏览记录表 `Community.History`
+## 访问历史表 `Community.History`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -217,7 +239,7 @@ FirstViewedTime      | datetime | - | ✗ | 首次浏览时间
 MostRecentViewedTime | datetime | - | ✗ | 最后浏览时间
 
 
-## 用户配置表 `Community.UserProfile`
+## 用户信息表 `Community.UserProfile`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----

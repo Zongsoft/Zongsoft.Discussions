@@ -37,118 +37,48 @@ namespace Zongsoft.Community.Models
 	public abstract class File
 	{
 		#region 公共属性
-		/// <summary>
-		/// 获取或设置文件编号。
-		/// </summary>
-		public abstract ulong FileId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置文件编号。</summary>
+		public abstract ulong FileId { get; set; }
 
-		/// <summary>
-		/// 获取或设置所属的站点编号。
-		/// </summary>
-		public abstract uint SiteId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置所属的站点编号。</summary>
+		public abstract uint SiteId { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户所属文件夹编号。
-		/// </summary>
-		public abstract uint FolderId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户所属文件夹编号。</summary>
+		public abstract uint FolderId { get; set; }
 
-		/// <summary>
-		/// 获取或设置用户所属的文件夹对象。
-		/// </summary>
-		public abstract Folder Folder
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户所属的文件夹对象。</summary>
+		public abstract Folder Folder { get; set; }
 
-		/// <summary>
-		/// 获取或设置附件的原始文件名。
-		/// </summary>
-		public abstract string Name
-		{
-			get; set;
-		}
+		/// <summary>获取或设置附件的原始文件名。</summary>
+		public abstract string Name { get; set; }
 
-		/// <summary>
-		/// 获取或设置附件文件的路径。
-		/// </summary>
-		public abstract string Path
-		{
-			get; set;
-		}
+		/// <summary>获取或设置名称缩写。</summary>
+		public abstract string Acronym { get; set; }
 
-		/// <summary>
-		/// 获取附件文件的访问URL。
-		/// </summary>
-		public string Url
-		{
-			get => Zongsoft.IO.FileSystem.GetUrl(this.Path);
-		}
+		/// <summary>获取或设置附件文件的路径。</summary>
+		public abstract Zongsoft.IO.PathLocation Path { get; set; }
 
-		/// <summary>
-		/// 获取或设置附件的文件类型(MIME类型)。
-		/// </summary>
-		public abstract string Type
-		{
-			get; set;
-		}
+		/// <summary>获取或设置附件的文件类型(MIME类型)。</summary>
+		public abstract string Type { get; set; }
 
-		/// <summary>
-		/// 获取或设置附件文件的大小(单位：Byte)。
-		/// </summary>
-		public abstract uint Size
-		{
-			get; set;
-		}
+		/// <summary>获取或设置附件文件的大小(单位：Byte)。</summary>
+		public abstract uint Size { get; set; }
 
-		/// <summary>
-		/// 获取或设置标签集。
-		/// </summary>
+		/// <summary>获取或设置标签集。</summary>
 		[TypeConverter(typeof(TagsConverter))]
-		public abstract string[] Tags
-		{
-			get; set;
-		}
+		public abstract string[] Tags { get; set; }
 
-		/// <summary>
-		/// 获取或设置附件的上传用户编号。
-		/// </summary>
-		public abstract uint? CreatorId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置附件的上传用户编号。</summary>
+		public abstract uint? CreatorId { get; set; }
 
-		/// <summary>
-		/// 获取或设置创建人的<see cref="Models.UserProfile"/>用户信息。
-		/// </summary>
-		public abstract UserProfile Creator
-		{
-			get; set;
-		}
+		/// <summary>获取或设置创建人的<see cref="Models.UserProfile"/>用户信息。</summary>
+		public abstract UserProfile Creator { get; set; }
 
-		/// <summary>
-		/// 获取或设置附件的上传时间。
-		/// </summary>
-		public abstract DateTime CreatedTime
-		{
-			get; set;
-		}
+		/// <summary>获取或设置附件的上传时间。</summary>
+		public abstract DateTime CreatedTime { get; set; }
 
-		/// <summary>
-		/// 获取或设置描述信息。
-		/// </summary>
-		public abstract string Description
-		{
-			get; set;
-		}
+		/// <summary>获取或设置描述信息。</summary>
+		public abstract string Description { get; set; }
 		#endregion
 	}
 

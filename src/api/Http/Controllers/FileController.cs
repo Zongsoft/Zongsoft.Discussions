@@ -38,6 +38,7 @@ using Zongsoft.Web;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
+using Zongsoft.IO;
 
 namespace Zongsoft.Community.Web.Http.Controllers
 {
@@ -119,7 +120,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				{
 					file.FolderId = id.HasValue ? id.Value : 0;
 					file.Name = info.Name;
-					file.Path = info.Path.Url;
+					file.Path = (PathLocation)info.Path.Url;
 					file.Type = info.Type;
 					file.Size = (uint)Math.Max(0, info.Size);
 				});

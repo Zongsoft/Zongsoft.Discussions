@@ -124,9 +124,9 @@ namespace Zongsoft.Community.Services
 
 			//匿名用户只能获取公共数据
 			if(!this.Principal.Identity.IsAuthenticated)
-				return criteria.And(Condition.Equal(nameof(Forum.Visibility), Visibility.Public));
+				return criteria.And(Condition.Equal(nameof(Forum.Visibility), Visibility.All));
 			else
-				return criteria.And(Condition.In(nameof(Forum.Visibility), (byte)Visibility.Internal, (byte)Visibility.Public) |
+				return criteria.And(Condition.In(nameof(Forum.Visibility), (byte)Visibility.Internal, (byte)Visibility.All) |
 					(
 						Condition.Equal(nameof(Forum.Visibility), Visibility.Specified) &
 						Condition.Exists(nameof(Forum.Users),

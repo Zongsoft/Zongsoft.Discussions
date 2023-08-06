@@ -11,7 +11,7 @@
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="Subject" type="string" length="50" nullable="false" />
 			<property name="Content" type="string" length="500" nullable="false" />
-			<property name="ContentType" type="string" length="50" nullable="true" />
+			<property name="ContentType" type="string" length="100" nullable="true" />
 			<property name="MessageType" type="string" length="50" nullable="true" />
 			<property name="Referer" type="string" length="50" nullable="true" />
 			<property name="Tags" type="nvarchar" length="100" nullable="true" />
@@ -56,7 +56,7 @@
 			<property name="Kind" type="byte" nullable="false" />
 			<property name="Subject" type="string" length="50" nullable="false" />
 			<property name="Content" type="string" length="500" nullable="false" />
-			<property name="ContentType" type="string" length="50" nullable="true" />
+			<property name="ContentType" type="string" length="100" nullable="true" />
 			<property name="ContactName" type="string" length="50" nullable="true" />
 			<property name="ContactText" type="string" length="50" nullable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
@@ -71,9 +71,9 @@
 			<property name="SiteId" type="uint" nullable="true" immutable="true" />
 			<property name="FolderId" type="uint" nullable="false" />
 			<property name="Name" type="string" length="50" nullable="false" />
-			<property name="PinYin" type="string" length="200" nullable="true" />
+			<property name="Acronym" type="string" length="50" nullable="true" />
 			<property name="Path" type="string" length="200" nullable="false" />
-			<property name="Type" type="string" length="50" nullable="false" />
+			<property name="Type" type="string" length="100" nullable="false" />
 			<property name="Size" type="uint" nullable="false" />
 			<property name="Tags" type="nvarchar" length="100" nullable="true" />
 			<property name="CreatorId" type="uint" nullable="true" immutable="true" />
@@ -97,7 +97,7 @@
 			<property name="FolderId" type="uint" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="Name" type="string" length="50" nullable="false" />
-			<property name="PinYin" type="string" length="200" nullable="true" />
+			<property name="Acronym" type="string" length="50" nullable="true" />
 			<property name="Icon" type="string" length="50" nullable="true" />
 			<property name="Shareability" type="byte" nullable="false" />
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
@@ -130,6 +130,27 @@
 
 			<complexProperty name="User" port="UserProfile">
 				<link port="UserId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="Site" table="Community_Site">
+			<key>
+				<member name="SiteId" />
+			</key>
+
+			<property name="SiteId" type="int" length="4" nullable="false" />
+			<property name="Name" type="nvarchar" length="50" nullable="false" />
+			<property name="Host" type="varchar" length="50" nullable="false" />
+			<property name="Icon" type="varchar" length="100" nullable="true" />
+			<property name="Domain" type="varchar" length="50" nullable="false" />
+			<property name="Description" type="nvarchar" length="500" nullable="true" />
+
+			<complexProperty name="ForumGroups" port="ForumGroup" multiplicity="*">
+				<link port="SiteId" />
+			</complexProperty>
+
+			<complexProperty name="Forums" port="Forum" multiplicity="*">
+				<link port="SiteId" />
 			</complexProperty>
 		</entity>
 
@@ -245,12 +266,12 @@
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="ForumId" type="ushort" nullable="false" />
 			<property name="Title" type="string" length="50" nullable="false" />
-			<property name="PinYin" type="string" length="200" nullable="true" />
+			<property name="Acronym" type="string" length="50" nullable="true" />
 			<property name="Summary" type="string" length="500" nullable="true" />
 			<property name="Tags" type="string" length="100" nullable="true" />
 			<property name="PostId" type="ulong" nullable="false" />
 			<property name="CoverPicturePath" type="string" length="200" nullable="true" />
-			<property name="ArticleUrl" type="string" length="200" nullable="true" />
+			<property name="LinkUrl" type="string" length="200" nullable="true" />
 			<property name="Visible" type="bool" nullable="false" default="true" />
 			<property name="Approved" type="bool" nullable="false" default="true" />
 			<property name="IsLocked" type="bool" nullable="false" />
@@ -310,7 +331,6 @@
 			<property name="TotalDownvotes" type="uint" nullable="false" />
 			<property name="VisitorAddress" type="string" length="100" nullable="true" />
 			<property name="VisitorDescription" type="string" length="500" nullable="true" />
-			<property name="AttachmentMark" type="varchar" length="100" nullable="true" />
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
@@ -326,12 +346,40 @@
 				<link port="PostId" anchor="RefererId" />
 			</complexProperty>
 
+			<complexProperty name="Attachments" port="PostAttachment" multiplicity="*">
+				<link port="PostId" />
+			</complexProperty>
+
 			<complexProperty name="Comments" port="Post" multiplicity="*">
 				<link port="PostId" anchor="RefererId" />
 			</complexProperty>
 
 			<complexProperty name="Votes" port="PostVoting" multiplicity="*">
 				<link port="PostId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="PostAttachment" table="Community_PostAttachment">
+			<key>
+				<member name="PostId" />
+				<member name="AttachmentId" />
+			</key>
+
+			<property name="PostId" type="ulong" nullable="false" />
+			<property name="AttachmentId" type="ulong" nullable="false" />
+			<property name="AttachmentFolderId" type="uint" nullable="false" />
+			<property name="Ordinal" type="short" nullable="false" />
+
+			<complexProperty name="Post" port="Post">
+				<link port="PostId" />
+			</complexProperty>
+
+			<complexProperty name="Attachment" port="File">
+				<link port="FileId" anchor="AttachmentId" />
+			</complexProperty>
+
+			<complexProperty name="AttachmentFolder" port="Folder">
+				<link port="FolderId" anchor="AttachmentFolderId" />
 			</complexProperty>
 		</entity>
 

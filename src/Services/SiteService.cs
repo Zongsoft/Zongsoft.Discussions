@@ -25,24 +25,36 @@
  */
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models
+using Zongsoft.Data;
+using Zongsoft.Services;
+using Zongsoft.Community.Models;
+
+namespace Zongsoft.Community.Services
 {
-	/// <summary>
-	/// 表示可见性的枚举。
-	/// </summary>
-	public enum Visibility : byte
+	[Service(nameof(SiteService))]
+	[DataService(typeof(SiteCriteria))]
+	public class SiteService : DataServiceBase<Site>
 	{
-		/// <summary>隐藏，仅限所有人可见</summary>
-		Hidden,
+		#region 构造函数
+		public SiteService(IServiceProvider serviceProvider) : base(serviceProvider) { }
+		#endregion
 
-		/// <summary>限定用户</summary>
-		Specified,
+		#region 公共方法
+		public IEnumerable<ForumGroup> GetForumGroups(uint siteId) =>
+			this.DataAccess.Select<ForumGroup>(Condition.Equal(nameof(ForumGroup.SiteId), siteId));
 
-		/// <summary>内部，站内用户</summary>
-		Internal,
-
-		/// <summary>公共，所有人(包括匿名访客)</summary>
-		All,
+		public IEnumerable<Forum> GetForums(uint siteId, ushort groupId = 0)
+		{
+			return groupId == 0 ?
+				this.DataAccess.Select<Forum>(
+					Condition.Equal(nameof(Forum.SiteId), siteId)) :
+				this.DataAccess.Select<Forum>(
+					Condition.Equal(nameof(Forum.SiteId), siteId) &
+					Condition.Equal(nameof(Forum.GroupId), groupId));
+		}
+		#endregion
 	}
 }

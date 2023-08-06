@@ -18,6 +18,12 @@
 		</dependencies>
 	</manifest>
 
+	<extension path="/Workbench/Modules">
+		<object name="Community" value="{static:Zongsoft.Community.Module.Current, Zongsoft.Community}">
+			<expose name="Schemas" value="{path:../@Schemas}" />
+		</object>
+	</extension>
+
 	<extension path="/Workbench/Data/Accessors">
 		<object name="Community">
 			<community.validator>
@@ -29,6 +35,16 @@
 	<extension path="/Workbench/Data/Accessors/Community/Filters">
 		<object name="PostFilter" type="Zongsoft.Community.Data.PostFilter, Zongsoft.Community" />
 		<object name="ThreadFilter" type="Zongsoft.Community.Data.ThreadFilter, Zongsoft.Community" />
+	</extension>
+
+	<!-- 挂载身份质询器 -->
+	<extension path="/Workbench/Security/Authentication/Challengers">
+		<object type="Zongsoft.Community.Security.UserChallenger, Zongsoft.Community" />
+	</extension>
+
+	<!-- 挂载身份转换器 -->
+	<extension path="/Workbench/Security/Authentication/Transformers">
+		<object type="Zongsoft.Community.Security.UserIdentityTransformer, Zongsoft.Community" />
 	</extension>
 
 	<!-- 挂载“Community”服务提供程序 -->

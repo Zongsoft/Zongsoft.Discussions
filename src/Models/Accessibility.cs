@@ -25,7 +25,6 @@
  */
 
 using System;
-using System.ComponentModel;
 
 namespace Zongsoft.Community.Models
 {
@@ -37,10 +36,10 @@ namespace Zongsoft.Community.Models
 		/// <summary>版主</summary>
 		Moderator,
 
-		/// <summary>特定用户</summary>
+		/// <summary>限定用户</summary>
 		Specified,
 
-		/// <summary>内部的，站内用户</summary>
+		/// <summary>内部，站内用户</summary>
 		Internal,
 	}
 }

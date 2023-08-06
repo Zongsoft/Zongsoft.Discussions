@@ -64,8 +64,8 @@ namespace Zongsoft.Community.Services
 				if(count < 1)
 				{
 					//如果新增记录失败则删除刚创建的文件
-					if(filePath != null && filePath.Length > 0)
-						Utility.DeleteFile(filePath);
+					if(!filePath.IsEmpty)
+						Utility.DeleteFile(filePath.Path);
 				}
 
 				return count;
@@ -73,8 +73,8 @@ namespace Zongsoft.Community.Services
 			catch
 			{
 				//删除新建的文件
-				if(filePath != null && filePath.Length > 0)
-					Utility.DeleteFile(filePath);
+				if(!filePath.IsEmpty)
+					Utility.DeleteFile(filePath.Path);
 
 				throw;
 			}

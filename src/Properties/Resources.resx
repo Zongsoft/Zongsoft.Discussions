@@ -1,0 +1,564 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Accessibility" xml:space="preserve">
+    <value>可访问性</value>
+  </data>
+  <data name="Accessibility.Internal" xml:space="preserve">
+    <value>内部人员</value>
+  </data>
+  <data name="Accessibility.Moderator" xml:space="preserve">
+    <value>版主</value>
+  </data>
+  <data name="Accessibility.Specified" xml:space="preserve">
+    <value>限定人员</value>
+  </data>
+  <data name="Acronym" xml:space="preserve">
+    <value>缩写</value>
+  </data>
+  <data name="Approvable" xml:space="preserve">
+    <value>是否审核</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>已审核</value>
+  </data>
+  <data name="ApprovedTime" xml:space="preserve">
+    <value>审核时间</value>
+  </data>
+  <data name="Attachment" xml:space="preserve">
+    <value>附件</value>
+  </data>
+  <data name="AttachmentFolder" xml:space="preserve">
+    <value>附件目录</value>
+  </data>
+  <data name="AttachmentFolderId" xml:space="preserve">
+    <value>附件目录编号</value>
+  </data>
+  <data name="AttachmentId" xml:space="preserve">
+    <value>附件编号</value>
+  </data>
+  <data name="Avatar" xml:space="preserve">
+    <value>头像</value>
+  </data>
+  <data name="Community" xml:space="preserve">
+    <value>社区论坛</value>
+  </data>
+  <data name="Community.Description" xml:space="preserve">
+    <value>提供社区站点、论坛、主题、发帖等功能。</value>
+  </data>
+  <data name="ContactName" xml:space="preserve">
+    <value>联系人名</value>
+  </data>
+  <data name="ContactText" xml:space="preserve">
+    <value>联系方式</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>内容</value>
+  </data>
+  <data name="ContentType" xml:space="preserve">
+    <value>内容类型</value>
+  </data>
+  <data name="CoverPicture" xml:space="preserve">
+    <value>封面图片</value>
+  </data>
+  <data name="CoverPicturePath" xml:space="preserve">
+    <value>封面路径</value>
+  </data>
+  <data name="CreatedTime" xml:space="preserve">
+    <value>创建时间</value>
+  </data>
+  <data name="Creation" xml:space="preserve">
+    <value>创建</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>创建人</value>
+  </data>
+  <data name="CreatorId" xml:space="preserve">
+    <value>创建人编号</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>描述说明</value>
+  </data>
+  <data name="Domain" xml:space="preserve">
+    <value>领域</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>电子邮箱</value>
+  </data>
+  <data name="Expiration" xml:space="preserve">
+    <value>过期时间</value>
+  </data>
+  <data name="Feedback" xml:space="preserve">
+    <value>反馈</value>
+  </data>
+  <data name="FeedbackId" xml:space="preserve">
+    <value>反馈编号</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>文件</value>
+  </data>
+  <data name="File.Name" xml:space="preserve">
+    <value>文件名称</value>
+  </data>
+  <data name="File.Size" xml:space="preserve">
+    <value>文件大小</value>
+  </data>
+  <data name="File.Type" xml:space="preserve">
+    <value>文件类型</value>
+  </data>
+  <data name="FileId" xml:space="preserve">
+    <value>文件编号</value>
+  </data>
+  <data name="FileName" xml:space="preserve">
+    <value>文件名称</value>
+  </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>文件路径</value>
+  </data>
+  <data name="FileSize" xml:space="preserve">
+    <value>文件大小</value>
+  </data>
+  <data name="FileType" xml:space="preserve">
+    <value>文件类型</value>
+  </data>
+  <data name="FirstViewedTime" xml:space="preserve">
+    <value>首次浏览时间</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>文件夹</value>
+  </data>
+  <data name="FolderId" xml:space="preserve">
+    <value>目录编号</value>
+  </data>
+  <data name="Forum" xml:space="preserve">
+    <value>论坛</value>
+  </data>
+  <data name="Forum.Group" xml:space="preserve">
+    <value>论坛组</value>
+  </data>
+  <data name="Forum.GroupId" xml:space="preserve">
+    <value>论坛组号</value>
+  </data>
+  <data name="ForumGroup" xml:space="preserve">
+    <value>论坛组</value>
+  </data>
+  <data name="ForumGroupId" xml:space="preserve">
+    <value>论坛组号</value>
+  </data>
+  <data name="ForumId" xml:space="preserve">
+    <value>论坛编号</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>性别</value>
+  </data>
+  <data name="Gender.Female" xml:space="preserve">
+    <value>女士</value>
+  </data>
+  <data name="Gender.Male" xml:space="preserve">
+    <value>男士</value>
+  </data>
+  <data name="Gender.None" xml:space="preserve">
+    <value>未定义</value>
+  </data>
+  <data name="Gender.Unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="Grade" xml:space="preserve">
+    <value>等级</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>主机域名</value>
+  </data>
+  <data name="Icon" xml:space="preserve">
+    <value>图标</value>
+  </data>
+  <data name="IsGlobal" xml:space="preserve">
+    <value>是否全局</value>
+  </data>
+  <data name="IsLocked" xml:space="preserve">
+    <value>是否锁定</value>
+  </data>
+  <data name="IsModerator" xml:space="preserve">
+    <value>是否版主</value>
+  </data>
+  <data name="IsPinned" xml:space="preserve">
+    <value>是否置顶</value>
+  </data>
+  <data name="IsPopular" xml:space="preserve">
+    <value>是否热门</value>
+  </data>
+  <data name="IsRead" xml:space="preserve">
+    <value>是否已读</value>
+  </data>
+  <data name="IsValued" xml:space="preserve">
+    <value>是否精华</value>
+  </data>
+  <data name="LastViewedTime" xml:space="preserve">
+    <value>最后浏览时间</value>
+  </data>
+  <data name="LinkUrl" xml:space="preserve">
+    <value>链接地址</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>消息</value>
+  </data>
+  <data name="MessageId" xml:space="preserve">
+    <value>消息编号</value>
+  </data>
+  <data name="MessageType" xml:space="preserve">
+    <value>消息类型</value>
+  </data>
+  <data name="Modification" xml:space="preserve">
+    <value>修改</value>
+  </data>
+  <data name="MostRecentPostAuthor" xml:space="preserve">
+    <value>最后回帖作者</value>
+  </data>
+  <data name="MostRecentPostAuthorAvatar" xml:space="preserve">
+    <value>最后回帖作者头像</value>
+  </data>
+  <data name="MostRecentPostAuthorId" xml:space="preserve">
+    <value>最后回帖作者编号</value>
+  </data>
+  <data name="MostRecentPostAuthorName" xml:space="preserve">
+    <value>最后回帖作者名称</value>
+  </data>
+  <data name="MostRecentPostId" xml:space="preserve">
+    <value>最后回帖编号</value>
+  </data>
+  <data name="MostRecentPostTime" xml:space="preserve">
+    <value>最后回帖时间</value>
+  </data>
+  <data name="MostRecentThreadAuthor" xml:space="preserve">
+    <value>最近主题作者</value>
+  </data>
+  <data name="MostRecentThreadAuthorAvatar" xml:space="preserve">
+    <value>最近主题作者头像</value>
+  </data>
+  <data name="MostRecentThreadAuthorId" xml:space="preserve">
+    <value>最近主题作者编号</value>
+  </data>
+  <data name="MostRecentThreadAuthorName" xml:space="preserve">
+    <value>最近主题作者名称</value>
+  </data>
+  <data name="MostRecentThreadId" xml:space="preserve">
+    <value>最近主题编号</value>
+  </data>
+  <data name="MostRecentThreadTime" xml:space="preserve">
+    <value>最近主题时间</value>
+  </data>
+  <data name="MostRecentThreadTitle" xml:space="preserve">
+    <value>最近主题标题</value>
+  </data>
+  <data name="MostRecentViewedTime" xml:space="preserve">
+    <value>最近浏览时间</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="Nickname" xml:space="preserve">
+    <value>昵称</value>
+  </data>
+  <data name="Ordinal" xml:space="preserve">
+    <value>序号</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="Permission" xml:space="preserve">
+    <value>权限</value>
+  </data>
+  <data name="Permission.None" xml:space="preserve">
+    <value>无权限</value>
+  </data>
+  <data name="Permission.Read" xml:space="preserve">
+    <value>可读</value>
+  </data>
+  <data name="Permission.Write" xml:space="preserve">
+    <value>可写</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>电话</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>电话号码</value>
+  </data>
+  <data name="Photo" xml:space="preserve">
+    <value>照片</value>
+  </data>
+  <data name="PhotoPath" xml:space="preserve">
+    <value>照片路径</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>帖子</value>
+  </data>
+  <data name="PostId" xml:space="preserve">
+    <value>帖子编号</value>
+  </data>
+  <data name="Referer" xml:space="preserve">
+    <value>引用</value>
+  </data>
+  <data name="RefererId" xml:space="preserve">
+    <value>引用编号</value>
+  </data>
+  <data name="Remark" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="Shareability" xml:space="preserve">
+    <value>可分享性</value>
+  </data>
+  <data name="Shareability.All" xml:space="preserve">
+    <value>所有</value>
+  </data>
+  <data name="Shareability.Frendly" xml:space="preserve">
+    <value>好友</value>
+  </data>
+  <data name="Shareability.Internal" xml:space="preserve">
+    <value>内部</value>
+  </data>
+  <data name="Shareability.Private" xml:space="preserve">
+    <value>私有</value>
+  </data>
+  <data name="Shareability.Public" xml:space="preserve">
+    <value>公共</value>
+  </data>
+  <data name="Site" xml:space="preserve">
+    <value>站点</value>
+  </data>
+  <data name="SiteId" xml:space="preserve">
+    <value>站点编号</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>大小</value>
+  </data>
+  <data name="Summary" xml:space="preserve">
+    <value>概述简要</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>标签</value>
+  </data>
+  <data name="Thread" xml:space="preserve">
+    <value>主题</value>
+  </data>
+  <data name="ThreadId" xml:space="preserve">
+    <value>主题编号</value>
+  </data>
+  <data name="ThreadStatus" xml:space="preserve">
+    <value>主题状态</value>
+  </data>
+  <data name="ThreadStatus.Cancelled" xml:space="preserve">
+    <value>已取消</value>
+  </data>
+  <data name="ThreadStatus.None" xml:space="preserve">
+    <value>待处理</value>
+  </data>
+  <data name="ThreadStatus.Published" xml:space="preserve">
+    <value>已发布</value>
+  </data>
+  <data name="Tiemstamp" xml:space="preserve">
+    <value>时间戳</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="TotalDownvotes" xml:space="preserve">
+    <value>被踩总数</value>
+  </data>
+  <data name="TotalPosts" xml:space="preserve">
+    <value>帖子总数</value>
+  </data>
+  <data name="TotalReplies" xml:space="preserve">
+    <value>回复总数</value>
+  </data>
+  <data name="TotalThreads" xml:space="preserve">
+    <value>主题总数</value>
+  </data>
+  <data name="TotalUpvotes" xml:space="preserve">
+    <value>点赞总数</value>
+  </data>
+  <data name="TotalViews" xml:space="preserve">
+    <value>浏览总数</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>类型</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="User.Creation" xml:space="preserve">
+    <value>创建时间</value>
+  </data>
+  <data name="User.Email" xml:space="preserve">
+    <value>用户邮箱</value>
+  </data>
+  <data name="User.Modification" xml:space="preserve">
+    <value>修改时间</value>
+  </data>
+  <data name="User.Phone" xml:space="preserve">
+    <value>用户电话</value>
+  </data>
+  <data name="UserAvatar" xml:space="preserve">
+    <value>用户头像</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>用户编号</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>用户名称</value>
+  </data>
+  <data name="UserProfile" xml:space="preserve">
+    <value>用户信息</value>
+  </data>
+  <data name="UserProfile.Email" xml:space="preserve">
+    <value>用户邮箱</value>
+  </data>
+  <data name="UserProfile.Phone" xml:space="preserve">
+    <value>用户电话</value>
+  </data>
+  <data name="ViewedTime" xml:space="preserve">
+    <value>查看时间</value>
+  </data>
+  <data name="Visibility" xml:space="preserve">
+    <value>可见性</value>
+  </data>
+  <data name="Visibility.All" xml:space="preserve">
+    <value>所有</value>
+  </data>
+  <data name="Visibility.Hidden" xml:space="preserve">
+    <value>隐藏</value>
+  </data>
+  <data name="Visibility.Internal" xml:space="preserve">
+    <value>内部</value>
+  </data>
+  <data name="Visibility.Public" xml:space="preserve">
+    <value>公共</value>
+  </data>
+  <data name="Visibility.Specified" xml:space="preserve">
+    <value>限定</value>
+  </data>
+  <data name="Visible" xml:space="preserve">
+    <value>是否可见</value>
+  </data>
+  <data name="VisitorAddress" xml:space="preserve">
+    <value>访客地址</value>
+  </data>
+  <data name="VisitorDescription" xml:space="preserve">
+    <value>访客描述</value>
+  </data>
+</root>

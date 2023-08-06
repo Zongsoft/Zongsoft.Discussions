@@ -26,16 +26,23 @@
 
 using Zongsoft.Services;
 
+[assembly: Zongsoft.Services.ApplicationModule(Zongsoft.Community.Module.NAME)]
+
 namespace Zongsoft.Community
 {
 	public class Module : ApplicationModule
 	{
+		#region 常量定义
+		/// <summary>表示社区模块的名称常量值。</summary>
+		public const string NAME = nameof(Community);
+		#endregion
+
 		#region 单例字段
 		public static readonly Module Current = new();
 		#endregion
 
 		#region 构造函数
-		public Module() : base("Community") { }
+		public Module() : base(NAME, Community.Properties.Resources.Community, Community.Properties.Resources.Community_Description) { }
 		#endregion
 	}
 }

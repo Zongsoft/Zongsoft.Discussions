@@ -32,72 +32,47 @@ using Zongsoft.Data;
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示用户浏览记录的实体类。
+	/// 表示访问历史的实体类。
 	/// </summary>
-	public interface IHistory
+	public abstract class History
 	{
 		#region 公共属性
-		/// <summary>
-		/// 获取或设置用户的编号。
-		/// </summary>
-		uint UserId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置用户的编号。</summary>
+		public abstract uint UserId { get; set; }
 
-		/// <summary>
-		/// 获取或设置浏览的主题编号。
-		/// </summary>
-		ulong ThreadId
-		{
-			get; set;
-		}
+		/// <summary>获取或设置浏览的主题编号。</summary>
+		public abstract ulong ThreadId { get; set; }
 
-		/// <summary>
-		/// 获取或设置浏览的主题对象。
-		/// </summary>
-		Thread Thread
-		{
-			get; set;
-		}
+		/// <summary>获取或设置浏览的主题对象。</summary>
+		public abstract Thread Thread { get; set; }
 
-		/// <summary>
-		/// 获取或设置累计浏览次数。
-		/// </summary>
-		uint Count
-		{
-			get; set;
-		}
+		/// <summary>获取或设置累计浏览次数。</summary>
+		public abstract uint Count { get; set; }
 
-		/// <summary>
-		/// 获取或设置首次浏览的时间。
-		/// </summary>
-		DateTime FirstViewedTime
-		{
-			get; set;
-		}
+		/// <summary>获取或设置首次浏览的时间。</summary>
+		public abstract DateTime FirstViewedTime { get; set; }
 
-		/// <summary>
-		/// 获取或设置最后浏览的时间。
-		/// </summary>
-		DateTime MostRecentViewedTime
-		{
-			get; set;
-		}
+		/// <summary>获取或设置最后浏览的时间。</summary>
+		public abstract DateTime MostRecentViewedTime { get; set; }
 		#endregion
 	}
 
 	/// <summary>
-	/// 表示浏览记录查询条件的实体类。
+	/// 表示访问历史查询条件的实体类。
 	/// </summary>
 	public abstract class HistoryCriteria : CriteriaBase
 	{
+		#region 公共属性
+		/// <summary>获取或设置浏览的主题编号。</summary>
 		public abstract ulong? ThreadId { get; set; }
 
+		/// <summary>获取或设置累计浏览次数范围。</summary>
 		public abstract Range<uint>? Count { get; set; }
 
+		/// <summary>获取或设置浏览的时间范围。</summary>
 		[Condition(typeof(TimestampConverter))]
 		public abstract Range<DateTime>? Timestamp { get; set; }
+		#endregion
 
 		#region 嵌套子类
 		private class TimestampConverter : ConditionConverter
@@ -109,8 +84,8 @@ namespace Zongsoft.Community.Models
 				if(timestamp.IsEmpty)
 					return null;
 
-				return Condition.Between(nameof(IHistory.FirstViewedTime), timestamp) |
-				       Condition.Between(nameof(IHistory.MostRecentViewedTime), timestamp);
+				return Condition.Between(context.GetFullName(nameof(History.FirstViewedTime)), timestamp) |
+				       Condition.Between(context.GetFullName(nameof(History.MostRecentViewedTime)), timestamp);
 			}
 		}
 		#endregion

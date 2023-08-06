@@ -61,7 +61,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[HttpGet("{id}/Histories")]
-		public IEnumerable<IHistory> GetHistories(uint id, [FromQuery]Paging page = null)
+		public IEnumerable<History> GetHistories(uint id, [FromQuery]Paging page = null)
 		{
 			return this.DataService.GetHistories(id, page);
 		}

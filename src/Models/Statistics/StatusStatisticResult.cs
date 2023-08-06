@@ -34,16 +34,7 @@ namespace Zongsoft.Community.Models.Statistics
 	/// </summary>
 	public struct StatusStatisticResult<TStatus> where TStatus : struct
 	{
-		public TStatus Status
-		{
-			get;
-			set;
-		}
-
-		public uint Count
-		{
-			get;
-			set;
-		}
+		public TStatus Status { get; set; }
+		public int Count { get; set; }
 	}
 }

@@ -32,31 +32,32 @@ using Zongsoft.Data;
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示社区子系统中的用户设置信息。
+	/// 表示用户信息的实体类。
 	/// </summary>
-	public abstract class UserProfile
+	public abstract class UserProfile : Zongsoft.Security.Membership.IUserIdentity
 	{
-		#region 构造函数
-		protected UserProfile()
-		{
-		}
-		#endregion
-
 		#region 公共属性
-		/// <summary>获取或设置用户所属的站点编号。</summary>
+		/// <summary>获取或设置用户所属站点编号。</summary>
 		public abstract uint SiteId { get; set; }
 
 		/// <summary>获取或设置用户编号。</summary>
 		public abstract uint UserId { get; set; }
 
 		/// <summary>获取或设置用户名称。</summary>
+		[ModelProperty(ModelPropertyRole.Name, ModelPropertyFlags.Required)]
 		public abstract string Name { get; set; }
 
 		/// <summary>获取或设置用昵称。</summary>
+		[ModelProperty(ModelPropertyRole.Name)]
 		public abstract string Nickname { get; set; }
 
-		/// <summary>获取或设置用户的所属命名空间。</summary>
-		public abstract string Namespace { get; set; }
+		/// <summary>获取或设置用户绑定的邮箱地址。</summary>
+		[ModelProperty(ModelPropertyRole.Email)]
+		public abstract string Email { get; set; }
+
+		/// <summary>获取或设置用户绑定的手机号码。</summary>
+		[ModelProperty(ModelPropertyRole.Phone)]
+		public abstract string Phone { get; set; }
 
 		/// <summary>获取或设置头像标识。</summary>
 		public abstract string Avatar { get; set; }
@@ -68,10 +69,7 @@ namespace Zongsoft.Community.Models
 		public abstract byte Grade { get; set; }
 
 		/// <summary>获取或设置用户的照片文件路径。</summary>
-		public abstract string PhotoPath { get; set; }
-
-		/// <summary>获取用户的照片文件访问URL。</summary>
-		public string PhotoUrl { get => Zongsoft.IO.FileSystem.GetUrl(this.PhotoPath); }
+		public abstract Zongsoft.IO.PathLocation PhotoPath { get; set; }
 
 		/// <summary>获取或设置用户累计发布的帖子总数。</summary>
 		public abstract uint TotalPosts { get; set; }
@@ -94,19 +92,35 @@ namespace Zongsoft.Community.Models
 		/// <summary>获取或设置用户最新主题的发布时间。</summary>
 		public abstract DateTime? MostRecentThreadTime { get; set; }
 
+		/// <summary>获取或设置用户的创建时间。</summary>
+		public abstract DateTime Creation { get; set; }
+
+		/// <summary>获取或设置用户的修改时间。</summary>
+		public abstract DateTime? Modification { get; set; }
+
 		/// <summary>获取或设置用户的描述信息。</summary>
 		public abstract string Description { get; set; }
 		#endregion
+
+		#region 显式实现
+		string Zongsoft.Security.Membership.IUserIdentity.Namespace { get; set; }
+		#endregion
 	}
 
+	/// <summary>
+	/// 表示用户信息查询条件的实体类。
+	/// </summary>
 	public abstract class UserProfileCriteria : CriteriaBase
 	{
 		#region 公共属性
+		/// <summary>获取或设置用户标识。</summary>
 		[Condition("Name", "Phone", "Email")]
 		public abstract string Identity { get; set; }
 
+		/// <summary>获取或设置用户性别。</summary>
 		public abstract Gender? Gender { get; set; }
 
+		/// <summary>获取或设置用户等级范围。</summary>
 		public abstract Range<byte>? Grade { get; set; }
 		#endregion
 	}

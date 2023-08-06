@@ -47,36 +47,14 @@ namespace Zongsoft.Community.Services.Commands
 		private const string SOURCE_OPTION = "source";
 		#endregion
 
-		#region 成员字段
-		private MessageService _service;
-		#endregion
-
 		#region 构造函数
-		public MessageSendCommand() : base("Send")
-		{
-		}
-
-		public MessageSendCommand(string name) : base(name)
-		{
-		}
+		public MessageSendCommand() : base("Send") { }
+		public MessageSendCommand(string name) : base(name) { }
 		#endregion
 
 		#region 公共属性
-		[ServiceDependency(Provider = "Community")]
-		public MessageService Service
-		{
-			get
-			{
-				return _service;
-			}
-			set
-			{
-				if(value == null)
-					throw new ArgumentNullException();
-
-				_service = value;
-			}
-		}
+		[ServiceDependency(Provider = Module.NAME)]
+		public MessageService Service { get; set; }
 		#endregion
 
 		#region 执行方法

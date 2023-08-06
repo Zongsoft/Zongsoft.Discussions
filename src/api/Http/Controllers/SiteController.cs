@@ -7,7 +7,7 @@
  *                   /____/
  *
  * Authors:
- *   钟峰(Popeye Zhong) <zongsoft@qq.com>
+ *   钟峰(Popeye Zhong) <9555843@qq.com>
  * 
  * Copyright (C) 2015-2017 Zongsoft Corporation. All rights reserved.
  * 
@@ -25,24 +25,33 @@
  */
 
 using System;
+using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+
+using Zongsoft.Web;
+using Zongsoft.Data;
+using Zongsoft.Community.Models;
+using Zongsoft.Community.Services;
+
+namespace Zongsoft.Community.Web.Http.Controllers
 {
-	/// <summary>
-	/// 表示可见性的枚举。
-	/// </summary>
-	public enum Visibility : byte
+	[Area("Community")]
+	[Route("[area]/Sites")]
+	public class SiteController : ApiControllerBase<Site, SiteService>
 	{
-		/// <summary>隐藏，仅限所有人可见</summary>
-		Hidden,
+		#region 构造函数
+		public SiteController(IServiceProvider serviceProvider) : base(serviceProvider) { }
+		#endregion
 
-		/// <summary>限定用户</summary>
-		Specified,
+		#region 公共方法
+		[HttpGet("{siteId}/Forums")]
+		public IEnumerable<Forum> GetForums(uint siteId, [FromQuery(Name = "group")]ushort groupId = 0) => this.DataService.GetForums(siteId, groupId);
 
-		/// <summary>内部，站内用户</summary>
-		Internal,
-
-		/// <summary>公共，所有人(包括匿名访客)</summary>
-		All,
+		[HttpGet("{siteId}/ForumGroups")]
+		public IEnumerable<ForumGroup> GetForumGroups(uint siteId) => this.DataService.GetForumGroups(siteId);
+		#endregion
 	}
 }

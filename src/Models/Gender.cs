@@ -25,7 +25,6 @@
  */
 
 using System;
-using System.ComponentModel;
 
 namespace Zongsoft.Community.Models
 {
@@ -34,12 +33,13 @@ namespace Zongsoft.Community.Models
 	/// </summary>
 	public enum Gender : byte
 	{
+		/// <summary>未知</summary>
+		None = 99,
+
 		/// <summary>男(先生)</summary>
-		[Description("Text.Gender.Male")]
 		Male = 1,
 
 		/// <summary>女(女士)</summary>
-		[Description("Text.Gender.Female")]
 		Female = 0,
 	}
 }

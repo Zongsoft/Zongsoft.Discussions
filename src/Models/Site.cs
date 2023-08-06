@@ -32,44 +32,47 @@ using Zongsoft.Data;
 namespace Zongsoft.Community.Models
 {
 	/// <summary>
-	/// 表示论坛分组的业务实体类。
+	/// 表示站点的实体类。
 	/// </summary>
-	public abstract class ForumGroup
+	public abstract class Site
 	{
-		#region 公共属性
-		/// <summary>获取或设置论坛组所属的站点编号，复合主键。</summary>
+		#region 普通属性
+		/// <summary>获取或设置站点编号。</summary>
 		public abstract uint SiteId { get; set; }
-
-		/// <summary>获取或设置论坛组的编号，复合主键。</summary>
-		public abstract ushort GroupId { get; set; }
-
-		/// <summary>获取或设置论坛组所在站点中的排列序号。</summary>
-		public abstract short Ordinal { get; set; }
-
-		/// <summary>获取或设置论坛组的名称。</summary>
+		/// <summary>获取或设置站点代号。</summary>
+		public abstract string SiteNo { get; set; }
+		/// <summary>获取或设置站点名称。</summary>
 		public abstract string Name { get; set; }
-
-		/// <summary>获取或设置论坛组的图标。</summary>
+		/// <summary>获取或设置站点域名。</summary>
+		public abstract string Host { get; set; }
+		/// <summary>获取或设置站点图标。</summary>
 		public abstract string Icon { get; set; }
-
-		/// <summary>获取或设置论坛组的描述文本。</summary>
+		/// <summary>获取或设置所属领域。</summary>
+		public abstract string Domain { get; set; }
+		/// <summary>获取或设置描述信息。</summary>
 		public abstract string Description { get; set; }
 		#endregion
 
 		#region 集合属性
-		/// <summary>获取或设置论坛组中的论坛集。</summary>
-		public abstract IEnumerable<Forum> Forums { get; set; }
+		/// <summary>获取或设置论坛组集合。</summary>
+		public abstract ICollection<ForumGroup> ForumGroups { get; set; }
+		/// <summary>获取或设置论坛集合。</summary>
+		public abstract ICollection<Forum> Forums { get; set; }
 		#endregion
 	}
 
 	/// <summary>
-	/// 表示论坛分组查询的实体类。
+	/// 表示站点查询条件的实体类。
 	/// </summary>
-	public abstract class ForumGroupCriteria : CriteriaBase
+	public abstract class SiteCriteria : CriteriaBase
 	{
-		#region 公共属性
-		/// <summary>获取或设置论坛组的名称。</summary>
+		/// <summary>获取或设置站点代号。</summary>
+		public abstract string SiteNo { get; set; }
+		/// <summary>获取或设置站点名称。</summary>
 		public abstract string Name { get; set; }
-		#endregion
+		/// <summary>获取或设置站点域名。</summary>
+		public abstract string Host { get; set; }
+		/// <summary>获取或设置所属领域。</summary>
+		public abstract string Domain { get; set; }
 	}
 }
