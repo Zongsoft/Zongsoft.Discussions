@@ -26,9 +26,7 @@
 
 using System;
 using System.Security.Claims;
-using System.Security.Principal;
 
-using Zongsoft.Services;
 using Zongsoft.Security;
 
 using Zongsoft.Community.Models;
@@ -38,10 +36,7 @@ namespace Zongsoft.Community.Security
 	public class UserIdentityTransformer : IClaimsIdentityTransformer
 	{
 		#region 公共方法
-		public bool CanTransform(ClaimsIdentity identity) =>
-			string.Equals(identity.AuthenticationType, "Zongsoft.Community", StringComparison.OrdinalIgnoreCase) ||
-			string.Equals(identity.FindFirst(ClaimTypes.System)?.Value, "Zongsoft.Community", StringComparison.OrdinalIgnoreCase);
-
+		public bool CanTransform(ClaimsIdentity identity) => string.Equals(identity.AuthenticationType, "Zongsoft.Community", StringComparison.OrdinalIgnoreCase);
 		public object Transform(ClaimsIdentity identity) => identity.AsModel<UserProfile>(this.OnTransform);
 		#endregion
 
