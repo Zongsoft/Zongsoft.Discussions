@@ -26,7 +26,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Collections.Generic;
 
 using Zongsoft.Data;
 
@@ -71,43 +70,6 @@ namespace Zongsoft.Community.Models
 
 		/// <summary>获取或设置创建时间。</summary>
 		public abstract DateTime CreatedTime { get; set; }
-		#endregion
-
-		#region 关联属性
-		/// <summary>获取或设置消息用户集。</summary>
-		public abstract IEnumerable<MessageUser> Users { get; set; }
-		#endregion
-
-		#region 嵌套结构
-		/// <summary>
-		/// 表示消息接受人的业务实体类。
-		/// </summary>
-		public struct MessageUser
-		{
-			#region 构造函数
-			public MessageUser(ulong messageId, uint userId, bool isRead = false)
-			{
-				this.MessageId = messageId;
-				this.UserId = userId;
-				this.IsRead = isRead;
-				this.User = null;
-				this.Message = null;
-			}
-			#endregion
-
-			#region 公共属性
-			/// <summary>获取或设置消息编号。</summary>
-			public ulong MessageId { get; set; }
-			/// <summary>获取或设置消息对象。</summary>
-			public Message Message { get; set; }
-			/// <summary>获取或设置用户编号。</summary>
-			public uint UserId { get; set; }
-			/// <summary>获取或设置用户对象。</summary>
-			public UserProfile User { get; set; }
-			/// <summary>获取或设置一个值，指示用户是否已读该消息。</summary>
-			public bool IsRead { get; set; }
-			#endregion
-		}
 		#endregion
 	}
 

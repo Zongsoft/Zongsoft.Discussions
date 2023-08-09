@@ -59,6 +59,41 @@ namespace Zongsoft.Community.Models
 		/// <summary>获取或设置论坛集合。</summary>
 		public abstract ICollection<Forum> Forums { get; set; }
 		#endregion
+
+		#region 嵌套结构
+		/// <summary>
+		/// 表示站点用户的结构。
+		/// </summary>
+		public struct SiteUser : IEquatable<SiteUser>
+		{
+			#region 构造函数
+			public SiteUser(uint siteId, uint userId, Site site = null, UserProfile user = null)
+			{
+				this.SiteId = siteId;
+				this.UserId = userId;
+				this.Site = site;
+				this.User = user;
+			}
+			#endregion
+
+			#region 公共属性
+			public uint SiteId { get; set; }
+			public uint UserId { get; set; }
+			public Site Site { get; set; }
+			public UserProfile User { get; set; }
+			#endregion
+
+			#region 重写方法
+			public bool Equals(SiteUser other) => this.SiteId == other.SiteId && this.UserId == other.UserId;
+			public override bool Equals(object obj) => obj is SiteUser other && this.Equals(other);
+			public override int GetHashCode() => HashCode.Combine(this.SiteId, this.UserId);
+			public override string ToString() => $"{this.SiteId}-{this.UserId}";
+
+			public static bool operator ==(SiteUser left, SiteUser right) => left.Equals(right);
+			public static bool operator !=(SiteUser left, SiteUser right) => !(left == right);
+			#endregion
+		}
+		#endregion
 	}
 
 	/// <summary>

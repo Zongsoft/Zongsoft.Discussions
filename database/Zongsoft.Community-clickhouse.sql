@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS `Community_Message`
 (
   `MessageId`   bigint unsigned NOT NULL COMMENT '主键，消息编号',
@@ -8,8 +7,8 @@ CREATE TABLE IF NOT EXISTS `Community_Message`
   `ContentType` varchar(50)     NULL     COMMENT '内容类型',
   `MessageType` varchar(50)     NULL     COMMENT '消息类型',
   `Referer`     varchar(50)     NULL     COMMENT '消息来源',
-  `Tags`        nvarchar(100)   NULL     COMMENT '标签集(以逗号分隔)',
-  `CreatorId`   int unsigned    NOT NULL COMMENT '创建人编号(零表示系统消息)',
+  `Tags`        nvarchar(100)   NULL     COMMENT '标签集',
+  `CreatorId`   int unsigned    NOT NULL COMMENT '创建人编号',
   `CreatedTime` datetime NOT    NULL DEFAULT NOW() COMMENT '创建时间',
   PRIMARY KEY (`MessageId`)
 ) ENGINE=MergeTree COMMENT '消息表';

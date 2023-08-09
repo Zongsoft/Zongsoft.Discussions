@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using Zongsoft.Data;
 using Zongsoft.Services;
 using Zongsoft.Security;
-using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 
 namespace Zongsoft.Community.Services
@@ -60,9 +59,6 @@ namespace Zongsoft.Community.Services
 				_basePath = value.Trim();
 			}
 		}
-
-		[ServiceDependency(IsRequired = true)]
-		public IUserProvider<IUserModel> UserProvider { get; set; }
 		#endregion
 
 		#region 公共方法
@@ -71,7 +67,7 @@ namespace Zongsoft.Community.Services
 			if(userId == 0)
 				userId = this.Principal.Identity.GetIdentifier<uint>();
 
-			return this.DataAccess.Select<History>(Condition.Equal("UserId", userId), "Thread", paging);
+			return this.DataAccess.Select<History>(Condition.Equal(nameof(History.UserId), userId), $"*, {nameof(History.Thread)}" + "{*}", paging);
 		}
 
 		public int GetMessageTotalCount(uint userId = 0)
@@ -79,7 +75,7 @@ namespace Zongsoft.Community.Services
 			if(userId == 0)
 				userId = this.Principal.Identity.GetIdentifier<uint>();
 
-			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId));
+			return this.DataAccess.Count<UserMessage>(Condition.Equal(nameof(UserMessage.UserId), userId));
 		}
 
 		public int GetMessageUnreadCount(uint userId = 0)
@@ -87,7 +83,7 @@ namespace Zongsoft.Community.Services
 			if(userId == 0)
 				userId = this.Principal.Identity.GetIdentifier<uint>();
 
-			return this.DataAccess.Count<Message.MessageUser>(Condition.Equal("UserId", userId) & Condition.Equal("IsRead", false));
+			return this.DataAccess.Count<UserMessage>(Condition.Equal(nameof(UserMessage.UserId), userId) & Condition.Equal(nameof(UserMessage.IsRead), false));
 		}
 
 		public IEnumerable<Message> GetMessages(uint userId = 0, bool? isRead = null, Paging paging = null)
@@ -95,17 +91,12 @@ namespace Zongsoft.Community.Services
 			if(userId == 0)
 				userId = this.Principal.Identity.GetIdentifier<uint>();
 
-			var conditions = ConditionCollection.And(Condition.Equal("UserId", userId));
+			var conditions = ConditionCollection.And(Condition.Equal(nameof(UserMessage.UserId), userId));
 
 			if(isRead.HasValue)
-				conditions.Add(Condition.Equal("IsRead", isRead.Value));
+				conditions.Add(Condition.Equal(nameof(UserMessage.IsRead), isRead.Value));
 
-			return this.DataAccess.Select<Message.MessageUser>(conditions, "Message", paging).Select(p => p.Message);
-		}
-
-		public bool SetStatus(uint userId, UserStatus status)
-		{
-			return this.UserProvider.SetStatus(userId, status);
+			return this.DataAccess.Select<UserMessage>(conditions, $"*, {nameof(UserMessage.Message)}" + "{*}", paging).Select(p => p.Message);
 		}
 
 		public bool SetAvatar(uint userId, string avatar)
@@ -126,36 +117,6 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override int OnInsert(IDataDictionary<UserProfile> data, ISchema schema, DataInsertOptions options)
-		{
-			//调用基类同名方法（新增用户配置信息）
-			if(base.OnInsert(data, schema, options) > 0)
-			{
-				var user = Model.Build<IUserModel>(u =>
-				{
-					u.UserId = data.GetValue(p => p.UserId);
-					u.Name = data.GetValue(p => p.Name);
-				});
-
-				user.Status = UserStatus.Active;
-
-				//如果未显式指定用户的命名空间，则使用当前用户的命名空间
-				if(string.IsNullOrWhiteSpace(user.Namespace))
-				{
-					user.Namespace = this.Principal.Identity.GetNamespace();
-				}
-
-				//创建基础用户账户
-				if(!this.UserProvider.Create(user, user.Name.Trim().ToLowerInvariant()))
-					throw new InvalidOperationException($"The '{user.Name}' user create failed.");
-
-				//更新用户编号
-				data.SetValue(p => p.UserId, user.UserId);
-			}
-
-			return 1;
-		}
-
 		protected override int OnUpdate(IDataDictionary<UserProfile> data, ICondition criteria, ISchema schema, DataUpdateOptions options)
 		{
 			//如果没有指定用户编号或指定的用户编号为零，则显式指定为当前用户编号

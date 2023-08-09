@@ -76,10 +76,9 @@ namespace Zongsoft.Community.Services.Commands
 				entity.Referer = context.Expression.Options.GetValue<string>(SOURCE_OPTION);
 				entity.Subject = context.Expression.Options.GetValue<string>(SUBJECT_OPTION);
 				entity.MessageType = context.Expression.Options.GetValue<string>(MESSAGETYPE_OPTION);
-				entity.Users = GetUsers(context.Expression.Arguments).Select(uid => new Models.Message.MessageUser(0, uid));
 			});
 
-			if(this.Service.Insert(message) > 0)
+			if(this.Service.Send(message, GetUsers(context.Expression.Arguments)) > 0)
 				return message;
 
 			return null;

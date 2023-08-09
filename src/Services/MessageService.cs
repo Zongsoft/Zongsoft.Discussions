@@ -44,14 +44,27 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 公共方法
-		public IEnumerable<Message.MessageUser> GetUsers(ulong messageId, bool? isRead = null, Paging paging = null)
+		public int Send(Message message, IEnumerable<uint> users)
 		{
-			var conditions = ConditionCollection.And(Condition.Equal("MessageId", messageId));
+			if(message == null)
+				throw new ArgumentNullException(nameof(message));
 
-			if(isRead.HasValue)
-				conditions.Add(Condition.Equal("IsRead", isRead.Value));
+			if(users == null || !users.Any())
+				return 0;
 
-			return this.DataAccess.Select<Message.MessageUser>(conditions, "User, User.User", paging);
+			using(var transaction = new Zongsoft.Transactions.Transaction())
+			{
+				//插入消息
+				this.Insert(message);
+
+				//插入用户消息
+				var count = this.DataAccess.InsertMany(users.Select(uid => new UserMessage(uid, message.MessageId)));
+
+				//提交事务
+				transaction.Commit();
+
+				return count;
+			}
 		}
 		#endregion
 
@@ -69,12 +82,12 @@ namespace Zongsoft.Community.Services
 				message.Content = Utility.ReadTextFile(message.Content);
 
 			//更新当前用户对该消息的读取状态
-			this.DataAccess.Update(this.DataAccess.Naming.Get<Message.MessageUser>(), new
+			this.DataAccess.Update(this.DataAccess.Naming.Get<UserMessage>(), new
 			{
 				IsRead = true,
 			},
-			Condition.Equal(nameof(Message.MessageUser.MessageId), message.MessageId) &
-			Condition.Equal(nameof(Message.MessageUser.UserId), this.Principal.Identity.GetIdentifier<uint>()));
+			Condition.Equal(nameof(UserMessage.MessageId), message.MessageId) &
+			Condition.Equal(nameof(UserMessage.UserId), this.Principal.Identity.GetIdentifier<uint>()));
 
 			return message;
 		}
@@ -107,38 +120,18 @@ namespace Zongsoft.Community.Services
 				data.SetValue(p => p.ContentType, Utility.GetContentType(data.GetValue(p => p.ContentType), false));
 			});
 
-			using(var transaction = new Zongsoft.Transactions.Transaction())
+			var count = base.OnInsert(data, schema, options);
+
+			if(count < 1)
 			{
-				var count = base.OnInsert(data, schema, options);
-
-				if(count < 1)
-				{
-					//如果新增记录失败则删除刚创建的文件
-					if(filePath != null && filePath.Length > 0)
-						Utility.DeleteFile(filePath);
-
-					return count;
-				}
-
-				data.TryGetValue(p => p.Users, (key, users) =>
-				{
-					if(users == null)
-						return;
-
-					IEnumerable<Message.MessageUser> GetMembers(ulong messageId, IEnumerable<Message.MessageUser> members)
-					{
-						foreach(var member in members)
-							yield return new Message.MessageUser(messageId, member.UserId);
-					}
-
-					this.DataAccess.InsertMany(GetMembers(data.GetValue(p => p.MessageId), users));
-				});
-
-				//提交事务
-				transaction.Commit();
+				//如果新增记录失败则删除刚创建的文件
+				if(filePath != null && filePath.Length > 0)
+					Utility.DeleteFile(filePath);
 
 				return count;
 			}
+
+			return count;
 		}
 
 		protected override int OnUpdate(IDataDictionary<Message> data, ICondition criteria, ISchema schema, DataUpdateOptions options)

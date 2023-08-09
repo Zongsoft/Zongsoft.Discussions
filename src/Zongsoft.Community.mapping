@@ -9,40 +9,17 @@
 
 			<property name="MessageId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
-			<property name="Subject" type="string" length="50" nullable="false" />
-			<property name="Content" type="string" length="500" nullable="false" />
-			<property name="ContentType" type="string" length="100" nullable="true" />
-			<property name="MessageType" type="string" length="50" nullable="true" />
-			<property name="Referer" type="string" length="50" nullable="true" />
+			<property name="Subject" type="nvarchar" length="50" nullable="false" />
+			<property name="Content" type="nvarchar" length="500" nullable="false" />
+			<property name="ContentType" type="varchar" length="100" nullable="true" />
+			<property name="MessageType" type="varchar" length="50" nullable="true" />
+			<property name="Referer" type="varchar" length="50" nullable="true" />
 			<property name="Tags" type="nvarchar" length="100" nullable="true" />
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
 			<complexProperty name="Creator" port="UserProfile">
 				<link port="UserId" anchor="CreatorId" />
-			</complexProperty>
-
-			<complexProperty name="Users" port="MessageUser" multiplicity="*" immutable="false">
-				<link port="MessageId" />
-			</complexProperty>
-		</entity>
-
-		<entity name="MessageUser" table="Community_MessageUser">
-			<key>
-				<member name="MessageId" />
-				<member name="UserId" />
-			</key>
-
-			<property name="MessageId" type="ulong" nullable="false" />
-			<property name="UserId" type="uint" nullable="false" />
-			<property name="IsRead" type="bool" nullable="false" />
-
-			<complexProperty name="Message" port="Message">
-				<link port="MessageId" />
-			</complexProperty>
-
-			<complexProperty name="User" port="UserProfile">
-				<link port="UserId" />
 			</complexProperty>
 		</entity>
 
@@ -54,11 +31,11 @@
 			<property name="FeedbackId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="Kind" type="byte" nullable="false" />
-			<property name="Subject" type="string" length="50" nullable="false" />
-			<property name="Content" type="string" length="500" nullable="false" />
-			<property name="ContentType" type="string" length="100" nullable="true" />
-			<property name="ContactName" type="string" length="50" nullable="true" />
-			<property name="ContactText" type="string" length="50" nullable="true" />
+			<property name="Subject" type="nvarchar" length="50" nullable="false" />
+			<property name="Content" type="nvarchar" length="500" nullable="false" />
+			<property name="ContentType" type="varchar" length="100" nullable="true" />
+			<property name="ContactName" type="nvarchar" length="50" nullable="true" />
+			<property name="ContactText" type="nvarchar" length="50" nullable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 		</entity>
 
@@ -70,15 +47,15 @@
 			<property name="FileId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="true" immutable="true" />
 			<property name="FolderId" type="uint" nullable="false" />
-			<property name="Name" type="string" length="50" nullable="false" />
-			<property name="Acronym" type="string" length="50" nullable="true" />
-			<property name="Path" type="string" length="200" nullable="false" />
-			<property name="Type" type="string" length="100" nullable="false" />
+			<property name="Name" type="nvarchar" length="50" nullable="false" />
+			<property name="Acronym" type="varchar" length="50" nullable="true" />
+			<property name="Path" type="nvarchar" length="200" nullable="false" />
+			<property name="Type" type="varchar" length="100" nullable="false" />
 			<property name="Size" type="uint" nullable="false" />
 			<property name="Tags" type="nvarchar" length="100" nullable="true" />
 			<property name="CreatorId" type="uint" nullable="true" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
-			<property name="Description" type="string" length="100" nullable="true" />
+			<property name="Description" type="nvarchar" length="100" nullable="true" />
 
 			<complexProperty name="Folder" port="Folder">
 				<link port="FolderId" />
@@ -96,13 +73,13 @@
 
 			<property name="FolderId" type="uint" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
-			<property name="Name" type="string" length="50" nullable="false" />
-			<property name="Acronym" type="string" length="50" nullable="true" />
-			<property name="Icon" type="string" length="50" nullable="true" />
+			<property name="Name" type="nvarchar" length="50" nullable="false" />
+			<property name="Acronym" type="varchar" length="50" nullable="true" />
+			<property name="Icon" type="varchar" length="50" nullable="true" />
 			<property name="Shareability" type="byte" nullable="false" />
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
-			<property name="Description" type="string" length="500" nullable="true" />
+			<property name="Description" type="nvarchar" length="500" nullable="true" />
 
 			<complexProperty name="Creator" port="UserProfile">
 				<link port="UserId" anchor="CreatorId" />
@@ -138,7 +115,8 @@
 				<member name="SiteId" />
 			</key>
 
-			<property name="SiteId" type="int" length="4" nullable="false" />
+			<property name="SiteId" type="int" length="4" nullable="false" sequence="#" />
+			<property name="SiteNo" type="varchar" length="50" nullable="false" />
 			<property name="Name" type="nvarchar" length="50" nullable="false" />
 			<property name="Host" type="varchar" length="50" nullable="false" />
 			<property name="Icon" type="varchar" length="100" nullable="true" />
@@ -154,6 +132,24 @@
 			</complexProperty>
 		</entity>
 
+		<entity name="SiteUser" table="Community_SiteUser">
+			<key>
+				<member name="SiteId" />
+				<member name="UserId" />
+			</key>
+
+			<property name="SiteId" type="uint" nullable="false" />
+			<property name="UserId" type="uint" nullable="false" />
+
+			<complexProperty name="Site" port="Site">
+				<link port="SiteId" />
+			</complexProperty>
+
+			<complexProperty name="User" port="UserProfile">
+				<link port="UserId" />
+			</complexProperty>
+		</entity>
+
 		<entity name="ForumGroup" table="Community_ForumGroup">
 			<key>
 				<member name="SiteId" />
@@ -162,10 +158,10 @@
 
 			<property name="SiteId" type="uint" nullable="false" />
 			<property name="GroupId" type="ushort" nullable="false" sequence="#SiteId" />
-			<property name="Name" type="string" length="50" nullable="false" />
-			<property name="Icon" type="string" length="100" nullable="true" />
+			<property name="Name" type="nvarchar" length="50" nullable="false" />
+			<property name="Icon" type="varchar" length="100" nullable="true" />
 			<property name="Ordinal" type="short" nullable="false" />
-			<property name="Description" type="string" length="500" nullable="true" />
+			<property name="Description" type="nvarchar" length="500" nullable="true" />
 
 			<complexProperty name="Forums" port="Forum" multiplicity="*">
 				<link port="SiteId" />
@@ -182,9 +178,9 @@
 			<property name="SiteId" type="uint" nullable="false" />
 			<property name="ForumId" type="ushort" nullable="false" sequence="#SiteId" />
 			<property name="GroupId" type="ushort" nullable="false" />
-			<property name="Name" type="string" length="50" nullable="false" />
-			<property name="Description" type="string" length="500" nullable="true" />
-			<property name="CoverPicturePath" type="string" length="200" nullable="true" />
+			<property name="Name" type="nvarchar" length="50" nullable="false" />
+			<property name="Description" type="nvarchar" length="500" nullable="true" />
+			<property name="CoverPicturePath" type="nvarchar" length="200" nullable="true" />
 			<property name="Ordinal" type="short" nullable="false" />
 			<property name="IsPopular" type="bool" nullable="false" />
 			<property name="Approvable" type="bool" nullable="false" />
@@ -193,15 +189,15 @@
 			<property name="TotalPosts" type="int" nullable="false" />
 			<property name="TotalThreads" type="int" nullable="false" />
 			<property name="MostRecentThreadId" type="ulong" nullable="true" />
-			<property name="MostRecentThreadTitle" type="string" length="100" nullable="true" />
+			<property name="MostRecentThreadTitle" type="nvarchar" length="100" nullable="true" />
 			<property name="MostRecentThreadAuthorId" type="int" nullable="true" />
-			<property name="MostRecentThreadAuthorName" type="string" length="50" nullable="true" />
-			<property name="MostRecentThreadAuthorAvatar" type="string" length="100" nullable="true" />
+			<property name="MostRecentThreadAuthorName" type="nvarchar" length="50" nullable="true" />
+			<property name="MostRecentThreadAuthorAvatar" type="varchar" length="100" nullable="true" />
 			<property name="MostRecentThreadTime" type="datetime" nullable="true" />
 			<property name="MostRecentPostId" type="ulong" nullable="true" />
 			<property name="MostRecentPostAuthorId" type="int" nullable="true" />
-			<property name="MostRecentPostAuthorName" type="string" length="50" nullable="true" />
-			<property name="MostRecentPostAuthorAvatar" type="string" length="100" nullable="true" />
+			<property name="MostRecentPostAuthorName" type="nvarchar" length="50" nullable="true" />
+			<property name="MostRecentPostAuthorAvatar" type="varchar" length="100" nullable="true" />
 			<property name="MostRecentPostTime" type="datetime" nullable="true" />
 			<property name="CreatorId" type="int" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
@@ -265,13 +261,13 @@
 			<property name="ThreadId" type="ulong" nullable="false" sequence="#" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="ForumId" type="ushort" nullable="false" />
-			<property name="Title" type="string" length="50" nullable="false" />
-			<property name="Acronym" type="string" length="50" nullable="true" />
-			<property name="Summary" type="string" length="500" nullable="true" />
-			<property name="Tags" type="string" length="100" nullable="true" />
+			<property name="Title" type="nvarchar" length="50" nullable="false" />
+			<property name="Acronym" type="varchar" length="50" nullable="true" />
+			<property name="Summary" type="nvarchar" length="500" nullable="true" />
+			<property name="Tags" type="nvarchar" length="100" nullable="true" />
 			<property name="PostId" type="ulong" nullable="false" />
-			<property name="CoverPicturePath" type="string" length="200" nullable="true" />
-			<property name="LinkUrl" type="string" length="200" nullable="true" />
+			<property name="CoverPicturePath" type="nvarchar" length="200" nullable="true" />
+			<property name="LinkUrl" type="nvarchar" length="200" nullable="true" />
 			<property name="Visible" type="bool" nullable="false" default="true" />
 			<property name="Approved" type="bool" nullable="false" default="true" />
 			<property name="IsLocked" type="bool" nullable="false" />
@@ -284,8 +280,8 @@
 			<property name="ViewedTime" type="datetime" nullable="true" />
 			<property name="MostRecentPostId" type="ulong" nullable="true" />
 			<property name="MostRecentPostAuthorId" type="uint" nullable="true" />
-			<property name="MostRecentPostAuthorName" type="string" length="50" nullable="true" />
-			<property name="MostRecentPostAuthorAvatar" type="string" length="100" nullable="true" />
+			<property name="MostRecentPostAuthorName" type="nvarchar" length="50" nullable="true" />
+			<property name="MostRecentPostAuthorAvatar" type="varchar" length="100" nullable="true" />
 			<property name="MostRecentPostTime" type="datetime" nullable="true" />
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
@@ -321,16 +317,16 @@
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
 			<property name="ThreadId" type="ulong" nullable="false" />
 			<property name="RefererId" type="ulong" nullable="false" />
-			<property name="Content" type="string" length="500" nullable="false" />
-			<property name="ContentType" type="string" length="50" nullable="true" />
+			<property name="Content" type="nvarchar" length="500" nullable="false" />
+			<property name="ContentType" type="varchar" length="50" nullable="true" />
 			<property name="Visible" type="bool" nullable="false" default="true" />
 			<property name="Approved" type="bool" nullable="false" default="true" />
 			<property name="IsLocked" type="bool" nullable="false" />
 			<property name="IsValued" type="bool" nullable="false" />
 			<property name="TotalUpvotes" type="uint" nullable="false" />
 			<property name="TotalDownvotes" type="uint" nullable="false" />
-			<property name="VisitorAddress" type="string" length="100" nullable="true" />
-			<property name="VisitorDescription" type="string" length="500" nullable="true" />
+			<property name="VisitorAddress" type="nvarchar" length="100" nullable="true" />
+			<property name="VisitorDescription" type="nvarchar" length="500" nullable="true" />
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
@@ -431,11 +427,11 @@
 
 			<property name="UserId" type="uint" nullable="false" />
 			<property name="SiteId" type="uint" nullable="false" immutable="true" />
-			<property name="Name" type="string" length="50" nullable="false" />
-			<property name="Nickname" type="string" length="50" nullable="false" />
-			<property name="Email" type="string" length="50" nullable="true" />
-			<property name="Phone" type="string" length="50" nullable="true" />
-			<property name="Avatar" type="string" length="100" nullable="true" />
+			<property name="Name" type="nvarchar" length="50" nullable="false" />
+			<property name="Nickname" type="nvarchar" length="50" nullable="false" />
+			<property name="Email" type="varchar" length="50" nullable="true" />
+			<property name="Phone" type="varchar" length="50" nullable="true" />
+			<property name="Avatar" type="varchar" length="100" nullable="true" />
 			<property name="Gender" type="byte" nullable="false" />
 			<property name="Grade" type="byte" nullable="false" />
 			<property name="TotalPosts" type="uint" nullable="false" />
@@ -443,11 +439,42 @@
 			<property name="MostRecentPostId" type="ulong" nullable="true" />
 			<property name="MostRecentPostTime" type="datetime" nullable="true" />
 			<property name="MostRecentThreadId" type="ulong" nullable="true" />
-			<property name="MostRecentThreadTitle" type="string" length="100" nullable="true" />
+			<property name="MostRecentThreadTitle" type="nvarchar" length="100" nullable="true" />
 			<property name="MostRecentThreadTime" type="datetime" nullable="true" />
 			<property name="Creation" type="datetime" nullable="false" default="now()" immutable="true" />
 			<property name="Modification" type="datetime" nullable="true" />
-			<property name="Description" type="string" length="500" nullable="true" />
+			<property name="Description" type="nvarchar" length="500" nullable="true" />
+
+			<complexProperty name="Site" port="Site">
+				<link port="SiteId" />
+			</complexProperty>
+
+			<complexProperty name="MostRecentPost" port="Post">
+				<link port="PostId" anchor="MostRecentPostId" />
+			</complexProperty>
+
+			<complexProperty name="MostRecentThread" port="Thread">
+				<link port="ThreadId" anchor="MostRecentThreadId" />
+			</complexProperty>
+		</entity>
+
+		<entity name="UserMessage" table="Community_UserMessage">
+			<key>
+				<member name="UserId" />
+				<member name="MessageId" />
+			</key>
+
+			<property name="UserId" type="uint" nullable="false" />
+			<property name="MessageId" type="ulong" nullable="false" />
+			<property name="IsRead" type="bool" nullable="false" />
+
+			<complexProperty name="User" port="UserProfile">
+				<link port="UserId" />
+			</complexProperty>
+
+			<complexProperty name="Message" port="Message">
+				<link port="MessageId" />
+			</complexProperty>
 		</entity>
 	</container>
 </schema>

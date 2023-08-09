@@ -1,4 +1,4 @@
-# Zongsoft.Community 社区系统
+# Zongsoft.Community(Discussions) 社区系统
 
 ## 消息表 `Community.Message`
 
@@ -16,15 +16,6 @@ CreatorId   | int      | 4   | ✗ | 创建人编号(零表示系统消息)
 CreatedTime | datetime | -   | ✗ | 创建时间
 
 
-## 消息接收人员表 `Community.MessageUser`
-
-字段名称 | 数据类型 | 长度 | 可空 | 备注
-------- |:-------:|:---:|:---:| ----
-MessageId | bigint | 8 | ✗ | 主键，消息编号
-UserId    | int    | 4 | ✗ | 主键，用户编号
-IsRead    | bool   | - | ✗ | 是否已读
-
-
 ## 意见反馈表 `Community.Feedback`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
@@ -40,11 +31,11 @@ ContactText | nvarchar | 50  | ✓ | 联系方式
 CreatedTime | datetime | -   | ✗ | 反馈时间
 
 
-## 文件夹表 `Community.Folder`
+## 目录表 `Community.Folder`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
-FolderId     | int      | 4   | ✗ | 主键，文件夹编号
+FolderId     | int      | 4   | ✗ | 主键，目录编号
 SiteId       | int      | 4   | ✗ | 所属站点编号
 Name         | nvarchar | 50  | ✗ | 目录名称
 Icon         | varchar  | 50  | ✓ | 图标标识
@@ -55,11 +46,11 @@ CreatedTime  | datetime | -   | ✗ | 创建时间
 Description  | varchar  | 500 | ✓ | 备注描述
 
 
-## 文件夹用户表 `Community.FolderUser`
+## 目录用户表 `Community.FolderUser`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
-FolderId   | int      | 4 | ✗ | 主键，文件夹编号
+FolderId   | int      | 4 | ✗ | 主键，目录编号
 UserId     | int      | 4 | ✗ | 主键，用户编号
 Permission | byte     | 1 | ✗ | 权限定义(0:None, 1:Read, 2:Write)
 Expiration | datetime | - | ✓ | 过期时间
@@ -96,7 +87,15 @@ Domain      | varchar  | 50  | ✗ | 所属领域
 Description | nvarchar | 500 | ✓ | 描述信息
 
 
-## 论坛分组表 `Community.ForumGroup`
+## 站点用户表 `Community.SiteUser`
+
+字段名称 | 数据类型 | 长度 | 可空 | 备注
+------- |:-------:|:---:|:---:| ----
+SiteId      | int  | 4 | ✗ | 主键，站点编号
+UserId      | int  | 4 | ✗ | 主键，用户编号
+
+
+## 论坛组表 `Community.ForumGroup`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -117,25 +116,25 @@ ForumId                      | smallint | 2   | ✗ | 主键，论坛编号
 GroupId                      | smallint | 2   | ✗ | 论坛组编号
 Name                         | nvarchar | 50  | ✗ | 论坛名称
 Description                  | nvarchar | 500 | ✓ | 描述文本
-CoverPicturePath             | varchar  | 200 | ✓ | 封面图片路径
+CoverPicturePath             | varchar  | 200 | ✓ | 封面路径
 Ordinal                      | smallint | 2   | ✗ | 排列顺序
 IsPopular                    | bool     | -   | ✗ | 是否热门版块
-Approvable                   | bool     | -   | ✗ | 发帖是否需要审核
+Approvable                   | bool     | -   | ✗ | 发帖是否审核
 Visibility                   | byte     | 1   | ✗ | 可见范围
 Accessibility                | byte     | 1   | ✗ | 可访问性
 TotalPosts                   | int      | 4   | ✗ | 累计帖子总数
 TotalThreads                 | int      | 4   | ✗ | 累计主题总数
-MostRecentThreadId           | bigint   | 8   | ✓ | 最新主题的编号
-MostRecentThreadTitle        | nvarchar | 100 | ✓ | 最新主题的标题
-MostRecentThreadAuthorId     | int      | 4   | ✓ | 最新主题的作者编号
-MostRecentThreadAuthorName   | nvarchar | 50  | ✓ | 最新主题的作者名
-MostRecentThreadAuthorAvatar | varchar  | 100 | ✓ | 最新主题的作者头像
-MostRecentThreadTime         | datetime | -   | ✓ | 最新主题的发布时间
-MostRecentPostId             | bigint   | 8   | ✓ | 最后回帖的帖子编号
-MostRecentPostAuthorId       | int      | 4   | ✓ | 最后回帖的用户编号
-MostRecentPostAuthorName     | nvarchar | 50  | ✓ | 最后回帖的用户名
-MostRecentPostAuthorAvatar   | varchar  | 100 | ✓ | 最后回帖的用户头像
-MostRecentPostTime           | datetime | -   | ✓ | 最后回帖的时间
+MostRecentThreadId           | bigint   | 8   | ✓ | 最新主题编号
+MostRecentThreadTitle        | nvarchar | 100 | ✓ | 最新主题标题
+MostRecentThreadAuthorId     | int      | 4   | ✓ | 最新主题作者编号
+MostRecentThreadAuthorName   | nvarchar | 50  | ✓ | 最新主题作者名称
+MostRecentThreadAuthorAvatar | varchar  | 100 | ✓ | 最新主题作者头像
+MostRecentThreadTime         | datetime | -   | ✓ | 最新主题发布时间
+MostRecentPostId             | bigint   | 8   | ✓ | 最后回帖帖子编号
+MostRecentPostAuthorId       | int      | 4   | ✓ | 最后回帖用户编号
+MostRecentPostAuthorName     | nvarchar | 50  | ✓ | 最后回帖用户名称
+MostRecentPostAuthorAvatar   | varchar  | 100 | ✓ | 最后回帖用户头像
+MostRecentPostTime           | datetime | -   | ✓ | 最后回帖时间
 CreatorId                    | int      | 4   | ✗ | 创建人编号
 CreatedTime                  | datetime | -   | ✗ | 创建时间
 
@@ -162,12 +161,12 @@ Title                      | nvarchar | 50  | ✗ | 文章标题
 Acronym                    | varchar  | 50  | ✓ | 标题缩写
 Summary                    | nvarchar | 500 | ✓ | 文章摘要
 Tags                       | nvarchar | 100 | ✓ | 标签集(以逗号分隔)
-PostId                     | bigint   | 8   | ✗ | 内容帖子编号
-CoverPicturePath           | varchar  | 200 | ✓ | 封面图片路径
+PostId                     | bigint   | 8   | ✗ | 主帖编号
+CoverPicturePath           | varchar  | 200 | ✓ | 封面路径
 LinkUrl                    | varchar  | 200 | ✓ | 主题链接
 Visible                    | bool     | -   | ✗ | 是否可见(默认为真)
 Approved                   | bool     | -   | ✗ | 是否审核通过
-IsLocked                   | bool     | -   | ✗ | 已被锁定（锁定则不允许回复）
+IsLocked                   | bool     | -   | ✗ | 已被锁定(锁定则不允许回复)
 IsPinned                   | bool     | -   | ✗ | 是否置顶
 IsValued                   | bool     | -   | ✗ | 是否精华帖
 IsGlobal                   | bool     | -   | ✗ | 是否全局贴
@@ -175,11 +174,11 @@ TotalViews                 | int      | 4   | ✗ | 累计阅读数
 TotalReplies               | int      | 4   | ✗ | 累计回帖数
 ApprovedTime               | datetime | -   | ✓ | 审核通过时间
 ViewedTime                 | datetime | -   | ✓ | 最后被阅读时间
-MostRecentPostId           | bigint   | 8   | ✓ | 最后回帖的帖子编号
-MostRecentPostAuthorId     | int      | 4   | ✓ | 最后回帖的用户编号
-MostRecentPostAuthorName   | nvarchar | 50  | ✓ | 最后回帖的用户名称
-MostRecentPostAuthorAvatar | varchar  | 100 | ✓ | 最后回帖的用户头像
-MostRecentPostTime         | datetime | -   | ✓ | 最后回帖的时间
+MostRecentPostId           | bigint   | 8   | ✓ | 最后回帖编号
+MostRecentPostAuthorId     | int      | 4   | ✓ | 最后回帖用户编号
+MostRecentPostAuthorName   | nvarchar | 50  | ✓ | 最后回帖用户名称
+MostRecentPostAuthorAvatar | varchar  | 100 | ✓ | 最后回帖用户头像
+MostRecentPostTime         | datetime | -   | ✓ | 最后回帖时间
 CreatorId                  | int      | 4   | ✗ | 创建人编号
 CreatedTime                | datetime | -   | ✗ | 创建时间
 
@@ -193,9 +192,9 @@ SiteId             | int      | 4   | ✗ | 所属站点编号
 ThreadId           | bigint   | 8   | ✗ | 所属主题编号
 RefererId          | bigint   | 8   | ✗ | 回帖引用帖子编号
 Content            | varchar  | 500 | ✗ | 帖子内容
-ContentType        | varchar  | 50  | ✓ | 内容类型(text/plain+embedded, text/html, application/json)
+ContentType        | varchar  | 50  | ✓ | 内容类型(text/plain+embedded, text/html)
 Visible            | bool     | -   | ✗ | 是否可见(默认为真)
-Approved           | bool     | -   | ✗ | 是否审核通过
+Approved           | bool     | -   | ✗ | 是否已审核
 IsLocked           | bool     | -   | ✗ | 是否已锁定(锁定则不允许回复)
 IsValued           | bool     | -   | ✗ | 是否精华帖
 TotalUpvotes       | int      | 4   | ✗ | 累计点赞数
@@ -244,22 +243,22 @@ MostRecentViewedTime | datetime | - | ✗ | 最后浏览时间
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
 UserId                | int      | 4   | ✗ | 主键，用户编号
-SiteId                | int      | 4   | ✗ | 用户所属站点编号
+SiteId                | int      | 4   | ✗ | 默认站点编号
 Name                  | varchar  | 50  | ✗ | 用户名称
 Nickname              | nvarchar | 50  | ✓ | 用户昵称
-Email                 | varchar  | 50  | ✓ | 用户绑定的邮箱地址
-Phone                 | varchar  | 50  | ✓ | 用户绑定的手机号码
+Email                 | varchar  | 50  | ✓ | 邮箱地址
+Phone                 | varchar  | 50  | ✓ | 手机号码
 Avatar                | varchar  | 100 | ✓ | 用户头像
-Gender                | byte     | 1   | ✗ | 用户性别(0:Female, 1:Male)
-Grade                 | byte     | 1   | ✗ | 用户等级(默认为零)
+Gender                | byte     | 1   | ✗ | 用户性别
+Grade                 | byte     | 1   | ✗ | 用户等级
 PhotoPath             | varchar  | 200 | ✓ | 照片文件路径
 TotalPosts            | int      | 4   | ✗ | 累计回复总数
 TotalThreads          | int      | 4   | ✗ | 累计主题总数
-MostRecentPostId      | bigint   | 8   | ✓ | 最后回帖的帖子编号
-MostRecentPostTime    | datetime | -   | ✓ | 最后回帖的时间
-MostRecentThreadId    | bigint   | 8   | ✓ | 最新发布的主题编号
-MostRecentThreadTitle | nvarchar | 100 | ✓ | 最新发布的主题标题
-MostRecentThreadTime  | datetime | -   | ✓ | 最新主题的发布时间
+MostRecentPostId      | bigint   | 8   | ✓ | 最后回帖编号
+MostRecentPostTime    | datetime | -   | ✓ | 最后回帖时间
+MostRecentThreadId    | bigint   | 8   | ✓ | 最新发布主题编号
+MostRecentThreadTitle | nvarchar | 100 | ✓ | 最新发布主题标题
+MostRecentThreadTime  | datetime | -   | ✓ | 最新主题发布时间
 Creation              | datetime | -   | ✗ | 创建时间
-Modification          | datetime | -   | ✓ | 最后修改时间
+Modification          | datetime | -   | ✓ | 修改时间
 Description           | nvarchar | 500 | ✓ | 描述信息

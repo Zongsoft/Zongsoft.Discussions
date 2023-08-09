@@ -40,6 +40,9 @@ namespace Zongsoft.Community.Models
 		/// <summary>获取或设置用户所属站点编号。</summary>
 		public abstract uint SiteId { get; set; }
 
+		/// <summary>获取或设置用户所属站点对象。</summary>
+		public abstract Site Site { get; set; }
+
 		/// <summary>获取或设置用户编号。</summary>
 		public abstract uint UserId { get; set; }
 
@@ -83,6 +86,9 @@ namespace Zongsoft.Community.Models
 		/// <summary>获取或设置用户最后回帖的时间。</summary>
 		public abstract DateTime? MostRecentPostTime { get; set; }
 
+		/// <summary>获取或设置用户最后回帖的帖子对象。</summary>
+		public abstract Post MostRecentPost { get; set; }
+
 		/// <summary>获取或设置用户最新发布的主题编号。</summary>
 		public abstract ulong? MostRecentThreadId { get; set; }
 
@@ -91,6 +97,9 @@ namespace Zongsoft.Community.Models
 
 		/// <summary>获取或设置用户最新主题的发布时间。</summary>
 		public abstract DateTime? MostRecentThreadTime { get; set; }
+
+		/// <summary>获取或设置用户最新发布的主题对象。</summary>
+		public abstract Thread MostRecentThread { get; set; }
 
 		/// <summary>获取或设置用户的创建时间。</summary>
 		public abstract DateTime Creation { get; set; }
@@ -122,6 +131,36 @@ namespace Zongsoft.Community.Models
 
 		/// <summary>获取或设置用户等级范围。</summary>
 		public abstract Range<byte>? Grade { get; set; }
+		#endregion
+	}
+
+	/// <summary>
+	/// 表示用户消息的结构。
+	/// </summary>
+	public struct UserMessage
+	{
+		#region 构造函数
+		public UserMessage(uint userId, ulong messageId, bool isRead = false)
+		{
+			this.MessageId = messageId;
+			this.UserId = userId;
+			this.IsRead = isRead;
+			this.User = null;
+			this.Message = null;
+		}
+		#endregion
+
+		#region 公共属性
+		public uint UserId { get; set; }
+		/// <summary>获取或设置用户对象。</summary>
+		public UserProfile User { get; set; }
+		/// <summary>获取或设置一个值，指示用户是否已读该消息。</summary>
+		/// <summary>获取或设置消息编号。</summary>
+		public ulong MessageId { get; set; }
+		/// <summary>获取或设置消息对象。</summary>
+		public Message Message { get; set; }
+		/// <summary>获取或设置用户编号。</summary>
+		public bool IsRead { get; set; }
 		#endregion
 	}
 }
