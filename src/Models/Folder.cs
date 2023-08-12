@@ -92,36 +92,17 @@ namespace Zongsoft.Community.Models
 			#endregion
 
 			#region 重写方法
-			public bool Equals(FolderUser other)
-			{
-				return this.FolderId == other.FolderId &&
-				       this.UserId == other.UserId;
-			}
+			public bool Equals(FolderUser other) => this.FolderId == other.FolderId && this.UserId == other.UserId;
+			public override bool Equals(object obj) => obj is FolderUser other && this.Equals(other);
+			public override int GetHashCode() => HashCode.Combine(this.FolderId, this.UserId);
+			public override string ToString() => this.Expiration == null ?
+				$"{this.FolderId}-{this.UserId}:{this.Permission}" :
+				$"{this.FolderId}-{this.UserId}:{this.Permission}@{this.Expiration}";
+			#endregion
 
-			public override bool Equals(object obj)
-			{
-				if(obj == null || obj.GetType() != typeof(FolderUser))
-					return false;
-
-				return this.Equals((FolderUser)obj);
-			}
-
-			public override int GetHashCode()
-			{
-				return (int)(this.FolderId ^ this.UserId);
-			}
-
-			public override string ToString()
-			{
-				var text = this.FolderId.ToString() + "-" +
-				           this.UserId.ToString() + ":" +
-				           this.Permission.ToString();
-
-				if(this.Expiration.HasValue)
-					text += "@" + this.Expiration.Value.ToString();
-
-				return text;
-			}
+			#region 重写符号
+			public static bool operator ==(FolderUser left, FolderUser right) => left.Equals(right);
+			public static bool operator !=(FolderUser left, FolderUser right) => !(left == right);
 			#endregion
 		}
 		#endregion
