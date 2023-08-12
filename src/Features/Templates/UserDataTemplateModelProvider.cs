@@ -46,7 +46,7 @@ namespace Zongsoft.Community.Features.Templates
 		#endregion
 
 		#region 公共属性
-		[ServiceDependency("@", IsRequired = true)]
+		[ServiceDependency("~", IsRequired = true)]
 		public IDataAccess DataAccess { get; set; }
 		#endregion
 
