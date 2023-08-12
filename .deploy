@@ -2,7 +2,7 @@ src/Zongsoft.Community.option
 src/Zongsoft.Community.plugin
 src/Zongsoft.Community.mapping
 
-src/bin/$(Edition)/$(Target)/Zongsoft.Community.*
+src/bin/$(Edition)/$(Framework)/Zongsoft.Community.*
 
 [templates]
 docs/templates/*.xlsx
