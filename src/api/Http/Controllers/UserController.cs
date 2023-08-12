@@ -53,13 +53,6 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		#endregion
 
 		#region 公共方法
-		[HttpPatch("{id}/Status/{status}")]
-		public IActionResult SetStatus(uint id, UserStatus status)
-		{
-			return this.DataService.SetStatus(id, status) ?
-				this.NoContent() : this.BadRequest();
-		}
-
 		[HttpGet("{id}/Histories")]
 		public IEnumerable<History> GetHistories(uint id, [FromQuery]Paging page = null)
 		{

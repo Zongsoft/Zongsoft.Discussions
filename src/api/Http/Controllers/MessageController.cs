@@ -45,17 +45,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 	public class MessageController : ApiControllerBase<Message, MessageService>
 	{
 		#region 构造函数
-		public MessageController(IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
-		#endregion
-
-		#region 公共方法
-		[HttpGet("{id}/Users")]
-		public object GetUsers(ulong id, [FromQuery]bool? isRead = null, [FromQuery]Paging page = null)
-		{
-			return this.Paginate(this.DataService.GetUsers(id, isRead, page));
-		}
+		public MessageController(IServiceProvider serviceProvider) : base(serviceProvider) { }
 		#endregion
 	}
 }
