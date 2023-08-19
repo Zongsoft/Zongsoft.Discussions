@@ -1,14 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zongsoft.Community", "Zongsoft.Community.csproj", "{578D2452-C76E-4BBD-BE45-42A2E6D9FD5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zongsoft.Community", "Zongsoft.Community.csproj", "{578D2452-C76E-4BBD-BE45-42A2E6D9FD5B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{30AC4796-DFDE-4DA6-8781-43789929AFAD}"
-	ProjectSection(SolutionItems) = preProject
-		..\database\Zongsoft.Community.mdf = ..\database\Zongsoft.Community.mdf
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zongsoft.Community.Web", "api\Zongsoft.Community.Web.csproj", "{AEB4F7C7-44A5-4921-80EA-397BCBAEB1BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +17,10 @@ Global
 		{578D2452-C76E-4BBD-BE45-42A2E6D9FD5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{578D2452-C76E-4BBD-BE45-42A2E6D9FD5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{578D2452-C76E-4BBD-BE45-42A2E6D9FD5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEB4F7C7-44A5-4921-80EA-397BCBAEB1BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEB4F7C7-44A5-4921-80EA-397BCBAEB1BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEB4F7C7-44A5-4921-80EA-397BCBAEB1BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEB4F7C7-44A5-4921-80EA-397BCBAEB1BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
