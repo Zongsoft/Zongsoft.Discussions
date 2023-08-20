@@ -20,45 +20,34 @@
 
 	<extension path="/Workbench/Modules">
 		<object name="Community" value="{static:Zongsoft.Community.Module.Current, Zongsoft.Community}">
+			<expose name="Accessor" value="{path:../@Accessor}">
+				<expose name="Filters" value="{path:../@Filters}" />
+			</expose>
+
+			<expose name="Events" value="{path:../@Events}" />
 			<expose name="Schemas" value="{path:../@Schemas}" />
+			<expose name="Properties" value="{path:../@Properties}" />
 		</object>
 	</extension>
 
-	<extension path="/Workbench/Data/Accessors">
-		<object name="Community">
-			<community.validator>
-				<object type="Zongsoft.Community.Data.DataValidator, Zongsoft.Community" />
-			</community.validator>
-		</object>
+	<extension path="/Workbench/Modules/Community">
+		<accessor.validator>
+			<object type="Zongsoft.Community.Data.DataValidator, Zongsoft.Community" />
+		</accessor.validator>
 	</extension>
 
-	<extension path="/Workbench/Data/Accessors/Community/Filters">
+	<extension path="/Workbench/Modules/Community/Accessor/Filters">
 		<object name="PostFilter" type="Zongsoft.Community.Data.PostFilter, Zongsoft.Community" />
 		<object name="ThreadFilter" type="Zongsoft.Community.Data.ThreadFilter, Zongsoft.Community" />
 	</extension>
 
 	<!-- 挂载身份质询器 -->
 	<extension path="/Workbench/Security/Authentication/Challengers">
-		<object type="Zongsoft.Community.Security.UserChallenger, Zongsoft.Community" />
+		<object value="{static:Zongsoft.Community.Security.UserChallenger.Instance, Zongsoft.Community}" />
 	</extension>
 
 	<!-- 挂载身份转换器 -->
 	<extension path="/Workbench/Security/Authentication/Transformers">
-		<object type="Zongsoft.Community.Security.UserIdentityTransformer, Zongsoft.Community" />
-	</extension>
-
-	<!-- 挂载“Community”服务提供程序 -->
-	<extension path="/Workspace/Services/Providers">
-		<object name="Community" type="Zongsoft.Services.PluginServiceProvider, Zongsoft.Plugins" />
-	</extension>
-
-	<!-- 将“Community”服务提供程序链接到默认服务容器 -->
-	<extension path="/Workspace/Services">
-		<object name="Community" value="{path:../Providers/Community}" />
-	</extension>
-
-	<extension path="/Workspace/Services/Community">
-		<object name="Data" value="{path:/Workbench/Data/Accessors/Community}" />
-		<object name="Configuration" value="{opt:/Community/General}" />
+		<object value="{static:Zongsoft.Community.Security.UserIdentityTransformer.Instance, Zongsoft.Community}" />
 	</extension>
 </plugin>

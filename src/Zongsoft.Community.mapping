@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <schema xmlns="http://schemas.zongsoft.com/data">
-	<container>
+	<container name="Community">
 		<entity name="Message" table="Community_Message" driver="ClickHouse">
 			<key>
 				<member name="MessageId" />

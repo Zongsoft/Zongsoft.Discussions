@@ -40,9 +40,12 @@ namespace Zongsoft.Community.Security
 {
 	public class UserChallenger : IChallenger
 	{
-		#region 公共属性
-		[ServiceDependency("~", IsRequired = true)]
-		public IDataAccess DataAccess { get; set; }
+		#region 单例字段
+		public static readonly UserChallenger Instance = new();
+		#endregion
+
+		#region 私有构造
+		private UserChallenger() { }
 		#endregion
 
 		#region 公共方法
@@ -79,7 +82,7 @@ namespace Zongsoft.Community.Security
 
 		#region 虚拟方法
 		protected virtual UserProfile GetUser(uint userId) =>
-			this.DataAccess.Select<UserProfile>(Condition.Equal(nameof(UserProfile.UserId), userId), Paging.Limit(1)).FirstOrDefault();
+			Module.Current.Accessor.Select<UserProfile>(Condition.Equal(nameof(UserProfile.UserId), userId), Paging.Limit(1)).FirstOrDefault();
 
 		protected virtual UserProfile CreateUser(IIdentity identity)
 		{
@@ -95,7 +98,7 @@ namespace Zongsoft.Community.Security
 						user.SiteId = id;
 					else
 					{
-						var site = this.DataAccess.Select<Site>(
+						var site = Module.Current.Accessor.Select<Site>(
 							Condition.Equal(nameof(Site.SiteNo), @namespace),
 							$"{nameof(Site.SiteId)},{nameof(Site.SiteNo)}",
 							Paging.Limit(1)).FirstOrDefault();
@@ -106,7 +109,7 @@ namespace Zongsoft.Community.Security
 				}
 			}
 
-			return this.DataAccess.Upsert(user) > 0 ? user : null;
+			return Module.Current.Accessor.Upsert(user) > 0 ? user : null;
 		}
 
 		protected virtual void OnClaims(ClaimsIdentity identity, UserProfile user) { }
@@ -116,7 +119,7 @@ namespace Zongsoft.Community.Security
 		#region 私有方法
 		private ClaimsIdentity Identity(UserProfile user)
 		{
-			var identity = user.Identity("Zongsoft.Community", "Zongsoft");
+			var identity = user.Identity(UserIdentity.Scheme, "Zongsoft");
 
 			identity.AddClaim(nameof(UserProfile.SiteId), user.SiteId.ToString(), ClaimValueTypes.String);
 			identity.AddClaim(nameof(UserProfile.Gender), user.Gender.ToString(), ClaimValueTypes.String);

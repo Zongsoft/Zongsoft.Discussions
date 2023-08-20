@@ -27,11 +27,11 @@
 using System;
 using System.Collections.Generic;
 
-using Zongsoft.Community.Models;
 using Zongsoft.Data;
 using Zongsoft.Data.Metadata;
-using Zongsoft.Security;
-using Zongsoft.Services;
+
+using Zongsoft.Community.Models;
+using Zongsoft.Community.Security;
 
 namespace Zongsoft.Community.Data
 {
@@ -74,22 +74,22 @@ namespace Zongsoft.Community.Data
 		#region 公共方法
 		public ICondition Validate(IDataAccessContextBase context, ICondition criteria)
 		{
-			if(!ApplicationContext.Current.Principal.Identity.TryGetClaim(SITE_ID, out var value) || !uint.TryParse(value, out var siteId))
+			if(UserIdentity.Current == null)
 				return criteria;
 
 			if(criteria == null)
-				return Condition.Equal(SITE_ID, siteId);
+				return Condition.Equal(SITE_ID, UserIdentity.Current.SiteId);
 
-			if(criteria.Matches(SITE_ID, matched => matched.Value = siteId) > 0)
+			if(criteria.Matches(SITE_ID, matched => matched.Value = UserIdentity.Current.SiteId) > 0)
 				return criteria;
 
 			if(criteria is ConditionCollection conditions && conditions.Combination == ConditionCombination.And)
 			{
-				conditions.Add(Condition.Equal(SITE_ID, siteId));
+				conditions.Add(Condition.Equal(SITE_ID, UserIdentity.Current.SiteId));
 				return conditions;
 			}
 
-			return ConditionCollection.And(Condition.Equal(SITE_ID, siteId), criteria);
+			return ConditionCollection.And(Condition.Equal(SITE_ID, UserIdentity.Current.SiteId), criteria);
 		}
 
 		public bool OnInsert(IDataMutateContextBase context, IDataEntityProperty property, out object value)
@@ -114,26 +114,14 @@ namespace Zongsoft.Community.Data
 		#region 私有方法
 		private static bool TryGetUserId(IDataMutateContextBase context, out object value)
 		{
-			value = null;
-
-			if(ApplicationContext.Current?.Principal is CredentialPrincipal principal && principal.Identity.IsAuthenticated)
-				value = principal.Identity.GetIdentifier<uint>();
-
+			value = UserIdentity.Current?.UserId;
 			return value != null;
 		}
 
 		private static bool TryGetSiteId(IDataMutateContextBase context, out object value)
 		{
-			if(ApplicationContext.Current?.Principal is CredentialPrincipal principal &&
-			   principal.Identity.IsAuthenticated &&
-			   principal.Identity.TryGetClaim<uint>(nameof(UserProfile.SiteId), out var siteId))
-			{
-					value = siteId;
-					return true;
-			}
-
-			value = null;
-			return false;
+			value = UserIdentity.Current?.SiteId;
+			return value != null;
 		}
 
 		private static bool TryGetTimestamp(IDataMutateContextBase context, out object value)

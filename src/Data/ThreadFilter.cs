@@ -33,7 +33,7 @@ using Zongsoft.Security;
 
 namespace Zongsoft.Community.Data
 {
-	[DataAccessFilter(nameof(Models.Thread))]
+	[DataAccessFilter($"{Module.NAME}.{nameof(Models.Thread)}")]
 	public class ThreadFilter : IDataAccessFilter<DataSelectContextBase>
 	{
 		#region 构造函数
