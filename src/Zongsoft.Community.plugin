@@ -30,10 +30,8 @@
 		</object>
 	</extension>
 
-	<extension path="/Workbench/Modules/Community">
-		<accessor.validator>
-			<object type="Zongsoft.Community.Data.DataValidator, Zongsoft.Community" />
-		</accessor.validator>
+	<extension path="/Workbench/Data/Validators">
+		<object name="Community" type="Zongsoft.Community.Data.DataValidator, Zongsoft.Community" />
 	</extension>
 
 	<extension path="/Workbench/Modules/Community/Accessor/Filters">
