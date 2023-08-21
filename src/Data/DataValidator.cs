@@ -41,10 +41,6 @@ namespace Zongsoft.Community.Data
 		private delegate bool TryGetDelegate(IDataMutateContextBase context, out object value);
 		#endregion
 
-		#region 常量定义
-		private const string SITE_ID = "SiteId";
-		#endregion
-
 		#region 静态字段
 		private static readonly IDictionary<string, TryGetDelegate> _inserts;
 		private static readonly IDictionary<string, TryGetDelegate> _updates;
@@ -77,19 +73,10 @@ namespace Zongsoft.Community.Data
 			if(UserIdentity.Current == null)
 				return criteria;
 
-			if(criteria == null)
-				return Condition.Equal(SITE_ID, UserIdentity.Current.SiteId);
+			if(HasProperty(context, Fields.SiteId) && !criteria.Contains(Fields.SiteId))
+				criteria &= Condition.Equal(Fields.SiteId, UserIdentity.Current.SiteId);
 
-			if(criteria.Matches(SITE_ID, matched => matched.Value = UserIdentity.Current.SiteId) > 0)
-				return criteria;
-
-			if(criteria is ConditionCollection conditions && conditions.Combination == ConditionCombination.And)
-			{
-				conditions.Add(Condition.Equal(SITE_ID, UserIdentity.Current.SiteId));
-				return conditions;
-			}
-
-			return ConditionCollection.And(Condition.Equal(SITE_ID, UserIdentity.Current.SiteId), criteria);
+			return criteria;
 		}
 
 		public bool OnInsert(IDataMutateContextBase context, IDataEntityProperty property, out object value)
@@ -112,6 +99,18 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 私有方法
+		private static bool HasProperty(IDataAccessContextBase context, string name)
+		{
+			return context switch
+			{
+				DataExistContextBase exist => exist.Entity.Properties.Contains(name),
+				DataSelectContextBase select => select.Entity.Properties.Contains(name),
+				IDataMutateContextBase mutate => mutate.Entity.Properties.Contains(name),
+				DataAggregateContextBase aggregate => aggregate.Entity.Properties.Contains(name),
+				_ => false,
+			};
+		}
+
 		private static bool TryGetUserId(IDataMutateContextBase context, out object value)
 		{
 			value = UserIdentity.Current?.UserId;

@@ -24,43 +24,12 @@
  * limitations under the License.
  */
 
-using Zongsoft.Data;
-using Zongsoft.Services;
-using Zongsoft.Components;
-
-[assembly: ApplicationModule(Zongsoft.Community.Module.NAME)]
+using System;
 
 namespace Zongsoft.Community
 {
-	public class Module : ApplicationModule<Module.EventRegistry>
+	internal class Fields
 	{
-		#region 常量定义
-		/// <summary>表示社区模块的名称常量值。</summary>
-		public const string NAME = nameof(Community);
-		#endregion
-
-		#region 单例字段
-		public static readonly Module Current = new();
-		#endregion
-
-		#region 构造函数
-		public Module() : base(NAME, Community.Properties.Resources.Community, Community.Properties.Resources.Community_Description) { }
-		#endregion
-
-		#region 公共属性
-		private IDataAccess _accessor;
-		public IDataAccess Accessor => _accessor ??= this.Services.ResolveRequired<IDataAccessProvider>().GetAccessor(this.Name);
-		#endregion
-
-		#region 嵌套子类
-		public sealed class EventRegistry : EventRegistryBase
-		{
-			#region 构造函数
-			public EventRegistry() : base(NAME)
-			{
-			}
-			#endregion
-		}
-		#endregion
+		public const string SiteId = nameof(SiteId);
 	}
 }
