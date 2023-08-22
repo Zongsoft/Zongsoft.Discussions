@@ -99,27 +99,24 @@ namespace Zongsoft.Community.Data
 		#endregion
 
 		#region 私有方法
-		private static bool HasProperty(IDataAccessContextBase context, string name)
+		private static bool HasProperty(IDataAccessContextBase context, string name) => context switch
 		{
-			return context switch
-			{
-				DataExistContextBase exist => exist.Entity.Properties.Contains(name),
-				DataSelectContextBase select => select.Entity.Properties.Contains(name),
-				IDataMutateContextBase mutate => mutate.Entity.Properties.Contains(name),
-				DataAggregateContextBase aggregate => aggregate.Entity.Properties.Contains(name),
-				_ => false,
-			};
+			DataExistContextBase exist => exist.Entity.Properties.Contains(name),
+			DataSelectContextBase select => select.Entity.Properties.Contains(name),
+			IDataMutateContextBase mutate => mutate.Entity.Properties.Contains(name),
+			DataAggregateContextBase aggregate => aggregate.Entity.Properties.Contains(name),
+			_ => false,
+		};
+
+		private static bool TryGetSiteId(IDataMutateContextBase context, out object value)
+		{
+			value = UserIdentity.Current?.SiteId;
+			return value != null;
 		}
 
 		private static bool TryGetUserId(IDataMutateContextBase context, out object value)
 		{
 			value = UserIdentity.Current?.UserId;
-			return value != null;
-		}
-
-		private static bool TryGetSiteId(IDataMutateContextBase context, out object value)
-		{
-			value = UserIdentity.Current?.SiteId;
 			return value != null;
 		}
 
