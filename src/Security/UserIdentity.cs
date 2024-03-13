@@ -25,13 +25,14 @@
  */
 
 using System;
+using System.Security.Claims;
 
 using Zongsoft.Security;
 using Zongsoft.Security.Membership;
 
 namespace Zongsoft.Community.Security
 {
-	public class UserIdentity : UserIdentityBase<UserIdentity>
+	public class UserIdentity : UserIdentityBase
 	{
 		#region 常量定义
 		public const string Scheme = "Zongsoft.Community";
@@ -64,7 +65,54 @@ namespace Zongsoft.Community.Security
 		#endregion
 
 		#region 静态成员
-		public static UserIdentity Current => Get(Scheme, identity => (UserIdentity)UserIdentityTransformer.Instance.Transform(identity));
+		public static UserIdentity Current => ClaimsIdentityModel.Get<UserIdentity>(Scheme, Transformer.Instance);
+		#endregion
+
+		#region 嵌套子类
+		internal sealed class Transformer : IClaimsIdentityTransformer
+		{
+			#region 单例字段
+			public static readonly Transformer Instance = new();
+			#endregion
+
+			#region 私有构造
+			private Transformer() { }
+			#endregion
+
+			#region 公共方法
+			public bool CanTransform(ClaimsIdentity identity) => string.Equals(identity.AuthenticationType, UserIdentity.Scheme, StringComparison.OrdinalIgnoreCase);
+			public object Transform(ClaimsIdentity identity) => identity.AsModel<UserIdentity>(this.OnTransform);
+			#endregion
+
+			#region 私有方法
+			private bool OnTransform(UserIdentity user, Claim claim)
+			{
+				switch(claim.Type)
+				{
+					case nameof(UserIdentity.SiteId):
+						user.SiteId = (claim.Value != null && uint.TryParse(claim.Value, out var siteId)) ? siteId : 0;
+						return true;
+					case nameof(UserIdentity.Gender):
+						user.Gender = (claim.Value != null && Enum.TryParse<Models.Gender>(claim.Value, out var gender)) ? gender : Models.Gender.None;
+						return true;
+					case nameof(UserIdentity.Avatar):
+						user.Avatar = claim.Value;
+						return true;
+					case nameof(UserIdentity.Grade):
+						user.Grade = (claim.Value != null && byte.TryParse(claim.Value, out var grade)) ? grade : (byte)0;
+						return true;
+					case nameof(UserIdentity.TotalPosts):
+						user.TotalPosts = (claim.Value != null && uint.TryParse(claim.Value, out var totalPosts)) ? totalPosts : 0;
+						return true;
+					case nameof(UserIdentity.TotalThreads):
+						user.TotalThreads = (claim.Value != null && uint.TryParse(claim.Value, out var totalThreads)) ? totalThreads : 0;
+						return true;
+					default:
+						return false;
+				}
+			}
+			#endregion
+		}
 		#endregion
 	}
 }

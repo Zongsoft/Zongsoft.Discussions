@@ -46,6 +46,6 @@
 
 	<!-- 挂载身份转换器 -->
 	<extension path="/Workbench/Security/Authentication/Transformers">
-		<object value="{static:Zongsoft.Community.Security.UserIdentityTransformer.Instance, Zongsoft.Community}" />
+		<object value="{static:Zongsoft.Community.Security.UserIdentity+Transformer.Instance, Zongsoft.Community}" />
 	</extension>
 </plugin>
