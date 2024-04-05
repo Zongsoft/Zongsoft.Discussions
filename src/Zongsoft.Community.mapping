@@ -18,6 +18,10 @@
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
+			<complexProperty name="Site" port="Site" behaviors="principal">
+				<link port="SiteId" />
+			</complexProperty>
+
 			<complexProperty name="Creator" port="UserProfile">
 				<link port="UserId" anchor="CreatorId" />
 			</complexProperty>
@@ -37,6 +41,10 @@
 			<property name="ContactName" type="nvarchar" length="50" nullable="true" />
 			<property name="ContactText" type="nvarchar" length="50" nullable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
+
+			<complexProperty name="Site" port="Site" behaviors="principal">
+				<link port="SiteId" />
+			</complexProperty>
 		</entity>
 
 		<entity name="File" table="Community_File">
@@ -56,6 +64,10 @@
 			<property name="CreatorId" type="uint" nullable="true" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 			<property name="Description" type="nvarchar" length="100" nullable="true" />
+
+			<complexProperty name="Site" port="Site" behaviors="principal">
+				<link port="SiteId" />
+			</complexProperty>
 
 			<complexProperty name="Folder" port="Folder">
 				<link port="FolderId" />
@@ -81,6 +93,10 @@
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 			<property name="Description" type="nvarchar" length="500" nullable="true" />
 
+			<complexProperty name="Site" port="Site" behaviors="principal">
+				<link port="SiteId" />
+			</complexProperty>
+
 			<complexProperty name="Creator" port="UserProfile">
 				<link port="UserId" anchor="CreatorId" />
 			</complexProperty>
@@ -104,6 +120,10 @@
 			<property name="UserId" type="uint" nullable="false" />
 			<property name="Permission" type="byte" nullable="false" />
 			<property name="Expiration" type="datetime" nullable="true" />
+
+			<complexProperty name="Folder" port="Folder" multiplicity="!" behaviors="principal">
+				<link port="FolderId" />
+			</complexProperty>
 
 			<complexProperty name="User" port="UserProfile">
 				<link port="UserId" />
@@ -141,7 +161,7 @@
 			<property name="SiteId" type="uint" nullable="false" />
 			<property name="UserId" type="uint" nullable="false" />
 
-			<complexProperty name="Site" port="Site">
+			<complexProperty name="Site" port="Site" multiplicity="!" behaviors="principal">
 				<link port="SiteId" />
 			</complexProperty>
 
@@ -162,6 +182,10 @@
 			<property name="Icon" type="varchar" length="100" nullable="true" />
 			<property name="Ordinal" type="short" nullable="false" />
 			<property name="Description" type="nvarchar" length="500" nullable="true" />
+
+			<complexProperty name="Site" port="Site" behaviors="principal">
+				<link port="SiteId" />
+			</complexProperty>
 
 			<complexProperty name="Forums" port="Forum" multiplicity="*">
 				<link port="SiteId" />
@@ -201,6 +225,10 @@
 			<property name="MostRecentPostTime" type="datetime" nullable="true" />
 			<property name="CreatorId" type="int" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
+
+			<complexProperty name="Site" port="Site" behaviors="principal">
+				<link port="SiteId" />
+			</complexProperty>
 
 			<complexProperty name="Group" port="ForumGroup">
 				<link port="SiteId" />
@@ -242,6 +270,10 @@
 			<property name="UserId" type="uint" nullable="false" />
 			<property name="Permission" type="byte" nullable="false" />
 			<property name="IsModerator" type="bool" nullable="false" />
+
+			<complexProperty name="Site" port="Site">
+				<link port="SiteId" />
+			</complexProperty>
 
 			<complexProperty name="Forum" port="Forum">
 				<link port="SiteId" />
@@ -285,6 +317,10 @@
 			<property name="MostRecentPostTime" type="datetime" nullable="true" />
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
+
+			<complexProperty name="Site" port="Site" behaviors="principal">
+				<link port="SiteId" />
+			</complexProperty>
 
 			<complexProperty name="Forum" port="Forum">
 				<link port="SiteId" />
@@ -330,6 +366,10 @@
 			<property name="CreatorId" type="uint" nullable="false" immutable="true" />
 			<property name="CreatedTime" type="datetime" nullable="false" default="now()" immutable="true" />
 
+			<complexProperty name="Site" port="Site" behaviors="principal">
+				<link port="SiteId" />
+			</complexProperty>
+
 			<complexProperty name="Thread" port="Thread">
 				<link port="ThreadId" />
 			</complexProperty>
@@ -366,7 +406,7 @@
 			<property name="AttachmentFolderId" type="uint" nullable="false" />
 			<property name="Ordinal" type="short" nullable="false" />
 
-			<complexProperty name="Post" port="Post">
+			<complexProperty name="Post" port="Post" multiplicity="!" behaviors="principal">
 				<link port="PostId" />
 			</complexProperty>
 
@@ -390,7 +430,7 @@
 			<property name="Value" type="sbyte" nullable="false" />
 			<property name="Tiemstamp" type="datetime" nullable="false" default="now()" immutable="true" />
 
-			<complexProperty name="Post" port="Post">
+			<complexProperty name="Post" port="Post" multiplicity="!" behaviors="principal">
 				<link port="PostId" />
 			</complexProperty>
 
