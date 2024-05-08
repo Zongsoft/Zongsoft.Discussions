@@ -117,10 +117,10 @@ namespace Zongsoft.Community.Services
 		#endregion
 
 		#region 重写方法
-		protected override ICondition OnValidate(DataServiceMethod method, ICondition criteria, string filter, IDataOptions options)
+		protected override ICondition OnValidate(DataServiceMethod method, ICondition criteria, IDataOptions options)
 		{
 			//调用基类同名方法
-			criteria = base.OnValidate(method, criteria, filter, options);
+			criteria = base.OnValidate(method, criteria, options);
 
 			//匿名用户只能获取公共数据
 			if(!this.Principal.Identity.IsAuthenticated)

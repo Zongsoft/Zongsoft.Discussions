@@ -28,22 +28,24 @@ using System;
 using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 using Zongsoft.Web;
-using Zongsoft.Services;
+using Zongsoft.Data;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
-namespace Zongsoft.Community.Web.Http.Controllers
+namespace Zongsoft.Community.Web.Controllers
 {
-	[Area("Community")]
-	[Route("[area]/Feedbacks")]
-	public class FeedbackController : ApiControllerBase<Feedback, FeedbackService>
-	{
-		#region 构造函数
-		public FeedbackController(IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
-		#endregion
-	}
+    [ControllerName("Sites")]
+    public class SiteController : ServiceController<Site, SiteService>
+    {
+        #region 公共方法
+        [HttpGet("{siteId}/Forums")]
+        public IEnumerable<Forum> GetForums(uint siteId, [FromQuery(Name = "group")] ushort groupId = 0) => this.DataService.GetForums(siteId, groupId);
+
+        [HttpGet("{siteId}/ForumGroups")]
+        public IEnumerable<ForumGroup> GetForumGroups(uint siteId) => this.DataService.GetForumGroups(siteId);
+        #endregion
+    }
 }

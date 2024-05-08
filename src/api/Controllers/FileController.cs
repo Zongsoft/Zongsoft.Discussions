@@ -32,52 +32,27 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
 
+using Zongsoft.IO;
 using Zongsoft.Web;
+using Zongsoft.Data;
+using Zongsoft.Common;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
-using Zongsoft.IO;
 
-namespace Zongsoft.Community.Web.Http.Controllers
+namespace Zongsoft.Community.Web.Controllers
 {
 	[Authorization]
-	[Area("Community")]
-	[Route("[area]/Files")]
-	public class FileController : ApiControllerBase<File, FileService>
+	[ControllerName("Files")]
+	public class FileController : ServiceController<File, FileService>
 	{
-		#region 常量定义
-		private static readonly DateTime EPOCH = new DateTime(2000, 1, 1);
-		#endregion
-
-		#region 成员字段
-		private WebFileAccessor _accessor;
-		#endregion
-
-		#region 构造函数
-		public FileController(IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
-		#endregion
-
 		#region 公共属性
-		[Zongsoft.Services.ServiceDependency]
-		public WebFileAccessor Accessor
-		{
-			get
-			{
-				return _accessor;
-			}
-			set
-			{
-				if(value == null)
-					throw new ArgumentNullException();
+		[Zongsoft.Services.ServiceDependency(IsRequired = true)]
+		public WebFileAccessor Accessor { get; set; }
+		#endregion
 
-				_accessor = value;
-			}
-		}
-
+		#region 重写属性
 		protected override bool CanCreate => false;
 		protected override bool CanDelete => false;
 		protected override bool CanUpdate => false;
@@ -85,23 +60,23 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		#region 公共方法
 		[HttpGet("{id}")]
-		public IActionResult Download(string id)
+		public async Task<IActionResult> DownloadAsync(string id, CancellationToken cancellation = default)
 		{
-			var file = base.Get(id) as File;
+			var file = await this.DataService.GetAsync(id, $"{nameof(Models.File.FileId)},{nameof(Models.File.Path)}", Paging.Disabled, Array.Empty<Sorting>(), cancellation) as File;
 
 			if(file == null || string.IsNullOrWhiteSpace(file.Path))
 				return null;
 
-			return _accessor.Read(file.Path);
+			return this.Accessor.Read(file.Path);
 		}
 
 		[HttpPost("{id?}")]
-		public async Task<IEnumerable<File>> Upload(uint? id = null)
+		public async Task<IEnumerable<File>> UploadAsync(uint? id = null, CancellationToken cancellation = default)
 		{
 			var files = new List<File>();
-			var infos = _accessor.Write(this.Request,
-				                          this.DataService.GetDirectory(id),
-			                              args => args.FileName = (DateTime.Now - EPOCH).Days.ToString() + "-" + Zongsoft.Common.Randomizer.GenerateString());
+			var infos = this.Accessor.Write(this.Request,
+										  this.DataService.GetDirectory(id),
+										  args => args.FileName = $"{Timestamp.Millennium.Epoch.GetElapsed().Days}-{Randomizer.GenerateString()}", cancellation);
 
 			await foreach(var info in infos)
 			{
@@ -116,9 +91,9 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				if(string.IsNullOrWhiteSpace(name as string))
 					name = info.Name;
 
-				var attachment = Zongsoft.Data.Model.Build<File>(file =>
+				var attachment = Model.Build<File>(file =>
 				{
-					file.FolderId = id.HasValue ? id.Value : 0;
+					file.FolderId = id ?? 0;
 					file.Name = info.Name;
 					file.Path = (PathLocation)info.Path.Url;
 					file.Type = info.Type;
@@ -128,7 +103,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				if(this.DataService.Insert(attachment) > 0)
 					files.Add(attachment);
 				else
-					await _accessor.Delete(info.Path.FullPath);
+					await this.Accessor.Delete(info.Path.FullPath);
 			}
 
 			return files;

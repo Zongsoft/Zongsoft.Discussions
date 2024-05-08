@@ -25,33 +25,21 @@
  */
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
 
 using Zongsoft.Web;
-using Zongsoft.Data;
+using Zongsoft.Services;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
-namespace Zongsoft.Community.Web.Http.Controllers
+namespace Zongsoft.Community.Web.Controllers
 {
-	[Area("Community")]
-	[Route("[area]/Sites")]
-	public class SiteController : ApiControllerBase<Site, SiteService>
-	{
-		#region 构造函数
-		public SiteController(IServiceProvider serviceProvider) : base(serviceProvider) { }
-		#endregion
-
-		#region 公共方法
-		[HttpGet("{siteId}/Forums")]
-		public IEnumerable<Forum> GetForums(uint siteId, [FromQuery(Name = "group")]ushort groupId = 0) => this.DataService.GetForums(siteId, groupId);
-
-		[HttpGet("{siteId}/ForumGroups")]
-		public IEnumerable<ForumGroup> GetForumGroups(uint siteId) => this.DataService.GetForumGroups(siteId);
-		#endregion
-	}
+    [ControllerName("Feedbacks")]
+    public class FeedbackController : ServiceController<Feedback, FeedbackService>
+    {
+    }
 }

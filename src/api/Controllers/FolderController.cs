@@ -25,35 +25,40 @@
  */
 
 using System;
-using System.Collections.Generic;
+using System.Net;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
 
 using Zongsoft.Web;
-using Zongsoft.Data;
+using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
-namespace Zongsoft.Community.Web.Http.Controllers
+namespace Zongsoft.Community.Web.Controllers
 {
-	[Area("Community")]
-	[Route("[area]/Forums/Groups")]
-	public class ForumGroupController : ApiControllerBase<ForumGroup, ForumGroupService>
-	{
-		#region 构造函数
-		public ForumGroupController(IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
-		#endregion
+    [Authorization]
+    [ControllerName("Folders")]
+    public class FolderController : ServiceController<Folder, FolderService>
+    {
+        #region 公共方法
+        [HttpPatch("{id}/Icon/{value}")]
+        public IActionResult SetIcon(uint id, string value = null)
+        {
+            return this.DataService.SetIcon(id, value) ? this.NoContent() : this.NotFound();
+        }
 
-		#region 公共方法
-		[HttpGet("{siteId}-{groupId}/Forums")]
-		public IEnumerable<Forum> GetForums(uint siteId, ushort groupId)
-		{
-			return this.DataService.GetForums(siteId, groupId);
-		}
-		#endregion
-	}
+        [HttpPatch("{id}/Visiblity/{value}")]
+        public IActionResult SetVisiblity(uint id, Visibility value)
+        {
+            return this.DataService.SetVisiblity(id, value) ? this.NoContent() : this.NotFound();
+        }
+
+        [HttpPatch("{id}/Accessibility/{value}")]
+        public IActionResult SetAccessibility(uint id, Accessibility value)
+        {
+            return this.DataService.SetAccessibility(id, value) ? this.NoContent() : this.NotFound();
+        }
+        #endregion
+    }
 }

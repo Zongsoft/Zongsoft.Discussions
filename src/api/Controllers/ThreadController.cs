@@ -25,31 +25,25 @@
  */
 
 using System;
-using System.Web;
+using System.Linq;
+using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
 
 using Zongsoft.Web;
+using Zongsoft.Data;
 using Zongsoft.Web.Http.Headers;
 using Zongsoft.Security;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
-namespace Zongsoft.Community.Web.Http.Controllers
+namespace Zongsoft.Community.Web.Controllers
 {
-	[Area("Community")]
-	[Route("[area]/Threads")]
-	public class ThreadController : ApiControllerBase<Thread, ThreadService>
+	[ControllerName("Threads")]
+	public class ThreadController : ServiceController<Thread, ThreadService>
 	{
-		#region 构造函数
-		public ThreadController(IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
-		#endregion
-
 		#region 公共方法
 		[HttpPatch("{id}/Approve")]
 		[Authorization]
@@ -159,7 +153,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpPatch, HttpPut]
 		[ActionName("Title")]
-		public object SetTitle(ulong id, [FromBody]string value)
+		public object SetTitle(ulong id, [FromBody] string value)
 		{
 			return this.DataService.Update(new
 			{
@@ -172,7 +166,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpPatch, HttpPut]
 		[ActionName("Summary")]
-		public object SetSummary(ulong id, [FromBody]string value)
+		public object SetSummary(ulong id, [FromBody] string value)
 		{
 			return this.DataService.Update(new
 			{
@@ -185,7 +179,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 
 		[HttpPatch, HttpPut]
 		[ActionName("Content")]
-		public object SetContent(ulong id, [FromBody]string content)
+		public object SetContent(ulong id, [FromBody] string content)
 		{
 			return this.DataService.Update(new
 			{
@@ -193,15 +187,24 @@ namespace Zongsoft.Community.Web.Http.Controllers
 				Post = new
 				{
 					Content = content,
-					ContentType = this.Request.ContentType,
+					this.Request.ContentType,
 				}
 			}) > 0 ? this.NoContent() : this.NotFound();
 		}
 
 		[ActionName("Posts")]
-		public object GetPosts(ulong id, [FromQuery]Zongsoft.Data.Paging page = null)
+		public object GetPosts(ulong id, [FromQuery]Paging page = null)
 		{
-			return this.Paginate(this.DataService.GetPosts(id, this.Request.Headers.GetDataSchema(), page));
+			page ??= Paging.Page(1);
+			var posts = this.DataService.GetPosts(id, this.Request.Headers.GetDataSchema(), page);
+
+			if(posts != null && posts.Any())
+			{
+				this.Response.Headers.TryAdd("X-Pagination", $"{page.PageIndex}/{page.PageCount}({page.TotalCount})");
+				this.Ok(posts);
+			}
+
+			return this.NoContent();
 		}
 		#endregion
 	}

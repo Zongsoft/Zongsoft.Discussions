@@ -25,11 +25,11 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
 
 using Zongsoft.Web;
 using Zongsoft.Web.Http.Headers;
@@ -37,18 +37,11 @@ using Zongsoft.Data;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
-namespace Zongsoft.Community.Web.Http.Controllers
+namespace Zongsoft.Community.Web.Controllers
 {
-	[Area("Community")]
-	[Route("[area]/Forums")]
-	public class ForumController : ApiControllerBase<Forum, ForumService>
+	[ControllerName("Forums")]
+	public class ForumController : ServiceController<Forum, ForumService>
 	{
-		#region 构造函数
-		public ForumController(IServiceProvider serviceProvider) : base(serviceProvider)
-		{
-		}
-		#endregion
-
 		#region 公共方法
 		[HttpGet("{id}/Moderators")]
 		public IEnumerable<UserProfile> GetModerators(ushort id)
@@ -57,7 +50,7 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		}
 
 		[HttpGet("{id}/Globals")]
-		public IEnumerable<Thread> GetGlobalThreads(ushort id, [FromQuery]Paging page = null)
+		public IEnumerable<Thread> GetGlobalThreads(ushort id, [FromQuery] Paging page = null)
 		{
 			return this.DataService.GetGlobalThreads(id, this.Request.Headers.GetDataSchema(), page);
 		}
@@ -77,7 +70,16 @@ namespace Zongsoft.Community.Web.Http.Controllers
 		[HttpGet("{id}/Threads")]
 		public object GetThreads(ushort id, [FromQuery] Paging page = null)
 		{
-			return this.Paginate(this.DataService.GetThreads(id, this.Request.Headers.GetDataSchema(), page));
+			page ??= Paging.Page(1);
+			var threads = this.DataService.GetThreads(id, this.Request.Headers.GetDataSchema(), page);
+
+			if(threads != null && threads.Any())
+			{
+				this.Response.Headers.TryAdd("X-Pagination", $"{page.PageIndex}/{page.PageCount}({page.TotalCount})");
+				this.Ok(threads);
+			}
+
+			return this.NoContent();
 		}
 		#endregion
 	}

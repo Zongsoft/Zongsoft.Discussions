@@ -29,23 +29,23 @@ using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
 
 using Zongsoft.Web;
 using Zongsoft.Data;
-using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
 using Zongsoft.Community.Services;
 
-namespace Zongsoft.Community.Web.Http.Controllers
+namespace Zongsoft.Community.Web.Controllers
 {
-	[Authorization]
-	[Area("Community")]
-	[Route("[area]/Messages")]
-	public class MessageController : ApiControllerBase<Message, MessageService>
-	{
-		#region 构造函数
-		public MessageController(IServiceProvider serviceProvider) : base(serviceProvider) { }
-		#endregion
-	}
+    [ControllerName("ForumGroups")]
+    public class ForumGroupController : ServiceController<ForumGroup, ForumGroupService>
+    {
+        #region 公共方法
+        [HttpGet("{siteId}-{groupId}/Forums")]
+        public IEnumerable<Forum> GetForums(uint siteId, ushort groupId)
+        {
+            return this.DataService.GetForums(siteId, groupId);
+        }
+        #endregion
+    }
 }
