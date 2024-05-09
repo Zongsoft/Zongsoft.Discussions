@@ -70,16 +70,7 @@ namespace Zongsoft.Community.Web.Controllers
 		[HttpGet("{id}/Threads")]
 		public object GetThreads(ushort id, [FromQuery] Paging page = null)
 		{
-			page ??= Paging.Page(1);
-			var threads = this.DataService.GetThreads(id, this.Request.Headers.GetDataSchema(), page);
-
-			if(threads != null && threads.Any())
-			{
-				this.Response.Headers.TryAdd("X-Pagination", $"{page.PageIndex}/{page.PageCount}({page.TotalCount})");
-				this.Ok(threads);
-			}
-
-			return this.NoContent();
+			return this.Paginate(page ??= Paging.First(), this.DataService.GetThreads(id, this.Request.Headers.GetDataSchema(), page));
 		}
 		#endregion
 	}

@@ -94,16 +94,7 @@ namespace Zongsoft.Community.Web.Controllers
         [HttpGet("{id}/[action]")]
         public object GetMessages(uint id, [FromQuery] bool? isRead = null, [FromQuery] Paging page = null)
 		{
-			page ??= Paging.Page(1);
-			var messages = this.DataService.GetMessages(id, isRead, page);
-
-			if(messages != null && messages.Any())
-			{
-				this.Response.Headers.TryAdd("X-Pagination", $"{page.PageIndex}/{page.PageCount}({page.TotalCount})");
-				this.Ok(messages);
-			}
-
-			return this.NoContent();
+			return this.Paginate(page ??= Paging.First(), this.DataService.GetMessages(id, isRead, page));
         }
 
         [ActionName("Avatar")]

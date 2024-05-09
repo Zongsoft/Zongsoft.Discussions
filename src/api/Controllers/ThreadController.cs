@@ -195,16 +195,7 @@ namespace Zongsoft.Community.Web.Controllers
 		[ActionName("Posts")]
 		public object GetPosts(ulong id, [FromQuery]Paging page = null)
 		{
-			page ??= Paging.Page(1);
-			var posts = this.DataService.GetPosts(id, this.Request.Headers.GetDataSchema(), page);
-
-			if(posts != null && posts.Any())
-			{
-				this.Response.Headers.TryAdd("X-Pagination", $"{page.PageIndex}/{page.PageCount}({page.TotalCount})");
-				this.Ok(posts);
-			}
-
-			return this.NoContent();
+			return this.Paginate(page ??= Paging.First(), this.DataService.GetPosts(id, this.Request.Headers.GetDataSchema(), page));
 		}
 		#endregion
 	}
