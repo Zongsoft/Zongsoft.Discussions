@@ -1,0 +1,4 @@
+artifacts/Zongsoft.Discussions.plugin
+artifacts/Zongsoft.Discussions.option
+artifacts/Zongsoft.Discussions.mapping
+lib/$(Framework)/Zongsoft.Discussions.*

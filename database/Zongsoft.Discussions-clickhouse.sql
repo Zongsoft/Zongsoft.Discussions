@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `Community_Message`
+CREATE TABLE IF NOT EXISTS `Discussions_Message`
 (
   `MessageId`   bigint unsigned NOT NULL COMMENT '主键，消息编号',
   `SiteId`      int unsigned    NOT NULL COMMENT '站点编号',

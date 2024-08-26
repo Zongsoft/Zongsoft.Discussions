@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Zongsoft.Community.Properties {
+namespace Zongsoft.Discussions.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Zongsoft.Community.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Zongsoft.Community.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Zongsoft.Discussions.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -180,18 +180,18 @@ namespace Zongsoft.Community.Properties {
         /// <summary>
         ///   查找类似 社区论坛 的本地化字符串。
         /// </summary>
-        internal static string Community {
+        internal static string Discussions {
             get {
-                return ResourceManager.GetString("Community", resourceCulture);
+                return ResourceManager.GetString("Discussions", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 提供社区站点、论坛、主题、发帖等功能。 的本地化字符串。
         /// </summary>
-        internal static string Community_Description {
+        internal static string Discussions_Description {
             get {
-                return ResourceManager.GetString("Community.Description", resourceCulture);
+                return ResourceManager.GetString("Discussions.Description", resourceCulture);
             }
         }
         

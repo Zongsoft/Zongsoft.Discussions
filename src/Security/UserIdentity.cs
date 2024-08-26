@@ -30,12 +30,12 @@ using System.Security.Claims;
 using Zongsoft.Security;
 using Zongsoft.Security.Membership;
 
-namespace Zongsoft.Community.Security
+namespace Zongsoft.Discussions.Security
 {
 	public class UserIdentity : UserIdentityBase
 	{
 		#region 常量定义
-		public const string Scheme = "Zongsoft.Community";
+		public const string Scheme = "Zongsoft.Discussions";
 		#endregion
 
 		#region 公共属性

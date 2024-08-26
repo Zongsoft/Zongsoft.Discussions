@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<plugin name="Zongsoft.Community.Web"
-        title="Zongsoft.Community.Web Plugin"
+<plugin name="Zongsoft.Discussions.Web"
+        title="Zongsoft.Discussions.Web Plugin"
         author="Zongsoft Studio(zongsoft@qq.com)"
         copyright="Copyright(C) Zongsoft Corporation. 2015-2020. All rights reserved."
         description="Created by Popeye Zhong in 2017-05">
 
 	<manifest>
 		<dependencies>
-			<dependency name="Zongsoft.Community" />
+			<dependency name="Zongsoft.Discussions" />
 		</dependencies>
 
 		<assemblies>
-			<assembly name="Zongsoft.Community.Web" />
+			<assembly name="Zongsoft.Discussions.Web" />
 		</assemblies>
 	</manifest>
 </plugin>

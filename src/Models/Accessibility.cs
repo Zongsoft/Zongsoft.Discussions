@@ -26,7 +26,7 @@
 
 using System;
 
-namespace Zongsoft.Community.Models
+namespace Zongsoft.Discussions.Models
 {
 	/// <summary>
 	/// 表示可访问性(可写入性)的枚举。

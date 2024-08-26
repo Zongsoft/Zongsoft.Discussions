@@ -26,7 +26,7 @@
 
 using System;
 
-namespace Zongsoft.Community.Models
+namespace Zongsoft.Discussions.Models
 {
 	/// <summary>
 	/// 表示附加附件的实体接口。

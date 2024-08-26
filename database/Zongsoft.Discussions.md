@@ -1,6 +1,6 @@
-# Zongsoft.Community(Discussions) 社区系统
+# Zongsoft.Discussions(Discussions) 社区系统
 
-## 消息表 `Community.Message`
+## 消息表 `Discussions.Message`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -16,7 +16,7 @@ CreatorId   | int      | 4   | ✗ | 创建人编号(零表示系统消息)
 CreatedTime | datetime | -   | ✗ | 创建时间
 
 
-## 意见反馈表 `Community.Feedback`
+## 意见反馈表 `Discussions.Feedback`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -31,7 +31,7 @@ ContactText | nvarchar | 50  | ✓ | 联系方式
 CreatedTime | datetime | -   | ✗ | 反馈时间
 
 
-## 目录表 `Community.Folder`
+## 目录表 `Discussions.Folder`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -46,7 +46,7 @@ CreatedTime  | datetime | -   | ✗ | 创建时间
 Description  | varchar  | 500 | ✓ | 备注描述
 
 
-## 目录用户表 `Community.FolderUser`
+## 目录用户表 `Discussions.FolderUser`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -56,7 +56,7 @@ Permission | byte     | 1 | ✗ | 权限定义(0:None, 1:Read, 2:Write)
 Expiration | datetime | - | ✓ | 过期时间
 
 
-## 文件表 `Community.File`
+## 文件表 `Discussions.File`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -74,7 +74,7 @@ CreatedTime | datetime | -   | ✗ | 创建时间(上传时间)
 Description | nvarchar | 100 | ✓ | 描述说明
 
 
-## 站点表 `Community.Site`
+## 站点表 `Discussions.Site`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -87,7 +87,7 @@ Domain      | varchar  | 50  | ✗ | 所属领域
 Description | nvarchar | 500 | ✓ | 描述信息
 
 
-## 站点用户表 `Community.SiteUser`
+## 站点用户表 `Discussions.SiteUser`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -95,7 +95,7 @@ SiteId      | int  | 4 | ✗ | 主键，站点编号
 UserId      | int  | 4 | ✗ | 主键，用户编号
 
 
-## 论坛组表 `Community.ForumGroup`
+## 论坛组表 `Discussions.ForumGroup`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -107,7 +107,7 @@ Ordinal     | smallint | 2   | ✗ | 排列顺序
 Description | nvarchar | 500 | ✓ | 描述信息
 
 
-## 论坛表 `Community.Forum`
+## 论坛表 `Discussions.Forum`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -139,7 +139,7 @@ CreatorId                    | int      | 4   | ✗ | 创建人编号
 CreatedTime                  | datetime | -   | ✗ | 创建时间
 
 
-## 论坛用户表 `Community.ForumUser`
+## 论坛用户表 `Discussions.ForumUser`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -150,7 +150,7 @@ Permission  | byte     | 1 | ✗ | 权限定义(0:None, 1:Read, 2:Write)
 IsModerator | bool     | - | ✗ | 是否版主
 
 
-## 主题表 `Community.Thread`
+## 主题表 `Discussions.Thread`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -183,7 +183,7 @@ CreatorId                  | int      | 4   | ✗ | 创建人编号
 CreatedTime                | datetime | -   | ✗ | 创建时间
 
 
-## 帖子表 `Community.Post`
+## 帖子表 `Discussions.Post`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -205,7 +205,7 @@ CreatorId          | int      | 4   | ✗ | 发帖人编号
 CreatedTime        | datetime | -   | ✗ | 发帖时间
 
 
-## 帖子附件表 `Community.PostAttachment`
+## 帖子附件表 `Discussions.PostAttachment`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -215,7 +215,7 @@ AttachmentFolderId | int    | 4 | ✗ | 附件目录编号
 Ordinal            | short  | 2 | ✗ | 排列顺序
 
 
-## 帖子投票表 `Community.PostVoting`
+## 帖子投票表 `Discussions.PostVoting`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
@@ -227,18 +227,21 @@ Value      | byte     | 1   | ✗ | 投票数(正数为Upvote，负数为Downvot
 Tiemstamp  | datetime | -   | ✗ | 投票时间
 
 
-## 访问历史表 `Community.History`
+## 访问历史表 `Discussions.History`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----
-UserId               | int      | 4 | ✗ | 主键，用户编号
-ThreadId             | bigint   | 8 | ✗ | 主键，主题编号
-Count                | int      | 4 | ✗ | 浏览次数
-FirstViewedTime      | datetime | - | ✗ | 首次浏览时间
-MostRecentViewedTime | datetime | - | ✗ | 最后浏览时间
+UserId          | int      | 4 | ✗ | 主键，用户编号
+ThreadId        | bigint   | 8 | ✗ | 主键，主题编号
+ViewedCount     | int      | 4 | ✗ | 浏览次数
+PostedCount     | int      | 4 | ✗ | 发帖次数
+FirstViewedTime | datetime | - | ✗ | 首次浏览时间
+FirstPostedTime | datetime | - | ✓ | 首次发帖时间
+LastViewedTime  | datetime | - | ✗ | 最后浏览时间
+LastPostedTime  | datetime | - | ✓ | 最后发帖时间
 
 
-## 用户信息表 `Community.UserProfile`
+## 用户信息表 `Discussions.UserProfile`
 
 字段名称 | 数据类型 | 长度 | 可空 | 备注
 ------- |:-------:|:---:|:---:| ----

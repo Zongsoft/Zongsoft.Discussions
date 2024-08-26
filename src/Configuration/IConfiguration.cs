@@ -27,21 +27,17 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Configuration
+namespace Zongsoft.Discussions.Configuration
 {
 	/// <summary>
 	/// 表示应用配置信息的接口。
 	/// </summary>
 	public interface IConfiguration
 	{
-		/// <summary>
-		/// 获取或设置默认的站点编号。
-		/// </summary>
+		/// <summary>获取或设置默认的站点编号。</summary>
 		uint SiteId { get; set; }
 
-		/// <summary>
-		/// 获取或设置文件存储的基路径。
-		/// </summary>
+		/// <summary>获取或设置文件存储的基路径。</summary>
 		string BasePath { get; set; }
 	}
 }

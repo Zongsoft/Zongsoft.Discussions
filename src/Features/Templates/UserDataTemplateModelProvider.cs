@@ -33,10 +33,10 @@ using Zongsoft.Data.Templates;
 using Zongsoft.Services;
 using Zongsoft.Serialization;
 
-using Zongsoft.Community.Models;
-using Zongsoft.Community.Services;
+using Zongsoft.Discussions.Models;
+using Zongsoft.Discussions.Services;
 
-namespace Zongsoft.Community.Features.Templates
+namespace Zongsoft.Discussions.Features.Templates
 {
 	[Service(typeof(IDataTemplateModelProvider))]
 	public class UserDataTemplateModelProvider : DataTemplateModelProviderBase

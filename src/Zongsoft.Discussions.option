@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<options>
+	<option path="/Discussions">
+		<general siteId="1" basePath="zfs.oss:/zongsoft-discussions/" />
+	</option>
+</options>

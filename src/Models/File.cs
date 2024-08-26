@@ -29,7 +29,7 @@ using System.ComponentModel;
 
 using Zongsoft.Data;
 
-namespace Zongsoft.Community.Models
+namespace Zongsoft.Discussions.Models
 {
 	/// <summary>
 	/// 表示文件的实体类。

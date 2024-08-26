@@ -26,7 +26,7 @@
 
 using System;
 
-namespace Zongsoft.Community
+namespace Zongsoft.Discussions
 {
 	internal class Fields
 	{

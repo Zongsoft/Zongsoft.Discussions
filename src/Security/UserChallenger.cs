@@ -34,9 +34,9 @@ using Zongsoft.Services;
 using Zongsoft.Security;
 using Zongsoft.Security.Membership;
 
-using Zongsoft.Community.Models;
+using Zongsoft.Discussions.Models;
 
-namespace Zongsoft.Community.Security
+namespace Zongsoft.Discussions.Security
 {
 	public class UserChallenger : IChallenger
 	{

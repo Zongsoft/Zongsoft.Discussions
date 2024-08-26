@@ -1,8 +1,7 @@
 SET NAMES utf8mb4;
 SET TIME_ZONE='+08:00';
 
-
-CREATE TABLE IF NOT EXISTS `Community_Feedback`
+CREATE TABLE IF NOT EXISTS `Discussions_Feedback`
 (
 	`FeedbackId`  bigint unsigned  NOT NULL COMMENT '主键，反馈编号',
 	`SiteId`      int unsigned     NOT NULL COMMENT '站点编号',
@@ -16,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `Community_Feedback`
 	PRIMARY KEY (`FeedbackId`)
 ) ENGINE=InnoDB COMMENT='反馈表';
 
-CREATE TABLE IF NOT EXISTS `Community_Message`
+CREATE TABLE IF NOT EXISTS `Discussions_Message`
 (
 	`MessageId`   bigint unsigned NOT NULL COMMENT '主键，消息编号',
 	`SiteId`      int unsigned    NOT NULL COMMENT '站点编号',
@@ -31,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `Community_Message`
 	PRIMARY KEY (`MessageId`)
 ) ENGINE=InnoDB COMMENT='消息表';
 
-CREATE TABLE IF NOT EXISTS `Community_Folder`
+CREATE TABLE IF NOT EXISTS `Discussions_Folder`
 (
 	`FolderId`     int unsigned     NOT NULL COMMENT '主键，目录编号',
 	`SiteId`       int unsigned     NOT NULL COMMENT '站点编号',
@@ -45,17 +44,17 @@ CREATE TABLE IF NOT EXISTS `Community_Folder`
 	PRIMARY KEY (`FolderId`)
 ) ENGINE=InnoDB COMMENT='目录表';
 
-CREATE TABLE IF NOT EXISTS `Community_FolderUser`
+CREATE TABLE IF NOT EXISTS `Discussions_FolderUser`
 (
 	`FolderId`   int unsigned     NOT NULL COMMENT '主键，目录编号',
 	`UserId`     int unsigned     NOT NULL COMMENT '主键，用户编号',
 	`Permission` tinyint unsigned NOT NULL COMMENT '权限定义',
 	`Expiration` datetime         NULL     COMMENT '过期时间',
 	PRIMARY KEY (`FolderId`, `UserId`),
-	CONSTRAINT `FK_FolderUser.FolderId` FOREIGN KEY (`FolderId`) REFERENCES `Community_Folder` (`FolderId`) ON DELETE CASCADE
+	CONSTRAINT `FK_FolderUser.FolderId` FOREIGN KEY (`FolderId`) REFERENCES `Discussions_Folder` (`FolderId`) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='目录用户表';
 
-CREATE TABLE IF NOT EXISTS `Community_File`
+CREATE TABLE IF NOT EXISTS `Discussions_File`
 (
 	`FileId`      bigint unsigned NOT NULL COMMENT '主键，文件编号',
 	`SiteId`      int unsigned    NOT NULL COMMENT '所属站点编号' DEFAULT 0,
@@ -72,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `Community_File`
 	PRIMARY KEY (`FileId`)
 ) ENGINE=InnoDB COMMENT='文件（附件）表';
 
-CREATE TABLE IF NOT EXISTS `Community_Site`
+CREATE TABLE IF NOT EXISTS `Discussions_Site`
 (
 	`SiteId`      int unsigned NOT NULL COMMENT '主键，站点编号',
 	`SiteNo`      varchar(50)  NOT NULL COMMENT '站点代号' COLLATE 'ascii_general_ci',
@@ -87,15 +86,15 @@ CREATE TABLE IF NOT EXISTS `Community_Site`
 	INDEX `IX_Domain` (`Domain`)
 ) ENGINE=InnoDB COMMENT='站点表';
 
-CREATE TABLE IF NOT EXISTS `Community_SiteUser`
+CREATE TABLE IF NOT EXISTS `Discussions_SiteUser`
 (
 	`SiteId` int unsigned NOT NULL COMMENT '主键，站点编号',
 	`UserId` int unsigned NOT NULL COMMENT '主键，用户编号',
 	PRIMARY KEY (`SiteId`, `UserId`),
-	CONSTRAINT `FK_SiteUser.SiteId` FOREIGN KEY (`SiteId`) REFERENCES `Community_Site` (`SiteId`) ON DELETE CASCADE
+	CONSTRAINT `FK_SiteUser.SiteId` FOREIGN KEY (`SiteId`) REFERENCES `Discussions_Site` (`SiteId`) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='站点用户表';
 
-CREATE TABLE IF NOT EXISTS `Community_ForumGroup`
+CREATE TABLE IF NOT EXISTS `Discussions_ForumGroup`
 (
 	`SiteId`      int unsigned      NOT NULL COMMENT '主键，站点编号',
 	`GroupId`     smallint unsigned NOT NULL COMMENT '主键，分组编号',
@@ -106,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `Community_ForumGroup`
 	PRIMARY KEY (`SiteId`, `GroupId`)
 ) ENGINE=InnoDB COMMENT='论坛分组表';
 
-CREATE TABLE IF NOT EXISTS `Community_Forum`
+CREATE TABLE IF NOT EXISTS `Discussions_Forum`
 (
 	`SiteId`                       int unsigned      NOT NULL COMMENT '主键，站点编号',
 	`ForumId`                      smallint unsigned NOT NULL COMMENT '主键，论坛编号',
@@ -137,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `Community_Forum`
 	PRIMARY KEY (`SiteId`, `ForumId`)
 ) ENGINE=InnoDB COMMENT='论坛表';
 
-CREATE TABLE IF NOT EXISTS `Community_ForumUser`
+CREATE TABLE IF NOT EXISTS `Discussions_ForumUser`
 (
 	`SiteId`      int unsigned      NOT NULL COMMENT '主键，站点编号',
 	`ForumId`     smallint unsigned NOT NULL COMMENT '主键，论坛编号',
@@ -145,10 +144,10 @@ CREATE TABLE IF NOT EXISTS `Community_ForumUser`
 	`Permission`  tinyint unsigned  NOT NULL COMMENT '权限定义',
 	`IsModerator` tinyint(1)        NOT NULL COMMENT '是否版主',
 	PRIMARY KEY (`SiteId`, `ForumId`, `UserId`),
-	CONSTRAINT `FK_ForumUser.ForumId` FOREIGN KEY (`SiteId`) REFERENCES `Community_Site` (`SiteId`) ON DELETE CASCADE
+	CONSTRAINT `FK_ForumUser.ForumId` FOREIGN KEY (`SiteId`) REFERENCES `Discussions_Site` (`SiteId`) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='论坛用户表';
 
-CREATE TABLE IF NOT EXISTS `Community_Post`
+CREATE TABLE IF NOT EXISTS `Discussions_Post`
 (
 	`PostId`             bigint unsigned NOT NULL COMMENT '主键，帖子编号',
 	`SiteId`             int unsigned    NOT NULL COMMENT '所属站点编号',
@@ -169,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `Community_Post`
 	PRIMARY KEY (`PostId` DESC)
 ) ENGINE=InnoDB COMMENT='帖子表';
 
-CREATE TABLE IF NOT EXISTS `Community_PostAttachment`
+CREATE TABLE IF NOT EXISTS `Discussions_PostAttachment`
 (
 	`PostId`             bigint unsigned NOT NULL COMMENT '主键，帖子编号',
 	`AttachmentId`       bigint unsigned NOT NULL COMMENT '主键，附件编号',
@@ -179,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `Community_PostAttachment`
 	INDEX `IX_Ordinal` (`PostId`, `AttachmentFolderId`, `Ordinal`)
 ) ENGINE=InnoDB COMMENT '帖子附件表';
 
-CREATE TABLE IF NOT EXISTS `Community_PostVoting`
+CREATE TABLE IF NOT EXISTS `Discussions_PostVoting`
 (
 	`PostId`     bigint unsigned NOT NULL COMMENT '主键，帖子编号',
 	`UserId`     int unsigned    NOT NULL COMMENT '主键，用户编号',
@@ -188,17 +187,20 @@ CREATE TABLE IF NOT EXISTS `Community_PostVoting`
 	PRIMARY KEY (`PostId`, `UserId`)
 ) ENGINE=InnoDB COMMENT='帖子投票表';
 
-CREATE TABLE IF NOT EXISTS `Community_History`
+CREATE TABLE IF NOT EXISTS `Discussions_History`
 (
-	`UserId`               int unsigned    NOT NULL COMMENT '主键，用户编号',
-	`ThreadId`             bigint unsigned NOT NULL COMMENT '主键，主题编号',
-	`Count`                int unsigned    NOT NULL COMMENT '浏览次数',
-	`FirstViewedTime`      datetime        NOT NULL COMMENT '首次浏览时间' DEFAULT CURRENT_TIMESTAMP,
-	`MostRecentViewedTime` datetime        NOT NULL COMMENT '最后浏览时间' DEFAULT CURRENT_TIMESTAMP,
+	`UserId`          int unsigned    NOT NULL COMMENT '主键，用户编号',
+	`ThreadId`        bigint unsigned NOT NULL COMMENT '主键，主题编号',
+	`ViewedCount`     int unsigned    NOT NULL COMMENT '浏览次数',
+	`PostedCount`     int unsigned    NOT NULL COMMENT '发帖次数',
+	`FirstViewedTime` datetime        NOT NULL COMMENT '首次浏览时间' DEFAULT CURRENT_TIMESTAMP,
+	`FirstPostedTime` datetime        NULL     COMMENT '首次发帖时间',
+	`LastViewedTime`  datetime        NOT NULL COMMENT '最后浏览时间' DEFAULT CURRENT_TIMESTAMP,
+	`LastPostedTime`  datetime        NULL     COMMENT '最后发帖时间',
 	PRIMARY KEY (`UserId`, `ThreadId` DESC)
 ) ENGINE=InnoDB COMMENT='访问历史表';
 
-CREATE TABLE IF NOT EXISTS `Community_Thread`
+CREATE TABLE IF NOT EXISTS `Discussions_Thread`
 (
 	`ThreadId`                   bigint unsigned   NOT NULL COMMENT '主键，主题编号',
 	`SiteId`                     int unsigned      NOT NULL COMMENT '所属站点编号',
@@ -230,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `Community_Thread`
 	PRIMARY KEY (`ThreadId` DESC)
 ) ENGINE=InnoDB COMMENT='主题表';
 
-CREATE TABLE IF NOT EXISTS `Community_UserProfile`
+CREATE TABLE IF NOT EXISTS `Discussions_UserProfile`
 (
 	`UserId`                int unsigned     NOT NULL COMMENT '主键，用户编号',
 	`SiteId`                int unsigned     NOT NULL COMMENT '所属站点编号',
@@ -257,12 +259,12 @@ CREATE TABLE IF NOT EXISTS `Community_UserProfile`
 	UNIQUE INDEX `UX_User_Phone` (`SiteId`, `Phone`)
 ) ENGINE=InnoDB COMMENT='用户信息表';
 
-CREATE TABLE IF NOT EXISTS `Community_UserMessage`
+CREATE TABLE IF NOT EXISTS `Discussions_UserMessage`
 (
 	`UserId`    int unsigned        NOT NULL COMMENT '主键，用户编号',
 	`MessageId` bigint unsigned     NOT NULL COMMENT '主键，消息编号',
 	`IsRead`    tinyint(1) unsigned NOT NULL COMMENT '是否已读',
 	PRIMARY KEY (`UserId`, `MessageId`),
-	CONSTRAINT `FK_UserMessage.UserId` FOREIGN KEY (`UserId`) REFERENCES `Community_UserProfile` (`UserId`) ON DELETE CASCADE,
-	CONSTRAINT `FK_UserMessage.MessageId` FOREIGN KEY (`MessageId`) REFERENCES `Community_Message` (`MessageId`) ON DELETE CASCADE
+	CONSTRAINT `FK_UserMessage.UserId` FOREIGN KEY (`UserId`) REFERENCES `Discussions_UserProfile` (`UserId`) ON DELETE CASCADE,
+	CONSTRAINT `FK_UserMessage.MessageId` FOREIGN KEY (`MessageId`) REFERENCES `Discussions_Message` (`MessageId`) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='用户消息表';

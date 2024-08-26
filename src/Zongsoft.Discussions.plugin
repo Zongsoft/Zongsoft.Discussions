@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<plugin name="Zongsoft.Discussions"
+        title="Zongsoft.Discussions Plugin"
+        author="Zongsoft Studio(zongsoft@qq.com)"
+        copyright="Copyright(C) Zongsoft Studio. 2015-2020. All rights reserved."
+        description="Created by Popeye Zhong in 2017-05">
+
+	<manifest>
+		<assemblies>
+			<assembly name="Zongsoft.Discussions" />
+		</assemblies>
+
+		<dependencies>
+			<dependency name="Zongsoft.Data" />
+			<dependency name="Zongsoft.Security" />
+		</dependencies>
+	</manifest>
+
+	<extension path="/Workbench/Modules">
+		<object name="Discussions" value="{static:Zongsoft.Discussions.Module.Current, Zongsoft.Discussions}">
+			<expose name="Accessor" value="{path:../@Accessor}">
+				<expose name="Filters" value="{path:../@Filters}" />
+			</expose>
+
+			<expose name="Events" value="{path:../@Events}" />
+			<expose name="Schemas" value="{path:../@Schemas}" />
+			<expose name="Properties" value="{path:../@Properties}" />
+		</object>
+	</extension>
+
+	<extension path="/Workbench/Data/Validators">
+		<object name="Discussions" type="Zongsoft.Discussions.Data.DataValidator, Zongsoft.Discussions" />
+	</extension>
+
+	<extension path="/Workbench/Modules/Discussions/Accessor/Filters">
+		<object name="PostFilter" type="Zongsoft.Discussions.Data.PostFilter, Zongsoft.Discussions" />
+		<object name="ThreadFilter" type="Zongsoft.Discussions.Data.ThreadFilter, Zongsoft.Discussions" />
+	</extension>
+
+	<!-- 挂载身份质询器 -->
+	<extension path="/Workbench/Security/Authentication/Challengers">
+		<object value="{static:Zongsoft.Discussions.Security.UserChallenger.Instance, Zongsoft.Discussions}" />
+	</extension>
+
+	<!-- 挂载身份转换器 -->
+	<extension path="/Workbench/Security/Authentication/Transformers">
+		<object value="{static:Zongsoft.Discussions.Security.UserIdentity+Transformer.Instance, Zongsoft.Discussions}" />
+	</extension>
+
+	<extension path="/Workbench/Modules/Discussions/Schemas">
+		<object name="Site" title="{res:Site}" description="{res:Site.Description}" />
+		<object name="File" title="{res:File}" description="{res:File.Description}" />
+		<object name="Folder" title="{res:Folder}" description="{res:Folder.Description}" />
+		<object name="Forum" title="{res:Forum}" description="{res:Forum.Description}" />
+		<object name="ForumGroup" title="{res:ForumGroup}" description="{res:ForumGroup.Description}" />
+		<object name="Message" title="{res:Message}" description="{res:Message.Description}" />
+		<object name="Post" title="{res:Post}" description="{res:Post.Description}" />
+		<object name="Thread" title="{res:Thread}" description="{res:Thread.Description}" />
+		<object name="User" title="{res:User}" description="{res:User.Description}" />
+		<object name="Feedback" title="{res:Feedback}" description="{res:Feedback.Description}" />
+	</extension>
+</plugin>

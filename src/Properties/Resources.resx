@@ -156,10 +156,10 @@
   <data name="Avatar" xml:space="preserve">
     <value>头像</value>
   </data>
-  <data name="Community" xml:space="preserve">
+  <data name="Discussions" xml:space="preserve">
     <value>社区论坛</value>
   </data>
-  <data name="Community.Description" xml:space="preserve">
+  <data name="Discussions.Description" xml:space="preserve">
     <value>提供社区站点、论坛、主题、发帖等功能。</value>
   </data>
   <data name="ContactName" xml:space="preserve">

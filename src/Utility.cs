@@ -35,9 +35,9 @@ using Zongsoft.Services;
 using Zongsoft.Security;
 using Zongsoft.Configuration;
 
-using Zongsoft.Community.Models;
+using Zongsoft.Discussions.Models;
 
-namespace Zongsoft.Community
+namespace Zongsoft.Discussions
 {
 	internal static class Utility
 	{
@@ -215,9 +215,7 @@ namespace Zongsoft.Community
 		public static string GetFilePath(string relativePath = null) => GetFilePath(0, 0, relativePath);
 		public static string GetFilePath(uint siteId, string relativePath = null) => GetFilePath(siteId, 0, relativePath);
 
-		/// <summary>
-		/// 获取特定规则的文件存储路径。
-		/// </summary>
+		/// <summary>获取特定规则的文件存储路径。</summary>
 		/// <param name="siteId">指定的站点编号，零表示当前用户所在的站点。</param>
 		/// <param name="userId">指定的用户编号，零表示当前用户。</param>
 		/// <param name="relativePath">相对路径，如果以斜杠符“/”打头表示忽略编号为零的层级。</param>
@@ -237,7 +235,7 @@ namespace Zongsoft.Community
 		/// </remarks>
 		public static string GetFilePath(uint siteId, uint userId, string relativePath = null)
 		{
-			var basePath = ApplicationContext.Current.Configuration.GetOptionValue<string>("/Community/General.BasePath");
+			var basePath = ApplicationContext.Current.Configuration.GetOptionValue<string>("/Discussions/General.BasePath");
 
 			if(string.IsNullOrWhiteSpace(basePath))
 				return string.Empty;

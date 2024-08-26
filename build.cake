@@ -1,6 +1,6 @@
 var target = Argument("target", "default");
 
-var solutionFile  = "src/Zongsoft.Community.sln";
+var solutionFile  = "src/Zongsoft.Discussions.sln";
 
 Task("clean")
 	.Description("清理解决方案")

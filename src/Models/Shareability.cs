@@ -26,7 +26,7 @@
 
 using System;
 
-namespace Zongsoft.Community.Models
+namespace Zongsoft.Discussions.Models
 {
 	/// <summary>
 	/// 表示分享性的枚举。

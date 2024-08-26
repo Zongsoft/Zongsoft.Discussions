@@ -28,15 +28,15 @@ using Zongsoft.Data;
 using Zongsoft.Services;
 using Zongsoft.Components;
 
-[assembly: ApplicationModule(Zongsoft.Community.Module.NAME)]
+[assembly: ApplicationModule(Zongsoft.Discussions.Module.NAME)]
 
-namespace Zongsoft.Community
+namespace Zongsoft.Discussions
 {
 	public class Module : ApplicationModule<Module.EventRegistry>
 	{
 		#region 常量定义
-		/// <summary>表示社区模块的名称常量值。</summary>
-		public const string NAME = nameof(Community);
+		/// <summary>表示论坛模块的名称常量值。</summary>
+		public const string NAME = nameof(Discussions);
 		#endregion
 
 		#region 单例字段
@@ -44,7 +44,7 @@ namespace Zongsoft.Community
 		#endregion
 
 		#region 构造函数
-		public Module() : base(NAME, Community.Properties.Resources.Community, Community.Properties.Resources.Community_Description) { }
+		public Module() : base(NAME, Discussions.Properties.Resources.Discussions, Discussions.Properties.Resources.Discussions_Description) { }
 		#endregion
 
 		#region 公共属性

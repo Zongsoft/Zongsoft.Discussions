@@ -36,10 +36,10 @@ using Zongsoft.Data;
 using Zongsoft.Web.Http;
 using Zongsoft.Security;
 using Zongsoft.Security.Membership;
-using Zongsoft.Community.Models;
-using Zongsoft.Community.Services;
+using Zongsoft.Discussions.Models;
+using Zongsoft.Discussions.Services;
 
-namespace Zongsoft.Community.Web.Controllers
+namespace Zongsoft.Discussions.Web.Controllers
 {
 	[ControllerName("Threads")]
 	public class ThreadController : ServiceController<Thread, ThreadService>

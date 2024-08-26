@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 using Zongsoft.Data;
 
-namespace Zongsoft.Community.Models
+namespace Zongsoft.Discussions.Models
 {
 	/// <summary>
 	/// 表示论坛分组的业务实体类。

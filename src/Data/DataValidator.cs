@@ -30,10 +30,10 @@ using System.Collections.Generic;
 using Zongsoft.Data;
 using Zongsoft.Data.Metadata;
 
-using Zongsoft.Community.Models;
-using Zongsoft.Community.Security;
+using Zongsoft.Discussions.Models;
+using Zongsoft.Discussions.Security;
 
-namespace Zongsoft.Community.Data
+namespace Zongsoft.Discussions.Data
 {
 	public class DataValidator : IDataValidator
 	{

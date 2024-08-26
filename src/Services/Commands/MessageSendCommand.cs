@@ -30,7 +30,7 @@ using System.Collections.Generic;
 
 using Zongsoft.Services;
 
-namespace Zongsoft.Community.Services.Commands
+namespace Zongsoft.Discussions.Services.Commands
 {
 	[CommandOption(SUBJECT_OPTION, typeof(string), Required = true)]
 	[CommandOption(CONTENT_OPTION, typeof(string), Required = true)]

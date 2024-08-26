@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zongsoft.Community", "Zongsoft.Community.csproj", "{578D2452-C76E-4BBD-BE45-42A2E6D9FD5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zongsoft.Discussions", "Zongsoft.Discussions.csproj", "{578D2452-C76E-4BBD-BE45-42A2E6D9FD5B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zongsoft.Community.Web", "api\Zongsoft.Community.Web.csproj", "{AEB4F7C7-44A5-4921-80EA-397BCBAEB1BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zongsoft.Discussions.Web", "api\Zongsoft.Discussions.Web.csproj", "{AEB4F7C7-44A5-4921-80EA-397BCBAEB1BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

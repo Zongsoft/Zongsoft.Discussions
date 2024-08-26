@@ -26,7 +26,7 @@
 
 using System;
 
-namespace Zongsoft.Community.Models
+namespace Zongsoft.Discussions.Models
 {
 	/// <summary>
 	/// 表示主题状态的枚举。

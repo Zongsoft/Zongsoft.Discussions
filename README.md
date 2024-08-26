@@ -1,12 +1,15 @@
-# Zongsoft.Community 社区论坛系统
+# Zongsoft.Discussions 社区论坛系统
 
-![license](https://img.shields.io/github/license/Zongsoft/Zongsoft.Community) ![download](https://img.shields.io/nuget/dt/Zongsoft.Community) ![version](https://img.shields.io/github/v/release/Zongsoft/Zongsoft.Community?include_prereleases) ![github stars](https://img.shields.io/github/stars/Zongsoft/Zongsoft.Community?style=social)
+![License](https://img.shields.io/github/license/Zongsoft/Zongsoft.Discussions)
+![NuGet Version](https://img.shields.io/nuget/v/Zongsoft.Discussions)
+![NuGet Downloads](https://img.shields.io/nuget/dt/Zongsoft.Discussions)
+![Github Stars](https://img.shields.io/github/stars/Zongsoft/Zongsoft.Discussions?style=social)
 
-README: [English](https://github.com/Zongsoft/Zongsoft.Community/blob/master/README.md) | [简体中文](https://github.com/Zongsoft/Zongsoft.Community/blob/master/README-zh_CN.md)
+[English](README.md) | [简体中文](README-zh_CN.md)
 
 -----
 
-[**Zongsoft.Community**](https://github.com/Zongsoft/Zongsoft.Community) 是一个社区论坛的后端系统，这个项目旨在展示 **Zongsoft** 插件式应用开发以及对 [**Zongsoft.Data**](https://github.com/Zongsoft/Zongsoft.Data) 数据引擎的使用技巧。
+[**Zongsoft.Discussions**](https://github.com/Zongsoft/Zongsoft.Discussions) 是一个社区论坛的后端系统，这个项目旨在展示 **Zongsoft** 插件式应用开发。
 
 
 **_文档正在撰写中，代码也还在持续完善中。请关注我们的微信公号和知识星球以获得最新进展及通知！_**
@@ -15,9 +18,9 @@ README: [English](https://github.com/Zongsoft/Zongsoft.Community/blob/master/REA
 <a name="contribution"></a>
 ## 贡献
 
-请不要在项目的 **I**ssues 中提交询问(**Q**uestion)以及咨询讨论，**I**ssue 是用来报告问题(**B**ug)和功能特性(**F**eature)。如果你希望参与贡献，欢迎提交 代码合并请求(_[**P**ull**R**equest](https://github.com/Zongsoft/Zongsoft.Community/pulls)_) 或问题反馈(_[**I**ssue](https://github.com/Zongsoft/Zongsoft.Community/issues)_)。
+请不要在项目的 **I**ssues 中提交询问(**Q**uestion)以及咨询讨论，**I**ssue 是用来报告问题(**B**ug)和功能特性(**F**eature)。如果你希望参与贡献，欢迎提交 代码合并请求(_[**P**ull**R**equest](https://github.com/Zongsoft/Zongsoft.Discussions/pulls)_) 或问题反馈(_[**I**ssue](https://github.com/Zongsoft/Zongsoft.Discussions/issues)_)。
 
-对于新功能，请务必创建一个功能反馈(_[**I**ssue](https://github.com/Zongsoft/Zongsoft.Community/issues)_)来详细描述你的建议，以便我们进行充分讨论，这也将使我们更好的协调工作防止重复开发，并帮助你调整建议或需求，使之成功地被接受到项目中。
+对于新功能，请务必创建一个功能反馈(_[**I**ssue](https://github.com/Zongsoft/Zongsoft.Discussions/issues)_)来详细描述你的建议，以便我们进行充分讨论，这也将使我们更好的协调工作防止重复开发，并帮助你调整建议或需求，使之成功地被接受到项目中。
 
 欢迎你为我们的开源项目撰写文章进行推广，如果需要我们在官网(_[http://zongsoft.com/blog](http://zongsoft.com/blog)_) 中转发你的文章、博客、视频等可通过 [**电子邮件**](mailto:zongsoft@qq.com) 联系我们。
 

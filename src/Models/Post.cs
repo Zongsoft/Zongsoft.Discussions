@@ -30,7 +30,7 @@ using System.Collections.Generic;
 
 using Zongsoft.Data;
 
-namespace Zongsoft.Community.Models
+namespace Zongsoft.Discussions.Models
 {
 	/// <summary>
 	/// 表示帖子的业务实体类。

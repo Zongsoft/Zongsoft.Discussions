@@ -31,7 +31,7 @@ using System.Collections;
 using Zongsoft.Data;
 using Zongsoft.Security;
 
-namespace Zongsoft.Community.Data
+namespace Zongsoft.Discussions.Data
 {
 	[DataAccessFilter($"{Module.NAME}.{nameof(Models.Thread)}")]
 	public class ThreadFilter : IDataAccessFilter<DataSelectContextBase>

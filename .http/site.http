@@ -1,0 +1,72 @@
+### 列表操作
+GET /Sites?page={{$dotenv page}} HTTP/1.1
+Host: {{host}}:{{port}}
+Authorization: Credential {{$dotenv credentialId}}
+
+### 编号查询
+# @prompt id 站点编号
+GET /Sites/{{id}} HTTP/1.1
+Host: {{host}}:{{port}}
+Authorization: Credential {{$dotenv credentialId}}
+
+### 模式查询
+GET /Sites/name:MySite+host:localhost?page={{$dotenv page}} HTTP/1.1
+Host: {{host}}:{{port}}
+Authorization: Credential {{$dotenv credentialId}}
+
+### 查询操作
+### 注：有关查询条件请参考对应的条件实体类的定义。
+POST /Sites/Query?page={{$dotenv page}} HTTP/1.1
+Host: {{host}}:{{port}}
+Authorization: Credential {{$dotenv credentialId}}
+
+{
+	"Name": "%",
+	"Host": "localhost",
+	"Domain": "_"
+}
+
+### 创建操作
+# @prompt name 站点名称
+POST /Sites HTTP/1.1
+Host: {{host}}:{{port}}
+Authorization: Credential {{$dotenv credentialId}}
+Content-Type: application/json
+
+{
+	"Name": "{{name}}"
+}
+
+### 更新操作
+# @prompt id    站点编号
+# @prompt field 字段名称
+# @prompt value 字段内容
+PATCH /Sites/{{id}} HTTP/1.1
+Host: {{host}}:{{port}}
+Authorization: Credential {{$dotenv credentialId}}
+Content-Type: application/json
+
+{
+	"{{field}}": "{{value}}"
+}
+
+### 删除操作
+# @prompt id 站点编号
+DELETE /Sites/{{id}} HTTP/1.1
+Host: {{host}}:{{port}}
+Authorization: Credential {{$dotenv credentialId}}
+
+### 批量删除
+DELETE /Sites HTTP/1.1
+Host: {{host}}:{{port}}
+Authorization: Credential {{$dotenv credentialId}}
+Content-Type: text/plain
+
+401,402,403
+
+### 导出操作
+GET /Sites/Export?format=spreadsheet HTTP/1.1
+Host: {{host}}:{{port}}
+X-Data-Schema: *
+X-Export-Fields: *
+Authorization: Credential {{$dotenv credentialId}}

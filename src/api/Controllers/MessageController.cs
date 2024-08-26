@@ -33,10 +33,10 @@ using Microsoft.AspNetCore.Http;
 using Zongsoft.Web;
 using Zongsoft.Data;
 using Zongsoft.Security.Membership;
-using Zongsoft.Community.Models;
-using Zongsoft.Community.Services;
+using Zongsoft.Discussions.Models;
+using Zongsoft.Discussions.Services;
 
-namespace Zongsoft.Community.Web.Controllers
+namespace Zongsoft.Discussions.Web.Controllers
 {
     [Authorization]
     [ControllerName("Messages")]

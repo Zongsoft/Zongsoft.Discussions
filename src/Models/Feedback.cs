@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 using Zongsoft.Data;
 
-namespace Zongsoft.Community.Models
+namespace Zongsoft.Discussions.Models
 {
 	/// <summary>
 	/// 表示意见反馈的业务实体类。

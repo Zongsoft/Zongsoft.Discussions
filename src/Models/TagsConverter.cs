@@ -28,7 +28,7 @@ using System;
 using System.Globalization;
 using System.ComponentModel;
 
-namespace Zongsoft.Community.Models
+namespace Zongsoft.Discussions.Models
 {
 	public class TagsConverter : TypeConverter
 	{

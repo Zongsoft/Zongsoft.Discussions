@@ -30,9 +30,9 @@ using System.Collections.Generic;
 
 using Zongsoft.Data;
 using Zongsoft.Services;
-using Zongsoft.Community.Models;
+using Zongsoft.Discussions.Models;
 
-namespace Zongsoft.Community.Services
+namespace Zongsoft.Discussions.Services
 {
 	[Service(nameof(ForumGroupService))]
 	[DataService(typeof(ForumGroupCriteria))]

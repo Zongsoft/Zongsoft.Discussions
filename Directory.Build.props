@@ -2,11 +2,11 @@
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0;net8.0;</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
-		<Authors>Popeye Zhong(zongsoft@qq.com)</Authors>
+		<Authors>Zongsoft Studio(zongsoft@qq.com)</Authors>
 		<Company>Zongsoft Studio</Company>
-		<Copyright>Copyright(C) Zongsoft Studio 2010-2023. All rights reserved.</Copyright>
-		<RepositoryUrl>https://github.com/Zongsoft/Zongsoft.Community</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/Zongsoft/Zongsoft.Community</PackageProjectUrl>
+		<Copyright>Copyright(C) Zongsoft Studio 2010-2025. All rights reserved.</Copyright>
+		<RepositoryUrl>https://github.com/Zongsoft/Zongsoft.Discussions</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/Zongsoft/Zongsoft.Discussions</PackageProjectUrl>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageIcon>zongsoft-logo.png</PackageIcon>
 		<PackageIconUrl>https://github.com/Zongsoft/Guidelines/raw/master/zongsoft-logo(48x48).png</PackageIconUrl>

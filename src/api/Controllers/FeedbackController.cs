@@ -33,10 +33,10 @@ using Microsoft.AspNetCore.Mvc;
 
 using Zongsoft.Web;
 using Zongsoft.Services;
-using Zongsoft.Community.Models;
-using Zongsoft.Community.Services;
+using Zongsoft.Discussions.Models;
+using Zongsoft.Discussions.Services;
 
-namespace Zongsoft.Community.Web.Controllers
+namespace Zongsoft.Discussions.Web.Controllers
 {
     [ControllerName("Feedbacks")]
     public class FeedbackController : ServiceController<Feedback, FeedbackService>

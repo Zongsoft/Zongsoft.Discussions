@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 using Zongsoft.Data;
 
-namespace Zongsoft.Community.Models
+namespace Zongsoft.Discussions.Models
 {
 	/// <summary>
 	/// 表示访问历史的实体类。
@@ -47,13 +47,22 @@ namespace Zongsoft.Community.Models
 		public abstract Thread Thread { get; set; }
 
 		/// <summary>获取或设置累计浏览次数。</summary>
-		public abstract uint Count { get; set; }
+		public abstract uint ViewedCount { get; set; }
+
+		/// <summary>获取或设置累计发帖次数。</summary>
+		public abstract uint PostedCount { get; set; }
 
 		/// <summary>获取或设置首次浏览的时间。</summary>
 		public abstract DateTime FirstViewedTime { get; set; }
 
+		/// <summary>获取或设置首次发帖的时间。</summary>
+		public abstract DateTime? FirstPostedTime { get; set; }
+
 		/// <summary>获取或设置最后浏览的时间。</summary>
-		public abstract DateTime MostRecentViewedTime { get; set; }
+		public abstract DateTime LastViewedTime { get; set; }
+
+		/// <summary>获取或设置最后发帖的时间。</summary>
+		public abstract DateTime? LastPostedTime { get; set; }
 		#endregion
 	}
 
@@ -67,15 +76,18 @@ namespace Zongsoft.Community.Models
 		public abstract ulong? ThreadId { get; set; }
 
 		/// <summary>获取或设置累计浏览次数范围。</summary>
-		public abstract Range<uint>? Count { get; set; }
+		public abstract Range<uint>? ViewedCount { get; set; }
+
+		/// <summary>获取或设置累计发帖次数范围。</summary>
+		public abstract Range<uint>? PostedCount { get; set; }
 
 		/// <summary>获取或设置浏览的时间范围。</summary>
-		[Condition(typeof(TimestampConverter))]
-		public abstract Range<DateTime>? Timestamp { get; set; }
+		[Condition(typeof(ViewedConverter))]
+		public abstract Range<DateTime>? ViewedTime { get; set; }
 		#endregion
 
 		#region 嵌套子类
-		private class TimestampConverter : ConditionConverter
+		private class ViewedConverter : ConditionConverter
 		{
 			public override ICondition Convert(ConditionConverterContext context)
 			{
@@ -85,7 +97,7 @@ namespace Zongsoft.Community.Models
 					return null;
 
 				return Condition.Between(context.GetFullName(nameof(History.FirstViewedTime)), timestamp) |
-				       Condition.Between(context.GetFullName(nameof(History.MostRecentViewedTime)), timestamp);
+				       Condition.Between(context.GetFullName(nameof(History.LastViewedTime)), timestamp);
 			}
 		}
 		#endregion

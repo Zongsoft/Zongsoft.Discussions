@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <schema xmlns="http://schemas.zongsoft.com/data">
-	<container name="Community">
-		<entity name="Message" table="Community_Message" driver="ClickHouse">
+	<container name="Discussions">
+		<entity name="Message" table="Discussions_Message" driver="ClickHouse">
 			<key>
 				<member name="MessageId" />
 			</key>
@@ -27,7 +27,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="Feedback" table="Community_Feedback">
+		<entity name="Feedback" table="Discussions_Feedback">
 			<key>
 				<member name="FeedbackId" />
 			</key>
@@ -47,7 +47,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="File" table="Community_File">
+		<entity name="File" table="Discussions_File">
 			<key>
 				<member name="FileId" />
 			</key>
@@ -78,7 +78,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="Folder" table="Community_Folder">
+		<entity name="Folder" table="Discussions_Folder">
 			<key>
 				<member name="FolderId" />
 			</key>
@@ -110,7 +110,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="FolderUser" table="Community_FolderUser">
+		<entity name="FolderUser" table="Discussions_FolderUser">
 			<key>
 				<member name="FolderId" />
 				<member name="UserId" />
@@ -130,7 +130,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="Site" table="Community_Site">
+		<entity name="Site" table="Discussions_Site">
 			<key>
 				<member name="SiteId" />
 			</key>
@@ -152,7 +152,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="SiteUser" table="Community_SiteUser">
+		<entity name="SiteUser" table="Discussions_SiteUser">
 			<key>
 				<member name="SiteId" />
 				<member name="UserId" />
@@ -170,7 +170,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="ForumGroup" table="Community_ForumGroup">
+		<entity name="ForumGroup" table="Discussions_ForumGroup">
 			<key>
 				<member name="SiteId" />
 				<member name="GroupId" />
@@ -193,7 +193,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="Forum" table="Community_Forum">
+		<entity name="Forum" table="Discussions_Forum">
 			<key>
 				<member name="SiteId" />
 				<member name="ForumId" />
@@ -258,7 +258,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="ForumUser" table="Community_ForumUser">
+		<entity name="ForumUser" table="Discussions_ForumUser">
 			<key>
 				<member name="SiteId" />
 				<member name="ForumId" />
@@ -285,7 +285,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="Thread" table="Community_Thread">
+		<entity name="Thread" table="Discussions_Thread">
 			<key>
 				<member name="ThreadId" />
 			</key>
@@ -344,7 +344,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="Post" table="Community_Post">
+		<entity name="Post" table="Discussions_Post">
 			<key>
 				<member name="PostId" />
 			</key>
@@ -395,7 +395,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="PostAttachment" table="Community_PostAttachment">
+		<entity name="PostAttachment" table="Discussions_PostAttachment">
 			<key>
 				<member name="PostId" />
 				<member name="AttachmentId" />
@@ -419,7 +419,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="PostVoting" table="Community_PostVoting">
+		<entity name="PostVoting" table="Discussions_PostVoting">
 			<key>
 				<member name="PostId" />
 				<member name="UserId" />
@@ -439,7 +439,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="History" table="Community_History">
+		<entity name="History" table="Discussions_History">
 			<key>
 				<member name="UserId" />
 				<member name="ThreadId" />
@@ -447,9 +447,12 @@
 
 			<property name="UserId" type="uint" nullable="false" />
 			<property name="ThreadId" type="ulong" nullable="false" />
-			<property name="Count" type="uint" nullable="false" />
-			<property name="FirstViewedTime" type="datetime" nullable="false" immutable="true" />
-			<property name="MostRecentViewedTime" type="datetime" nullable="false" />
+			<property name="ViewedCount" type="uint" nullable="false" />
+			<property name="PostedCount" type="uint" nullable="false" />
+			<property name="FirstViewedTime" type="datetime" nullable="false" />
+			<property name="FirstPostedTime" type="datetime" nullable="true" />
+			<property name="LastViewedTime" type="datetime" nullable="false" />
+			<property name="LastPostedTime" type="datetime" nullable="true" />
 
 			<complexProperty name="User" port="UserProfile">
 				<link port="UserId" />
@@ -460,7 +463,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="UserProfile" table="Community_UserProfile">
+		<entity name="UserProfile" table="Discussions_UserProfile">
 			<key>
 				<member name="UserId" />
 			</key>
@@ -498,7 +501,7 @@
 			</complexProperty>
 		</entity>
 
-		<entity name="UserMessage" table="Community_UserMessage">
+		<entity name="UserMessage" table="Discussions_UserMessage">
 			<key>
 				<member name="UserId" />
 				<member name="MessageId" />

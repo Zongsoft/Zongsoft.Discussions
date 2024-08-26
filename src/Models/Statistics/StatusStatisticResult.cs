@@ -27,7 +27,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Zongsoft.Community.Models.Statistics
+namespace Zongsoft.Discussions.Models.Statistics
 {
 	/// <summary>
 	/// 表示按状态分组统计结果的实体类。
