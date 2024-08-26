@@ -11,11 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="Zongsoft.Core">
-			<HintPath>..\..\..\Framework\Zongsoft.Core\src\bin\$(Configuration)\$(TargetFramework)\Zongsoft.Core.dll</HintPath>
-		</Reference>
-		<Reference Include="Zongsoft.Web">
-			<HintPath>..\..\..\Framework\Zongsoft.Web\src\bin\$(Configuration)\$(TargetFramework)\Zongsoft.Web.dll</HintPath>
-		</Reference>
+		<PackageReference Include="Zongsoft.Core" Version="6.1.1" />
+		<PackageReference Include="Zongsoft.Web" Version="6.1.0" />
 	</ItemGroup>
 </Project>

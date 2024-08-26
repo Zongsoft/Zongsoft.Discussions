@@ -2,9 +2,8 @@
 
 <plugin name="Zongsoft.Community.Web"
         title="Zongsoft.Community.Web Plugin"
-        author="Popeye Zhong(9555843@qq.com)"
-        version="1.0"
-        copyright="Copyright(C) Zongsoft Corporation. 2015-2017. All rights reserved."
+        author="Zongsoft Studio(zongsoft@qq.com)"
+        copyright="Copyright(C) Zongsoft Corporation. 2015-2020. All rights reserved."
         description="Created by Popeye Zhong in 2017-05">
 
 	<manifest>

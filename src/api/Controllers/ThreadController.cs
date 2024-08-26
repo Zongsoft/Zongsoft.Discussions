@@ -33,7 +33,7 @@ using Microsoft.AspNetCore.Http;
 
 using Zongsoft.Web;
 using Zongsoft.Data;
-using Zongsoft.Web.Http.Headers;
+using Zongsoft.Web.Http;
 using Zongsoft.Security;
 using Zongsoft.Security.Membership;
 using Zongsoft.Community.Models;
@@ -49,36 +49,28 @@ namespace Zongsoft.Community.Web.Controllers
 		[Authorization]
 		public object Approve(ulong id)
 		{
-			return this.DataService.Approve(id) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.Approve(id) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpPatch("{id}/Hidden")]
 		[Authorization]
 		public object Hidden(ulong id)
 		{
-			return this.DataService.Visible(id, false) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.Visible(id, false) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpPatch("{id}/Visible")]
 		[Authorization]
 		public object Visible(ulong id)
 		{
-			return this.DataService.Visible(id, true) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.Visible(id, true) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpPost("{id}/Lock")]
 		[Authorization]
 		public object Lock(ulong id)
 		{
-			return this.DataService.SetLocked(id, true) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.SetLocked(id, true) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpDelete("{id}/Locked")]
@@ -86,9 +78,7 @@ namespace Zongsoft.Community.Web.Controllers
 		[Authorization]
 		public object Unlock(ulong id)
 		{
-			return this.DataService.SetLocked(id, false) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.SetLocked(id, false) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpPost, HttpPut]
@@ -96,9 +86,7 @@ namespace Zongsoft.Community.Web.Controllers
 		[Authorization]
 		public object Pin(ulong id)
 		{
-			return this.DataService.SetPinned(id, true) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.SetPinned(id, true) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpDelete]
@@ -106,9 +94,7 @@ namespace Zongsoft.Community.Web.Controllers
 		[Authorization]
 		public object Unpin(ulong id)
 		{
-			return this.DataService.SetPinned(id, false) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.SetPinned(id, false) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpPost, HttpPut]
@@ -116,9 +102,7 @@ namespace Zongsoft.Community.Web.Controllers
 		[Authorization]
 		public object Valued(ulong id)
 		{
-			return this.DataService.SetValued(id, true) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.SetValued(id, true) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpDelete]
@@ -126,9 +110,7 @@ namespace Zongsoft.Community.Web.Controllers
 		[Authorization]
 		public object Unvalued(ulong id)
 		{
-			return this.DataService.SetValued(id, false) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.SetValued(id, false) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpPost, HttpPut]
@@ -136,9 +118,7 @@ namespace Zongsoft.Community.Web.Controllers
 		[Authorization]
 		public object Global(ulong id)
 		{
-			return this.DataService.SetGlobal(id, true) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.SetGlobal(id, true) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpDelete]
@@ -146,9 +126,7 @@ namespace Zongsoft.Community.Web.Controllers
 		[Authorization]
 		public object Unglobal(ulong id)
 		{
-			return this.DataService.SetGlobal(id, false) ?
-				this.NoContent() :
-				this.NotFound();
+			return this.DataService.SetGlobal(id, false) ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpPatch, HttpPut]
@@ -159,9 +137,7 @@ namespace Zongsoft.Community.Web.Controllers
 			{
 				ThreadId = id,
 				Title = value,
-			}) > 0 ?
-				this.NoContent() :
-				this.NotFound();
+			}) > 0 ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpPatch, HttpPut]
@@ -172,9 +148,7 @@ namespace Zongsoft.Community.Web.Controllers
 			{
 				ThreadId = id,
 				Summary = value,
-			}) > 0 ?
-				this.NoContent() :
-				this.NotFound();
+			}) > 0 ? this.NoContent() : this.NotFound();
 		}
 
 		[HttpPatch, HttpPut]
