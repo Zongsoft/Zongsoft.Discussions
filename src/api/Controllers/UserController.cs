@@ -46,32 +46,8 @@ namespace Zongsoft.Discussions.Web.Controllers
     public class UserController : ServiceController<UserProfile, UserService>
     {
         #region 公共方法
-        [ActionName("Histories")]
-        [HttpGet("{id}/[action]")]
-        public IEnumerable<History> GetHistories(uint id, [FromQuery] Paging page = null)
-        {
-            return this.DataService.GetHistories(id, page);
-        }
-
-        [ActionName("Statistics")]
-        [HttpGet("{id}/[action]/{kind}")]
-        public object GetStatistics(uint id, string kind = null)
-        {
-            if (string.IsNullOrWhiteSpace(kind))
-                return this.BadRequest();
-
-            switch (kind.ToLowerInvariant())
-            {
-                case "message":
-                    return null;
-                    //return this.DataService.GetMessageStatistics(id);
-                default:
-                    return this.BadRequest("Invalid kind of the statistics.");
-            }
-        }
-
         [ActionName("Count")]
-        [HttpGet("{id}/[action]/{args}")]
+        [HttpGet("[area]/[controller]/{id}/[action]/{args}")]
         public IActionResult GetCount(uint id, string args)
         {
             if (string.IsNullOrEmpty(args))
@@ -90,19 +66,12 @@ namespace Zongsoft.Discussions.Web.Controllers
             }
         }
 
-        [ActionName("Messages")]
-        [HttpGet("{id}/[action]")]
-        public object GetMessages(uint id, [FromQuery] bool? isRead = null, [FromQuery] Paging page = null)
-		{
-			return this.Paginate(page ??= Paging.First(), this.DataService.GetMessages(id, isRead, page));
-        }
-
         [ActionName("Avatar")]
-        [HttpPost("{id}/[action]")]
+        [HttpPost("[area]/[controller]/{id}/[action]")]
         public Task<IO.FileInfo> SetAvatar(uint id) => SetAvatar(id);
 
         [ActionName("Photo")]
-        [HttpPost("{id}/[action]")]
+        [HttpPost("[area]/[controller]/{id}/[action]")]
         public Task<IO.FileInfo> SetPhoto(uint id) => SetPhoto(id);
         #endregion
     }

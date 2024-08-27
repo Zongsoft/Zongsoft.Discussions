@@ -7,7 +7,7 @@ Authorization: Credential {{$dotenv credentialId}}
 ### 新增操作
 # @prompt forumId 论坛编号
 # @prompt userId  用户编号
-POST /Forums/{{forumId}}/Users HTTP/1.1
+POST /Discussions/Forums/{{forumId}}/Users HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
@@ -21,7 +21,7 @@ Authorization: Credential {{$dotenv credentialId}}
 ### 增改操作
 # @prompt forumId 论坛编号
 # @prompt userId  用户编号
-PUT /Forums/{{forumId}}/Users HTTP/1.1
+PUT /Discussions/Forums/{{forumId}}/Users HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
@@ -35,7 +35,7 @@ Authorization: Credential {{$dotenv credentialId}}
 ### 更新操作
 # @prompt forumId 论坛编号
 # @prompt userId  用户编号
-PATCH /Forums/{{forumId}}/Users HTTP/1.1
+PATCH /Discussions/Forums/{{forumId}}/Users HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
@@ -49,12 +49,12 @@ Authorization: Credential {{$dotenv credentialId}}
 ### 删除操作
 # @prompt forumId 论坛编号
 # @prompt userId  用户编号
-DELETE /Forums/Users/{{forumId}}-{{userId}} HTTP/1.1
+DELETE /Discussions/Forums/Users/{{forumId}}-{{userId}} HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
 ### 批量删除
-DELETE /Forums/Users HTTP/1.1
+DELETE /Discussions/Forums/Users HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
@@ -62,6 +62,6 @@ Authorization: Credential {{$dotenv credentialId}}
 
 ### 清空操作
 # @prompt id 论坛编号
-DELETE /Forums/{{id}}/Users HTTP/1.1
+DELETE /Discussions/Forums/{{id}}/Users HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}

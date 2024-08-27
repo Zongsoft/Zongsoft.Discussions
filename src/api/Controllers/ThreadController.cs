@@ -41,135 +41,75 @@ using Zongsoft.Discussions.Services;
 
 namespace Zongsoft.Discussions.Web.Controllers
 {
+	[Authorization]
 	[ControllerName("Threads")]
 	public class ThreadController : ServiceController<Thread, ThreadService>
 	{
 		#region 公共方法
-		[HttpPatch("{id}/Approve")]
-		[Authorization]
+		[HttpPatch("[area]/[controller]/{id}/Approve")]
 		public object Approve(ulong id)
 		{
 			return this.DataService.Approve(id) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpPatch("{id}/Hidden")]
-		[Authorization]
+		[HttpPatch("[area]/[controller]/{id}/Hidden")]
 		public object Hidden(ulong id)
 		{
 			return this.DataService.Visible(id, false) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpPatch("{id}/Visible")]
-		[Authorization]
+		[HttpPatch("[area]/[controller]/{id}/Visible")]
 		public object Visible(ulong id)
 		{
 			return this.DataService.Visible(id, true) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpPost("{id}/Lock")]
-		[Authorization]
+		[HttpPost("[area]/[controller]/{id}/Lock")]
 		public object Lock(ulong id)
 		{
 			return this.DataService.SetLocked(id, true) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpDelete("{id}/Locked")]
-		[HttpPost("{id}/Unlock")]
-		[Authorization]
+		[HttpPost("[area]/[controller]/{id}/Unlock")]
 		public object Unlock(ulong id)
 		{
 			return this.DataService.SetLocked(id, false) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpPost, HttpPut]
-		[ActionName("Pinned")]
-		[Authorization]
+		[HttpPost("[area]/[controller]/{id}/Pin")]
 		public object Pin(ulong id)
 		{
 			return this.DataService.SetPinned(id, true) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpDelete]
-		[ActionName("Pinned")]
-		[Authorization]
+		[HttpPost("[area]/[controller]/{id}/Unpin")]
 		public object Unpin(ulong id)
 		{
 			return this.DataService.SetPinned(id, false) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpPost, HttpPut]
-		[ActionName("Valued")]
-		[Authorization]
+		[HttpPost("[area]/[controller]/{id}/Valued")]
 		public object Valued(ulong id)
 		{
 			return this.DataService.SetValued(id, true) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpDelete]
-		[ActionName("Valued")]
-		[Authorization]
+		[HttpPost("[area]/[controller]/{id}/Unvalued")]
 		public object Unvalued(ulong id)
 		{
 			return this.DataService.SetValued(id, false) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpPost, HttpPut]
-		[ActionName("Global")]
-		[Authorization]
+		[HttpPost("[area]/[controller]/{id}/Global")]
 		public object Global(ulong id)
 		{
 			return this.DataService.SetGlobal(id, true) ? this.NoContent() : this.NotFound();
 		}
 
-		[HttpDelete]
-		[ActionName("Global")]
-		[Authorization]
+		[HttpPost("[area]/[controller]/{id}/Unglobal")]
 		public object Unglobal(ulong id)
 		{
 			return this.DataService.SetGlobal(id, false) ? this.NoContent() : this.NotFound();
-		}
-
-		[HttpPatch, HttpPut]
-		[ActionName("Title")]
-		public object SetTitle(ulong id, [FromBody] string value)
-		{
-			return this.DataService.Update(new
-			{
-				ThreadId = id,
-				Title = value,
-			}) > 0 ? this.NoContent() : this.NotFound();
-		}
-
-		[HttpPatch, HttpPut]
-		[ActionName("Summary")]
-		public object SetSummary(ulong id, [FromBody] string value)
-		{
-			return this.DataService.Update(new
-			{
-				ThreadId = id,
-				Summary = value,
-			}) > 0 ? this.NoContent() : this.NotFound();
-		}
-
-		[HttpPatch, HttpPut]
-		[ActionName("Content")]
-		public object SetContent(ulong id, [FromBody] string content)
-		{
-			return this.DataService.Update(new
-			{
-				ThreadId = id,
-				Post = new
-				{
-					Content = content,
-					this.Request.ContentType,
-				}
-			}) > 0 ? this.NoContent() : this.NotFound();
-		}
-
-		[ActionName("Posts")]
-		public object GetPosts(ulong id, [FromQuery]Paging page = null)
-		{
-			return this.Paginate(page ??= Paging.First(), this.DataService.GetPosts(id, this.Request.Headers.GetDataSchema(), page));
 		}
 		#endregion
 	}

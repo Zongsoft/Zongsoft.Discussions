@@ -1,13 +1,13 @@
 ### 列表操作
 # @prompt id 站点编号
-GET /Sites/{{id}}/Users?page={{$dotenv page}} HTTP/1.1
+GET /Discussions/Sites/{{id}}/Users?page={{$dotenv page}} HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
 ### 新增操作
 # @prompt siteId 站点编号
 # @prompt userId 用户编号
-POST /Sites/{{siteId}}/Users HTTP/1.1
+POST /Discussions/Sites/{{siteId}}/Users HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
@@ -20,7 +20,7 @@ Authorization: Credential {{$dotenv credentialId}}
 ### 增改操作
 # @prompt siteId 站点编号
 # @prompt userId 用户编号
-PUT /Sites/{{siteId}}/Users HTTP/1.1
+PUT /Discussions/Sites/{{siteId}}/Users HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
@@ -33,7 +33,7 @@ Authorization: Credential {{$dotenv credentialId}}
 ### 更新操作
 # @prompt siteId 站点编号
 # @prompt userId 用户编号
-PATCH /Sites/{{siteId}}/Users HTTP/1.1
+PATCH /Discussions/Sites/{{siteId}}/Users HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
@@ -46,12 +46,12 @@ Authorization: Credential {{$dotenv credentialId}}
 ### 删除操作
 # @prompt siteId 站点编号
 # @prompt userId 用户编号
-DELETE /Sites/Users/{{siteId}}-{{userId}} HTTP/1.1
+DELETE /Discussions/Sites/Users/{{siteId}}-{{userId}} HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
 ### 批量删除
-DELETE /Sites/Users HTTP/1.1
+DELETE /Discussions/Sites/Users HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}
 
@@ -59,6 +59,6 @@ Authorization: Credential {{$dotenv credentialId}}
 
 ### 清空操作
 # @prompt id 站点编号
-DELETE /Sites/{{id}}/Users HTTP/1.1
+DELETE /Discussions/Sites/{{id}}/Users HTTP/1.1
 Host: {{host}}:{{port}}
 Authorization: Credential {{$dotenv credentialId}}

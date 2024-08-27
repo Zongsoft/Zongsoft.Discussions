@@ -43,31 +43,31 @@ namespace Zongsoft.Discussions.Web.Controllers
 	public class ForumController : ServiceController<Forum, ForumService>
 	{
 		#region 公共方法
-		[HttpGet("{id}/Moderators")]
+		[HttpGet("[area]/[controller]/{id}/Moderators")]
 		public IEnumerable<UserProfile> GetModerators(ushort id)
 		{
 			return this.DataService.GetModerators(id, this.Request.Headers.GetDataSchema());
 		}
 
-		[HttpGet("{id}/Globals")]
+		[HttpGet("[area]/[controller]/{id}/Globals")]
 		public IEnumerable<Thread> GetGlobalThreads(ushort id, [FromQuery] Paging page = null)
 		{
 			return this.DataService.GetGlobalThreads(id, this.Request.Headers.GetDataSchema(), page);
 		}
 
-		[HttpGet("{id}/Pinneds")]
+		[HttpGet("[area]/[controller]/{id}/Pinneds")]
 		public IEnumerable<Thread> GetPinnedThreads(ushort id, [FromQuery] Paging page = null)
 		{
 			return this.DataService.GetPinnedThreads(id, this.Request.Headers.GetDataSchema(), page);
 		}
 
-		[HttpGet("{id}/Topmosts/{count?}")]
+		[HttpGet("[area]/[controller]/{id}/Topmosts/{count?}")]
 		public IEnumerable<Thread> GetTopmosts(ushort id, int count = 0)
 		{
 			return this.DataService.GetTopmosts(id, this.Request.Headers.GetDataSchema(), count);
 		}
 
-		[HttpGet("{id}/Threads")]
+		[HttpGet("[area]/[controller]/{id}/Threads")]
 		public object GetThreads(ushort id, [FromQuery] Paging page = null)
 		{
 			return this.Paginate(page ??= Paging.First(), this.DataService.GetThreads(id, this.Request.Headers.GetDataSchema(), page));

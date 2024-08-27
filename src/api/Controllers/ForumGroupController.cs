@@ -41,7 +41,7 @@ namespace Zongsoft.Discussions.Web.Controllers
     public class ForumGroupController : ServiceController<ForumGroup, ForumGroupService>
     {
         #region 公共方法
-        [HttpGet("{siteId}-{groupId}/Forums")]
+        [HttpGet("[area]/[controller]/{siteId}-{groupId}/Forums")]
         public IEnumerable<Forum> GetForums(uint siteId, ushort groupId)
         {
             return this.DataService.GetForums(siteId, groupId);

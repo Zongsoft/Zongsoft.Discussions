@@ -59,7 +59,7 @@ namespace Zongsoft.Discussions.Web.Controllers
 		#endregion
 
 		#region 公共方法
-		[HttpGet("{id}")]
+		[HttpGet("[area]/[controller]/{id}")]
 		public async Task<IActionResult> DownloadAsync(string id, CancellationToken cancellation = default)
 		{
 			var file = await this.DataService.GetAsync(id, $"{nameof(Models.File.FileId)},{nameof(Models.File.Path)}", Paging.Disabled, Array.Empty<Sorting>(), cancellation) as File;
@@ -70,7 +70,7 @@ namespace Zongsoft.Discussions.Web.Controllers
 			return this.Accessor.Read(file.Path);
 		}
 
-		[HttpPost("{id?}")]
+		[HttpPost("[area]/[controller]/{id?}")]
 		public async Task<IEnumerable<File>> UploadAsync(uint? id = null, CancellationToken cancellation = default)
 		{
 			var files = new List<File>();
