@@ -189,7 +189,7 @@ namespace Zongsoft.Discussions.Services
 			//递增当前主题的累计阅读量并更新最后查看时间
 			this.DataAccess.Update<Thread>(new
 			{
-				TotalViews = Interval.One,
+				TotalViews = Operand.Field(nameof(Thread.TotalViews)) + 1,
 				ViewedTime = DateTime.Now,
 			}, Condition.Equal(nameof(Thread.ThreadId), thread.ThreadId));
 
@@ -270,7 +270,7 @@ namespace Zongsoft.Discussions.Services
 			count += this.DataAccess.Update<UserProfile>(new
 			{
 				UserId = userId,
-				TotalThreads = Interval.One,
+				TotalThreads = Operand.Field(nameof(UserProfile.TotalThreads)) + 1,
 				MostRecentThreadId = data.GetValue(p => p.ThreadId),
 				MostRecentThreadTitle = data.GetValue(p => p.Title),
 				MostRecentThreadTime = data.GetValue(p => p.CreatedTime),
@@ -286,7 +286,7 @@ namespace Zongsoft.Discussions.Services
 			{
 				UserId = this.Principal.Identity.GetIdentifier<uint>(),
 				ThreadId = threadId,
-				Count = Interval.One, //注意：此处应该使用Interval类型值，以便数据引擎自动进行递增处理
+				ViewedCount = Operand.Field(nameof(History.ViewedCount)) + 1,
 				MostRecentViewedTime = DateTime.Now,
 			});
 		}

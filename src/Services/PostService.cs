@@ -54,8 +54,8 @@ namespace Zongsoft.Discussions.Services
 			using(var transaction = new Zongsoft.Transactions.Transaction())
 			{
 				this.DataAccess.Delete<Post.PostVoting>(
-					Condition.Equal("PostId", postId) &
-					Condition.Equal("UserId", userId));
+					Condition.Equal(nameof(Post.PostVoting.PostId), postId) &
+					Condition.Equal(nameof(Post.PostVoting.UserId), userId));
 
 				this.DataAccess.Insert(Model.Build<Post.PostVoting>(voting =>
 				{
@@ -89,8 +89,8 @@ namespace Zongsoft.Discussions.Services
 				var userId = this.Principal.Identity.GetIdentifier<uint>();
 
 				this.DataAccess.Delete<Post.PostVoting>(
-					Condition.Equal("PostId", postId) &
-					Condition.Equal("UserId", userId));
+					Condition.Equal(nameof(Post.PostVoting.PostId), postId) &
+					Condition.Equal(nameof(Post.PostVoting.UserId), userId));
 
 				this.DataAccess.Insert(Model.Build<Post.PostVoting>(voting =>
 				{
@@ -116,17 +116,17 @@ namespace Zongsoft.Discussions.Services
 
 		public IEnumerable<Post.PostVoting> GetUpvotes(ulong postId, Paging paging = null)
 		{
-			return this.DataAccess.Select<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.GreaterThan("Value", 0), paging);
+			return this.DataAccess.Select<Post.PostVoting>(Condition.Equal(nameof(Post.PostVoting.PostId), postId) & Condition.GreaterThan(nameof(Post.PostVoting.Value), 0), paging);
 		}
 
 		public IEnumerable<Post.PostVoting> GetDownvotes(ulong postId, Paging paging = null)
 		{
-			return this.DataAccess.Select<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.LessThan("Value", 0), paging);
+			return this.DataAccess.Select<Post.PostVoting>(Condition.Equal(nameof(Post.PostVoting.PostId), postId) & Condition.LessThan(nameof(Post.PostVoting.Value), 0), paging);
 		}
 
 		public IEnumerable<Post> GetComments(ulong postId, Paging paging = null)
 		{
-			return this.DataAccess.Select<Post>(Condition.Equal("RefererId", postId), paging, Sorting.Descending("PostId"));
+			return this.DataAccess.Select<Post>(Condition.Equal(nameof(Post.RefererId), postId), paging, Sorting.Descending(nameof(Post.PostId)));
 		}
 		#endregion
 
@@ -292,10 +292,10 @@ namespace Zongsoft.Discussions.Services
 		private bool SetPostVotes(ulong postId)
 		{
 			//获取当前帖子的点赞总数，即统计帖子投票表中投票数大于零的记录数
-			var upvotes = this.DataAccess.Count<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.GreaterThan("Value", 0));
+			var upvotes = this.DataAccess.Count<Post.PostVoting>(Condition.Equal(nameof(Post.PostVoting.PostId), postId) & Condition.GreaterThan(nameof(Post.PostVoting.Value), 0));
 
 			//获取当前帖子的被踩总数，即统计帖子投票表中投票数小于零的记录数
-			var downvotes = this.DataAccess.Count<Post.PostVoting>(Condition.Equal("PostId", postId) & Condition.LessThan("Value", 0));
+			var downvotes = this.DataAccess.Count<Post.PostVoting>(Condition.Equal(nameof(Post.PostVoting.PostId), postId) & Condition.LessThan(nameof(Post.PostVoting.Value), 0));
 
 			//更新指定帖子的累计点赞总数和累计被踩总数
 			return this.DataAccess.Update(this.DataAccess.Naming.Get<Post>(), new
@@ -319,17 +319,17 @@ namespace Zongsoft.Discussions.Services
 				return false;
 
 			//如果当前帖子对应的主题是不存在的，则返回失败
-			var thread = this.DataAccess.Select<Thread>(Condition.Equal("ThreadId", threadId)).FirstOrDefault();
+			var thread = this.DataAccess.Select<Thread>(Condition.Equal(nameof(Thread.ThreadId), threadId)).FirstOrDefault();
 
 			if(thread == null)
 				return false;
 
 			//递增新增贴所属的主题的累计回帖总数
-			if(this.DataAccess.Increment<Thread>("TotalReplies", Condition.Equal("ThreadId", threadId)) < 0)
+			if(this.DataAccess.Increase<Thread>(nameof(Thread.TotalReplies), Condition.Equal(nameof(Thread.ThreadId), threadId)) < 0)
 				return false;
 
 			var userId = data.GetValue(p => p.CreatorId);
-			var user = this.DataAccess.Select<UserProfile>(Condition.Equal("UserId", userId)).FirstOrDefault();
+			var user = this.DataAccess.Select<UserProfile>(Condition.Equal(nameof(UserProfile.UserId), userId)).FirstOrDefault();
 			var count = 0;
 
 			//更新当前帖子所属主题的最后回帖信息
@@ -356,7 +356,7 @@ namespace Zongsoft.Discussions.Services
 			});
 
 			//递增当前发帖人的累计回帖数，并且更新发帖人的最后回帖信息
-			if(this.DataAccess.Increment<UserProfile>("TotalPosts", Condition.Equal("UserId", data.GetValue(p => p.CreatorId))) > 0)
+			if(this.DataAccess.Increase<UserProfile>(nameof(UserProfile.TotalPosts), Condition.Equal(nameof(UserProfile.UserId), data.GetValue(p => p.CreatorId))) > 0)
 			{
 				count += this.DataAccess.Update(this.DataAccess.Naming.Get<UserProfile>(), new
 				{
